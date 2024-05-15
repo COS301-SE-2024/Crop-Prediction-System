@@ -37,7 +37,7 @@ The AI-Driven Crop Prediction System that applies Machine Learning and AI to ana
 
 ![Link to Functional Requirements (SRS)](https://github.com/COS301-SE-2024/Crop-Prediction-System/wiki/Functional-Requirements)
 
-![Link to Github Project Board](https://github.com/orgs/COS301-SE-2024/projects/57/views/7)
+![Link to Github Project Board](https://github.com/orgs/COS301-SE-2024/projects/57/views/4)
 
 ## Meet The Team
 
