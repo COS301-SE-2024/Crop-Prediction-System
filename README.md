@@ -32,6 +32,10 @@ The AI-Driven Crop Prediction System that applies Machine Learning and AI to ana
 ![GitHub Release](https://img.shields.io/github/v/release/COS301-SE-2024/Crop-Prediction-System?style=for-the-badge)
 ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscordapp.com%2Fapi%2Finvites%2FS2Jvfwx4wR%3Fwith_counts%3Dtrue&query=%24.approximate_presence_count&suffix=%20online%20(3%20bots)&style=for-the-badge&logo=discord&logoColor=white&label=Discord&labelColor=%237289da&color=black)
 
+### Project Day Countdown
+
+<img src="https://i.countdownmail.com/3aprft.gif" style="width:210px;" border="0" alt="countdownmail.com"/> 
+
 ## Demo Videos
 
 ![GeekGurusUnion-Demo1]()
