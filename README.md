@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="https://github.com/COS301-SE-2024/Crop-Prediction-System/assets/29703077/dbf7e991-5956-49f1-aa70-e89ef3be882a" width="150" height="auto">
-  <h1 align="center">GeekGurusUnion - Crop Prediction System</h1>
+  <img src="https://github.com/COS301-SE-2024/Crop-Prediction-System/assets/29703077/9ec5395e-132d-4fee-bc92-cc732c6da562" width="250" height="auto">
+  <h2 align="center">An AI Crop Prediction Project by GeekGurusUnion</h2>
 </p>
 
 ![corn-2655525_1280](https://github.com/COS301-SE-2024/Crop-Prediction-System/assets/29703077/f64d4582-77f1-457e-90dd-2a114a866a05)
 
 ## Project Description
 
-The AI-Driven Crop Prediction System that applies Machine Learning and AI to analyze weather, soil, and crop data to predict crop health and yield. This system provides farmers with precise predictions, empowering them to make data-driven decisions and enhance their farming practices.
+Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learning and AI to analyze weather, soil, and crop data to predict crop health and yield. This system provides farmers with precise predictions, empowering them to make data-driven decisions and enhance their farming practices.
 
 ## Technologies
 
@@ -49,6 +49,12 @@ The AI-Driven Crop Prediction System that applies Machine Learning and AI to ana
 ![Link to Github Project Board](https://github.com/orgs/COS301-SE-2024/projects/57/views/4)
 
 ## Meet The Team
+
+<div align=center>
+  <img src="https://github.com/COS301-SE-2024/Crop-Prediction-System/assets/29703077/1e05706a-e391-4147-aceb-e39e570da814" width="100" height="auto"/>
+  <h3>GeekGurusUnion</h3>
+  <p>Caffeine-fueled code marathons, frantic debugging sessions, and the sweet smell of victory (hopefully). This is our team at GeekGurusUnion in all its chaotic glory.</p>
+</p>
 
 | Profile | Description |
 |--------|-------------|
