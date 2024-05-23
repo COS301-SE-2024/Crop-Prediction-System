@@ -54,7 +54,7 @@ Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learni
   <img src="https://github.com/COS301-SE-2024/Crop-Prediction-System/assets/29703077/1e05706a-e391-4147-aceb-e39e570da814" width="100" height="auto"/>
   <h3>GeekGurusUnion</h3>
   <p>Caffeine-fueled code marathons, frantic debugging sessions, and the sweet smell of victory (hopefully). This is our team at GeekGurusUnion in all its chaotic glory.</p>
-</p>
+</div>
 
 | Profile | Description |
 |--------|-------------|
