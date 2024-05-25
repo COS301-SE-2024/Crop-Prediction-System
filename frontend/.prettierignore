@@ -1,0 +1,15 @@
+node_modules
+dist
+build
+coverage
+.nuxt
+nuxt.config.ts
+.prettierrc
+.eslintrc.js
+.prettierignore
+package.json
+pnpm-lock.yaml
+server/tsconfig.json
+tsconfig.json
+gitignore
+README.md
