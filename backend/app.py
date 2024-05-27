@@ -1,9 +1,8 @@
-from backend.model.base import initModel
 from fastapi import FastAPI
+import datetime
 
 app = FastAPI()
 
 @app.get("/")
-def main():
-    return initModel()
-
+def read_root():
+    return {"message": "Hello, world!", "timestamp": datetime.datetime.now().isoformat()}
