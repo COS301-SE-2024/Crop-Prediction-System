@@ -1,2 +1,2 @@
 def initModel():
-    return "Hello, World!"
+    return {"Response": "Model Initialized"}
