@@ -19,6 +19,20 @@
 		"vue-router": "^4.3.2"
 	},
 	"devDependencies": {
+		"husky": "^9.0.11",
+		"lint-staged": "^15.2.5",
 		"prettier": "^3.2.5"
+	},
+	"lint-staged": {
+		"./*.vue": [
+			"pnpm run format",
+			"pnpm run lint"
+		]
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged",
+			"pre-push": "lint-staged"
+		}
 	}
 }
