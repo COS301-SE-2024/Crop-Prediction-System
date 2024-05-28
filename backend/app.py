@@ -7,3 +7,6 @@ app = FastAPI()
 def main():
     return initModel()
 
+@app.get("/getFieldInfo")
+def getFieldInfo():
+    return initModel()
