@@ -25,4 +25,4 @@ python3 -m pytest --cov=myproj tests/
 ## Postman Workspace
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://mp6-backend-api-endpoint-testing.postman.co/workspace/8272030c-3ed4-409e-bf53-b9ae07a682db)
 
-When working with the API in Postman, make sure to choose the correct environment. For local development, use the `Development` environment. For testing the deployed API, use the `Production` environment.
+When working with the API in Postman, make sure to choose the correct environment. For local development, use the `Development` environment. For testing the deployed API, use the `Production` environment.z`

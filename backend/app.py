@@ -1,7 +1,7 @@
 from backend.model.base import initModel
 from fastapi import FastAPI
 # from backend.database.supabaseFunctions import signUp, login, logout, getUser
-# from backend.database.supabaseFunctions import sbGetFieldInfo
+from backend.database.supabaseFunctions import sbGetFieldInfo
 
 app = FastAPI()
 
@@ -11,7 +11,7 @@ def main():
 
 @app.get("/getFieldInfo")
 def getFieldInfo():
-    return initModel()
+    return sbGetFieldInfo()
 
 # @app.get("/getFieldInfo")
 # def getFieldInfo():
