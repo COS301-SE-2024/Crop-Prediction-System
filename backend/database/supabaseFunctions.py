@@ -7,8 +7,4 @@ key: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 supabase: Client = create_client(url, key)
 
 def sbGetFieldInfo():
-    result = supabase.table("fieldInfo").select("*").execute()
-    # print(result)
-    # print(result.get("data"))
-    # print(json.dumps(result.data.json(), indent=2))
-    return json.dumps(result.json(), indent=2)
+    return supabase.table("fieldInfo").select("*").execute().data
