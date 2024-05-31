@@ -47,6 +47,8 @@ Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learni
 
 ![Link to Functional Requirements (SRS)](https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/SRS%20Demo%201.pdf)
 
+![API Documentation](https://documenter.getpostman.com/view/26558432/2sA3Qwaoyd)
+
 ![Link to Github Project Board](https://github.com/orgs/COS301-SE-2024/projects/57/views/4)
 
 ## Meet The Team
