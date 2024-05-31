@@ -11,10 +11,10 @@ class supabaseInstance:
         load_dotenv()
 
         # Get Supabase URL and Key
-        # self.url = os.environ.get("SUPABASE_URL")
-        # self.key = os.environ.get("SUPABASE_KEY")
-        self.url = "https://iimtpbzfrdcuuklwnprq.supabase.co"
-        self.key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpbXRwYnpmcmRjdXVrbHducHJxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcxNTgxNDUwMywiZXhwIjoyMDMxMzkwNTAzfQ.VzlziOMi-30xI_HbLwWbiVeSoNK-hzUCDzg3w_G0XgI"
+        self.url = os.environ.get("SUPABASE_URL")
+        self.key = os.environ.get("SUPABASE_KEY")
+        # self.url = "https://iimtpbzfrdcuuklwnprq.supabase.co"
+        # self.key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpbXRwYnpmcmRjdXVrbHducHJxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcxNTgxNDUwMywiZXhwIjoyMDMxMzkwNTAzfQ.VzlziOMi-30xI_HbLwWbiVeSoNK-hzUCDzg3w_G0XgI"
 
         # Create Supabase client
         self.sbClient: Client = create_client(self.url, self.key)
