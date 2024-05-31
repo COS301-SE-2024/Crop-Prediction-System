@@ -20,10 +20,10 @@ class API:
         self.app.add_api_route("/getFieldInfo", self.getFieldInfo, methods=["GET"])
         self.app.add_api_route("/getFieldData", self.getFieldData, methods=["GET"])
         self.app.add_api_route("/createField", self.createField, methods=["POST"])
-        self.app.add_api_route("/updateField", self.updateField, methods=["POST"])
+        self.app.add_api_route("/updateField", self.updateField, methods=["PUT"])
         self.app.add_api_route("/deleteField", self.deleteField, methods=["POST"])
         self.app.add_api_route("/createEntry", self.createEntry, methods=["POST"])
-        self.app.add_api_route("/updateEntry", self.updateEntry, methods=["POST"])
+        self.app.add_api_route("/updateEntry", self.updateEntry, methods=["PUT"])
         self.app.add_api_route("/deleteEntry", self.deleteEntry, methods=["POST"])
 
     def main(self):
@@ -49,7 +49,7 @@ class API:
         return self.sb.updateField(fieldInfo)
 
     def deleteField(self, field_id: dict):
-        return self.sb.deleteField(field_id)
+        return self.sb.deleteField(field_id.get("field_id"))
 
     def createEntry(self, entryInfo: Entry):
         return self.sb.createEntry(entryInfo)
@@ -58,7 +58,7 @@ class API:
         return self.sb.updateEntry(entryInfo)
 
     def deleteEntry(self, entry_id: dict):
-        return self.sb.deleteEntry(entry_id)
+        return self.sb.deleteEntry(entry_id.get("entry_id"))
     
 api_instance = API()
 app = api_instance.app

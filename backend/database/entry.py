@@ -1,12 +1,14 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class Entry(BaseModel):
-    weather_temperature: float
-    weather_humidity: float
-    weather_uv: float
-    weather_rainfall: float
-    soil_moisture: float
-    soil_ph: float
-    soil_conductivity: float
-    is_manual: bool
-    field_id: int
+    entry_id: Optional[int] = None
+    weather_temperature: Optional[float] = None
+    weather_humidity: Optional[float] = None
+    weather_uv: Optional[float] = None
+    weather_rainfall: Optional[float] = None
+    soil_moisture: Optional[float] = None
+    soil_ph: Optional[float] = None
+    soil_conductivity: Optional[float] = None
+    is_manual: Optional[bool] = None
+    field_id: Optional[int] = None
