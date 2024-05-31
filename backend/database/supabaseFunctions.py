@@ -2,6 +2,7 @@ import json
 import os
 from supabase import create_client, Client
 from dotenv import load_dotenv
+from fastapi.encoders import jsonable_encoder
 
 load_dotenv()
 
@@ -12,7 +13,8 @@ key = os.environ.get("SUPABASE_KEY")
 sbClient: Client = create_client("https://iimtpbzfrdcuuklwnprq.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpbXRwYnpmcmRjdXVrbHducHJxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcxNTgxNDUwMywiZXhwIjoyMDMxMzkwNTAzfQ.VzlziOMi-30xI_HbLwWbiVeSoNK-hzUCDzg3w_G0XgI")
 
 def sbGetFieldData(fieldid: int):
-    return sbClient.rpc("get_field_data_by_id", {"fieldid":fieldid}).execute()
+    response = sbClient.rpc("get_field_data_by_id", {"fieldid": fieldid}).execute()
+    return jsonable_encoder(response)
 
 def sbGetFieldInfo():
     return sbClient.rpc("get_field_info").execute()
