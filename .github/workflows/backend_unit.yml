@@ -1,0 +1,32 @@
+name: pytest-codecov
+
+on:
+  push:
+    branches:
+      - main  # Adjust branch name as needed
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x  # Adjust Python version as needed
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt  # Adjust based on your project setup
+
+      - name: Run tests with pytest
+        run: |
+          pytest --cov=<your_package_or_module>
+          pytest --cov-report xml
+
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
