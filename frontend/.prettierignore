@@ -14,3 +14,6 @@ gitignore
 README.md
 eslint.config.mjs
 presets
+tailwind.config.js
+plugins
+assets
