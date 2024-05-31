@@ -17,9 +17,4 @@ export default defineNuxtConfig({
   plugins: [
     "~/plugins/maps.client.js"
   ],
-  runtimeConfig: {
-    public: {
-      googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
-    }
-  }
 })
