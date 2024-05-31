@@ -14,7 +14,7 @@
     "lint-staged": "^15.2.5"
   },
   "lint-staged": {
-    "/frontend/app.vue": [
+    "/frontend/**/*.vue": [
       "pnpm run format",
       "pnpm run lint"
     ]
