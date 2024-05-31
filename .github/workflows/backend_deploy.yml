@@ -18,7 +18,7 @@ jobs:
         with:
           host: ${{ secrets.DIGITAL_OCEAN_IP }}
           username: root
-          key: ${{ secrets.DIGITAL_OCEAN_PASSWORD }}
+          password: ${{ secrets.DIGITAL_OCEAN_PASSWORD }}
           script: |
             cd /var/www/app/Crop-Prediction-System
             git pull
