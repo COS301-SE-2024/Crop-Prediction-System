@@ -6,7 +6,7 @@ on:
       - '**'
 
 jobs:
-  test:
+  automated-backend-unit-tests:
     runs-on: ubuntu-latest
 
     steps:
