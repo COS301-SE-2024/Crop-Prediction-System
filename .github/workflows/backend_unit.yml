@@ -3,7 +3,7 @@ name: pytest-codecov
 on:
   push:
     branches:
-      - '*'
+      - '**'
 
 jobs:
   test:
