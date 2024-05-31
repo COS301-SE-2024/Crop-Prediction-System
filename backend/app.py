@@ -15,6 +15,17 @@ class Field(BaseModel):
     crop_type: str
     user_id: str
 
+class Entry(BaseModel):
+    weather_temperature: float
+    weather_humidity: float
+    weather_uv: float
+    weather_rainfall: float
+    soil_moisture: float
+    soil_ph: float
+    soil_conductivity: float
+    is_manual: bool
+    field_id: int
+
 @app.get("/")
 def main():
     return initModel()
@@ -41,7 +52,9 @@ def updateField(field_id: int, field_area: object, field_name: str, field_tph: f
 
 # @app.post("/deleteField")
 
-# @app.post("/createEntry")
+@app.post("/createEntry")
+def createEntry(entryInfo: Entry):
+    return sbCreateEntry(entryInfo.weather_temperature, entryInfo.weather_humidity, entryInfo.weather_uv, entryInfo.weather_rainfall, entryInfo.soil_moisture, entryInfo.soil_ph, entryInfo.soil_conductivity, entryInfo.is_manual, entryInfo.field_id)
 
 # # update data
 # @app.post("/updateEntry")

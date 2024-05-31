@@ -29,7 +29,7 @@ def sbDeleteField(field_id: int):
     return sbClient.rpc("delete_field", {"fieldid": field_id}).execute()
 
 def sbCreateEntry(weather_temperature: float, weather_humidity: float, weather_uv: float, weather_rainfall: float, soil_moisture: float, soil_ph:float, soil_conductivity: float, is_manual: bool, field_id: int):
-    return sbClient.rpc("create_entry", {"weathertemperature": weather_temperature, "weatherhumidity": weather_humidity, "weatheruv": weather_uv, "weatherrainfall": weather_rainfall, "soilmoisture": soil_moisture, "soilph": soil_ph, "soilconductivity": soil_conductivity, "ismanual": is_manual, "fieldid": field_id}).execute()
+    return sbClient.table("field_data").insert([{"weather_temperature": weather_temperature, "weather_humidity": weather_humidity, "weather_uv": weather_uv, "weather_rainfall": weather_rainfall, "soil_moisture": soil_moisture, "soil_ph": soil_ph, "soil_conductivity": soil_conductivity, "is_manual": is_manual, "field_id": field_id}]).execute()
 
 def sbUpdateEntry(entry_id: int, weather_temperature: float, weather_humidity: float, weather_uv: float, weather_rainfall: float, soil_moisture: float, soil_ph:float, soil_conductivity: float, is_manual: bool, field_id: int):
     return sbClient.rpc("update_entry", {"entryid": entry_id, "weathertemperature": weather_temperature, "weatherhumidity": weather_humidity, "weatheruv": weather_uv, "weatherrainfall": weather_rainfall, "soilmoisture": soil_moisture, "soilph": soil_ph, "soilconductivity": soil_conductivity, "ismanual": is_manual, "fieldid": field_id}).execute()
