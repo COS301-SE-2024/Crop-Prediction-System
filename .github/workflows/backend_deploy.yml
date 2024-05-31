@@ -20,5 +20,6 @@ jobs:
           username: root
           password: ${{ secrets.DIGITAL_OCEAN_PASSWORD }}
           script: |
+            cd /var/www/app/Crop-Prediction-System
             whoami
             ls -l
