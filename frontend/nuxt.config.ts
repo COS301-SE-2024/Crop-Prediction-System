@@ -1,5 +1,5 @@
 import path from 'path';
-// https://nuxt.com/docs/api/configuration/nuxt-config
+
 export default defineNuxtConfig({
   css: ['./assets/css/tailwind.css', 'primeicons/primeicons.css'],
   devtools: { enabled: true },
@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     options: {
       unstyled: true
     },
-    importPT: { from: path.resolve(__dirname, './presets/lara/')}
+    importPT: { from: path.resolve(__dirname, './presets/lara/') }
   },
   components: {
     global: true,
