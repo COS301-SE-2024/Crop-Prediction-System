@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-# from backend.database.supabaseFunctions import signUp, login, logout, getUser
 from backend.database.supabaseFunctions import supabaseFunctions
 from pydantic import BaseModel
 
