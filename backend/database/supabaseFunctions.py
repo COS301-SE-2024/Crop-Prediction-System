@@ -12,7 +12,7 @@ key = os.environ.get("SUPABASE_KEY")
 # sbClient: Client = create_client(url, key)
 sbClient: Client = create_client("https://iimtpbzfrdcuuklwnprq.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpbXRwYnpmcmRjdXVrbHducHJxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcxNTgxNDUwMywiZXhwIjoyMDMxMzkwNTAzfQ.VzlziOMi-30xI_HbLwWbiVeSoNK-hzUCDzg3w_G0XgI")
 
-def sbGetFieldData(fieldid: int):
+def sbGetFieldData(fieldid: str):
     response = sbClient.rpc("get_field_data_by_id", {"fieldid": fieldid}).execute()
     return response
 
