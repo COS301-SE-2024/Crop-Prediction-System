@@ -36,9 +36,9 @@ def main():
 def getFieldInfo():
     return sbGetFieldInfo()
 
-@app.get("/getFieldData/{fieldid}")
-async def getFieldData(fieldid: int):
-    return await sbGetFieldData(fieldid)
+@app.get("/getFieldData")
+async def getFieldData(fieldid: int = 0):
+    return sbGetFieldData(fieldid)
 
 @app.post("/createField")
 def createField(fieldInfo: Field):
