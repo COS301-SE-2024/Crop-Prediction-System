@@ -9,7 +9,7 @@ url = os.environ.get("SUPABASE_URL")
 key = os.environ.get("SUPABASE_KEY")
 
 # sbClient: Client = create_client(url, key)
-sbClient: Client = create_client("https://iimtpbzfrdcuuklwnprq.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpbXRwYnpmcmRjdXVrbHducHJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTU4MTQ1MDMsImV4cCI6MjAzMTM5MDUwM30.o2gbIkgZaTQlFRLabs-abzkim462xatVumMJXo06m6w")
+sbClient: Client = create_client("https://iimtpbzfrdcuuklwnprq.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpbXRwYnpmcmRjdXVrbHducHJxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcxNTgxNDUwMywiZXhwIjoyMDMxMzkwNTAzfQ.VzlziOMi-30xI_HbLwWbiVeSoNK-hzUCDzg3w_G0XgI")
 
 def sbGetFieldData(fieldid: int):
     return sbClient.rpc("get_field_data_by_id", {"fieldid":fieldid}).execute()
@@ -18,11 +18,8 @@ def sbGetFieldInfo():
     return sbClient.rpc("get_field_info").execute()
 
 def sbCreateField(field_area, field_name: str, field_tph: float, field_health: float, crop_type: str, user_id: str):
-    parsed_user_id = json.loads(user_id)
-    # check if userID is null:
-    if parsed_user_id == None:
-        return sbClient.table("field_info").insert([{"field_area": field_area, "field_name": field_name, "field_tph": field_tph, "field_health": field_health, "crop_type": crop_type }]).execute()
-
+    if user_id == "null":
+        return sbClient.table("field_info").insert([{"field_area": field_area, "field_name": field_name, "field_tph": field_tph, "field_health": field_health, "crop_type": crop_type}]).execute()
     return sbClient.table("field_info").insert([{"field_area": field_area, "field_name": field_name, "field_tph": field_tph, "field_health": field_health, "crop_type": crop_type, "user_id": user_id}]).execute()
 
 def sbUpdateField(field_id: int, field_area: object, field_name: str, field_tph: float, field_health: float, crop_type: str, user_id: int):

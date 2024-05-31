@@ -8,7 +8,7 @@ app = FastAPI()
 
 # base model
 class Field(BaseModel):
-    field_area: list[list[float]]
+    field_area: object
     field_name: str
     field_tph: float
     field_health: float
