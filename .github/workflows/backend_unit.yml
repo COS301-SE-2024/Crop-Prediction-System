@@ -23,7 +23,7 @@ jobs:
 
       - name: Run tests with pytest
         run: |
-          pytest --cov=<your_package_or_module>
+          pytest --cov=backend
           pytest --cov-report xml
 
       - name: Upload coverage report to Codecov
