@@ -13,5 +13,8 @@ export default defineNuxtConfig({
   components: {
     global: true,
     dirs: ["`/components"],
-  }
+  },
+  plugins: [
+    "~/plugins/maps.client.js"
+  ],
 })
