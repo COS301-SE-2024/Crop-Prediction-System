@@ -19,4 +19,6 @@ jobs:
           host: ${{ secrets.DIGITAL_OCEAN_IP }}
           username: root
           password: ${{ secrets.DIGITAL_OCEAN_PASSWORD }}
-          script: whoami
+          script: |
+            whoami
+            ls -l
