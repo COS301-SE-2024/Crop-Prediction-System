@@ -2,7 +2,7 @@ import json
 from backend.model.base import initModel
 from fastapi import FastAPI
 # from backend.database.supabaseFunctions import signUp, login, logout, getUser
-from backend.database.supabaseFunctions import sbGetFieldInfo, sbGetFieldData, sbCreateField, sbUpdateField, sbDeleteField, sbCreateEntry, sbUpdateEntry, sbDeleteEntry
+from backend.database.supabaseFunctions import sbGetFieldInfo, sbGetFieldData, sbCreateField, sbUpdateField, sbCreateEntry, sbUpdateEntry, sbDeleteEntry
 from pydantic import BaseModel
 app = FastAPI()
 
@@ -15,6 +15,8 @@ class Field(BaseModel):
     crop_type: str
     user_id: str
 
+class DeleteEntry(BaseModel):
+    entry_id: int
 class Entry(BaseModel):
     weather_temperature: float
     weather_humidity: float
@@ -59,7 +61,9 @@ def createEntry(entryInfo: Entry):
 # # update data
 # @app.post("/updateEntry")
 
-# @app.post("/deleteEntry")
+@app.post("/deleteEntry")
+def deleteEntry(toDelete: DeleteEntry):
+    return sbDeleteEntry(toDelete.entry_id)
 
 
 
