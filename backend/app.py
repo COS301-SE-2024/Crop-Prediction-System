@@ -1,93 +1,64 @@
-import json
-from backend.model.base import initModel
 from fastapi import FastAPI
 # from backend.database.supabaseFunctions import signUp, login, logout, getUser
-from backend.database.supabaseFunctions import sbGetFieldInfo, sbGetFieldData, sbCreateField, sbUpdateField, sbCreateEntry, sbUpdateEntry, sbDeleteEntry
+from backend.database.supabaseFunctions import supabaseFunctions
 from pydantic import BaseModel
-app = FastAPI()
 
-# base model
-class Field(BaseModel):
-    field_area: object
-    field_name: str
-    field_tph: float
-    field_health: float
-    crop_type: str
-    user_id: str
+from backend.model.base import MLModel
+from backend.database.field import Field
+from backend.database.entry import Entry
 
-class DeleteEntry(BaseModel):
-    entry_id: int
-class Entry(BaseModel):
-    weather_temperature: float
-    weather_humidity: float
-    weather_uv: float
-    weather_rainfall: float
-    soil_moisture: float
-    soil_ph: float
-    soil_conductivity: float
-    is_manual: bool
-    field_id: int
+class API:
+    def __init__(self):
+        self.app = FastAPI()
+        self.ml = MLModel()
+        self.sb = supabaseFunctions()
+        self.setup_routes()
 
-@app.get("/")
-def main():
-    return initModel()
+    def setup_routes(self):
+        self.app.add_api_route("/", self.main, methods=["GET"])
+        self.app.add_api_route("/startModel", self.initModel, methods=["GET"])
+        self.app.add_api_route("/getFieldInfo", self.getFieldInfo, methods=["GET"])
+        self.app.add_api_route("/getFieldData", self.getFieldData, methods=["GET"])
+        self.app.add_api_route("/createField", self.createField, methods=["POST"])
+        self.app.add_api_route("/updateField", self.updateField, methods=["POST"])
+        self.app.add_api_route("/deleteField", self.deleteField, methods=["POST"])
+        self.app.add_api_route("/createEntry", self.createEntry, methods=["POST"])
+        self.app.add_api_route("/updateEntry", self.updateEntry, methods=["POST"])
+        self.app.add_api_route("/deleteEntry", self.deleteEntry, methods=["POST"])
 
-@app.get("/getFieldInfo")
-def getFieldInfo():
-    return sbGetFieldInfo()
+    def main(self):
+        return {
+            "Welcome": "Welcome to the TerraByte API",
+            "Documentation": "Visit Postman for more information",
+            "Link to Postman": "https://documenter.getpostman.com/view/12263200/TzJx9G8z"
+        }
 
-@app.get("/getFieldData")
-async def getFieldData(fieldid: int = 0):
-    return sbGetFieldData(str(fieldid))
+    def initModel(self):
+        return self.ml.startModel()
 
-@app.post("/createField")
-def createField(fieldInfo: Field):
-    # print("createField")
-    # print(fieldInfo.field_area)
-    return sbCreateField(fieldInfo.field_area, fieldInfo.field_name, fieldInfo.field_tph, fieldInfo.field_health, fieldInfo.crop_type, fieldInfo.user_id)
+    def getFieldInfo(self, fieldid: int = 0):
+        return self.sb.getFieldInfo(str(fieldid))
 
-# update type of field for example
-@app.post("/updateField")
-def updateField(field_id: int, field_area: object, field_name: str, field_tph: float, field_health: float, crop_type: str, user_id: int):
-    return sbUpdateField(field_id)
+    def getFieldData(self, fieldid: int = 0):
+        return self.sb.getFieldData(str(fieldid))
 
+    def createField(self, fieldInfo: Field):
+        return self.sb.createField(fieldInfo)
 
-# @app.post("/deleteField")
+    def updateField(self, fieldInfo: Field):
+        return self.sb.updateField(fieldInfo)
 
-@app.post("/createEntry")
-def createEntry(entryInfo: Entry):
-    return sbCreateEntry(entryInfo.weather_temperature, entryInfo.weather_humidity, entryInfo.weather_uv, entryInfo.weather_rainfall, entryInfo.soil_moisture, entryInfo.soil_ph, entryInfo.soil_conductivity, entryInfo.is_manual, entryInfo.field_id)
+    def deleteField(self, field_id: dict):
+        return self.sb.deleteField(field_id)
 
-# # update data
-# @app.post("/updateEntry")
+    def createEntry(self, entryInfo: Entry):
+        return self.sb.createEntry(entryInfo)
 
-@app.post("/deleteEntry")
-def deleteEntry(toDelete: DeleteEntry):
-    return sbDeleteEntry(toDelete.entry_id)
+    def updateEntry(self, entryInfo: Entry):
+        return self.sb.updateEntry(entryInfo)
 
-
-
-# @app.get("/getFieldInfo")
-# def getFieldInfo():
-#     return sbGetFieldInfo()
-
-
-# # sign up user
-# @app.post("/signUpUser")
-# def signUpUser(user: dict):
-#     return signUp(user)
-
-# # login user
-# @app.post("/loginUser")
-# def loginUser(user: dict):
-#     return login(user)
-
-# # get user info
-# @app.post("/getUser")
-# def getUserInfo():
-#     return getUser()
-
-# #logout user
-# @app.post("/logoutUser")
-# def logoutUser():
-#     return logout()
+    def deleteEntry(self, entry_id: dict):
+        return self.sb.deleteEntry(entry_id)
+    
+api_instance = API()
+app = api_instance.app

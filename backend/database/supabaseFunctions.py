@@ -1,44 +1,192 @@
-import json
-import os
-from supabase import create_client, Client
-from dotenv import load_dotenv
-from fastapi.encoders import jsonable_encoder   
+from backend.database import supabaseInstance
+from backend.database.field import Field
+from backend.database.entry import Entry
 
-load_dotenv()
+class supabaseFunctions:
+    __sbClient = supabaseInstance.supabaseInstance().get_client()
 
-url = os.environ.get("SUPABASE_URL")
-key = os.environ.get("SUPABASE_KEY")
+    def __init__(self):
+        pass
 
-# sbClient: Client = create_client(url, key)
-sbClient: Client = create_client("https://iimtpbzfrdcuuklwnprq.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpbXRwYnpmcmRjdXVrbHducHJxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcxNTgxNDUwMywiZXhwIjoyMDMxMzkwNTAzfQ.VzlziOMi-30xI_HbLwWbiVeSoNK-hzUCDzg3w_G0XgI")
+    @staticmethod
+    def getFieldData(fieldid: str):
+        try:
+            dict = {"fieldid": fieldid}
+            response = supabaseFunctions.__sbClient.rpc("get_field_data_by_id", dict).execute()
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get field data"}
+        finally:
+            if response.data == []:
+                return {"error": "Data not found. Field ID may be invalid or may not have any data."}
+            return response.data
 
-def sbGetFieldData(fieldid: str):
-    dict = {"fieldid": fieldid }
-    print(dict)
-    response = sbClient.rpc("get_field_data_by_id", dict).execute()
-    print(response.data)
-    return response.data
+    @staticmethod
+    def getFieldInfo(fieldid: str):
+        try:
+            dict = {"field_id": fieldid}
+            response = supabaseFunctions.__sbClient.rpc("get_field_info", dict).execute()
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get field info"}
+        finally:
+            if response.data == []:
+                return {"error": "Field not found. Please create a field first."}
+            return response.data
 
-def sbGetFieldInfo():
-    return sbClient.rpc("get_field_info").execute()
+    @staticmethod
+    def createField(fieldInfo: Field):
+        if fieldInfo.user_id == "":
+            try:
+                supabaseFunctions.__sbClient.table("field_info").insert([{"field_area": fieldInfo.field_area, "field_name": fieldInfo.field_name, "field_tph": fieldInfo.field_tph, "field_health": fieldInfo.field_health, "crop_type": fieldInfo.crop_type}]).execute()
+            except Exception as e:
+                print(e)
+                return {"error": "Failed to create field"}
+            finally:
+                return {"success": "Field created"}
+        try:
+            supabaseFunctions.__sbClient.table("field_info").insert([{"field_area": fieldInfo.field_area, "field_name": fieldInfo.field_name, "field_tph": fieldInfo.field_tph, "field_health": fieldInfo.field_health, "crop_type": fieldInfo.crop_type, "user_id": fieldInfo.user_id}]).execute()
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to create field"}
+        finally:
+            return {"success": "Field created"}
 
-def sbCreateField(field_area, field_name: str, field_tph: float, field_health: float, crop_type: str, user_id: str):
-    if user_id == "null":
-        return sbClient.table("field_info").insert([{"field_area": field_area, "field_name": field_name, "field_tph": field_tph, "field_health": field_health, "crop_type": crop_type}]).execute()
-    return sbClient.table("field_info").insert([{"field_area": field_area, "field_name": field_name, "field_tph": field_tph, "field_health": field_health, "crop_type": crop_type, "user_id": user_id}]).execute()
+    @staticmethod
+    def updateField(fieldInfo: Field):
+        try:
+            supabaseFunctions.__sbClient.table("field_info").update({"field_area": fieldInfo.field_area, "field_name": fieldInfo.field_name, "field_tph": fieldInfo.field_tph, "field_health": fieldInfo.field_health, "crop_type": fieldInfo.crop_type, "user_id": fieldInfo.user_id}).eq("field_id", fieldInfo.field_id).execute()
+        except Exception as e:
+            print(e)
+            return {"error": "Field not found"}
+        finally:
+            return {"success": "Field updated"}
+        
+    @staticmethod
+    def deleteField(field_id: int):
+        try:
+            supabaseFunctions.__sbClient.table("field_info").delete().eq("field_id", field_id).execute()
+        except Exception as e:
+            print(e)
+            return {"error": "Field not found"}
+        finally:
+            return {"success": "Field deleted"}
+    
+    @staticmethod
+    def createEntry(fieldData: Entry):
+        try:
+            supabaseFunctions.__sbClient.table("field_data").insert([{"weather_temperature": fieldData.weather_temperature, "weather_humidity": fieldData.weather_humidity, "weather_uv": fieldData.weather_uv, "weather_rainfall": fieldData.weather_rainfall, "soil_moisture": fieldData.soil_moisture, "soil_ph": fieldData.soil_ph, "soil_conductivity": fieldData.soil_conductivity, "is_manual": fieldData.is_manual, "field_id": fieldData.field_id}]).execute()
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to create entry"}
+        finally:
+            return {"success": "Entry created"}
+        
+    @staticmethod
+    def updateEntry(fieldData: Entry):
+        try:
+            supabaseFunctions.__sbClient.table("field_data").update({"weather_temperature": fieldData.weather_temperature, "weather_humidity": fieldData.weather_humidity, "weather_uv": fieldData.weather_uv, "weather_rainfall": fieldData.weather_rainfall, "soil_moisture": fieldData.soil_moisture, "soil_ph": fieldData.soil_ph, "soil_conductivity": fieldData.soil_conductivity, "is_manual": fieldData.is_manual, "field_id": fieldData.field_id}).eq("entry_id", fieldData.entry_id).execute()
+        except Exception as e:
+            print(e)
+            return {"error": "Entry not found"}
+        finally:
+            return {"success": "Entry updated"}
+        
+    @staticmethod
+    def deleteEntry(entry_id: int):
+        try:
+            supabaseFunctions.__sbClient.table("field_data").delete().eq("entry_id", entry_id).execute()
+        except Exception as e:
+            print(e)
+            return {"error": "Entry not found"}
+        finally:
+            return {"success": "Entry deleted"}
+        
 
-def sbUpdateField(field_id: int, field_area: object, field_name: str, field_tph: float, field_health: float, crop_type: str, user_id: int):
-    return sbClient.rpc("update_field", {"fieldarea": field_area, "fieldname": field_name, "fieldtph": field_tph, "fieldhealth": field_health, "croptype": crop_type, "userid": user_id}).execute()
+# __sbClient = supabaseInstance.supabaseInstance().get_client()
 
-# cant delete a field
-# def sbDeleteField(field_id: int):
-#     return sbClient.rpc("delete_field", {"fieldid": field_id}).execute()
+# def getFieldData(fieldid: str):
+#     try:
+#         dict = {"fieldid": fieldid}
+#         response = __sbClient.rpc("get_field_data_by_id", dict).execute()
+#     except Exception as e:
+#         print(e)
+#         return {"error": "Failed to get field data"}
+#     finally:
+#         if response.data == []:
+#             return {"error": "Data not found. Field ID may be invalid or may not have any data."}
+#         return response.data
 
-def sbCreateEntry(weather_temperature: float, weather_humidity: float, weather_uv: float, weather_rainfall: float, soil_moisture: float, soil_ph:float, soil_conductivity: float, is_manual: bool, field_id: int):
-    return sbClient.table("field_data").insert([{"weather_temperature": weather_temperature, "weather_humidity": weather_humidity, "weather_uv": weather_uv, "weather_rainfall": weather_rainfall, "soil_moisture": soil_moisture, "soil_ph": soil_ph, "soil_conductivity": soil_conductivity, "is_manual": is_manual, "field_id": field_id}]).execute()
+# def getFieldInfo(fieldid: str):
+#     try:
+#         dict = {"field_id": fieldid}
+#         response = __sbClient.rpc("get_field_info", dict).execute()
+#     except Exception as e:
+#         print(e)
+#         return {"error": "Failed to get field info"}
+#     finally:
+#         if response.data == []:
+#             return {"error": "Field not found. Please create a field first."}
+#         return response.data
 
-def sbUpdateEntry(entry_id: int, weather_temperature: float, weather_humidity: float, weather_uv: float, weather_rainfall: float, soil_moisture: float, soil_ph:float, soil_conductivity: float, is_manual: bool, field_id: int):
-    return sbClient.rpc("update_entry", {"entryid": entry_id, "weathertemperature": weather_temperature, "weatherhumidity": weather_humidity, "weatheruv": weather_uv, "weatherrainfall": weather_rainfall, "soilmoisture": soil_moisture, "soilph": soil_ph, "soilconductivity": soil_conductivity, "ismanual": is_manual, "fieldid": field_id}).execute()
+# def createField(field_area, field_name: str, field_tph: float, field_health: float, crop_type: str, user_id: str):
+#     if user_id == "":
+#         try:
+#             __sbClient.table("field_info").insert([{"field_area": field_area, "field_name": field_name, "field_tph": field_tph, "field_health": field_health, "crop_type": crop_type}]).execute()
+#         except Exception as e:
+#             print(e)
+#             return {"error": "Failed to create field"}
+#         finally:
+#             return {"success": "Field created"}
+#     try:
+#         __sbClient.table("field_info").insert([{"field_area": field_area, "field_name": field_name, "field_tph": field_tph, "field_health": field_health, "crop_type": crop_type, "user_id": user_id}]).execute()
+#     except Exception as e:
+#         print(e)
+#         return {"error": "Failed to create field"}
+#     finally:
+#         return {"success": "Field created"}
 
-def sbDeleteEntry(entry_id: int):
-    return sbClient.table("field_data").delete().eq("entry_id", entry_id).execute()
+# def updateField(field_id: int, field_area: object, field_name: str, field_tph: float, field_health: float, crop_type: str, user_id: int):
+#     try:
+#         __sbClient.table("field_info").update({"field_area": field_area, "field_name": field_name, "field_tph": field_tph, "field_health": field_health, "crop_type": crop_type, "user_id": user_id}).eq("field_id", field_id).execute()
+#     except Exception as e:
+#         print(e)
+#         return {"error": "Field not found"}
+#     finally:
+#         return {"success": "Field updated"}
+
+# def deleteField(field_id: int):
+#     try:
+#         __sbClient.table("field_info").delete().eq("field_id", field_id).execute()
+#     except Exception as e:
+#         print(e)
+#         return {"error": "Field not found"}
+#     finally:
+#         return {"success": "Field deleted"}
+
+# def createEntry(weather_temperature: float, weather_humidity: float, weather_uv: float, weather_rainfall: float, soil_moisture: float, soil_ph:float, soil_conductivity: float, is_manual: bool, field_id: int):
+#     try:
+#         __sbClient.table("field_data").insert([{"weather_temperature": weather_temperature, "weather_humidity": weather_humidity, "weather_uv": weather_uv, "weather_rainfall": weather_rainfall, "soil_moisture": soil_moisture, "soil_ph": soil_ph, "soil_conductivity": soil_conductivity, "is_manual": is_manual, "field_id": field_id}]).execute()
+#     except Exception as e:
+#         print(e)
+#         return {"error": "Failed to create entry"}
+#     finally:
+#         return {"success": "Entry created"}
+
+# def updateEntry(entry_id: int, weather_temperature: float, weather_humidity: float, weather_uv: float, weather_rainfall: float, soil_moisture: float, soil_ph:float, soil_conductivity: float, is_manual: bool, field_id: int):
+#     try:
+#         __sbClient.table("field_data").update({"weather_temperature": weather_temperature, "weather_humidity": weather_humidity, "weather_uv": weather_uv, "weather_rainfall": weather_rainfall, "soil_moisture": soil_moisture, "soil_ph": soil_ph, "soil_conductivity": soil_conductivity, "is_manual": is_manual, "field_id": field_id}).eq("entry_id", entry_id).execute()
+#     except Exception as e:
+#         print(e)
+#         return {"error": "Entry not found"}
+#     finally:
+#         return {"success": "Entry updated"}
+
+# def deleteEntry(entry_id: int):
+#     try:
+#         __sbClient.table("field_data").delete().eq("entry_id", entry_id).execute()
+#     except Exception as e:
+#         print(e)
+#         return {"error": "Entry not found"}
+#     finally:
+#         return {"success": "Entry deleted"}
