@@ -29,8 +29,7 @@ class API:
     def main(self):
         return {
             "Welcome": "Welcome to the TerraByte API",
-            "Documentation": "Visit Postman for more information",
-            "Link to Postman": "https://documenter.getpostman.com/view/12263200/TzJx9G8z"
+            "Link to Documentation": "https://documenter.getpostman.com/view/26558432/2sA3Qwaoyd"
         }
 
     def initModel(self):
