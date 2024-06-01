@@ -26,6 +26,10 @@ import { ref } from 'vue'
 import GoogleMap from '~/components/GoogleMap.vue'
 import { useConfirm } from 'primevue/useconfirm'
 
+definePageMeta({
+	middleware: 'auth',
+})
+
 const googleMapRef = ref() // Reference to the GoogleMap component
 const isDialogVisible = ref(false)
 const isDrawingEnabled = ref(false)
