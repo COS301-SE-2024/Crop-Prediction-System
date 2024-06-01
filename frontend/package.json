@@ -15,6 +15,7 @@
 	"dependencies": {
 		"@googlemaps/js-api-loader": "^1.16.6",
 		"@nuxt/eslint": "^0.3.13",
+		"chart.js": "^4.4.3",
 		"nuxt": "^3.11.2",
 		"nuxt-gmaps": "^1.2.10",
 		"primeicons": "^7.0.0",
