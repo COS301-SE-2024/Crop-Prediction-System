@@ -26,12 +26,12 @@ Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learni
 
 ## Project Status
 
-![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/COS301-SE-2024/Crop-Prediction-System?style=for-the-badge&logo=Github&link=https%3A%2F%2Fgithub.com%2FCOS301-SE-2024%2FCrop-Prediction-System%2Fissues)
-![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-closed/COS301-SE-2024/Crop-Prediction-System?style=for-the-badge&logo=Github&link=https%3A%2F%2Fgithub.com%2FCOS301-SE-2024%2FCrop-Prediction-System%2Fissues)
-![GitHub last commit](https://img.shields.io/github/last-commit/COS301-SE-2024/Crop-Prediction-System?style=for-the-badge)
-![GitHub Release](https://img.shields.io/github/v/release/COS301-SE-2024/Crop-Prediction-System?style=for-the-badge)
-![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscordapp.com%2Fapi%2Finvites%2FS2Jvfwx4wR%3Fwith_counts%3Dtrue&query=%24.approximate_presence_count&suffix=%20online%20(3%20bots)&style=for-the-badge&logo=discord&logoColor=white&label=Discord&labelColor=%237289da&color=black)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/COS301-SE-2024/Crop-Prediction-System?logo=Github&link=https%3A%2F%2Fgithub.com%2FCOS301-SE-2024%2FCrop-Prediction-System%2Fissues)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-closed/COS301-SE-2024/Crop-Prediction-System?logo=Github&link=https%3A%2F%2Fgithub.com%2FCOS301-SE-2024%2FCrop-Prediction-System%2Fissues)
+![GitHub last commit](https://img.shields.io/github/last-commit/COS301-SE-2024/Crop-Prediction-System?logo=Github)
+![GitHub Release](https://img.shields.io/github/v/release/COS301-SE-2024/Crop-Prediction-System?logo=Github)
 [![codecov](https://codecov.io/gh/COS301-SE-2024/Crop-Prediction-System/graph/badge.svg?token=WwjFFuFVr7)](https://codecov.io/gh/COS301-SE-2024/Crop-Prediction-System)
+[![System Uptime](https://img.shields.io/pingpong/uptime/sp_bf59a60096094040a09ea511e5b93cee?label=Website%20Uptime)](https://terrabyte.pingpong.host/)
 
 ### Project Day Countdown
 
@@ -40,6 +40,7 @@ Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learni
 ## Demo Material
 
 ![Demo1 Video]()
+
 ![Demo1 Presentation]()
 
 ## Documentation
