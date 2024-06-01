@@ -15,17 +15,17 @@
 import { ref } from 'vue';
 
 class Entry {
-    entry_id: number;
-    created_at: Date;
-    weather_temperature: number;
-    weather_humidity: number;
-    weather_uv: number;
-    weather_rainfall: number;
-    soil_moisture: number;
-    soil_ph: number;
-    soil_conductivity: number;
-    is_manual: boolean;
-    field_id: number;
+    entry_id: number = 0;
+    created_at: Date = new Date();
+    weather_temperature: number = 0;
+    weather_humidity: number = 0;
+    weather_uv: number = 0;
+    weather_rainfall: number = 0;
+    soil_moisture: number = 0;
+    soil_ph: number = 0;
+    soil_conductivity: number = 0;
+    is_manual: boolean = false;
+    field_id: number = 0;
 };
 
 const entries = ref<Entry[]>([]);

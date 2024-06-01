@@ -1,7 +1,7 @@
 <template>
 	<div class="h-screen w-full flex flex-col gap-5">
 		<div class="flex flex-row justify-between items-center">
-			<span class="font-bold text-xl">Fields</span>
+			<span class="font-bold text-xl dark:text-white">Fields</span>
 			<Button label="Add Field" @click="isDialogVisible = true" />
 		</div>
 
