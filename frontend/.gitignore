@@ -22,12 +22,3 @@ logs
 .env
 .env.*
 !.env.example
-
-# Python cache
-__pycache__
-
-# Pytest cache
-.pytest_cache
-.tool-versions
-
-*.vpp.*

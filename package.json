@@ -1,0 +1,28 @@
+{
+  "name": "crop-prediction-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "lint.fix": "eslint . --fix",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.5"
+  },
+  "lint-staged": {
+    "/frontend/**/*.vue": [
+      "pnpm run format",
+      "pnpm run lint"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "lint-staged"
+    }
+  }
+}
