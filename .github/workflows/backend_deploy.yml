@@ -1,0 +1,24 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - feature/api
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy to DigitalOcean
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DIGITAL_OCEAN_IP }}
+          username: root
+          password: ${{ secrets.DIGITAL_OCEAN_PASSWORD }}
+          script: |
+            cd /var/www/app/Crop-Prediction-System
+            ls -la
+            git pull

@@ -1,7 +1,7 @@
 <template>
 	<Menu :model="items" class="border-none">
 		<template #submenuheader="{ item }">
-			<span class="text-black ml-[-12px] font-bold p-0">{{ item.label }}</span>
+			<span class="text-black dark:text-white ml-[-12px] font-bold p-0">{{ item.label }}</span>
 		</template>
 		<template #item="{ item }">
 			<RouterLink v-if="!item.separator" :to="item.url" custom v-slot="{ href, isActive }">

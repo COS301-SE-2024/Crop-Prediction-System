@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-	darkMode: 'class',
+	darkMode: 'media',
 	content: ['presets/**/*.{js,vue,ts}'],
 	theme: {
 		extend: {
