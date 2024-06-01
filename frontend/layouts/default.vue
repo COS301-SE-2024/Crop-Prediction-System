@@ -6,7 +6,7 @@
 			</header>
 		</div>
 
-		<div class="p-5 h-full">
+		<div class="sm:p-5 h-full w-screen">
 			<slot />
 		</div>
 	</div>

@@ -12,7 +12,7 @@
 		<div class="grid xl:grid-cols-5 xl:grid-rows-2 w-full h-full gap-5 pb-5">
 			<div class="xl:col-span-3 xl:row-span-2 border border-surface-border p-6 rounded-lg shadow-lg h-full flex flex-col gap-2">
 				<div class="flex justify-between items-center">
-					<p class="text-xl font-[500]">Farm Map</p>
+					<p class="text-xl font-[500] dark:text-white">Farm Map</p>
 					<NuxtLink to="/inputs/manage-fields" class="text-sm text-primary-500">
 						<Button label="Edit" icon="pi pi-pencil" severity="secondary" text />
 					</NuxtLink>
