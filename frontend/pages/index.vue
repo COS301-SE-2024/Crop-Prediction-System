@@ -1,17 +1,16 @@
 <template>
-	<div class="flex flex-col gap-5 h-full">
-		<div class="flex space-x-5 w-full">
+	<div class="space-y-5 w-full">
+		<div class="flex space-x-5 w-full overflow-x-auto whitespace-nowrap">
 			<StatPanel
 				v-for="stat in stats"
 				:key="stat.title"
 				:title="stat.title"
 				:chart-input="stat.chartData"
 				:chart-type="stat.chartType"
-				class="w-full"
 			/>
 		</div>
-		<div class="grid grid-cols-5 grid-rows-2 w-full h-full gap-5 pb-5">
-			<div class="col-span-3 row-span-2 border border-surface-border p-6 rounded-lg shadow-lg h-full flex flex-col gap-2">
+		<div class="grid xl:grid-cols-5 xl:grid-rows-2 w-full h-full gap-5 pb-5">
+			<div class="xl:col-span-3 xl:row-span-2 border border-surface-border p-6 rounded-lg shadow-lg h-full flex flex-col gap-2">
 				<div class="flex justify-between items-center">
 					<p class="text-xl font-[500]">Farm Map</p>
 					<NuxtLink to="/inputs/manage-fields" class="text-sm text-primary-500">
@@ -20,9 +19,9 @@
 				</div>
 				<GoogleMap class="w-full h-full" />
 			</div>
-			<div class="col-span-2 row-span-2 grid gap-5 h-full">
+			<div class="xl:col-span-2 xl:row-span-2 grid gap-5 h-full">
 				<FieldData />
-				<div class="grid grid-cols-2 gap-5 items-center border border-surface-border p-6 rounded-lg shadow-lg">
+				<div class="grid xl:grid-cols-2 gap-5 items-center border border-surface-border p-6 rounded-lg shadow-lg">
 					<div class="flex flex-col gap-2">
 						<span class="text-lg font-[500]">Polar Stats</span>
 						<!-- actionable results -->

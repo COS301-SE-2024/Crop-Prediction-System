@@ -1,12 +1,20 @@
 <template>
-	<nav class="p-2 h-[65px] z-50 w-full shadow-md">
-		<div class="flex justify-between items-center h-full">
-			<Sidebar />
-			<img src="../assets/logo.png" alt="Logo" class="h-full object-cover self-center" />
-			<div class="flex flex-row items-center gap-4">
-				<i class="pi pi-bell" style="font-size: 1.5rem" />
-				<i class="pi pi-user" style="font-size: 1.5rem" />
-				<i class="pi pi-cog" style="font-size: 1.5rem" />
+	<nav class="p-2 px-5 z-50 w-full shadow-md">
+		<div class="flex justify-between xl:justify-normal xl:grid xl:grid-cols-3 h-full w-full">
+			<Sidebar class="justify-self-start"/>
+            <NuxtLink to="/" class="text-2xl font-[500] text-primary-500 justify-self-center self-center">
+                <img src="../assets/logo.png" alt="Logo" class="w-36 xl:h-full xl:w-auto object-cover" />
+            </NuxtLink>
+			<div class="flex flex-row items-center justify-end gap-4 justify-self-end">
+                <div class="p-5 sm:p-0">
+                    <i class="pi pi-bell" style="font-size: 1.5rem" />
+                </div>
+                <div class="hidden sm:block">
+                    <i class="pi pi-user" style="font-size: 1.5rem" />
+                </div>
+                <div class="hidden sm:block">
+                    <i class="pi pi-cog" style="font-size: 1.5rem" />
+                </div>
 			</div>
 		</div>
 	</nav>

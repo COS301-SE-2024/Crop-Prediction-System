@@ -8,7 +8,7 @@
         </template>
 
         <template #center>
-            <IconField iconPosition="left">
+            <IconField iconPosition="left" class="hidden lg:block">
                 <InputIcon>
                     <i class="pi pi-search" />
                 </InputIcon>
@@ -20,7 +20,7 @@
     </Toolbar>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 
 const items = ref([
