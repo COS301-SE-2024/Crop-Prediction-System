@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import LogsToolbar from '~/components/LogsToolbar.vue'
-import LogsView from '~/components/logsView.vue'
+import LogsView from '~/components/LogsView.vue'
 
 definePageMeta({
 	layout: 'default',
