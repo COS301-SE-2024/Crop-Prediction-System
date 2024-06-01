@@ -66,68 +66,64 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Password from 'primevue/password';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
+import { ref } from 'vue';
 
-definePageMeta({
-  layout: false,
-  head: {
-    title: 'TerraByte | Signup'
+const email = ref('');
+const password = ref('');
+const confirmPassword = ref('');
+
+const supabase = useSupabaseClient();
+
+const passwordErrors = () => {
+  const errors = [];
+  if (!/(?=.*[a-z])/.test(password.value)) {
+    errors.push('include at least one lowercase letter');
   }
-});
+  if (!/(?=.*[A-Z])/.test(password.value)) {
+    errors.push('include at least one uppercase letter');
+  }
+  if (!/(?=.*[0-9])/.test(password.value)) {
+    errors.push('include at least one number');
+  }
+  if (!/(?=.*[!@#$%^&*])/.test(password.value)) {
+    errors.push('include at least one symbol');
+  }
+  if (password.value.length < 8) {
+    errors.push('be at least 8 characters long');
+  }
+  return errors;
+};
 
-export default {
-  components: {
-    Password,
-    InputText,
-    Button,
-  },
-  data() {
-    return {
-      email: '',
-      password: '',
-      confirmPassword: '',
-    };
-  },
-  computed: {
-    passwordErrors() {
-      const errors = [];
-      if (!/(?=.*[a-z])/.test(this.password)) {
-        errors.push('include at least one lowercase letter');
-      }
-      if (!/(?=.*[A-Z])/.test(this.password)) {
-        errors.push('include at least one uppercase letter');
-      }
-      if (!/(?=.*[0-9])/.test(this.password)) {
-        errors.push('include at least one number');
-      }
-      if (!/(?=.*[!@#$%^&*])/.test(this.password)) {
-        errors.push('include at least one symbol');
-      }
-      if (this.password.length < 8) {
-        errors.push('be at least 8 characters long');
-      }
-      return errors;
-    },
-    isPasswordValid() {
-      return this.passwordErrors.length === 0;
-    },
-    isFormInvalid() {
-      return !this.email || !this.isPasswordValid || this.password !== this.confirmPassword;
-    },
-  },
-  methods: {
-    handleSignUp() {
-      if (this.isFormInvalid) {
-        return;
-      }
-      // Handle sign up logic here
-      console.log('Email:', this.email);
-      console.log('Password:', this.password);
-    },
-  },
+const isPasswordValid = () => {
+  return passwordErrors().length === 0;
+};
+
+const isFormInvalid = () => {
+  return !email.value || !isPasswordValid() || confirmPassword.value !== password.value;
+};
+
+const handleSignUp = async () => {
+  if (isFormInvalid()) {
+    return;
+  }
+  
+  try {
+    const { user, error } = await supabase.auth.signUp({
+      email: email.value,
+      password: password.value,
+    });
+    if (error) {
+      console.error('Error signing up:', error.message);
+    } else {
+      console.log('Signed up successfully:', user);
+    }
+  } catch (error) {
+    console.error('Error signing up:', error.message);
+  }
 };
 </script>
 
