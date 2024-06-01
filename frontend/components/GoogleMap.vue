@@ -63,7 +63,8 @@ function initializeMap(position) {
 	google.maps.event.addListener(drawingManager, 'overlaycomplete', (event) => {
 		if (event.type === google.maps.drawing.OverlayType.POLYGON) {
 			polygons.value.push(event.overlay)
-			emit('polygonDrawn', event.overlay.getPath().getArray())
+			const paths = event.overlay.getPath().getArray()
+			emit('polygonDrawn', paths)
 		}
 	})
 }

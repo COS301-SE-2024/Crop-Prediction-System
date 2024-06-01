@@ -38,6 +38,7 @@ const cropOptions = ref([
 ])
 const fieldsData = ref([])
 const confirm = useConfirm()
+const drawnPolygonPaths = ref([])
 
 const proceedToDrawing = () => {
 	isDialogVisible.value = false
@@ -51,10 +52,11 @@ const cancelAddField = () => {
 	googleMapRef.value.clearPolygon()
 }
 
-const handlePolygonDrawn = () => {
+const handlePolygonDrawn = (paths: google.maps.LatLng[]) => {
+	drawnPolygonPaths.value = paths
 	isDrawingEnabled.value = false
 	googleMapRef.value.setDrawingMode(false)
-	showConfirmationDialog(polygonPaths)
+	showConfirmationDialog()
 }
 
 const showConfirmationDialog = () => {
@@ -63,7 +65,7 @@ const showConfirmationDialog = () => {
 		header: 'Confirmation',
 		icon: 'pi pi-exclamation-triangle',
 		accept: () => {
-			saveField(polygonPaths)
+			saveField()
 		},
 		reject: () => {
 			cancelAddField() // Clear the polygon and reset the dialog
@@ -72,12 +74,16 @@ const showConfirmationDialog = () => {
 }
 
 const saveField = () => {
-	const paths = googleMapRef.value.getPolygonPaths()
-	if (paths.length > 0) {
+	if (drawnPolygonPaths.value.length > 0) {
 		fieldsData.value.push({
 			name: fieldName.value,
 			cropType: selectedCropType.value,
-			paths,
+			paths: drawnPolygonPaths.value,
+		})
+		console.log('Field saved:', {
+			name: fieldName.value,
+			cropType: selectedCropType.value,
+			paths: drawnPolygonPaths.value.toLocaleString(),
 		})
 		// Reset for the next field
 		fieldName.value = ''
