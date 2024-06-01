@@ -52,16 +52,16 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-	middleware: 'auth',
-})
-
 import StatPanel from '~/components/StatPanel.vue'
 import GoogleMap from '~/components/GoogleMap.vue'
 import Button from 'primevue/button'
 import ProgressBar from 'primevue/progressbar'
 import FieldData from '~/components/FieldData.vue'
 import PolarStat from '~/components/PolarStat.vue'
+
+definePageMeta({
+	middleware: 'auth',
+})
 
 const stats = [
 	{
