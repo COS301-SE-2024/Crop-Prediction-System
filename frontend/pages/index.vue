@@ -23,16 +23,16 @@
 				<FieldData />
 				<div class="grid xl:grid-cols-2 gap-5 items-center border border-surface-border p-6 rounded-lg shadow-lg">
 					<div class="flex flex-col gap-2">
-						<span class="text-lg font-[500]">Polar Stats</span>
+						<span class="text-lg font-[500] dark:text-surface-0">Polar Stats</span>
 						<!-- actionable results -->
-						<p class="text-sm text-surface-500">Actionable results based on the data</p>
-						<p>
+						<p class="text-sm text-surface-500 dark:text-surface-100">Actionable results based on the data</p>
+						<p class="dark:text-surface-400">
 							We'd suggest increasing the moisture levels in the soil to improve the overall crop health. This will
 							also help with the current temperature and humidity levels.
 						</p>
 						<div class="grid gap-3">
 							<div v-for="(value, i) in polarSupportingStat" :key="value">
-								<span class="text-sm font-[500]">{{ polarstat[0].labels[i] }}: {{ value * 100 }}%</span>
+								<span class="text-sm font-[500] dark:text-surface-300">{{ polarstat[0].labels[i] }}: {{ value * 100 }}%</span>
 								<ProgressBar :value="value * 100" :showValue="false" style="height: 12px" />
 							</div>
 						</div>

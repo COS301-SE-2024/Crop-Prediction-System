@@ -4,7 +4,8 @@
 			<div class="flex flex-col justify-between h-full items-center p-4">
 				<div class="flex flex-col gap-3 items-center w-full">
 					<div class="flex flex-row justify-between items-center w-full">
-						<img src="../assets/logo.png" alt="Logo" class="object-fill w-[70%] h-full" />
+						<img src="../assets/logo.png" alt="Logo" class="object-fill w-[70%] h-full dark:hidden block" />
+                        <img src="../assets/logo-alt.png" alt="Logo" class="object-fill w-[70%] h-full hidden dark:block" />
 						<Button icon="pi pi-times" @click="closeCallback" rounded text severity="secondary" aria-label="Filter" />
 					</div>
 					<div class="w-full max-h-[calc(100vh-200px)] overflow-y-auto">
