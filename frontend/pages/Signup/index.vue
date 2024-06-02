@@ -1,131 +1,95 @@
-<template>
-  <img src="../../assets/logo.png" alt="Logo" class="ml-4 mt-4 mb-4">
-  <div class="min-h-screen flex flex-col mb-4 items-center">
-    <h1 class="text-3xl font-bold mt-4 mb-2">Welcome to TerraByte!</h1>
-    <p class="text-lg text-center mb-4">Please sign up using your<br />personal details below.</p>
-    <div class="p-6 rounded-2xl shadow-md w-full max-w-md">
-      <h2 class="text-2xl font-semibold mb-4">Sign up</h2>
+<script setup lang>
+import Card from 'primevue/card'
+import InputText from 'primevue/inputtext'
+import { ref } from 'vue'
+import Password from 'primevue/password'
 
-      <div class="mb-4">
-        <label for="email" class="block text-sm font-medium">Email Address</label>
-        <InputText
-          id="email"
-          v-model="email"
-          type="email"
-          placeholder="email@example.com"
-          required
-          class="mt-1 block w-full"
-        />
-        <small v-if="!email" class="text-red-500 text-sm">Please provide an email address</small>
-      </div>
+const client = useSupabaseClient()
+const email = ref(null)
+const password = ref(null)
+const confirmPassword = ref(null)
+const errorMsg = ref(null)
+const successMsg = ref(null)
 
-      <div class="mb-4">
-        <label for="password" class="block text-sm font-medium">Password</label>
-        <Password
-          id="password"
-          v-model="password"
-          placeholder="Password"
-          feedback
-          :toggleMask="true"
-          promptLabel="Password"
-          weakLabel="Weak Password"
-          mediumLabel="Moderate Password"
-          strongLabel="Strong Password"
-          required
-          class="mt-1 block w-full"
-        />
-        <small v-if="password && passwordErrors.length" class="text-red-500 text-sm">
-          Password must:
-          <ul>
-            <li v-for="(error, index) in passwordErrors" :key="index">{{ error }}</li>
-          </ul>
-        </small>
-      </div>
+async function signUp() {
+	try {
+		const { error } = await client.auth.signUp({
+			email: email.value,
+			password: password.value,
+		})
+		if (error) throw error
+		successMsg.value = 'Check your email to confirm your account.'
+	} catch (error) {
+		errorMsg.value = error.value
+	}
+}
 
-      <div class="mb-4">
-        <label for="confirmPassword" class="block text-sm font-medium">Confirm Password</label>
-        <Password
-          id="confirmPassword"
-          v-model="confirmPassword"
-          placeholder="Password"
-          :toggleMask="true"
-          promptLabel="Confirm Password"
-          required
-          class="mt-1 block w-full"
-        />
-        <small v-if="confirmPassword && confirmPassword !== password" class="text-red-500 text-sm">Passwords do not match.</small>
-      </div>
-
-      <Button
-        label="Submit"
-        @click="handleSignUp"
-        :disabled="isFormInvalid"
-        class="w-full py-2 mt-4 mb-2"
-      />
-    </div>
-  </div>
-</template>
-
-<script setup>
-import Password from 'primevue/password';
-import InputText from 'primevue/inputtext';
-import Button from 'primevue/button';
-import { ref } from 'vue';
-
-const email = ref('');
-const password = ref('');
-const confirmPassword = ref('');
-
-const supabase = useSupabaseClient();
-
-const passwordErrors = () => {
-  const errors = [];
-  if (!/(?=.*[a-z])/.test(password.value)) {
-    errors.push('include at least one lowercase letter');
-  }
-  if (!/(?=.*[A-Z])/.test(password.value)) {
-    errors.push('include at least one uppercase letter');
-  }
-  if (!/(?=.*[0-9])/.test(password.value)) {
-    errors.push('include at least one number');
-  }
-  if (!/(?=.*[!@#$%^&*])/.test(password.value)) {
-    errors.push('include at least one symbol');
-  }
-  if (password.value.length < 8) {
-    errors.push('be at least 8 characters long');
-  }
-  return errors;
-};
-
-const isPasswordValid = () => {
-  return passwordErrors().length === 0;
-};
-
-const isFormInvalid = () => {
-  return !email.value || !isPasswordValid() || confirmPassword.value !== password.value;
-};
-
-const handleSignUp = async () => {
-  if (isFormInvalid()) {
-    return;
-  }
-  
-  try {
-    const { user, error } = await supabase.auth.signUp({
-      email: email.value,
-      password: password.value,
-    });
-    if (error) {
-      console.error('Error signing up:', error.message);
-    } else {
-      console.log('Signed up successfully:', user);
-    }
-  } catch (error) {
-    console.error('Error signing up:', error.message);
-  }
-};
+definePageMeta({
+	layout: 'auth',
+})
 </script>
 
-<style scoped>
-</style>
+<template>
+	<div class="w-full h-screen flex flex-col justify-center items-center p-4">
+		<img src="~/assets/logo.png" alt="Logo" class="absolute top-2 left-2" />
+		<div class="self-center">
+			<div class="flex flex-col gap-5 items-center w-[400px] max-w-lg">
+				<Card class="w-full border border-surface-border">
+					<template #title>
+						<h1>Sign up</h1>
+					</template>
+					<template #content>
+						<div class="flex flex-col gap-3">
+							<div class="flex flex-col gap-2 items-start">
+								<h3 class="font-semibold">Email Address</h3>
+								<InputText
+									id="email"
+									type="email"
+									class="w-full"
+									v-model="email"
+									placeholder="email@example.com"
+								/>
+							</div>
+							<div class="flex flex-col gap-2 items-start">
+								<h3 class="font-semibold">Password</h3>
+								<div class="card flex justify-center w-full">
+									<Password v-model="password" toggleMask class="w-full">
+										<template #header>
+											<h6 class="font-medium m-0 mb-2 text-base">Pick a password</h6>
+										</template>
+										<template #footer>
+											<Divider />
+											<p class="mt-2 p-0 mb-2">Suggestions</p>
+											<ul class="p-0 pl-2 m-0 ml-2 list-disc leading-6" style="line-height: 1.5">
+												<li>At least one lowercase</li>
+												<li>At least one uppercase</li>
+												<li>At least one numeric</li>
+												<li>Minimum 8 characters</li>
+											</ul>
+										</template>
+									</Password>
+								</div>
+							</div>
+							<div class="flex flex-col gap-2 items-start">
+								<h3 class="font-semibold">Confirm Password</h3>
+								<div class="card flex justify-center w-full">
+									<Password v-model="confirmPassword" toggleMask class="w-full">
+										<template #header>
+											<h6 class="font-medium m-0 mb-2 text-base">Confirm your password</h6>
+										</template>
+									</Password>
+								</div>
+							</div>
+							<small v-if="errorMsg" class="text-red-500">{{ errorMsg }}</small>
+							<small v-if="successMsg" class="text-primary">{{ successMsg }}</small>
+							<Button class="w-full" label="Sing up" @click="signUp" />
+							<small class="text-center"
+								>Already have an account? <NuxtLink to="/login" class="underline">Login </NuxtLink></small
+							>
+						</div>
+					</template>
+				</Card>
+			</div>
+		</div>
+	</div>
+</template>
