@@ -8,7 +8,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, email } from '@vuelidate/validators'
 
 const client = useSupabaseClient()
-// const email = ref(null)
+const userEmail = ref('')
 const password = ref(null)
 const errorMsg = ref(null)
 
@@ -17,7 +17,7 @@ const rules = {
   password: { required }
 }
 
-const validation = useVuelidate(rules, { email, password })
+const validation = useVuelidate(rules, { email: userEmail, password })
 
 const signIn = async () => {
   try {
@@ -25,7 +25,7 @@ const signIn = async () => {
     if (validation.value.$error) return
 
     const { error } = await client.auth.signInWithPassword({
-      email: email.value,
+      email: userEmail.value,
       password: password.value
     })
     if (error) throw error
@@ -57,7 +57,7 @@ definePageMeta({
 					id="email"
 					type="email"
 					class="w-full"
-					v-model="email"
+					v-model="userEmail" 
 					placeholder="email@example.com"
 					:class="{ 'p-invalid': validation.email.$dirty && validation.email.$error }"
 				  />
@@ -84,5 +84,4 @@ definePageMeta({
 	  </div>
 	</div>
 </template>
-  
   
