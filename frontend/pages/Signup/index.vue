@@ -3,25 +3,47 @@ import Card from 'primevue/card'
 import InputText from 'primevue/inputtext'
 import { ref } from 'vue'
 import Password from 'primevue/password'
+import { useVuelidate } from '@vuelidate/core'
+import { required, email, minLength, helpers } from '@vuelidate/validators'
 
 const client = useSupabaseClient()
-const email = ref(null)
+// const email = ref(null)
 const password = ref(null)
 const confirmPassword = ref(null)
 const errorMsg = ref(null)
 const successMsg = ref(null)
 
+const passwordPattern = helpers.regex('passwordPattern', /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{"':;?/>.<,]).{8,}$/)
+
+const rules = {
+  email: { required, email },
+  password: { required, minLength: minLength(8) },
+  confirmPassword: { required }
+}
+
+const validation = useVuelidate(rules, { email, password, confirmPassword })
+
 async function signUp() {
-	try {
-		const { error } = await client.auth.signUp({
-			email: email.value,
-			password: password.value,
-		})
-		if (error) throw error
-		successMsg.value = 'Check your email to confirm your account.'
-	} catch (error) {
-		errorMsg.value = error.value
+  try {
+    validation.value.$touch()
+    if (validation.value.$error) {
+		return
 	}
+
+    if (password.value !== confirmPassword.value) {
+      errorMsg.value = 'Passwords do not match'
+      return
+    }
+
+    const { error } = await client.auth.signUp({
+      email: email.value,
+      password: password.value,
+    })
+    if (error) throw error
+    successMsg.value = 'Check your email to confirm your account.'
+  } catch (error) {
+    errorMsg.value = error.message
+  }
 }
 
 definePageMeta({
@@ -39,7 +61,7 @@ definePageMeta({
 						<h1>Sign up</h1>
 					</template>
 					<template #content>
-						<div class="flex flex-col gap-3">
+						<form @submit.prevent="signUp" class="flex flex-col gap-3">
 							<div class="flex flex-col gap-2 items-start">
 								<h3 class="font-semibold">Email Address</h3>
 								<InputText
@@ -48,7 +70,9 @@ definePageMeta({
 									class="w-full"
 									v-model="email"
 									placeholder="email@example.com"
+									:class="{ 'p-invalid': validation.email.$dirty && validation.email.$error }"
 								/>
+								<small v-if="validation.email.$dirty && validation.email.$error" class="text-red-500">{{ validation.email.$message }}</small>
 							</div>
 							<div class="flex flex-col gap-2 items-start">
 								<h3 class="font-semibold">Password</h3>
@@ -68,6 +92,7 @@ definePageMeta({
 											</ul>
 										</template>
 									</Password>
+									<small v-if="validation.password.$dirty && validation.password.$error" class="text-red-500">{{ validation.password.$message }}</small>
 								</div>
 							</div>
 							<div class="flex flex-col gap-2 items-start">
@@ -78,6 +103,7 @@ definePageMeta({
 											<h6 class="font-medium m-0 mb-2 text-base">Confirm your password</h6>
 										</template>
 									</Password>
+									<small v-if="validation.confirmPassword.$dirty && validation.confirmPassword.$error" class="text-red-500">{{ validation.confirmPassword.$message }}</small>
 								</div>
 							</div>
 							<small v-if="errorMsg" class="text-red-500">{{ errorMsg }}</small>
@@ -86,7 +112,7 @@ definePageMeta({
 							<small class="text-center"
 								>Already have an account? <NuxtLink to="/login" class="underline">Login </NuxtLink></small
 							>
-						</div>
+						</form>
 					</template>
 				</Card>
 			</div>
