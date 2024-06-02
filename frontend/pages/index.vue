@@ -10,7 +10,9 @@
 			/>
 		</div>
 		<div class="grid xl:grid-cols-5 xl:grid-rows-2 w-full h-full gap-5 pb-5">
-			<div class="xl:col-span-3 xl:row-span-2 border border-surface-border p-6 rounded-lg shadow-lg h-full flex flex-col gap-2">
+			<div
+				class="xl:col-span-3 xl:row-span-2 border border-surface-border p-6 rounded-lg shadow-lg h-full flex flex-col gap-2"
+			>
 				<div class="flex justify-between items-center">
 					<p class="text-xl font-[500] dark:text-white">Farm Map</p>
 					<NuxtLink to="/inputs/manage-fields" class="text-sm text-primary-500">
@@ -32,7 +34,9 @@
 						</p>
 						<div class="grid gap-3">
 							<div v-for="(value, i) in polarSupportingStat" :key="value">
-								<span class="text-sm font-[500] dark:text-surface-300">{{ polarstat[0].labels[i] }}: {{ value * 100 }}%</span>
+								<span class="text-sm font-[500] dark:text-surface-300"
+									>{{ polarstat[0].labels[i] }}: {{ value * 100 }}%</span
+								>
 								<ProgressBar :value="value * 100" :showValue="false" style="height: 12px" />
 							</div>
 						</div>
@@ -58,6 +62,7 @@ import Button from 'primevue/button'
 import ProgressBar from 'primevue/progressbar'
 import FieldData from '~/components/FieldData.vue'
 import PolarStat from '~/components/PolarStat.vue'
+import { ref } from 'vue'
 
 definePageMeta({
 	middleware: 'auth',
