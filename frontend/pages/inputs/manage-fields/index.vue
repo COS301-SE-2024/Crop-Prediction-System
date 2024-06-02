@@ -108,14 +108,14 @@ const saveField = async () => {
 		// crop_type: Optional[str] = None
 		// user_id: Optional[str] = None
 		//  create an array called dataArray of objects to be sent to the backend
-		let FieldsDataPaths:any = []
+		const FieldsDataPaths: number[][] = []
 		// convert fieldsData from string to float. '(23.00000,22.123)' to [23.00000, 22.123]
-		fieldsData.value.forEach((field:any) => {
-			let fieldPaths:any = []
-			field.paths.forEach((path:any) => {
-				let pathString = path.toString().replace('(', '').replace(')', '').split(',')
-				let pathFloat = pathString.map((path:any) => parseFloat(path))
-				fieldPaths.push(pathFloat)
+		fieldsData.value.forEach((field: { name: string, cropType: { name: string }, paths:[] }) => {
+			const fieldPaths:number[] = []
+			field.paths.forEach((path:string) => {
+				const pathString = path.toString().replace('(', '').replace(')', '').split(',')
+				const pathFloat: number[] = pathString.map((path:string) => parseFloat(path))
+				fieldPaths.push(...pathFloat)
 			})
 			FieldsDataPaths.push(fieldPaths)
 		})
@@ -124,7 +124,7 @@ const saveField = async () => {
 			// convert to string
 			currentUser.id = currentUser.id.toString()
 		}
-		let returnData = {
+		const returnData = {
 			field_name: fieldName.value,
 			crop_type: selectedCropType.value.name,
 			field_area: {
