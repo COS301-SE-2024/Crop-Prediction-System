@@ -15,5 +15,6 @@ import LogsView from '~/components/LogsView.vue'
 
 definePageMeta({
 	layout: 'default',
+	middleware: 'auth',
 })
 </script>

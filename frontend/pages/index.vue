@@ -59,6 +59,10 @@ import ProgressBar from 'primevue/progressbar'
 import FieldData from '~/components/FieldData.vue'
 import PolarStat from '~/components/PolarStat.vue'
 
+definePageMeta({
+	middleware: 'auth',
+})
+
 const stats = [
 	{
 		title: 'Overall Crop Health',
