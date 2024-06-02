@@ -4,22 +4,34 @@ import Password from 'primevue/password'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import { ref } from 'vue'
+import { useVuelidate } from '@vuelidate/core'
+import { required, email } from '@vuelidate/validators'
 
 const client = useSupabaseClient()
-const email = ref(null)
+// const email = ref(null)
 const password = ref(null)
 const errorMsg = ref(null)
 
+const rules = {
+  email: { required, email },
+  password: { required }
+}
+
+const validation = useVuelidate(rules, { email, password })
+
 const signIn = async () => {
   try {
-	const { error } = await client.auth.signInWithPassword({
-	  email: email.value,
-	  password: password.value,
-	})
-	if (error) throw error
-	navigateTo('/')
+    validation.value.$touch()
+    if (validation.value.$error) return
+
+    const { error } = await client.auth.signInWithPassword({
+      email: email.value,
+      password: password.value
+    })
+    if (error) throw error
+    navigateTo('/')
   } catch (error) {
-	errorMsg.value = error.message
+    errorMsg.value = error.message
   }
 }
 
@@ -47,7 +59,9 @@ definePageMeta({
 					class="w-full"
 					v-model="email"
 					placeholder="email@example.com"
+					:class="{ 'p-invalid': validation.email.$dirty && validation.email.$error }"
 				  />
+				  <small v-if="validation.email.$dirty && validation.email.$error" class="text-red-500">{{ validation.email.$message }}</small>
 				</div>
 				<div class="flex flex-col gap-2 items-start">
 				  <h3 class="font-semibold">Password</h3>
@@ -57,6 +71,7 @@ definePageMeta({
 						<h6 class="font-medium m-0 mb-2 text-base">Enter your password</h6>
 					  </template>
 					</Password>
+					<small v-if="validation.password.$dirty && validation.password.$error" class="text-red-500">{{ validation.password.$message }}</small>
 				  </div>
 				</div>
 				<small v-if="errorMsg" class="text-red-500">{{ errorMsg }}</small>
