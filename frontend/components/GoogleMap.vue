@@ -29,6 +29,8 @@ const polygonOptions = {
 onMounted(async () => {
 	await mapsLoader.load() // Use the loader from the plugin
 
+	await fetchFields()
+
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(
 			initializeMap, // Pass the position directly to initializeMap
@@ -41,8 +43,7 @@ onMounted(async () => {
 })
 
 function initializeMap(position) {
-	const center = position ? { lat: position.coords.latitude, lng: position.coords.longitude } : { lat: -25.7479, lng: 28.2293 } // Default to Centurion, Gauteng (approx.)
-
+	const center = position ? { lat: position.coords.latitude, lng: position.coords.longitude } : { lat: -25.7479, lng: 28.2293 } // Default
 	map = new google.maps.Map(mapContainer.value, {
 		center, // Set the map's center to the current location
 		zoom: 19, // Adjust the default zoom level as needed
@@ -67,11 +68,28 @@ function initializeMap(position) {
 			emit('polygonDrawn', paths)
 		}
 	})
+
+	drawExistingPolygons()
 }
 
 function handleGeolocationError(error = null) {
 	console.warn('Error getting geolocation:', error ? error.message : 'Not supported')
 	initializeMap()
+}
+
+function drawExistingPolygons() {
+	fieldInfos.value.forEach((field, index) => {
+		const polygonCoords = field.field_area.coordinates[0].map((coord) => ({
+			lat: parseFloat(coord[0]),
+			lng: parseFloat(coord[1]),
+		}))
+		const polygon = new google.maps.Polygon({
+			paths: polygonCoords,
+			...polygonOptions,
+			map: map,
+		})
+		polygons.value.push(polygon)
+	})
 }
 
 onUnmounted(() => {
@@ -92,6 +110,35 @@ function setDrawingMode(enabled) {
 function getPolygonPaths() {
 	return polygons.value.map((polygon) => polygon.getPath().getArray())
 }
+
+const fieldInfos = ref([])
+const error = ref(null)
+
+async function fetchFields() {
+	try {
+		const promises = []
+		for (let fieldid = 106; fieldid <= 109; fieldid++) {
+			promises.push(
+				useFetch('/api/fieldInfo', {
+					params: { fieldid: fieldid },
+				}).then((response) => response.data),
+			)
+		}
+
+		const results = await Promise.all(promises)
+
+		results.forEach((result) => {
+			if (result.error) {
+				throw new Error(result.error)
+			}
+			fieldInfos.value.push(result.value[0])
+		})
+	} catch (err) {
+		error.value = err.message
+	}
+}
+
+// console.log(`FieldInfos`, fieldInfos.value[0].field_area.coordinates);
 
 defineExpose({
 	getPolygonPaths,
