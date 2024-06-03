@@ -16,7 +16,6 @@ const errorMsg = ref('')
 const successMsg = ref('')
 
 const passwordPattern = helpers.regex('passwordPattern', /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{"':;?/>.<,]).{8,}$/)
-const { sameAsPassword } = helpers.withMessage('Passwords do not match.', sameAs)
 
 const rules = {
   userEmail: { required, email },
@@ -49,6 +48,9 @@ const passwordChecks = computed(() => {
   }
   return checks
 })
+
+const passwordsMatch = computed(() => password.value === confirmPassword.value)
+
 
 definePageMeta({
 	layout: 'auth',
@@ -102,13 +104,13 @@ definePageMeta({
               </div>
               <div class="flex flex-col gap-2 items-start">
                 <h3 class="font-semibold">Confirm Password</h3>
-                <div class="card flex justify-center w-full">
-                  <Password v-model="confirmPassword" toggleMask class="w-full">
+                <div class="card flex flex-col justify-center w-full">
+                  <Password v-model="confirmPassword" toggleMask class="w-full" :feedback="false">
                     <template #header>
                       <h6 class="font-medium m-0 mb-2 text-base">Confirm your password</h6>
                     </template>
                   </Password>
-                  <small v-if="validation.confirmPassword.$dirty && validation.confirmPassword.$error" class="text-red-500">{{ validation.confirmPassword.sameAsPassword.$message }}</small>
+		  <small v-if="!passwordsMatch" class="w-full text-red-500">Passwords do not match</small>
                 </div>
               </div>
               <small v-if="errorMsg" class="text-red-500">{{ errorMsg }}</small>
