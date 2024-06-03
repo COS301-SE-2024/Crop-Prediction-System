@@ -1,5 +1,5 @@
 <template>
-	<div class="border border-surface-border p-6 rounded-lg shadow-lg text-sm">
+	<div class="border border-surface-border p-2 xl:p-6 rounded-lg shadow-lg text-sm">
 		<DataTable :value="fields" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
 			<Column field="name" header="Name" style="width: 25%">
 				<template #body="slotProps">
@@ -15,7 +15,7 @@
 					</Tag>
 				</template>
 			</Column>
-			<Column field="yield" header="Yield (T/H)" style="width: 25%"></Column>
+			<Column field="yield" header="T/H" style="width: 25%"></Column>
 			<Column field="cropType" header="Crop Type" style="width: 25%"></Column>
 		</DataTable>
 	</div>
