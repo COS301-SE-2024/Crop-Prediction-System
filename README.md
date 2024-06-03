@@ -53,6 +53,8 @@ Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learni
 
 ![Link to Github Project Board](https://github.com/orgs/COS301-SE-2024/projects/57/views/4)
 
+![Link to Deployment Documentation](https://github.com/COS301-SE-2024/Crop-Prediction-System/wiki/Netlify-Deployment)
+
 ## Meet The Team
 
 <div align=center>
