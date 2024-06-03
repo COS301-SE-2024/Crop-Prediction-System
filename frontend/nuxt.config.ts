@@ -3,7 +3,7 @@ import path from 'path';
 export default defineNuxtConfig({
   css: ['./assets/css/tailwind.css', 'primeicons/primeicons.css'],
   devtools: { enabled: true },
-  modules: ["@nuxt/eslint", "@nuxtjs/tailwindcss", "nuxt-primevue", "@nuxtjs/supabase"],
+  modules: ["@nuxt/eslint", "@nuxtjs/tailwindcss", "nuxt-primevue", "@nuxtjs/supabase", "@nuxt/test-utils/module"],
   primevue: {
     options: {
       unstyled: true

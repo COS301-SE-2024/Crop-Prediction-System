@@ -62,6 +62,7 @@ import Button from 'primevue/button'
 import ProgressBar from 'primevue/progressbar'
 import FieldData from '~/components/FieldData.vue'
 import PolarStat from '~/components/PolarStat.vue'
+import { ref } from 'vue'
 
 definePageMeta({
 	middleware: 'auth',

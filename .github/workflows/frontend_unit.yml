@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: Frontend Unit Tests
 
 on:
   workflow_dispatch:
@@ -20,12 +20,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
         working-directory: ./frontend
-      - name: Run Formatter
-        run: pnpm run format
+      - name: Run tests
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: pnpm run test
         working-directory: ./frontend
-      - name: Run Linter
-        run: pnpm run lint
-        working-directory: ./frontend
-      - name: Run Build
-        run: pnpm run build
-        working-directory: ./frontend
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
