@@ -2,8 +2,6 @@ name: pytest-codecov
 
 on:
   workflow_dispatch:
-  push:
-    branches: [feature/initialSetup]
   pull_request:
     branches: [main, dev]
 
