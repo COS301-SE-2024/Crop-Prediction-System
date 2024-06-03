@@ -1,12 +1,12 @@
 <template>
-	<div>
+	<div class="dark:bg-surface-800">
 		<div>
 			<header class="sticky">
 				<Navbar />
 			</header>
 		</div>
 
-		<div class="mt-5 min-h-screen w-[95%] m-auto">
+		<div class="sm:p-5 h-full w-screen">
 			<slot />
 		</div>
 	</div>
