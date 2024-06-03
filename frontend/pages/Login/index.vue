@@ -66,7 +66,7 @@ definePageMeta({
 				<div class="flex flex-col gap-2 items-start">
 				  <h3 class="font-semibold">Password</h3>
 				  <div class="card flex justify-center w-full">
-					<Password v-model="password" toggleMask class="w-full">
+					<Password v-model="password" toggleMask class="w-full" :feedback="false">
 					  <template #header>
 						<h6 class="font-medium m-0 mb-2 text-base">Enter your password</h6>
 					  </template>
