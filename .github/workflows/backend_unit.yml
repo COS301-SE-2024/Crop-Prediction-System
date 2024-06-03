@@ -1,9 +1,11 @@
 name: pytest-codecov
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - '**'
+    - feature/initialSetup
+  pull_request:
+    branches: [main, dev]
 
 jobs:
   automated-backend-unit-tests:
@@ -28,7 +30,6 @@ jobs:
         run: |
           pytest --cov=backend
           pytest --cov-report xml
-
 
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v2
