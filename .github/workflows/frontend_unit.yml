@@ -3,7 +3,7 @@ name: Continuous Integration
 on:
   workflow_dispatch:
   push:
-    - feature/initialSetup
+    branches: [feature/initialSetup]
   pull_request:
     branches: [main, dev]
 jobs:
