@@ -1,0 +1,34 @@
+name: Continuous Integration
+
+on:
+  workflow_dispatch:
+  push:
+    - feature/initialSetup
+  pull_request:
+    branches: [main, dev]
+jobs:
+  format-lint-build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: v21.7.0
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+        working-directory: ./frontend
+      - name: Run tests
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: pnpm run test
+        working-directory: ./frontend
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
