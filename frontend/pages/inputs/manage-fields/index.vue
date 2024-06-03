@@ -27,13 +27,14 @@ import GoogleMap from '~/components/GoogleMap.vue'
 import { useConfirm } from 'primevue/useconfirm'
 
 // get userID
-const session = useSupabaseClient();
-let currentUser = null;
+const session = useSupabaseClient()
+let currentUser = null
 if (session) {
-  const { data: { user } } = await session.auth.getUser();
- if (user) 
-	currentUser = user;
-  console.log("user: ", user.id);
+	const {
+		data: { user },
+	} = await session.auth.getUser()
+	if (user) currentUser = user
+	console.log('user: ', user.id)
 }
 
 definePageMeta({
@@ -110,17 +111,17 @@ const saveField = async () => {
 		//  create an array called dataArray of objects to be sent to the backend
 		const FieldsDataPaths: number[][] = []
 		// convert fieldsData from string to float. '(23.00000,22.123)' to [23.00000, 22.123]
-		fieldsData.value.forEach((field: { name: string, cropType: { name: string }, paths:[] }) => {
-			const fieldPaths:number[] = []
-			field.paths.forEach((path:string) => {
+		fieldsData.value.forEach((field: { name: string; cropType: { name: string }; paths: [] }) => {
+			const fieldPaths: number[] = []
+			field.paths.forEach((path: string) => {
 				const pathString = path.toString().replace('(', '').replace(')', '').split(',')
-				const pathFloat: number[] = pathString.map((path:string) => parseFloat(path))
+				const pathFloat: number[] = pathString.map((path: string) => parseFloat(path))
 				fieldPaths.push(...pathFloat)
 			})
 			FieldsDataPaths.push(fieldPaths)
 		})
 		//  ! fix type to give the correct type
-		if(currentUser){
+		if (currentUser) {
 			// convert to string
 			currentUser.id = currentUser.id.toString()
 		}
@@ -131,16 +132,16 @@ const saveField = async () => {
 				type: 'Polygon',
 				coordinates: FieldsDataPaths,
 			},
-			user_id: currentUser ? currentUser.id : "null",
+			user_id: currentUser ? currentUser.id : 'null',
 		}
 		console.log('returnData:', returnData)
 
-		try{
-			const response = await $fetch('/api/createField',{
+		try {
+			const response = await $fetch('/api/createField', {
 				method: 'POST',
-				body: returnData
+				body: returnData,
 			})
-		}catch(error){
+		} catch (error) {
 			console.error('Error:', error)
 		}
 
