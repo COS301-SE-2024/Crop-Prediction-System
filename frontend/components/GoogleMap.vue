@@ -26,10 +26,13 @@ const polygonOptions = {
 	draggable: true,
 }
 
+const fieldInfos = ref([])
+const error = ref(null)
+
 onMounted(async () => {
 	await mapsLoader.load() // Use the loader from the plugin
 
-	await fetchFields()
+	await fetchField(108) // Fetch only the field with ID 108
 
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(
@@ -111,30 +114,21 @@ function getPolygonPaths() {
 	return polygons.value.map((polygon) => polygon.getPath().getArray())
 }
 
-const fieldInfos = ref([])
-const error = ref(null)
-
-async function fetchFields() {
+async function fetchField(fieldid) {
 	try {
-		const promises = []
-		for (let fieldid = 106; fieldid <= 109; fieldid++) {
-			promises.push(
-				useFetch('/api/fieldInfo', {
-					params: { fieldid: fieldid },
-				}).then((response) => response.data),
-			)
-		}
-
-		const results = await Promise.all(promises)
-
-		results.forEach((result) => {
-			if (result.error) {
-				throw new Error(result.error)
-			}
-			fieldInfos.value.push(result.value[0])
+		console.log(`Fetching field with ID: ${fieldid}`)
+		const response = await $fetch('/api/fieldInfo', {
+			params: { fieldid: fieldid },
 		})
+
+		if (response.error) {
+			throw new Error(response.error)
+		}
+		console.log(`Fetched data for field ${fieldid}:`, response.value[0])
+		fieldInfos.value.push(response.value[0])
 	} catch (err) {
 		error.value = err.message
+		console.error(`Error fetching field with ID ${fieldid}:`, err.message)
 	}
 }
 
