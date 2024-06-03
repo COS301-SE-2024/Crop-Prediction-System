@@ -12,6 +12,8 @@ export default withNuxt({
     "vue/attribute-hyphenation": "off",
     "vue/v-on-event-hyphenation": "off",
     "vue/attributes-order": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "vue/no-multiple-template-root": "off",
   },
 })
 // Your custom configs here

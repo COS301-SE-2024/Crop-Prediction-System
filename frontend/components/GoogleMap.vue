@@ -26,8 +26,13 @@ const polygonOptions = {
 	draggable: true,
 }
 
+const fieldInfos = ref([])
+const error = ref(null)
+
 onMounted(async () => {
 	await mapsLoader.load() // Use the loader from the plugin
+
+	await fetchField(108) // Fetch only the field with ID 108
 
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(
@@ -41,8 +46,7 @@ onMounted(async () => {
 })
 
 function initializeMap(position) {
-	const center = position ? { lat: position.coords.latitude, lng: position.coords.longitude } : { lat: -25.7479, lng: 28.2293 } // Default to Centurion, Gauteng (approx.)
-
+	const center = position ? { lat: position.coords.latitude, lng: position.coords.longitude } : { lat: -25.7479, lng: 28.2293 } // Default
 	map = new google.maps.Map(mapContainer.value, {
 		center, // Set the map's center to the current location
 		zoom: 19, // Adjust the default zoom level as needed
@@ -63,14 +67,32 @@ function initializeMap(position) {
 	google.maps.event.addListener(drawingManager, 'overlaycomplete', (event) => {
 		if (event.type === google.maps.drawing.OverlayType.POLYGON) {
 			polygons.value.push(event.overlay)
-			emit('polygonDrawn', event.overlay.getPath().getArray())
+			const paths = event.overlay.getPath().getArray()
+			emit('polygonDrawn', paths)
 		}
 	})
+
+	drawExistingPolygons()
 }
 
 function handleGeolocationError(error = null) {
 	console.warn('Error getting geolocation:', error ? error.message : 'Not supported')
 	initializeMap()
+}
+
+function drawExistingPolygons() {
+	fieldInfos.value.forEach((field, index) => {
+		const polygonCoords = field.field_area.coordinates[0].map((coord) => ({
+			lat: parseFloat(coord[0]),
+			lng: parseFloat(coord[1]),
+		}))
+		const polygon = new google.maps.Polygon({
+			paths: polygonCoords,
+			...polygonOptions,
+			map: map,
+		})
+		polygons.value.push(polygon)
+	})
 }
 
 onUnmounted(() => {
@@ -91,6 +113,26 @@ function setDrawingMode(enabled) {
 function getPolygonPaths() {
 	return polygons.value.map((polygon) => polygon.getPath().getArray())
 }
+
+async function fetchField(fieldid) {
+	try {
+		console.log(`Fetching field with ID: ${fieldid}`)
+		const response = await $fetch('/api/fieldInfo', {
+			params: { fieldid: fieldid },
+		})
+
+		if (response.error) {
+			throw new Error(response.error)
+		}
+		console.log(`Fetched data for field ${fieldid}:`, response.value[0])
+		fieldInfos.value.push(response.value[0])
+	} catch (err) {
+		error.value = err.message
+		console.error(`Error fetching field with ID ${fieldid}:`, err.message)
+	}
+}
+
+// console.log(`FieldInfos`, fieldInfos.value[0].field_area.coordinates);
 
 defineExpose({
 	getPolygonPaths,
