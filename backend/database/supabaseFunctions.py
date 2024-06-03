@@ -17,7 +17,9 @@ class supabaseFunctions:
             print(e)
             return {"error": "Failed to get field data", "error_message": e}
         finally:
-            if response.data == []:
+            if response and response.data == []:
+                return {"error": "Data not found. Field ID may be invalid or may not have any data."}
+            elif not response:
                 return {"error": "Data not found. Field ID may be invalid or may not have any data."}
             return response.data
 
@@ -30,7 +32,9 @@ class supabaseFunctions:
             print(e)
             return {"error": "Failed to get field info", "error_message": e}
         finally:
-            if response.data == []:
+            if response and response.data == []:
+                return {"error": "Field not found. Please create a field first."}
+            elif not response:
                 return {"error": "Field not found. Please create a field first."}
             return response.data
 
