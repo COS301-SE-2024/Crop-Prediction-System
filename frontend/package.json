@@ -13,16 +13,20 @@
 		"lint.fix": "eslint . --fix"
 	},
 	"dependencies": {
+		"@googlemaps/js-api-loader": "^1.16.6",
 		"@nuxt/eslint": "^0.3.13",
 		"@vuelidate/core": "^2.0.3",
 		"@vuelidate/validators": "^2.0.4",
+		"chart.js": "^4.4.3",
 		"nuxt": "^3.11.2",
+		"nuxt-gmaps": "^1.2.10",
 		"primeicons": "^7.0.0",
 		"primevue": "^3.52.0",
 		"vue": "^3.4.27",
 		"vue-router": "^4.3.2"
 	},
 	"devDependencies": {
+		"@nuxtjs/supabase": "^1.2.2",
 		"@nuxtjs/tailwindcss": "^6.12.0",
 		"autoprefixer": "^10.4.19",
 		"husky": "^9.0.11",
@@ -34,7 +38,7 @@
 		"typescript": "^5.4.5"
 	},
 	"lint-staged": {
-		"./*.vue": [
+		"./**/*.vue": [
 			"pnpm run format",
 			"pnpm run lint"
 		]
