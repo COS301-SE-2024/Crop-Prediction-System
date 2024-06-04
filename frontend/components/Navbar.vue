@@ -15,8 +15,13 @@
 			<OverlayPanel ref="settingsPanel" class="w-60 flex flex-col justify-center items-center">
 				<div class="flex flex-col items-center justify-center gap-5">
 				<div class="flex items-center gap-2">
-					<span>Theme</span>
-					<InputSwitch v-model="settingsSwitch" />
+					<ToggleButton 
+						v-model="settingsSwitch" 
+						onIcon="pi pi-sun" 
+						offIcon="pi pi-moon" 
+						onLabel="Light" 
+						offLabel="Dark" 	
+					/>
 				</div>
 				</div>
 			</OverlayPanel>
@@ -40,7 +45,7 @@ import Sidebar from '../components/Sidebar.vue'
 import { ref } from 'vue'
 import Button from 'primevue/button'
 import OverlayPanel from 'primevue/overlaypanel'
-import InputSwitch from 'primevue/inputswitch'
+import ToggleButton from 'primevue/togglebutton'
 
 const user = useSupabaseUser()
 const client = useSupabaseClient()
