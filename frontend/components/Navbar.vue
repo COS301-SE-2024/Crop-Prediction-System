@@ -12,15 +12,23 @@
 					<Button label="Log Out" severity="danger" class="w-full" @click="signOut" />
 				</div>
 			</OverlayPanel>
+			<OverlayPanel ref="settingsPanel" class="w-60 flex flex-col justify-center items-center">
+				<div class="flex flex-col items-center justify-center gap-5">
+				<div class="flex items-center gap-2">
+					<span>Theme</span>
+					<InputSwitch v-model="settingsSwitch" />
+				</div>
+				</div>
+			</OverlayPanel>
 			<div class="flex flex-row items-center justify-end gap-4 justify-self-end dark:text-white">
 				<div class="p-5 sm:p-0">
 					<i class="pi pi-bell" style="font-size: 1.5rem" />
 				</div>
 				<div class="hidden sm:block">
-					<i class="pi pi-user" @click="toggle" style="font-size: 1.5rem" />
+					<i class="pi pi-user" @click="toggleProfile" style="font-size: 1.5rem" />
 				</div>
 				<div class="hidden sm:block">
-					<i class="pi pi-cog" style="font-size: 1.5rem" />
+					<i class="pi pi-cog" @click="toggleSettings" style="font-size: 1.5rem" />
 				</div>
 			</div>
 		</div>
@@ -31,15 +39,28 @@
 import Sidebar from '../components/Sidebar.vue'
 import { ref } from 'vue'
 import Button from 'primevue/button'
+import OverlayPanel from 'primevue/overlaypanel'
+import InputSwitch from 'primevue/inputswitch'
 
 const user = useSupabaseUser()
 const client = useSupabaseClient()
 
-const op = ref()
+const settingsSwitch = ref(false);
 
-const toggle = (event) => {
-	op.value.toggle(event)
-}
+const op = ref<OverlayPanel | null>(null);
+const settingsPanel = ref<OverlayPanel | null>(null);
+
+const toggleProfile = (event: Event) => {
+  if (op.value) {
+    op.value.toggle(event);
+  }
+};
+
+const toggleSettings = (event: Event) => {
+  if (settingsPanel.value) {
+    settingsPanel.value.toggle(event);
+  }
+};
 
 const signOut = async () => {
 	try {
