@@ -20,7 +20,8 @@
 						onIcon="pi pi-sun" 
 						offIcon="pi pi-moon" 
 						onLabel="Light" 
-						offLabel="Dark" 	
+						offLabel="Dark" 
+						@click="setColorTheme($colorMode.preference == 'dark' ? 'light' : 'dark')" 
 					/>
 				</div>
 				</div>
@@ -78,5 +79,11 @@ const signOut = async () => {
 	} catch (error) {
 		console.log(error)
 	}
+}
+
+type Theme = 'light' | 'dark'
+
+const setColorTheme = (newTheme: Theme) => {
+	useColorMode().preference = newTheme
 }
 </script>

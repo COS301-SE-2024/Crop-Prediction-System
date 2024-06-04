@@ -1,5 +1,5 @@
 <template>
-	<div class="dark:bg-surface-800">
+	<div class="bg-primary-inverse dark:bg-surface-800">
 		<div>
 			<header class="sticky">
 				<Navbar />
