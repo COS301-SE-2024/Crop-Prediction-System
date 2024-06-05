@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 from backend.database.supabaseFunctions import supabaseFunctions
 from backend.database.field import Field
 from backend.database.entry import Entry
-from backend.app import app, api_instance  # Adjust the import according to your project structure
+from backend.main import app, api_instance  # Adjust the import according to your project structure
 
 # Create a TestClient instance
 client = TestClient(app)
