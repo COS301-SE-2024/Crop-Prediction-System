@@ -62,9 +62,9 @@ const user = useSupabaseUser()
 
 const visible = ref(false)
 
-const selectedCity = ref()
 const cities = ref([
 	{ name: 'Buffelsfontein', alerts: 2 },
 	{ name: 'Plaas ander kant die dam', alerts: 4 },
 ])
+const selectedCity = ref(cities.value[0])
 </script>
