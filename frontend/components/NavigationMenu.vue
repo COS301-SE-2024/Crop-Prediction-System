@@ -80,17 +80,17 @@ const items = ref([
 		items: [
 			{
 				label: 'Manage Teams',
-				url: '/analytics/crop-yield-data',
+				url: '/team/manage',
 				icon: 'pi pi-users',
 			},
 			{
 				label: 'Create a Team',
-				url: '/analytics/crop-yield-data',
+				url: '/team/create',
 				icon: 'pi pi-plus-circle',
 			},
 			{
 				label: 'Join a Team',
-				url: '/analytics/crop-yield-data',
+				url: '/team/join',
 				icon: 'pi pi-sign-in',
 			},
 		],

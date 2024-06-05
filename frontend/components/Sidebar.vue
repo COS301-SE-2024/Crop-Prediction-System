@@ -19,15 +19,30 @@
 						<Avatar icon="pi pi-user" size="large" shape="circle" />
 						<h1>{{ user?.email }}</h1>
 					</div>
-					<Dropdown
-						v-model="selectedCity"
-						:options="cities"
-						optionLabel="name"
-						placeholder="Switch Team"
-						checkmark
-						:highlightOnSelect="true"
-						class="w-full text-xs"
-					/>
+					<div class="flex items-center gap-2">
+						<Dropdown
+							v-model="selectedCity"
+							:options="cities"
+							optionLabel="name"
+							placeholder="Switch Team"
+							checkmark
+							:highlightOnSelect="true"
+							class="w-full text-xs"
+							filter
+						>
+							<template #option="{ option }">
+								<div class="flex flex-row justify-between items-center w-full">
+									<span>{{ option.name }}</span>
+									<Badge :value="option.alerts" severity="danger" />
+								</div>
+							</template>
+						</Dropdown>
+						<!-- Sum of all option alerts minus the selected city alerts -->
+						<Badge
+							:value="cities.reduce((acc, city) => acc + city.alerts, 0) - selectedCity?.alerts"
+							severity="danger"
+						/>
+					</div>
 				</div>
 			</div>
 		</template>
@@ -49,7 +64,7 @@ const visible = ref(false)
 
 const selectedCity = ref()
 const cities = ref([
-	{ name: 'Buffelsfontein', code: 'NY' },
-	{ name: 'Plaas ander kant die dam', code: 'RM' },
+	{ name: 'Buffelsfontein', alerts: 2 },
+	{ name: 'Plaas ander kant die dam', alerts: 4 },
 ])
 </script>
