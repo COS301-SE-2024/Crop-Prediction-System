@@ -70,6 +70,12 @@ definePageMeta({
 	middleware: 'auth',
 })
 
+const visible = ref(false)
+
+function changeVisible() {
+	visible.value = !visible.value
+}
+
 const stats = [
 	{
 		title: 'Overall Crop Health',
