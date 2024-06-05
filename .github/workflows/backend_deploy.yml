@@ -22,5 +22,4 @@ jobs:
             cd /home/farm/server/Crop-Prediction-System
             ls -la
             git pull
-            su farm
-            pm2 restart sample_farm_api
+            su - farm -c "pm2 restart sample_farm_api"
