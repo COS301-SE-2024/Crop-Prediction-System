@@ -32,6 +32,7 @@ Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learni
 ![GitHub Release](https://img.shields.io/github/v/release/COS301-SE-2024/Crop-Prediction-System?logo=Github)
 [![codecov](https://codecov.io/gh/COS301-SE-2024/Crop-Prediction-System/graph/badge.svg?token=WwjFFuFVr7)](https://codecov.io/gh/COS301-SE-2024/Crop-Prediction-System)
 [![System Uptime](https://img.shields.io/pingpong/uptime/sp_bf59a60096094040a09ea511e5b93cee?label=Website%20Uptime)](https://terrabyte.pingpong.host/)
+[![assertible](https://assertible.com/tests/384056d8-aadc-46b1-b34b-b569b366e225/status?api_token=hF30yIrlSGpMqbfo)](https://assertible.com/dashboard#/services/60d94c06-00b8-466f-a1f5-f52e4f03f4b3/tests/384056d8-aadc-46b1-b34b-b569b366e225)
 
 ### Project Day Countdown
 

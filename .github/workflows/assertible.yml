@@ -1,0 +1,29 @@
+name: Assertible API Call
+
+on: [push]
+jobs:
+  test-curl-action:
+    name: "Assertible API"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Call API"
+        uses: indiesdev/curl@v1.1
+        with:
+          # The target URL
+          # Required: true if custom-config is not set
+          url: https://assertible.com/apis/60d94c06-00b8-466f-a1f5-f52e4f03f4b3/run?api_token={ASSERTIBLE_API_TOKEN}
+
+          # The request method, basically it's one of GET|POST|PUT|PATCH
+          # Default is GET
+          method: "POST"
+          accept: 200,201,204
+
+          # Request timeout (millisec)
+          timeout: 1000
+
+          # If it is set to true, it will show the response log in the GitHub UI
+          log-response: true
+
+          # The number of attempts before giving up
+          # Default: 1
+          retries: 3
