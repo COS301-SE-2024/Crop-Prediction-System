@@ -11,15 +11,14 @@ class supabaseFunctions:
     @staticmethod
     def getFieldData(fieldid: str):
         try:
-            dict = {"fieldid": fieldid}
+            dict = {"field_id": fieldid}
             response = supabaseFunctions.__sbClient.rpc("get_field_data_by_id", dict).execute()
-        except Exception as e:
-            print(e)
-            return {"error": "Failed to get field data", "error_message": e}
-        finally:
             if response.data == []:
                 return {"error": "Data not found. Field ID may be invalid or may not have any data."}
             return response.data
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get field data", "error_message": e}
 
     @staticmethod
     def getFieldInfo(fieldid: str):
