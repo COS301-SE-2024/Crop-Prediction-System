@@ -12,11 +12,22 @@
 						<Menu />
 					</div>
 				</div>
-				<div
-					class="w-full flex flex-row gap-3 items-center dark:hover:bg-surface-400/10 hover:bg-surface-100 cursor-pointer p-2 rounded-lg"
-				>
-					<Avatar icon="pi pi-user" size="large" shape="circle" />
-					<h1>{{ user?.email }}</h1>
+				<div class="space-y-2 w-full">
+					<div
+						class="w-full flex flex-row gap-3 items-center dark:hover:bg-surface-400/10 hover:bg-surface-100 cursor-pointer p-2 rounded-lg"
+					>
+						<Avatar icon="pi pi-user" size="large" shape="circle" />
+						<h1>{{ user?.email }}</h1>
+					</div>
+					<Dropdown
+						v-model="selectedCity"
+						:options="cities"
+						optionLabel="name"
+						placeholder="Switch Team"
+						checkmark
+						:highlightOnSelect="true"
+						class="w-full text-xs"
+					/>
 				</div>
 			</div>
 		</template>
@@ -30,8 +41,15 @@ import Sidebar from 'primevue/sidebar'
 import Menu from '../components/NavigationMenu.vue'
 import Avatar from 'primevue/avatar'
 import Button from 'primevue/button'
+import Dropdown from 'primevue/dropdown'
 
 const user = useSupabaseUser()
 
 const visible = ref(false)
+
+const selectedCity = ref()
+const cities = ref([
+	{ name: 'Buffelsfontein', code: 'NY' },
+	{ name: 'Plaas ander kant die dam', code: 'RM' },
+])
 </script>

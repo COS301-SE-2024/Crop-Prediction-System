@@ -121,16 +121,20 @@ export default {
         ]
     },
     list: {
-        class: 'py-3 list-none m-0'
+        class: 'list-none m-0'
     },
     item: ({ context }) => ({
         class: [
             // Font
             'font-normal',
             'leading-none',
+			'text-sm',
 
             // Position
             'relative',
+
+			// Flexbox
+			'flex items-center gap-2',
 
             // Shape
             'border-0',
@@ -138,7 +142,7 @@ export default {
 
             // Spacing
             'm-0',
-            'py-3 px-5',
+            'p-2 py-4',
 
             // Colors
             {
@@ -173,7 +177,7 @@ export default {
 
             // Spacing
             'm-0',
-            'py-3 px-5',
+            'p-2',
 
             // Color
             'text-surface-800 dark:text-white/80',
