@@ -11,7 +11,7 @@ jobs:
         with:
           # The target URL
           # Required: true if custom-config is not set
-          url: https://assertible.com/apis/60d94c06-00b8-466f-a1f5-f52e4f03f4b3/run?api_token={ASSERTIBLE_API_TOKEN}
+          url: https://assertible.com/apis/60d94c06-00b8-466f-a1f5-f52e4f03f4b3/run?api_token=${{ secrets.ASSERTIBLE_API_TOKEN }}
 
           # The request method, basically it's one of GET|POST|PUT|PATCH
           # Default is GET
