@@ -58,5 +58,5 @@ class API:
     def deleteEntry(self, entry_id: dict):
         return self.sb.deleteEntry(entry_id.get("entry_id"))
     
-# api_instance = API()
-# app = api_instance.app
+api_instance = API()
+app = api_instance.app
