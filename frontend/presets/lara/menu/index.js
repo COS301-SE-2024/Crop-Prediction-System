@@ -7,7 +7,7 @@ export default {
             // Spacing
             'py-2',
             // Colors
-            'bg-surface-0 dark:bg-surface-700',
+            'bg-surface-0 dark:bg-surface-800',
             'text-surface-700 dark:text-white/80',
             'border border-surface-200 dark:border-surface-700'
         ]
@@ -24,7 +24,7 @@ export default {
     content: ({ context }) => ({
         class: [
             //Shape
-            'rounded-none',
+            'rounded-lg',
             // Colors
             'text-surface-700 dark:text-white/80',
             {
@@ -35,7 +35,8 @@ export default {
             'duration-200',
             // States
             'hover:text-surface-700 dark:hover:text-white/80',
-            'hover:bg-surface-100 dark:bg-surface-700 dark:hover:bg-surface-400/10'
+            'hover:bg-surface-100 dark:bg-surface-800 dark:hover:bg-surface-400/10',
+
         ]
     }),
     action: {
@@ -75,7 +76,7 @@ export default {
     submenuheader: {
         class: [
             // Font
-            'font-bold',
+            'font-[500]',
             // Spacing
             'm-0',
             'py-3 px-5',
@@ -83,7 +84,7 @@ export default {
             'rounded-tl-none',
             'rounded-tr-none',
             // Colors
-            'bg-surface-0 dark:bg-surface-700',
+            'bg-surface-0 dark:bg-surface-800',
             'text-surface-700 dark:text-white'
         ]
     },

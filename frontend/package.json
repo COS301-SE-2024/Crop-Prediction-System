@@ -10,11 +10,14 @@
 		"postinstall": "nuxt prepare",
 		"format": "prettier --write .",
 		"lint": "eslint .",
-		"lint.fix": "eslint . --fix"
+		"lint.fix": "eslint . --fix",
+		"test": "vitest --coverage"
 	},
 	"dependencies": {
 		"@googlemaps/js-api-loader": "^1.16.6",
 		"@nuxt/eslint": "^0.3.13",
+		"@vuelidate/core": "^2.0.3",
+		"@vuelidate/validators": "^2.0.4",
 		"chart.js": "^4.4.3",
 		"nuxt": "^3.11.2",
 		"nuxt-gmaps": "^1.2.10",
@@ -25,9 +28,11 @@
 	},
 	"devDependencies": {
 		"@nuxt/test-utils": "^3.13.1",
+		"@nuxtjs/color-mode": "^3.4.1",
 		"@nuxtjs/supabase": "^1.2.2",
 		"@nuxtjs/tailwindcss": "^6.12.0",
 		"@vitejs/plugin-vue": "^5.0.5",
+		"@vitest/coverage-v8": "^1.6.0",
 		"@vue/test-utils": "^2.4.6",
 		"autoprefixer": "^10.4.19",
 		"happy-dom": "^14.12.0",

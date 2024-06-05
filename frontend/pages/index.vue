@@ -11,7 +11,7 @@
 		</div>
 		<div class="grid xl:grid-cols-5 xl:grid-rows-2 w-full h-full gap-5 pb-5">
 			<div
-				class="xl:col-span-3 xl:row-span-2 border border-surface-border p-6 rounded-lg shadow-lg h-full flex flex-col gap-2"
+				class="xl:col-span-3 xl:row-span-2 border border-surface-border dark:border-surface-600 p-6 rounded-lg shadow-lg h-full flex flex-col gap-2"
 			>
 				<div class="flex justify-between items-center">
 					<p class="text-xl font-[500] dark:text-white">Farm Map</p>
@@ -23,7 +23,9 @@
 			</div>
 			<div class="xl:col-span-2 xl:row-span-2 grid gap-5 h-full">
 				<FieldData />
-				<div class="grid xl:grid-cols-2 gap-5 items-center border border-surface-border p-6 rounded-lg shadow-lg">
+				<div
+					class="grid xl:grid-cols-2 gap-5 items-center border border-surface-border dark:border-surface-600 p-6 rounded-lg shadow-lg"
+				>
 					<div class="flex flex-col gap-2">
 						<span class="text-lg font-[500] dark:text-surface-0">Polar Stats</span>
 						<!-- actionable results -->

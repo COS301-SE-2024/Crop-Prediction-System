@@ -1,5 +1,5 @@
 <template>
-	<div class="border border-surface-border p-2 xl:p-6 rounded-lg shadow-lg text-sm">
+	<div class="border border-surface-border dark:border-surface-600 p-2 xl:p-6 rounded-lg shadow-lg text-sm">
 		<DataTable :value="fields" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
 			<Column field="name" header="Name" style="width: 25%">
 				<template #body="slotProps">
