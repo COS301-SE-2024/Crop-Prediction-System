@@ -1,24 +1,22 @@
 <template>
-	<div class="flex flex-col justify-center items-center">
-		<Card class="border border-surface-border p-fluid">
-			<template #header>
-				<div class="flex items-center gap-5 p-5">
-					<h2 class="font-medium text-md">Add Field Data</h2>
-					<Dropdown
-						v-model="selectedField"
-						editable
-						:options="fields"
-						optionLabel="name"
-						placeholder="Select a Field"
-						class="w-full md:w-[14rem]"
-					/>
-				</div>
-			</template>
+	<div class="flex flex-col h-full">
+		<Card class="border border-surface-border p-fluid h-full">
 			<template #title>
 				<h1>Manual Field Inputs</h1>
 			</template>
 			<template #content>
 				<div class="flex flex-col items-center gap-5">
+					<div class="flex items-center gap-5 p-5">
+						<h2 class="font-medium text-md">Add Field Data</h2>
+						<Dropdown
+							v-model="selectedField"
+							editable
+							:options="fields"
+							optionLabel="name"
+							placeholder="Select a Field"
+							class="w-full md:w-[14rem]"
+						/>
+					</div>
 					<div class="flex flex-wrap gap-3 p-fluid">
 						<div class="flex-auto">
 							<label for="minmaxfraction" class="font-medium block mb-2"> Temperature </label>

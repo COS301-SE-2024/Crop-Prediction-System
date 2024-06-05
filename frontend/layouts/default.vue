@@ -1,13 +1,14 @@
 <template>
 	<div class="bg-primary-inverse dark:bg-surface-800">
-		<div>
+		<div class="w-full min-h-screen">
+			<!-- <div class="h-auto"> -->
 			<header class="sticky">
 				<Navbar />
 			</header>
-		</div>
-
-		<div class="sm:p-5 h-full w-screen">
-			<slot />
+			<!-- </div> -->
+			<div class="sm:p-5">
+				<slot />
+			</div>
 		</div>
 	</div>
 </template>

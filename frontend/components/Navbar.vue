@@ -1,5 +1,5 @@
 <template>
-	<nav class="p-2 px-5 z-50 w-full shadow-md dark:bg-surface-900">
+	<nav class="p-2 px-5 z-50 w-full shadow-md dark:bg-surface-400/10">
 		<div class="flex justify-between xl:justify-normal xl:grid xl:grid-cols-3 h-full w-full">
 			<Sidebar class="justify-self-start" />
 			<NuxtLink to="/" class="text-2xl font-[500] text-primary-500 justify-self-center self-center h-full">
@@ -14,19 +14,19 @@
 			</OverlayPanel>
 			<OverlayPanel ref="settingsPanel" class="w-60 flex flex-col justify-center items-center">
 				<div class="flex flex-col items-center justify-center gap-5">
-				<div class="flex items-center gap-2">
-					<ToggleButton 
-						v-model="settingsSwitch" 
-						onIcon="pi pi-sun" 
-						offIcon="pi pi-moon" 
-						onLabel="Light" 
-						offLabel="Dark" 
-						@click="setColorTheme($colorMode.preference == 'dark' ? 'light' : 'dark')" 
-					/>
-				</div>
+					<div class="flex items-center gap-2">
+						<ToggleButton
+							v-model="settingsSwitch"
+							onIcon="pi pi-moon"
+							offIcon="pi pi-sun"
+							onLabel="Dark"
+							offLabel="Light"
+							@click="setColorTheme($colorMode.preference == 'dark' ? 'light' : 'dark')"
+						/>
+					</div>
 				</div>
 			</OverlayPanel>
-			<div class="flex flex-row items-center justify-end gap-4 justify-self-end dark:text-white">
+			<div class="flex flex-row items-center justify-end gap-4 justify-self-end dark:text-white *:cursor-pointer">
 				<div class="p-5 sm:p-0">
 					<i class="pi pi-bell" style="font-size: 1.5rem" />
 				</div>
@@ -51,22 +51,22 @@ import ToggleButton from 'primevue/togglebutton'
 const user = useSupabaseUser()
 const client = useSupabaseClient()
 
-const settingsSwitch = ref(false);
+const settingsSwitch = ref(false)
 
-const op = ref<OverlayPanel | null>(null);
-const settingsPanel = ref<OverlayPanel | null>(null);
+const op = ref<OverlayPanel | null>(null)
+const settingsPanel = ref<OverlayPanel | null>(null)
 
 const toggleProfile = (event: Event) => {
-  if (op.value) {
-    op.value.toggle(event);
-  }
-};
+	if (op.value) {
+		op.value.toggle(event)
+	}
+}
 
 const toggleSettings = (event: Event) => {
-  if (settingsPanel.value) {
-    settingsPanel.value.toggle(event);
-  }
-};
+	if (settingsPanel.value) {
+		settingsPanel.value.toggle(event)
+	}
+}
 
 const signOut = async () => {
 	try {
