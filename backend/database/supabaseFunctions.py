@@ -2,6 +2,8 @@ from backend.database import supabaseInstance
 from backend.database.field import Field
 from backend.database.entry import Entry
 
+import asyncio
+
 class supabaseFunctions:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
 
@@ -97,7 +99,7 @@ class supabaseFunctions:
     @staticmethod
     def createEntry(fieldData: Entry):
         try:
-            supabaseFunctions.__sbClient.table("field_data").insert([{"weather_temperature": fieldData.weather_temperature, "weather_humidity": fieldData.weather_humidity, "weather_uv": fieldData.weather_uv, "weather_rainfall": fieldData.weather_rainfall, "soil_moisture": fieldData.soil_moisture, "soil_ph": fieldData.soil_ph, "soil_conductivity": fieldData.soil_conductivity, "is_manual": fieldData.is_manual, "field_id": fieldData.field_id}]).execute()
+            supabaseFunctions.__sbClient.table("data_feed").insert([{"entry_id": fieldData.entry_id, "weather_temperature": fieldData.weather_temperature, "weather_humidity": fieldData.weather_humidity, "weather_uv": fieldData.weather_uv, "weather_rainfall": fieldData.weather_rainfall, "soil_moisture": fieldData.soil_moisture, "soil_ph": fieldData.soil_ph, "soil_conductivity": fieldData.soil_conductivity, "is_manual": fieldData.is_manual, "field_id": fieldData.field_id}]).execute()
         except Exception as e:
             print(e)
             return {"error": "Failed to create entry", "error_message": e, "type": "createEntry"}
@@ -110,7 +112,7 @@ class supabaseFunctions:
             if fieldData.entry_id is None:
                 return {"error": "Entry ID is required"}
             
-            # isEntry = supabaseFunctions.__sbClient.table("field_data").select().eq("entry_id", fieldData.entry_id).execute()
+            # isEntry = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", fieldData.entry_id).execute()
             # if isEntry.data == []:
             #     return {"error": "Entry not found", "entry_id": fieldData.entry_id, "type": "updateEntry"}
             
@@ -133,7 +135,7 @@ class supabaseFunctions:
                 fields["is_manual"] = fieldData.is_manual
             if fieldData.field_id is not None:
                 fields["field_id"] = fieldData.field_id
-            supabaseFunctions.__sbClient.table("field_data").update(fields).eq("entry_id", fieldData.entry_id).execute()
+            supabaseFunctions.__sbClient.table("data_feed").update(fields).eq("entry_id", fieldData.entry_id).execute()
             return {"success": "Entry updated"}
         except Exception as e:
             print(e)
@@ -145,12 +147,70 @@ class supabaseFunctions:
             if entry_id is None:
                 return {"error": "Entry ID is required"}
 
-            # isEntry = supabaseFunctions.__sbClient.table("field_data").select().eq("entry_id", entry_id).execute()
+            # isEntry = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", entry_id).execute()
             # if isEntry.data == []:
             #     return {"error": "Entry not found", "entry_id": entry_id, "type": "deleteEntry"}
 
-            supabaseFunctions.__sbClient.table("field_data").delete().eq("entry_id", entry_id).execute()
+            supabaseFunctions.__sbClient.table("data_feed").delete().eq("entry_id", entry_id).execute()
             return {"success": "Entry deleted"}
         except Exception as e:
             print(e)
             return {"error": "Entry not found", "error_message": e, "entry_id": entry_id, "type": "deleteEntry"}
+        
+
+    # integration testing from get to post
+    @staticmethod
+    def test():
+        testsPassed = 0
+        try:
+            dict_params = {"field_id": 0}
+            response = supabaseFunctions.__sbClient.rpc("get_field_info", dict_params).execute()
+            if response.data == []:
+                raise Exception("Field not found")
+            testsPassed += 1
+
+            dict_params = {"field_id": 0}
+            response = supabaseFunctions.__sbClient.rpc("get_field_data_by_id", dict_params).execute()
+            if response.data == []:
+                raise Exception("Data not found")
+            testsPassed += 1
+            
+            dict_params = {"entry_id": "0", "weather_temperature": 30, "weather_humidity": 50, "weather_uv": 5, "weather_rainfall": 0, "soil_moisture": 50, "soil_ph": 6, "soil_conductivity": 0, "is_manual": False, "field_id": 0}
+
+            response = supabaseFunctions.__sbClient.table("data_feed").insert([dict_params]).execute()
+
+            # see if entry was created
+            dict_params = {"entry_id": "0"}
+            response = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", dict_params.get("entry_id")).execute()
+            print(response.data, flush=True)
+            if response.data == []:
+                raise Exception("Entry not created")
+            testsPassed += 1
+
+            dict_params = {"entry_id": "0", "weather_temperature": 30, "weather_humidity": 50, "weather_uv": 5, "weather_rainfall": 0, "soil_moisture": 50, "soil_ph": 6, "soil_conductivity": 0, "is_manual": True, "field_id": 0}
+
+            response = supabaseFunctions.__sbClient.table("data_feed").update(dict_params).eq("entry_id", dict_params.get("entry_id")).execute()
+
+            # see if entry was updated
+            dict_params = {"entry_id": "0"}
+            response = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", dict_params.get("entry_id")).execute()
+            if response.data[0]["is_manual"] != True:
+                raise Exception("Entry not updated")
+            testsPassed += 1
+
+            dict_params = {"entry_id": "0"}
+
+            response = supabaseFunctions.__sbClient.table("data_feed").delete().eq("entry_id", dict_params.get("entry_id")).execute()
+
+            # see if entry was deleted
+            dict_params = {"entry_id": "0"}
+            response = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", dict_params.get("entry_id")).execute()
+            if response.data != []:
+                raise Exception("Entry not deleted")
+            testsPassed += 1
+
+            return {"success": "All tests passed", "tests_passed": testsPassed}
+        
+        except Exception as e:
+            print(e)
+            return {"error": "Test failed", "error_message": str(e)}
