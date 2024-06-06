@@ -41,15 +41,19 @@ definePageMeta({
 </script>
 
 <template>
-	<div class="w-full h-screen flex flex-col justify-center items-center p-4">
-		<img src="~/assets/logo.png" alt="Logo" class="absolute top-2 left-2" />
+	<div class="w-full h-screen flex flex-col justify-center items-center p-4 dark:bg-surface-900 bg-surface-500">
 		<div class="self-center">
-			<div class="flex flex-col gap-5 items-center w-[400px] max-w-md">
-				<Card class="w-full border border-surface-border">
-					<template #title>
-						<h1>Log in</h1>
-					</template>
-					<template #content>
+			<div
+				class="flex flex-col gap-5 items-center w-[400px] max-w-md bg-opacity-50 dark:bg-opacity-50 _bg-gray-100 _dark:bg-gray-600 backdrop-blur-md _border border-surface-500 text-center dark:text-white text-black p-8 rounded-xl"
+			>
+				<div class="w-full grid gap-4">
+					<div class="">
+						<div class="flex flex-col gap-3 items-center">
+							<img src="~/assets/logo_only.png" alt="Logo" class="w-20" />
+							<h1 class="text-2xl">Log in to TerraByte</h1>
+						</div>
+					</div>
+					<div>
 						<div class="flex flex-col gap-3">
 							<div class="flex flex-col gap-2 items-start">
 								<h3 class="font-semibold">Email Address</h3>
@@ -84,8 +88,8 @@ definePageMeta({
 								>Don't have an account? <NuxtLink to="/signup" class="underline">Sign up </NuxtLink></small
 							>
 						</div>
-					</template>
-				</Card>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

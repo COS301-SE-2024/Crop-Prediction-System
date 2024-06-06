@@ -6,7 +6,7 @@
 		<template #item="{ item }">
 			<RouterLink v-if="!item.separator" :to="item.url" custom v-slot="{ href, isActive }">
 				<a :href="href" :class="{ active: isActive }" class="flex flex-row gap-2 items-center py-2">
-					<span :class="item.icon" class="ml-5" />
+					<span :class="item.icon" class="pl-4" />
 					<span>{{ item.label }}</span>
 				</a>
 			</RouterLink>
@@ -72,6 +72,26 @@ const items = ref([
 				label: 'Crop Yield Data',
 				url: '/analytics/crop-yield-data',
 				icon: 'pi pi-chart-pie',
+			},
+		],
+	},
+	{
+		label: 'TEAM MANAGEMENT',
+		items: [
+			{
+				label: 'Manage Team',
+				url: '/team/manage',
+				icon: 'pi pi-users',
+			},
+			// {
+			// 	label: 'Create a Team',
+			// 	url: '/team/create',
+			// 	icon: 'pi pi-plus-circle',
+			// },
+			{
+				label: 'Join a Team',
+				url: '/team/join',
+				icon: 'pi pi-sign-in',
 			},
 		],
 	},
