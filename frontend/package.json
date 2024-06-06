@@ -11,7 +11,7 @@
 		"format": "prettier --write .",
 		"lint": "eslint .",
 		"lint.fix": "eslint . --fix",
-		"test": "vitest --coverage"
+		"test": "vitest"
 	},
 	"dependencies": {
 		"@googlemaps/js-api-loader": "^1.16.6",
