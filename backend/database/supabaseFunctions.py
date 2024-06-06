@@ -240,3 +240,16 @@ class supabaseFunctions:
         except Exception as e:
             print(e)
             return {"error": "Test failed", "error_message": str(e)}
+    
+    @staticmethod
+    def getUserFields(user_id: str):
+        try:
+            dict = {"user_id": user_id}
+            response = supabaseFunctions.__sbClient.rpc('get_field_info_from_user', dict).execute()
+            if response.data == []:
+                return {"error": "Data not found. Field ID may be invalid or may not have any data."}
+            return response.data
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get field data", "error_message": e}
+        

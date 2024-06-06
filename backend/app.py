@@ -36,6 +36,7 @@ class API:
         self.app.add_api_route("/createEntry", self.createEntry, methods=["POST"])
         self.app.add_api_route("/updateEntry", self.updateEntry, methods=["PUT"])
         self.app.add_api_route("/deleteEntry", self.deleteEntry, methods=["POST"])
+        self.app.add_api_route("/getUserFields", self.getUserFields, methods=["GET"])
         
         # testing routes    
         self.app.add_api_route("/test", self.test, methods=["GET"])
@@ -75,6 +76,9 @@ class API:
     
     def test(self, request: Request):
         return self.sb.test()
+
+    def getUserFields(self, request: Request, userid: str):
+        return self.sb.getUserFields(userid)
 
 api_instance = API()
 app = api_instance.app
