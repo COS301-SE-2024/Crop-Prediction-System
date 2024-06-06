@@ -7,6 +7,7 @@
 </template>
 
 <script setup lang="ts">
+import { maxLength } from '@vuelidate/validators'
 import Chart from 'primevue/chart'
 import { ref, onMounted, defineProps } from 'vue'
 
@@ -45,6 +46,18 @@ const setChartData = () => {
 					// rainfall
 					'rgba(153, 102, 255, 0.2)',
 				],
+				borderColor: [
+					// moisture
+					'rgba(255, 99, 132, 1)',
+					// temperature
+					'rgba(54, 162, 235, 1)',
+					// humidity
+					'rgba(255, 206, 86, 1)',
+					// soil
+					'rgba(75, 192, 192, 1)',
+					// rainfall
+					'rgba(153, 102, 255, 1)',
+				],
 				tension: 0.4,
 			},
 		],
@@ -56,26 +69,35 @@ const setChartOptions = () => {
 		responsive: true,
 		width: 100,
 		plugins: {
-			legend: {
+			labels: {
 				display: false,
 			},
 		},
 		scales: {
-			x: {
+			// x: {
+			// 	ticks: {
+			// 		display: false,
+			// 	},
+			// 	grid: {
+			// 		display: false,
+			// 	},
+			// },
+			// y: {
+			// 	ticks: {
+			// 		display: false,
+			// 	},
+			// 	grid: {
+			// 		display: false,
+			// 	},
+			// },
+			r: {
 				ticks: {
 					display: false,
 				},
 				grid: {
-					display: false,
+					color: 'rgba(192, 192, 192, 0.2)',
 				},
-			},
-			y: {
-				ticks: {
-					display: false,
-				},
-				grid: {
-					display: false,
-				},
+				max: 1,
 			},
 		},
 	}

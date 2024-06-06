@@ -1,12 +1,12 @@
 <template>
-	<Menu :model="items" class="border-none">
+	<Menu :model="items" class="border-none dark:bg-surface-800">
 		<template #submenuheader="{ item }">
-			<span class="text-black dark:text-white ml-[-12px] font-bold p-0">{{ item.label }}</span>
+			<span class="text-black dark:text-white ml-[-12px] font-[500] p-0">{{ item.label }}</span>
 		</template>
 		<template #item="{ item }">
 			<RouterLink v-if="!item.separator" :to="item.url" custom v-slot="{ href, isActive }">
-				<a :href="href" :class="{ active: isActive }" class="flex flex-row gap-2 items-center mb-2">
-					<span :class="item.icon" class="ml-5" />
+				<a :href="href" :class="{ active: isActive }" class="flex flex-row gap-2 items-center py-2">
+					<span :class="item.icon" class="pl-4" />
 					<span>{{ item.label }}</span>
 				</a>
 			</RouterLink>
@@ -72,6 +72,26 @@ const items = ref([
 				label: 'Crop Yield Data',
 				url: '/analytics/crop-yield-data',
 				icon: 'pi pi-chart-pie',
+			},
+		],
+	},
+	{
+		label: 'TEAM MANAGEMENT',
+		items: [
+			{
+				label: 'Manage Team',
+				url: '/team/manage',
+				icon: 'pi pi-users',
+			},
+			// {
+			// 	label: 'Create a Team',
+			// 	url: '/team/create',
+			// 	icon: 'pi pi-plus-circle',
+			// },
+			{
+				label: 'Join a Team',
+				url: '/team/join',
+				icon: 'pi pi-sign-in',
 			},
 		],
 	},
