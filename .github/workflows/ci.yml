@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [main, dev]
 jobs:
-  format-lint-build-test:
+  format-lint-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
