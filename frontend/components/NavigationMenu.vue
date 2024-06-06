@@ -83,11 +83,11 @@ const items = ref([
 				url: '/team/manage',
 				icon: 'pi pi-users',
 			},
-			{
-				label: 'Create a Team',
-				url: '/team/create',
-				icon: 'pi pi-plus-circle',
-			},
+			// {
+			// 	label: 'Create a Team',
+			// 	url: '/team/create',
+			// 	icon: 'pi pi-plus-circle',
+			// },
 			{
 				label: 'Join a Team',
 				url: '/team/join',

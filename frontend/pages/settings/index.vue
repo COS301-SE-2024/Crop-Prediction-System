@@ -56,7 +56,13 @@
 							<Column field="team" header="Team"></Column>
 							<Column field="id" header="User ID"></Column>
 							<Column field="name" header="Name"></Column>
-							<Column field="role" header="Role"></Column>
+							<Column field="role" header="Role">
+								<template #body="slotProps">
+									<div>
+										<Dropdown :options="items" v-model="slotProps.data.role" />
+									</div>
+								</template>
+							</Column>
 							<Column field="actions" header="Actions">
 								<template #body="slotProps">
 									<div class="flex gap-2">
@@ -130,8 +136,6 @@ const teams = ref([
 		data: {
 			team: 'Team 1',
 			id: '1',
-			name: 'John Doe',
-			role: 'Admin',
 		},
 		label: 'Team 1',
 		children: [
