@@ -79,7 +79,7 @@ const items = ref([
 		label: 'TEAM MANAGEMENT',
 		items: [
 			{
-				label: 'Manage Teams',
+				label: 'Manage Team',
 				url: '/team/manage',
 				icon: 'pi pi-users',
 			},

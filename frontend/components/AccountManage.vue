@@ -18,6 +18,8 @@
 <script setup>
 import { ref } from 'vue'
 
+const client = useSupabaseClient()
+
 const op = ref()
 
 const toggle = (event) => {
@@ -43,8 +45,21 @@ const items = ref([
 		label: 'Logout',
 		icon: 'pi pi-sign-out',
 		command: () => {
-			window.location.href = '/logout'
+			signOut()
 		},
 	},
 ])
+
+const signOut = async () => {
+	try {
+		const { error } = await client.auth.signOut()
+		if (!error) {
+			navigateTo('/login')
+		} else {
+			throw error
+		}
+	} catch (error) {
+		console.log(error)
+	}
+}
 </script>

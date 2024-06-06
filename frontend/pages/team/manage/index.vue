@@ -1,39 +1,26 @@
 <template>
-	<div class="card">
-		<TreeTable :value="teams">
-			<template #header>
-				<div class="text-xl font-bold">File Viewer</div>
-			</template>
-			<Column field="team" header="Team" :expander="true"></Column>
-			<Column field="name" header="Name"></Column>
-			<Column field="id" header="ID"></Column>
-			<!-- <Column header="Role" v-if="not at first level"> -->
-			<Column header="Role">
-				<template #body>
-					<!-- <p>{{ teams[slotProps.data.key].data.role }}</p> -->
-					<Dropdown :options="roles" class="w-full" v-model="teams[0].data.role" />
-				</template>
-			</Column>
-			<Column headerStyle="width: 10rem">
-				<template #body>
-					<div class="flex flex-wrap gap-2">
-						<Button type="button" icon="pi pi-trash" rounded severity="danger" />
-						<Button type="button" icon="pi pi-pencil" rounded severity="success" />
-					</div>
-				</template>
-			</Column>
-			<template #footer>
-				<div class="flex justify-between">
-					<div class="flex justify-content-start">
-						<Button icon="pi pi-plus" label="Add Team" />
-					</div>
-					<div class="flex justify-content-end gap-3">
-						<Button icon="pi pi-times" label="Cancel" severity="secondary" />
-						<Button icon="pi pi-save" label="Save" />
-					</div>
+	<div>
+		<div class="justify-between flex items-center">
+			<div class="flex gap-5">
+				<h1 class="text-2xl font-semibold dark:text-white">Manage Team</h1>
+				<div class="flex items-center gap-2">
+					<Dropdown
+						v-model="selectedCity"
+						:options="cities"
+						optionLabel="name"
+						placeholder="Switch Team"
+						checkmark
+						:highlightOnSelect="true"
+						class="w-full text-xs"
+						filter
+					>
+					</Dropdown>
 				</div>
-			</template>
-		</TreeTable>
+			</div>
+			<div class="flex gap-5">
+				<Button label="Add Team Member" icon="pi pi-plus" class="text-sm" />
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -50,45 +37,9 @@ definePageMeta({
 
 const roles = ref(['Farm Manager', 'Farmer', 'Data Analyst', 'Unassigned'])
 
-const teams = ref([
-	{
-		key: 0,
-		data: {
-			team: 'Team 1',
-			role: 'Farm Manager', // Make sure role is defined here
-		},
-		label: 'Team 1',
-		children: [
-			{
-				key: 1,
-				data: {
-					id: '1',
-					name: 'John Doe',
-					role: 'Data Analyst',
-				},
-				label: 'John Doe',
-			},
-			{
-				key: 2,
-				data: {
-					id: '2',
-					name: 'Jane Doe',
-					role: 'Farmer',
-				},
-				label: 'Jane Doe',
-			},
-		],
-	},
+const cities = ref([
+	{ name: 'Buffelsfontein', alerts: 2 },
+	{ name: 'Plaas ander kant die dam', alerts: 4 },
 ])
-
-// function addUser(teamIndex) {
-// 	if (newUser.value) {
-// 		teams.value[teamIndex].users.push(newUser.value)
-// 		newUser.value = ''
-// 	}
-// }
-
-// function removeUser(teamIndex, userIndex) {
-// 	teams.value[teamIndex].users.splice(userIndex, 1)
-// }
+const selectedCity = ref(cities.value[0])
 </script>

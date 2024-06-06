@@ -57,11 +57,11 @@
 							<Column field="id" header="User ID"></Column>
 							<Column field="name" header="Name"></Column>
 							<Column field="role" header="Role">
-								<template #body="slotProps">
+								<!-- <template #body="slotProps">
 									<div>
-										<Dropdown :options="items" v-model="slotProps.data.role" />
+										<Dropdown :options="items" v-model="slotProps.data.role" /> --
 									</div>
-								</template>
+								</template> -->
 							</Column>
 							<Column field="actions" header="Actions">
 								<template #body="slotProps">
