@@ -33,7 +33,7 @@ Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learni
 [![codecov](https://codecov.io/gh/COS301-SE-2024/Crop-Prediction-System/graph/badge.svg?token=WwjFFuFVr7)](https://codecov.io/gh/COS301-SE-2024/Crop-Prediction-System)
 [![System Uptime](https://img.shields.io/pingpong/uptime/sp_bf59a60096094040a09ea511e5b93cee?label=Website%20Uptime)](https://terrabyte.pingpong.host/)
 
-![Burndown Chart](https://docs.google.com/spreadsheets/d/e/2PACX-1vSgVMkTErwWrJGdGzM_3w7RC7OsFPbqp4zZD121R0UgJkWVNemy5hXqnPF_FVaBdYwa9QF-dJ7IasdD/pubchart?oid=993253821&format=image)
+<a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSgVMkTErwWrJGdGzM_3w7RC7OsFPbqp4zZD121R0UgJkWVNemy5hXqnPF_FVaBdYwa9QF-dJ7IasdD/pubchart?oid=993253821&format=interactive">Current Iteration Burndown Chart</a>
 
 ### Project Day Countdown
 
