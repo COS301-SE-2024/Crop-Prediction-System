@@ -77,7 +77,7 @@
 		</Column>
 	</DataTable>
 	<Dialog header="Selected Rows" v-model:visible="dialogVisible" :modal="true" :closable="true">
-		<Button label="Print" icon="pi pi-print" @click="triggerExport" />
+		<Button label="Print" icon="pi pi-print" @click="triggerPrint" />
 		<pre>{{ printableContent }}</pre>
 	</Dialog>
 	<Toast />
@@ -159,10 +159,12 @@ const onSort = (event) => {
 	loadLazyData(event)
 }
 
+const selectAll = ref(false)
+
 const onSelectAllChange = (event) => {
 	selectAll.value = event.checked
 
-	if (selectAll) {
+	if (selectAll.value) {
 		CustomerService.getCustomers().then((data) => {
 			selectAll.value = true
 			selectedDataEntries.value = data.customers
@@ -241,6 +243,9 @@ const triggerPrint = () => {
 	}
 	const printContents = JSON.stringify(rawSelectedData, null, 2)
 	const printWindow = window.open('', '', 'height=600,width=800')
+	if (!printWindow) {
+		return
+	}
 	printWindow.document.write('<html><head><title>Print</title></head><body>')
 	printWindow.document.write('<pre>' + printContents + '</pre>')
 	printWindow.document.write('</body></html>')
