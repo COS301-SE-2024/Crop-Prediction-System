@@ -93,6 +93,8 @@ const dialogVisible = ref(false)
 const printableContent = ref('')
 const dataEntries = ref()
 const toast = useToast()
+// const selectAll = ref()
+const selectAll = ref<boolean>()
 
 class Entry {
 	entry_id: number = 0
@@ -154,30 +156,18 @@ const filters = ref({
 	field_id: { value: null, matchMode: FilterMatchMode.EQUALS },
 })
 
-const onSort = (event) => {
-	lazyParams.value = event
-	loadLazyData(event)
-}
-
-const selectAll = ref(false)
-
-const onSelectAllChange = (event) => {
+const onSelectAllChange = (event: { checked: boolean }) => {
 	selectAll.value = event.checked
 
 	if (selectAll.value) {
-		CustomerService.getCustomers().then((data) => {
-			selectAll.value = true
-			selectedDataEntries.value = data.customers
-		})
+		selectedDataEntries.value = [...entries.value]
 	} else {
-		selectAll.value = false
 		selectedDataEntries.value = []
 	}
 }
 
 const onRowSelect = () => {
-	const rawSelectedData = selectedDataEntries.value.map((item) => toRaw(item))
-	selectAll.value = selectedDataEntries.value.length === totalRecords.value
+	selectAll.value = selectedDataEntries.value.length === entries.value.length
 }
 
 const onRowUnselect = () => {
@@ -209,9 +199,12 @@ const exportSelectedCSV = () => {
 	downloadLink.click()
 	document.body.removeChild(downloadLink)
 }
+interface DataEntry {
+	[key: string]: string | number | boolean | null | undefined
+}
 
-const convertToCSV = (objArray, headers) => {
-	const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray
+const convertToCSV = (objArray: DataEntry[], headers: string[]) => {
+	const array = Array.isArray(objArray) ? objArray : JSON.parse(objArray)
 	let str = ''
 
 	// Add headers as the first row
