@@ -1,12 +1,12 @@
 <template>
-	<div class="flex justify-center">
-		<TabView :activeIndex="activeTabIndex" @onTabChange="handleTabChange" class="w-5/12">
+	<div class="flex justify-center px-4 sm:px-6 lg:px-8">
+		<TabView :activeIndex="activeTabIndex" @onTabChange="handleTabChange" class="w-full sm:w-10/12 lg:w-5/12">
 			<TabPanel v-for="(tab, index) in settings" :key="index">
 				<template #header>
 					<i :class="tab.icon" class="pr-2"></i>
 					{{ tab.label }}
 				</template>
-				<div class="">
+				<div class="p-4">
 					<div v-if="tab.label === 'Account'" class="space-y-6">
 						<div>
 							<h1 class="text-2xl">Account</h1>
@@ -15,15 +15,15 @@
 						<div class="w-full flex flex-col gap-4">
 							<div class="flex flex-col gap-2">
 								<label for="first_name" class="block">First Name</label>
-								<InputText id="first_name" v-model="first_name" />
+								<InputText id="first_name" v-model="first_name" class="w-full" />
 							</div>
 							<div class="flex flex-col gap-2">
 								<label for="last_name" class="block">Last Name</label>
-								<InputText id="last_name" v-model="last_name" />
+								<InputText id="last_name" v-model="last_name" class="w-full" />
 							</div>
 							<div class="flex flex-col gap-2">
 								<label for="email" class="block">Email</label>
-								<InputText id="email" v-model="email" />
+								<InputText id="email" v-model="email" class="w-full" />
 							</div>
 							<div class="flex flex-col gap-2">
 								<p>Password: <a href="#" class="text-primary-500 underline">Email Reset Link</a></p>
@@ -36,7 +36,6 @@
 							</div>
 						</div>
 						<div>
-							<!-- save and cancel -->
 							<div class="flex flex-row justify-end gap-2">
 								<Button label="Cancel" severity="secondary" />
 								<Button label="Save" />
@@ -57,11 +56,6 @@
 							<Column field="id" header="User ID"></Column>
 							<Column field="name" header="Name"></Column>
 							<Column field="role" header="Role">
-								<!-- <template #body="slotProps">
-									<div>
-										<Dropdown :options="items" v-model="slotProps.data.role" /> --
-									</div>
-								</template> -->
 							</Column>
 							<Column field="actions" header="Actions">
 								<template #body="slotProps">
