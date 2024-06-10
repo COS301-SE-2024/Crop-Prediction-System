@@ -4,7 +4,7 @@
 			<span class="text-black dark:text-white ml-[-12px] font-[500] p-0">{{ item.label }}</span>
 		</template>
 		<template #item="{ item }">
-			<RouterLink v-if="!item.separator" :to="item.url" custom v-slot="{ href, isActive }">
+			<RouterLink v-if="!item.separator" :to="item.url || ''" custom v-slot="{ href, isActive }">
 				<a :href="href" :class="{ active: isActive }" class="flex flex-row gap-2 items-center py-2">
 					<span :class="item.icon" class="pl-4" />
 					<span>{{ item.label }}</span>
@@ -18,6 +18,7 @@
 import { ref, watch } from 'vue'
 import Menu from 'primevue/menu'
 import { useRoute } from 'vue-router'
+import type { MenuItem } from 'primevue/menuitem'
 
 const items = ref([
 	{

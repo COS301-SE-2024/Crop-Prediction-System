@@ -79,7 +79,7 @@ export default {
             'font-[500]',
             // Spacing
             'm-0',
-            'py-3 px-5',
+            'pb-1 pt-3 px-5',
             // Shape
             'rounded-tl-none',
             'rounded-tr-none',
