@@ -1,6 +1,6 @@
 <template>
-	<div class="h-screen w-full flex flex-col gap-5">
-		<div class="flex flex-row justify-between items-center">
+	<div class="h-full w-full flex flex-col gap-5 px-4 sm:px-6 md:px-8 lg:px-0 py-4 sm:py-6 md:py-8 lg:py-0">
+		<div class="flex flex-row justify-between items-center mb-4">
 			<span class="font-bold text-xl dark:text-white">Fields</span>
 			<Button label="Add Field" @click="isDialogVisible = true" />
 		</div>
@@ -17,7 +17,9 @@
 		</Dialog>
 
 		<ConfirmDialog />
-		<GoogleMap ref="googleMapRef" :isDrawingEnabled="isDrawingEnabled" @polygonDrawn="handlePolygonDrawn" />
+		<div class="flex-grow">
+			<GoogleMap ref="googleMapRef" :isDrawingEnabled="isDrawingEnabled" @polygonDrawn="handlePolygonDrawn" />
+		</div>
 	</div>
 </template>
 
@@ -151,3 +153,10 @@ const saveField = async () => {
 	}
 }
 </script>
+
+<style>
+.card {
+	max-width: 800px;
+	margin: 0 auto;
+}
+</style>
