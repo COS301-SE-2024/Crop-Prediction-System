@@ -38,6 +38,20 @@ async function signUp() {
 	}
 }
 
+const signInWithOauth = async () => {
+	try {
+		const { error } = await client.auth.signInWithOAuth({
+			provider: 'google',
+			options: {
+				redirectTo: `http://localhost:3000/confirm/`,
+			},
+		})
+		if (error) throw error
+	} catch (error) {
+		errorMsg.value = error.message
+	}
+}
+
 const passwordChecks = computed(() => {
 	const checks = {
 		hasLowercase: /[a-z]/.test(password.value),
@@ -63,7 +77,7 @@ definePageMeta({
 			<div class="flex flex-col gap-5 items-center w-[400px] max-w-lg">
 				<Card class="w-full border border-surface-border">
 					<template #title>
-						<h1>Sign up</h1>
+						<h1 class="font-medium">Sign up</h1>
 					</template>
 					<template #content>
 						<div class="flex flex-col gap-3">
@@ -138,6 +152,10 @@ definePageMeta({
 									password !== confirmPassword
 								"
 							/>
+							<Divider align="center">
+								<b class="bg-none">or</b>
+							</Divider>
+							<Button icon="pi pi-google" class="w-full" @click="signInWithOauth" />
 							<small class="text-center"
 								>Already have an account? <NuxtLink to="/login" class="underline">Login</NuxtLink>
 							</small>

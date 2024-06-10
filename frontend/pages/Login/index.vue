@@ -8,6 +8,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, email } from '@vuelidate/validators'
 
 const client = useSupabaseClient()
+const user = useSupabaseUser()
 const userEmail = ref('')
 const password = ref(null)
 const errorMsg = ref(null)
@@ -29,10 +30,28 @@ const signIn = async () => {
 			password: password.value,
 		})
 		if (error) throw error
-		navigateTo('/')
+		navigateTo('/confirm')
 	} catch (error) {
 		errorMsg.value = error.message
 	}
+}
+
+const signInWithOauth = async () => {
+	try {
+		const { error } = await client.auth.signInWithOAuth({
+			provider: 'google',
+			options: {
+				redirectTo: `http://localhost:3000/confirm/`,
+			},
+		})
+		if (error) throw error
+	} catch (error) {
+		errorMsg.value = error.message
+	}
+}
+
+if (user.value) {
+	console.log("I'm in here")
 }
 
 definePageMeta({
@@ -41,19 +60,19 @@ definePageMeta({
 </script>
 
 <template>
-	<div class="w-full h-screen flex flex-col justify-center items-center p-4 dark:bg-surface-900 bg-surface-500">
+	<div class="w-full h-screen flex flex-col justify-center items-center p-4 dark:">
 		<div class="self-center">
-			<div
-				class="flex flex-col gap-5 items-center w-[400px] max-w-md bg-opacity-50 dark:bg-opacity-50 _bg-gray-100 _dark:bg-gray-600 backdrop-blur-md _border border-surface-500 text-center dark:text-white text-black p-8 rounded-xl"
-			>
-				<div class="w-full grid gap-4">
-					<div class="">
-						<div class="flex flex-col gap-3 items-center">
-							<img src="~/assets/logo_only.png" alt="Logo" class="w-20" />
-							<h1 class="text-2xl">Log in to TerraByte</h1>
+			<div class="flex flex-col gap-5 items-center w-[400px] max-w-md">
+				<Card class="w-full border border-surface-border bg-primary-inverse dark:bg-surface-800">
+					<template #header>
+						<div class="flex justify-center items-center p-4">
+							<img src="../../assets/logo_only.png" alt="Logo" class="w-[100px] h-[100px] self-center" />
 						</div>
-					</div>
-					<div>
+					</template>
+					<template #title>
+						<h1 class="font-medium">Log in</h1>
+					</template>
+					<template #content>
 						<div class="flex flex-col gap-3">
 							<div class="flex flex-col gap-2 items-start">
 								<h3 class="font-semibold">Email Address</h3>
@@ -71,7 +90,7 @@ definePageMeta({
 							</div>
 							<div class="flex flex-col gap-2 items-start">
 								<h3 class="font-semibold">Password</h3>
-								<div class="card flex justify-center w-full">
+								<div class="flex justify-center w-full">
 									<Password v-model="password" toggleMask class="w-full" :feedback="false">
 										<template #header>
 											<h6 class="font-medium m-0 mb-2 text-base">Enter your password</h6>
@@ -84,12 +103,17 @@ definePageMeta({
 							</div>
 							<small v-if="errorMsg" class="text-red-500">{{ errorMsg }}</small>
 							<Button class="w-full" label="Login" @click="signIn" />
+							<Divider align="center">
+								<b class="bg-none">or</b>
+							</Divider>
+							<Button icon="pi pi-google" class="w-full" @click="signInWithOauth" />
 							<small class="text-center"
-								>Don't have an account? <NuxtLink to="/signup" class="underline">Sign up </NuxtLink></small
-							>
+								>Don't have an account?
+								<NuxtLink to="/signup" class="underline">Sign up</NuxtLink>
+							</small>
 						</div>
-					</div>
-				</div>
+					</template>
+				</Card>
 			</div>
 		</div>
 	</div>
