@@ -48,6 +48,7 @@ def process_ndvi_image(file_path, x, y, width, height):
         'std_dev_normalized_ndvi': std_dev_normalized_ndvi,
         'max_normalized_ndvi': max_normalized_ndvi,
         'min_normalized_ndvi': min_normalized_ndvi
+        # TODO: Make a decision on which statistics to include in the final DataFrame
     }
 
 # Define ROI coordinates (x, y, width, height)
@@ -71,8 +72,9 @@ ndvi_links = [link for link in ndvi_links if 'zip' in link]
 # Prepend the base URL to the relative links
 ndvi_links = [ndvi_url + link for link in ndvi_links]
 
-# Filter out links that end with '.zip'
-ndvi_zip_files = [link for link in ndvi_links if link.endswith('.zip')]
+# TODO: Filter the NDVI zip files based on the date range
+# Will have to decide on the crop season and filter the NDVI files accordingly
+# (it will otherwise take around 450 hours to process all the NDVI files xD)
 
 # Process each NDVI zip file URL
 ndvi_data = []
