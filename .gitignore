@@ -36,3 +36,7 @@ __pycache__
 
 # vpp
 *.vpp.*
+
+# ML data
+*.tif
+*.tfw
