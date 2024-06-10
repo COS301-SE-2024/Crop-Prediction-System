@@ -243,13 +243,26 @@ class supabaseFunctions:
     
     @staticmethod
     def getUserFields(user_id: str):
+        # get team id from profile and pass it to getTeamFieldsHelper
+        dict = {"userid": user_id}
+        response = supabaseFunctions.__sbClient.rpc("get_team_id", dict).execute()
+        if response.data == []:
+            return {"error": "Team not found. Please create a team first."}
+        # print(response.data[0]["id"])
+        userid = response.data[0]["team_id"]
+        dict2 = {"userid": userid}
+        team_id = response.data[0]["team_id"]
+        return supabaseFunctions.getTeamFieldsHelper(team_id)
+        
+    @staticmethod
+    def getTeamFieldsHelper(team_id: str):
         try:
-            dict = {"user_id": user_id}
-            response = supabaseFunctions.__sbClient.rpc('get_field_info_from_user', dict).execute()
+            dict = {"teamid": team_id}
+            response = supabaseFunctions.__sbClient.rpc("get_all_fields_from_team", dict).execute()
             if response.data == []:
-                return {"error": "Data not found. Field ID may be invalid or may not have any data."}
+                return {"error": "Data not found. Team ID may be invalid or may not have any data."}
             return response.data
         except Exception as e:
             print(e)
-            return {"error": "Failed to get field data", "error_message": e}
-        
+            return {"error": "Failed to get team fields", "error_message": e}        
+ 
