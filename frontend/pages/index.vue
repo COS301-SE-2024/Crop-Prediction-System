@@ -1,5 +1,5 @@
 <template>
-	<div class="space-y-5 w-full">
+	<div class="space-y-5 w-full px-4 sm:px-6 md:px-8 lg:px-0 py-4 sm:py-6 md:py-8 lg:py-0">
 		<div class="flex space-x-5 w-full overflow-x-auto whitespace-nowrap">
 			<StatPanel
 				v-for="stat in stats"
