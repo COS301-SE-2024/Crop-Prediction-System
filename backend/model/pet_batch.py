@@ -1,113 +1,83 @@
-import rasterio
-from rasterio.plot import show
+import requests
+import io
+import os
+import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import datetime as dt
+import rasterio
+from rasterio.io import MemoryFile
+from tqdm import tqdm
+import re
+from datetime import datetime
+from dotenv import load_dotenv
+from supabase import create_client, Client
+import tarfile
+import tempfile
 
-file_path = 'pet/et120101.bil'
+from pet import process_pet_file
 
-def process_pet_file(file_path, file_name):
+load_dotenv()
 
-    with rasterio.open(file_path) as src:
-        pet_array = src.read(1)
-        metadata = src.profile
+# Supabase credentials
+supabase_url = os.environ.get('SUPABASE_URL')
+supabase_key = os.environ.get('SUPABASE_KEY')
 
-    # plt.imshow(pet_array, cmap='viridis')
-    # plt.colorbar(label='PET (mm/month)')
-    # plt.title('Potential Evapotranspiration Data')
-    # plt.show()
+# Initialize Supabase client
+supabase_client: Client = create_client(supabase_url, supabase_key)
 
-    # Show in a different style
-    # plt.imshow(pet_array, cmap='rainbow')
-    # plt.colorbar(label='PET (mm/month)')
-    # plt.title('Potential Evapotranspiration Data')
-    # plt.show()
+# Define URL containing PET tar.gz files
+pet_url = 'https://edcintl.cr.usgs.gov/downloads/sciweb1/shared/fews/web/global/daily/pet/downloads/daily/'  # Replace with actual URL
 
-    # Define ROI coordinates (x, y, width, height)
-    x = 180
-    y = 100
-    w = 55
-    h = 30
+# Fetch URLs of all PET tar.gz files from the directory
+response = requests.get(pet_url)
+response.raise_for_status()
 
-    roi = pet_array[y:y+h, x:x+w]
+# Extract links from the HTML content
+pet_links = re.findall(r'href=[\'"]?([^\'" >]+)', response.text)
+pet_links = [link for link in pet_links if 'tar.gz' in link]
+pet_links = [pet_url + link for link in pet_links]
 
-    roi = np.where(roi == -9999, np.nan, roi)
+# Select all URLs from et12 to et24
+possibilities = ['et12', 'et13', 'et14', 'et15', 'et16', 'et17', 'et18', 'et19', 'et20', 'et21', 'et22', 'et23', 'et24']
+pet_links = [link for link in pet_links if any(possibility in link for possibility in possibilities)]
 
-    # Import the mask from a TIFF file
-    mask_filename = 'base_layers/sa_wheat_pet.tif'
-    with rasterio.open(mask_filename) as mask_src:
-        mask = mask_src.read(1)
-        mask_metadata = mask_src.meta
+# Take every 5th file
+pet_links = pet_links[::5]
 
-    # plt.imshow(mask, cmap='gray')
-    # plt.colorbar(label='Mask Value')
-    # plt.title('Wheat Farmland Mask')
-    # plt.show()
+print("Number of PET tar.gz files:", len(pet_links))
 
-    # Crop the mask to match the dimensions of the ROI
-    mask = mask[y:y+h, x:x+w]
+# Function to extract .bil and related files from tar.gz archive to a temp directory
+def extract_files_to_temp_dir(tar_gz_content, temp_dir):
+    with tarfile.open(fileobj=io.BytesIO(tar_gz_content), mode='r:gz') as tar:
+        tar.extractall(path=temp_dir)
 
-    # plt.imshow(mask, cmap='gray')
-    # plt.colorbar(label='Mask Value')
-    # plt.title('Wheat Farmland Mask')
-    # plt.show()
+# Process each PET tar.gz file URL
+pet_data = []
+for tar_gz_url in tqdm(pet_links, desc="Downloading and Processing PET", unit="tar.gz file"):
+    tar_gz_response = requests.get(tar_gz_url)
+    with tempfile.TemporaryDirectory() as temp_dir:
+        extract_files_to_temp_dir(tar_gz_response.content, temp_dir)
+        
+        file_name = os.path.basename(tar_gz_url)
+        
+        # get actual path to the extracted .bil file
+        bil_files = [os.path.join(temp_dir, f) for f in os.listdir(temp_dir) if f.endswith('.bil')]
 
-    mask = np.where(mask < 255, 1, 0)
+        print(f"Extracted .bil files: {bil_files}")
+        
+        processed_data = process_pet_file(bil_files[0], file_name)
+        if processed_data is not None:
+            processed_data['date'] = processed_data['date'].isoformat()
+            pet_data.append(processed_data)
+            
+            # Uncomment the following lines if you want to insert data into Supabase
+            response = supabase_client.table('pet_historical').insert([processed_data]).execute()
+            print(f"Response: {response}")
 
-    # Plot the Mask
-    # plt.imshow(mask, cmap='gray')
-    # plt.colorbar(label='Mask Value')
-    # plt.title('Wheat Farmland Mask')
-    # plt.show()
+# Create a DataFrame from the extracted data
+pet_df = pd.DataFrame(pet_data)
 
-    # Resize or interpolate the mask to match the dimensions of the ROI array
-    # Use appropriate resizing or interpolation method based on the array dimensions
-    # Apply the mask to the ROI array
-    roi = np.where(mask == 1, roi, np.nan)
+# Sort the DataFrame by date
+pet_df = pet_df.sort_values('date')
 
-    # Plot the ROI with a blue-to-red spectrum colormap
-    # plt.imshow(roi, cmap='rainbow')
-    # plt.colorbar(label='PET (mm/month)')
-    # plt.title('Potential Evapotranspiration Data')
-    # plt.show()
-
-    # apply normalization between -1 and 1
-    roi = (roi - np.nanmin(roi)) / (np.nanmax(roi) - np.nanmin(roi))
-    roi = 2 * roi - 1
-
-    # Plot the normalized ROI
-    # plt.imshow(roi, cmap='rainbow')
-    # plt.colorbar(label='Normalized PET')
-    # plt.title('Normalized Potential Evapotranspiration Data')
-    # plt.show()
-
-    # Calculate statistics
-    mean = np.nanmean(roi)
-    median = np.nanmedian(roi)
-    std = np.nanstd(roi)
-    var = np.nanvar(roi)
-    iqr = np.nanpercentile(roi, 75) - np.nanpercentile(roi, 25)
-
-    # print(f"Mean: {mean}")
-    # print(f"Median: {median}")
-    # print(f"Standard Deviation: {std}")
-    # print(f"Variance: {var}")
-    # print(f"IQR: {iqr}")
-
-    # date
-    # print(file_name)
-    # et020120.tar.gz
-
-    date = file_name[2:8]
-    date = f"{date[:2]}-{date[2:4]}-{date[4:]}"
-    date = dt.datetime.strptime(date, "%y-%m-%d")
-
-    return {
-        'date': date,
-        'mean': mean,
-        'median': median,
-        'std': std,
-        'var': var,
-        'iqr': iqr
-    }
-
+# Optionally, you can save the DataFrame to a CSV file
+pet_df.to_csv('pet_statistics.csv', index=False)
