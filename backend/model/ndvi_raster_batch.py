@@ -26,14 +26,6 @@ supabase_client = supabase.create_client(supabase_url, supabase_key)
 
 # 72 samples per year. Write a line to add the date to the dataframe (e.g. 2022-01-01). The file name is 2207 which means the 7th sample of 2022. This correlates to about 365/72*7 = 35 days after the start of the year.
 
-# Define function to process each NDVI image
-
-# Define ROI coordinates (x, y, width, height)
-x = 2500
-y = 7073
-width = 6225
-height = 4073
-
 # Define URL containing NDVI zip files
 ndvi_url = 'https://edcintl.cr.usgs.gov/downloads/sciweb1/shared/fews/web/africa/southern/pentadal/eviirs/ndvi/temporallysmoothedndvi/downloads/pentadal/'
 
@@ -74,7 +66,7 @@ for zip_url in tqdm(ndvi_zip_files, desc="Downloading and Processing", unit="zip
                 file_path = os.path.join('temp_folder', file_name)
                 
                 timer = time.time()
-                processed_data = process_ndvi_image(file_path, x, y, width, height)
+                processed_data = process_ndvi_image(file_path)
 
                 processed_data['date'] = processed_data['date'].isoformat()
 

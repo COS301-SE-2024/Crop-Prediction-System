@@ -38,7 +38,7 @@ for file_path in ndvi_files:
     # Process the NDVI image and store the extracted data
     try:
         timer = time.time()
-        processed_data = process_ndvi_image(file_path, x, y, width, height)
+        processed_data = process_ndvi_image(file_path)
 
         processed_data['date'] = processed_data['date'].isoformat()
 

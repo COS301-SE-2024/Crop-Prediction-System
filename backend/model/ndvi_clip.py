@@ -5,7 +5,7 @@ import os
 import pandas as pd
 import scipy as sp
 
-def process_ndvi_image(file_path, x, y, width, height):
+def process_ndvi_image(file_path):
 
     # Read the NDVI data from the GeoTIFF file
     with rasterio.open(file_path) as src:
