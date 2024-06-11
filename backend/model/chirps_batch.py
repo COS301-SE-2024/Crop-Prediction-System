@@ -37,6 +37,9 @@ chirps_links = [link for link in chirps_links if 'gz' in link]
 # Prepend the base URL to the relative links
 chirps_links = [chirps_url + link for link in chirps_links]
 
+# Select all URLs from 2012-current
+chirps_links = [link for link in chirps_links if '2012' in link or '2013' in link or '2014' in link or '2015' in link or '2016' in link or '2017' in link or '2018' in link or '2019' in link or '2020' in link or '2021' in link or '2022' in link]
+
 print("Number of chirps gz files:", len(chirps_links))
 
 # Process each chirps gz file URL

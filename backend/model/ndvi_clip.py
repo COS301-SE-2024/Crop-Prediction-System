@@ -41,10 +41,10 @@ def process_ndvi_image(file_path):
     mask = np.where(mask == 0, 1, 0)
 
     # Plot the mask
-    # plt.imshow(mask, cmap='gray')
-    # plt.colorbar(label='Mask Value')
-    # plt.title('Wheat Farmland Mask')
-    # plt.show()
+    plt.imshow(mask, cmap='gray')
+    plt.colorbar(label='Mask Value')
+    plt.title('Wheat Farmland Mask')
+    plt.show()
 
     # Resize or interpolate the mask to match the dimensions of the normalized ROI array
     # Use appropriate resizing or interpolation method based on the array dimensions
@@ -53,16 +53,16 @@ def process_ndvi_image(file_path):
 
     # Plot a histogram of the suitable wheat ROI
     # plt.hist(suitable_wheat_roi[~np.isnan(suitable_wheat_roi)].flatten(), bins=50, color='c')
-    # plt.xlabel('Normalized NDVI Values')
-    # plt.ylabel('Frequency')
-    # plt.title('Histogram of Normalized NDVI Values Suitable for Wheat')
-    # plt.show()
+    plt.xlabel('Normalized NDVI Values')
+    plt.ylabel('Frequency')
+    plt.title('Histogram of Normalized NDVI Values Suitable for Wheat')
+    plt.show()
 
     # Plot the suitable wheat ROI
-    # plt.imshow(suitable_wheat_roi, cmap='viridis')
-    # plt.colorbar(label='Normalized NDVI')
-    # plt.title('Normalized NDVI Suitable for Wheat')
-    # plt.show()
+    plt.imshow(suitable_wheat_roi, cmap='viridis')
+    plt.colorbar(label='Normalized NDVI')
+    plt.title('Normalized NDVI Suitable for Wheat')
+    plt.show()
 
     # Perform further analysis on the normalized ROI
     mean_normalized_ndvi = np.nanmean(suitable_wheat_roi)
