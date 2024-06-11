@@ -40,3 +40,7 @@ __pycache__
 # ML data
 *.tif
 *.tfw
+
+# RStudio
+*.RData
+*.Rhistory
