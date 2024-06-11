@@ -12,31 +12,31 @@
 							<h1 class="text-xl sm:text-2xl">Account</h1>
 							<p class="text-sm sm:text-base text-surface-400">Manage your account settings and other preferences</p>
 						</div>
-						<div class="w-full flex flex-col gap-4">
-							<div class="flex flex-col gap-2">
+						<div class="w-full flex flex-col gap-4 sm:gap-6">
+							<div class="flex flex-col gap-2 sm:gap-4">
 								<label for="first_name" class="block text-sm sm:text-base">First Name</label>
 								<InputText id="first_name" v-model="first_name" class="w-full text-sm sm:text-base" />
 							</div>
-							<div class="flex flex-col gap-2">
+							<div class="flex flex-col gap-2 sm:gap-4">
 								<label for="last_name" class="block text-sm sm:text-base">Last Name</label>
 								<InputText id="last_name" v-model="last_name" class="w-full text-sm sm:text-base" />
 							</div>
-							<div class="flex flex-col gap-2">
+							<div class="flex flex-col gap-2 sm:gap-4">
 								<label for="email" class="block text-sm sm:text-base">Email</label>
 								<InputText id="email" v-model="email" class="w-full text-sm sm:text-base" />
 							</div>
-							<div class="flex flex-col gap-2">
+							<div class="flex flex-col gap-2 sm:gap-4">
 								<p class="text-sm sm:text-base">Password: <a href="#" class="text-primary-500 underline">Email Reset Link</a></p>
 							</div>
 						</div>
 						<div>
-							<div class="field flex items-center gap-2">
+							<div class="field flex items-center gap-2 sm:gap-4">
 								<p class="text-sm sm:text-base">Dark Mode</p>
 								<InputSwitch v-model="checked" @change="setColorTheme(checked ? 'dark' : 'light')" />
 							</div>
 						</div>
 						<div>
-							<div class="flex flex-row justify-end gap-2">
+							<div class="flex flex-row justify-end gap-2 sm:gap-4">
 								<Button label="Cancel" severity="secondary" class="text-sm sm:text-base" />
 								<Button label="Save" class="text-sm sm:text-base" />
 							</div>
@@ -50,7 +50,7 @@
 							</div>
 							<Button label="Add Team" icon="pi pi-plus" class="p-button-success text-sm sm:text-base mt-4 sm:mt-0" />
 						</div>
-						<div class="treetable-container">
+						<div class="treetable-container text-xs sm:text-sm">
 							<TreeTable :value="teams">
 								<Column expander style="width: 3em"></Column>
 								<Column field="team" header="Team"></Column>
