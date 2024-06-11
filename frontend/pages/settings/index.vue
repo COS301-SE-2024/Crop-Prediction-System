@@ -10,7 +10,9 @@
 					<div v-if="tab.label === 'Account'" class="space-y-6">
 						<div>
 							<h1 class="text-xl sm:text-2xl">Account</h1>
-							<p class="text-sm sm:text-base text-surface-400">Manage your account settings and other preferences</p>
+							<p class="text-sm sm:text-base text-surface-400">
+								Manage your account settings and other preferences
+							</p>
 						</div>
 						<div class="w-full flex flex-col gap-4 sm:gap-6">
 							<div class="flex flex-col gap-2 sm:gap-4">
@@ -26,7 +28,9 @@
 								<InputText id="email" v-model="email" class="w-full text-sm sm:text-base" />
 							</div>
 							<div class="flex flex-col gap-2 sm:gap-4">
-								<p class="text-sm sm:text-base">Password: <a href="#" class="text-primary-500 underline">Email Reset Link</a></p>
+								<p class="text-sm sm:text-base">
+									Password: <a href="#" class="text-primary-500 underline">Email Reset Link</a>
+								</p>
 							</div>
 						</div>
 						<div>
@@ -48,7 +52,11 @@
 								<h1 class="text-xl sm:text-2xl">Teams</h1>
 								<p class="text-sm sm:text-base text-surface-400">Manage your teams and team members</p>
 							</div>
-							<Button label="Add Team" icon="pi pi-plus" class="p-button-success text-sm sm:text-base mt-4 sm:mt-0" />
+							<Button
+								label="Add Team"
+								icon="pi pi-plus"
+								class="p-button-success text-sm sm:text-base mt-4 sm:mt-0"
+							/>
 						</div>
 						<div class="treetable-container text-xs sm:text-sm">
 							<TreeTable :value="teams">
