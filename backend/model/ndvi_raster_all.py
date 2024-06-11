@@ -14,10 +14,13 @@ def process_ndvi_image(file_path, x, y, width, height):
     # Crop the ROI from the NDVI array
     roi = ndvi_array[y:y+height, x:x+width]
 
+    # Remove 0 values (ocean or nodata) from the ROI
+    roi = roi[roi != 0.0]
+
     # Calculate statistics for the ROI
-    mean_ndvi = roi.mean()
-    median_ndvi = np.median(roi)
-    std_dev_ndvi = roi.std()
+    # mean_ndvi = roi.mean()
+    # median_ndvi = np.median(roi)
+    # std_dev_ndvi = roi.std()
     max_ndvi = roi.max()
     min_ndvi = roi.min()
 
@@ -33,11 +36,11 @@ def process_ndvi_image(file_path, x, y, width, height):
 
     return {
         'file_path': file_path,
-        'mean_ndvi': mean_ndvi,
-        'median_ndvi': median_ndvi,
-        'std_dev_ndvi': std_dev_ndvi,
-        'max_ndvi': max_ndvi,
-        'min_ndvi': min_ndvi,
+        # 'mean_ndvi': mean_ndvi,
+        # 'median_ndvi': median_ndvi,
+        # 'std_dev_ndvi': std_dev_ndvi,
+        # 'max_ndvi': max_ndvi,
+        # 'min_ndvi': min_ndvi,
         'mean_normalized_ndvi': mean_normalized_ndvi,
         'median_normalized_ndvi': median_normalized_ndvi,
         'std_dev_normalized_ndvi': std_dev_normalized_ndvi,
@@ -69,4 +72,4 @@ ndvi_df = pd.DataFrame(ndvi_data)
 print(ndvi_df)
 
 # Optionally, you can save the DataFrame to a CSV file
-# ndvi_df.to_csv('ndvi_statistics.csv', index=False)
+ndvi_df.to_csv('ndvi_local_all.csv', index=False)

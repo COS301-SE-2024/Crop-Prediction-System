@@ -25,6 +25,16 @@ roi = ndvi_array[y:y+height, x:x+width]
 plt.imshow(roi, cmap='viridis')
 plt.show()
 
+# Remove 0 values (ocean or nodata) from the ROI
+roi = roi[roi != 0.0]
+
+# Histogram of NDVI values in the ROI
+plt.hist(roi.flatten(), bins=50, color='c')
+plt.xlabel('NDVI Values')
+plt.ylabel('Frequency')
+plt.title('Histogram of NDVI Values in ROI')
+plt.show() 
+
 # Perform further analysis on the ROI
 mean_ndvi = roi.mean()
 median_ndvi = np.median(roi)
@@ -44,8 +54,11 @@ print("Min NDVI:", min_ndvi)
 # Normalize NDVI values to range between -1 and 1
 normalized_roi = (roi - min_ndvi) / (max_ndvi - min_ndvi) * 2 - 1
 
-# Plot the normalized ROI (to verify the normalization)
-plt.imshow(normalized_roi, cmap='viridis')
+# Plot a histogram of the normalized ROI (to verify the normalization)
+plt.hist(normalized_roi.flatten(), bins=50, color='c')
+plt.xlabel('Normalized NDVI Values')
+plt.ylabel('Frequency')
+plt.title('Histogram of Normalized NDVI Values in ROI')
 plt.show()
 
 # Perform further analysis on the normalized ROI

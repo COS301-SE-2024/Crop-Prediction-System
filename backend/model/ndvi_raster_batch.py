@@ -19,6 +19,9 @@ def process_ndvi_image(file_path, x, y, width, height):
     # Crop the ROI from the NDVI array
     roi = ndvi_array[y:y+height, x:x+width]
 
+    # Remove 0 values (ocean or nodata) from the ROI
+    roi = roi[roi != 0.0]
+
     # Calculate statistics for the ROI
     # mean_ndvi = roi.mean()
     # median_ndvi = np.median(roi)
@@ -74,7 +77,13 @@ ndvi_links = [ndvi_url + link for link in ndvi_links]
 
 # TODO: Filter the NDVI zip files based on the date range
 # Will have to decide on the crop season and filter the NDVI files accordingly
-# (it will otherwise take around 450 hours to process all the NDVI files xD)
+
+# Take every 6th NDVI zip file (i.e. monthly data)
+# ndvi_zip_files = ndvi_links[::6]
+
+ndvi_zip_files = ndvi_links
+
+print("Number of NDVI zip files:", len(ndvi_zip_files))
 
 # Process each NDVI zip file URL
 ndvi_data = []
