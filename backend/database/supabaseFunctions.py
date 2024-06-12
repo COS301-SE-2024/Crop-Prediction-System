@@ -284,3 +284,12 @@ class supabaseFunctions:
         except Exception as e:
             print(e)
             return {"error": "Failed to remove from team", "error_message": e}
+        
+    @staticmethod
+    def updateRoles(user: dict):
+        try:
+            supabaseFunctions.__sbClient.table("profiles").update({"role": user.get("role")}).eq("id", user.get("user_id")).execute()
+            return {"success": "Updated roles"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to update roles", "error_message": e}

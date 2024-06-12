@@ -39,7 +39,8 @@ class API:
         self.app.add_api_route("/getUserFields", self.getUserFields, methods=["GET"])
         self.app.add_api_route("/addToTeam", self.addToTeam, methods=["POST"])
         self.app.add_api_route("/removeFromTeam", self.removeFromTeam, methods=["GET"])
-        
+        self.app.add_api_route("/updateRoles", self.updateRoles, methods=["POST"])
+
         # testing routes    
         self.app.add_api_route("/test", self.test, methods=["GET"])
                                
@@ -89,6 +90,8 @@ class API:
     def removeFromTeam(self, request: Request, user_id: str):
         return self.sb.removeFromTeam(user_id)
     #update roles
+    def updateRoles(self, request: Request, user: dict):
+        return self.sb.updateRoles(user)
 
 api_instance = API()
 app = api_instance.app
