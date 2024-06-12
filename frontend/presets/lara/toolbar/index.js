@@ -6,7 +6,7 @@ export default {
             'gap-2',
 
             // Spacing
-            'p-5',
+            'p-3',
 
             // Shape
             'rounded-md',

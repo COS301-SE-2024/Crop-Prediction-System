@@ -11,5 +11,12 @@ export default defineVitestConfig({
 			},
 		},
 		testTimeout: 10000,
+		coverage: {
+			enabled: true,
+			provider: 'v8',
+			exclude: ['presets/**/*'],
+			reportsDirectory: 'coverage',
+			reporter: ['text', 'html', 'json'],
+		},
 	},
 })
