@@ -274,3 +274,13 @@ class supabaseFunctions:
         except Exception as e:
             print(e)
             return {"error": "Failed to add user to team", "error_message": e}
+
+    @staticmethod
+    def removeFromTeam(user_id: str):
+        try:
+            response = supabaseFunctions.__sbClient.table("profiles").update({"team_id": None}).eq("id", user_id).execute()
+            print(response)
+            return {"success": "Removed from team"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to remove from team", "error_message": e}
