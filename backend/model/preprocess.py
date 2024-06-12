@@ -29,7 +29,7 @@ supabase_client = create_client(supabase_url, supabase_key)
 # Returns a pd.DataFrame with processed CHIRPS data
 # CHIRPS data is monthly
 chirps_data = process_chirps_files()
-chirps_data.to_csv('chirps_data.csv', index=False)
+chirps_data.to_csv('chirps_data_v2.csv', index=False)
 
 # Process NDVI files
 # Returns a pd.DataFrame with processed NDVI data

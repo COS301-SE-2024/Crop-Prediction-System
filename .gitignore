@@ -45,3 +45,6 @@ pet/
 # RStudio
 *.RData
 *.Rhistory
+
+# Big data
+big_data/

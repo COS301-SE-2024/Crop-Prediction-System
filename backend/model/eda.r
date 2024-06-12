@@ -11,7 +11,7 @@ data$date <- as.Date(data$date)
 data_season <- data[data$date >= as.Date("2012-12-01") & data$date <= as.Date("2023-12-01"),]
 
 # Convert date to numeric for cutting into seasons
-data_season$date_numeric <- as.numeric(data_season$date - as.Date("2019-01-01"))
+data_season$date_numeric <- as.numeric(data_season$date - as.Date("2012-01-01"))
 
 # Get the total season count from the dates by subtracting the first date from the last date
 year_count <- (as.numeric(as.Date("2023-12-01") - as.Date("2012-12-01")) / 365)
