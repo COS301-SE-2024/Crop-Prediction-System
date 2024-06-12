@@ -264,5 +264,13 @@ class supabaseFunctions:
             return response.data
         except Exception as e:
             print(e)
-            return {"error": "Failed to get team fields", "error_message": e}        
- 
+            return {"error": "Failed to get team fields", "error_message": e}    
+
+    @staticmethod
+    def addToTeam(team: dict):
+        try:
+            supabaseFunctions.__sbClient.table("profiles").update({"team_id": team.get("team_id")}).eq("id", team.get("user_id")).execute()
+            return {"success": "Added to team"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to add user to team", "error_message": e}
