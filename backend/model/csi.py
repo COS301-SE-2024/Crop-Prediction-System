@@ -59,5 +59,7 @@ def calculate_csi():
 
     return csi
 
+calculate_csi()
+
 # Crop Development Index (CDI) is the product of the normalized NDVI, PET, and CHIRPS values.
 # CDI = (NDVI - NDVI_min) / (NDVI_max - NDVI_min) * (PET - PET_min) / (PET_max - PET_min) * (1 - CHIRPS / CHIRPS_max)

@@ -11,6 +11,8 @@ import re
 from ndvi import process_ndvi_image
 import time
 
+import csv
+
 # Supabase
 # import supabase
 # from dotenv import load_dotenv
@@ -40,11 +42,29 @@ def process_ndvi_files():
     # Select only the links that contain 'zip' in the URL
     ndvi_links = [link for link in ndvi_links if 'zip' in link]
 
+    # TODO: Filter the NDVI zip files based on those already processed
+    # ndvi_data.csv contains the processed NDVI data
+    ndvi_df = pd.read_csv('ndvi_data.csv')
+    processed_files = ndvi_df['file_path'].unique()
+
+
+    # NDVI Link: sa1362.zip
+    # Processed Files: temp_folder/sa1362.tif
+    # Change the processed_files to only contain the file name
+    processed_files = [file.split('/')[1] for file in processed_files]
+
+    # Change the file extension to zip
+    processed_files = [file.replace('.tif', '.zip') for file in processed_files]
+    print(processed_files)
+    print("Number of processed files:", len(processed_files))
+
+
+    ndvi_links = [link for link in ndvi_links if link not in processed_files]
+
+    # print(ndvi_links)
+    
     # Prepend the base URL to the relative links
     ndvi_links = [ndvi_url + link for link in ndvi_links]
-
-    # TODO: Filter the NDVI zip files based on the date range
-    # Will have to decide on the crop season and filter the NDVI files accordingly
 
     # Take every 6th NDVI zip file (i.e. monthly data)
     # ndvi_zip_files = ndvi_links[::6]
@@ -81,6 +101,21 @@ def process_ndvi_files():
                     # # response = supabase_client.table('ndvi_historical').insert([processed_data]).execute()
 
                     # print(f"Response: {response} in {time.time() - timer} seconds")
+
+                    # write current entry to csv
+                    # with open("dict.csv", "a") as csv_file:
+                    #     writer = csv.writer(csv_file)
+                    #     for key, value in dictionary.items():
+                    #         writer.writerow([key, value])
+
+                    with open("ndvi_data.csv", "a", newline='') as csv_file:
+                        writer = csv.writer(csv_file)
+                        # If file is empty, write header
+                        if csv_file.tell() == 0:
+                            writer.writerow(processed_data.keys())
+                        writer.writerow(processed_data.values())
+
+
 
                     # Remove tif file after processing
                     os.remove(file_path)
