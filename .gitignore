@@ -48,3 +48,6 @@ pet/
 
 # Big data
 big_data/
+*.xlsx
+*.per
+
