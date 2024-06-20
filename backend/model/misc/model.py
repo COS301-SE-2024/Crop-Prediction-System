@@ -16,8 +16,8 @@ X = df.drop(columns=['date', 'wheat_ton_per_hectare'])
 y = df['wheat_ton_per_hectare']
 
 # Apply more weight to recent years by replicating them in the dataset
-recent_years_count = 5
-weight_factor = 5
+recent_years_count = 15
+weight_factor = 3
 
 # Identify the indices of recent years
 recent_years_indices = df.tail(recent_years_count).index
@@ -104,20 +104,30 @@ wheat_yield_2023 = model.predict(X_2023)
 # Convert the predicted value to the original scale
 wheat_yield_2023 = wheat_yield_2023 * std_yield + average_yield
 
-print(f"Predicted wheat yield for 2023: {wheat_yield_2023[0]}")
+print(f"Predicted wheat yield per hectare for 2023: {wheat_yield_2023[0]}")
 
 # Enter your hectare value to get ton value
 # hectare = float(input("Enter the hectare value: "))
-hectare = 1
+hectare = 537950
 
 # calculate the wheat yield in tons
 wheat_yield = hectare * wheat_yield_2023[0]
+# Expected: 2050000
 
 print(f"Wheat yield in tons: {wheat_yield}")
 
 # Plot feature importance
 importance = model.feature_importances_
 feature_names = X.columns
+
+# Merge the feature names and importance values
+feature_importance = pd.DataFrame(list(zip(feature_names, importance)), columns=['Feature', 'Importance'])
+
+# Sort the feature importance values in descending order
+feature_importance = feature_importance.sort_values(by='Importance', ascending=False)
+
+# Save the feature importance values to a CSV file
+feature_importance.to_csv('feature_importance.csv', index=False)
 
 plt.figure()
 plt.barh(feature_names, importance)

@@ -4,7 +4,7 @@ library(corrplot)
 library(dplyr)
 library(reshape2)
 
-data <- read.csv("uea_converted.csv")
+data <- read.csv("../processed_data/uea_converted.csv")
 yield <- read.csv("yield.csv")
 growing_season <- read.csv("growing_season.csv")
 
