@@ -17,7 +17,6 @@ import time
 times = []
 
 start_time = time.time()
-# Import CSV data
 data = pd.read_csv('processed_data/model_data_imputed.csv')
 
 # Define the target variable
@@ -217,7 +216,6 @@ print(f"Prediction: {times[3]:.4f}s")
 print(f"Total time: {sum(times):.4f}s")
 
 # Print the predicted wheat yield per hectare for 2023
-# Print in blue
 print("\n\033[94m" + "Predictions for 2023" + "\033[0m")
 
 print(f"Predicted wheat yield ton per hectare for 2023: {wheat_yield_2023[0][0]}")

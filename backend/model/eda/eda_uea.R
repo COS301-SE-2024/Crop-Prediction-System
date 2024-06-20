@@ -5,8 +5,8 @@ library(dplyr)
 library(reshape2)
 
 data <- read.csv("../processed_data/uea_converted.csv")
-yield <- read.csv("yield.csv")
-growing_season <- read.csv("growing_season.csv")
+yield <- read.csv("../processed_data/yield.csv")
+growing_season <- read.csv("../processed_data/growing_season.csv")
 
 # Convert growing season date from 1950-07 to 1950
 growing_season$year <- as.numeric(substr(growing_season$year, 1, 4))
@@ -22,7 +22,7 @@ wheat_yield <- yield[, c("production_year", "wheat_ton_per_hectare")]
 
 # First column is the date in the format FEB-2020 which is month and year
 # Convert it to a date object
-data$date <- as.Date(paste0("01-", data$date), format = "%d-%b-%Y")
+data$date <- as.Date(data$date, format = "%d-%b-%Y")
 
 # Convert the date to year
 data$date <- as.numeric(format(data$date, "%Y"))
@@ -46,7 +46,7 @@ data <- data %>%
 data_analyse <- data[complete.cases(data), ]
 
 # Save data_analyse as csv
-write.csv(data_analyse, "datasets/uea_analysed.csv", row.names = FALSE)
+# write.csv(data_analyse, "datasets/uea_analysed.csv", row.names = FALSE)
 
 # Correlation between wheat yield and other columns
 correlation <- cor(data_analyse)
