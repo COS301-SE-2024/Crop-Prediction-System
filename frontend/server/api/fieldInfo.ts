@@ -1,13 +1,20 @@
 export default defineEventHandler(async (event) => {
-	const config = useRuntimeConfig()
-	const { fieldid } = getQuery(event)
+  const proxyUrl = useRuntimeConfig().public.apiBaseUrl
+  const { fieldid } = getQuery(event)
 
-	try {
-		const response = await $fetch(`${config.public.apiBaseUrl}/getFieldInfo`, {
-			params: { fieldid },
-		})
-		return response
-	} catch (error) {
-		console.error('Error fetching field info:', error)
-	}
+  const apiUrl = `${proxyUrl}/getFieldInfo?fieldid=${fieldid}`
+
+  try {
+    const response = await fetch(apiUrl)
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`)
+    }
+    const data = await response.json()
+    return data
+  } catch (error: any) {
+    return {
+      statusCode: error.response?.status || 500,
+      message: error.message
+    }
+  }
 })
