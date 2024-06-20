@@ -202,10 +202,6 @@ X_2023 = X_2023[X.columns]
 wheat_yield_2023 = model.predict(X_2023_seq)
 wheat_yield_2023 = scaler_y.inverse_transform(wheat_yield_2023)
 
-# Print the predicted wheat yield per hectare for 2023
-print(f"Predicted wheat yield per hectare for 2023: {wheat_yield_2023[0][0]}")
-# 0.5
-
 # Calculate the total wheat yield in tons
 hectare = 537950
 wheat_yield = hectare * wheat_yield_2023[0][0]
