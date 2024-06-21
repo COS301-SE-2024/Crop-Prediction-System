@@ -53,7 +53,7 @@ def rec_knn(missing_values, df):
     # Fit the scaler on the data
     X_scaled = scaler.fit_transform(X)
 
-    # print(X_scaled)
+    print(X_scaled)
 
     # Initialize KNN model
     knn_model = KNeighborsRegressor(n_neighbors=5, weights='distance')
@@ -102,13 +102,23 @@ date = data['date']
 # Concatenate the date column with the imputed data
 dfResult = pd.concat([date, dfResult], axis=1)
 
+# Now calculate the soil moisture %
+# First calculate combined effect of precipitation and evapotranspiration for the next 16 days
+# dfResult['z_k'] = dfResult['precipitation'] / dfResult['potential_evapotranspiration']
+
+# # Calculate the soil moisture by taking the average of the combined effect of precipitation and evapotranspiration for the next 1 entry
+# dfResult['soil_moisture'] = dfResult['z_k'].rolling(window=1).mean()
+
+# # Apply a constant factor and take the inverse of the soil moisture to get the soil moisture %
+# dfResult['soil_moisture'] = 1 - 1 / (dfResult['soil_moisture'] ** 0.74)
+
 # Re-add "maize_ton_per_hectare","maize_comm_ton_per_hectare","maize_non_comm_ton_per_hectare","wheat_ton_per_hectare","groundnuts_ton_per_hectare","sunflowerseed_ton_per_hectare","sorghum_ton_per_hectare","soybeans_ton_per_hectare","barley_ton_per_hectare","canola_ton_per_hectare","oats_ton_per_hectare"
 yield_data = data[['maize_ton_per_hectare', 'maize_comm_ton_per_hectare', 'maize_non_comm_ton_per_hectare', 'wheat_ton_per_hectare', 'groundnuts_ton_per_hectare', 'sunflowerseed_ton_per_hectare', 'sorghum_ton_per_hectare', 'soybeans_ton_per_hectare', 'barley_ton_per_hectare', 'canola_ton_per_hectare', 'oats_ton_per_hectare']]
 
 dfResult = pd.concat([dfResult, yield_data], axis=1)
 
 # Save the imputed data to a CSV file
-dfResult.to_csv('processed_data/model_data_imputed.csv', index=False)
+dfResult.to_csv('processed_data/model_data_imputed_v2.csv', index=False)
 
 # Save model to be reused when there are new data with missing values
 import joblib
