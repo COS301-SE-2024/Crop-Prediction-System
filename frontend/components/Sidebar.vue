@@ -1,20 +1,20 @@
 <template>
 	<Sidebar v-model:visible="visible">
 		<template #container="{ closeCallback }">
-			<div class="flex flex-col justify-between h-full items-center p-4">
-				<div class="flex flex-col gap-3 items-center w-full">
-					<div class="flex flex-row justify-between items-center w-full">
-						<img src="../assets/logo.png" alt="Logo" class="object-fill w-1/2 h-full dark:hidden block" />
-						<img src="../assets/logo-alt.png" alt="Logo" class="object-fill w-1/2 h-full hidden dark:block" />
-						<Button icon="pi pi-times" @click="closeCallback" text severity="secondary" aria-label="Filter" />
-					</div>
-					<div class="w-full max-h-[calc(100vh-200px)] overflow-y-auto">
-						<Menu />
-					</div>
+			<div class="bg-none flex flex-col justify-between h-screen w-full items-center p-4 gap-2">
+				<div class="flex flex-row justify-between items-center w-full">
+					<img src="../assets/logo.png" alt="Logo" class="object-fill w-1/2 h-full dark:hidden block" />
+					<img src="../assets/logo-alt.png" alt="Logo" class="object-fill w-1/2 h-full hidden dark:block" />
+					<Button icon="pi pi-times" @click="closeCallback" text severity="secondary" aria-label="Filter" />
 				</div>
-				<div class="space-y-2 w-full">
+				<div class="w-full _max-h-[calc(100vh-200px)] h-full overflow-hidden">
+					<Menu />
+				</div>
+				<!-- <div class="flex flex-col gap-3 items-center w-full h-full overflow-y-auto">
+				</div> -->
+				<div class="w-full bg-opacity-50">
 					<AccountManage :email="user?.email" />
-					<div class="flex items-center gap-2">
+					<!-- <div class="flex items-center gap-2">
 						<Dropdown
 							v-model="selectedCity"
 							:options="cities"
@@ -32,12 +32,12 @@
 								</div>
 							</template>
 						</Dropdown>
-						<!-- Sum of all option alerts minus the selected city alerts -->
+						Sum of all option alerts minus the selected city alerts --
 						<Badge
 							:value="cities.reduce((acc, city) => acc + city.alerts, 0) - selectedCity?.alerts"
 							severity="danger"
 						/>
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</template>

@@ -1,5 +1,5 @@
 <template>
-	<nav class="p-2 px-5 z-50 w-full shadow-md dark:bg-surface-400/10 sticky top-0 left-0">
+	<nav class="p-2 px-5 z-50 w-full sm:w-full md:w-full shadow-md dark:bg-surface-400/10 sticky top-0 left-0">
 		<div class="flex justify-between xl:justify-normal xl:grid xl:grid-cols-3 h-full w-full">
 			<Sidebar class="justify-self-start" />
 			<NuxtLink to="/" class="text-2xl font-[500] text-primary-500 justify-self-center self-center h-full">
@@ -12,7 +12,7 @@
 				</div>
 			</OverlayPanel>
 			<OverlayPanel ref="settingsPanel" class="flex flex-col justify-center items-center p-2">
-				<!-- system statys showing operation -->
+				<!-- system status showing operation -->
 				<div class="w-full grid gap-2">
 					<Menu :model="status">
 						<template #item="{ item }">
@@ -24,9 +24,7 @@
 					</Menu>
 				</div>
 			</OverlayPanel>
-			<div
-				class="flex flex-row items-center justify-end gap-4 justify-self-end dark:text-white *:cursor-pointer *:opacity-60"
-			>
+			<div class="flex flex-row items-center justify-end gap-4 justify-self-end dark:text-white cursor-pointer opacity-60">
 				<!-- System Status -->
 				<div class="hidden sm:block">
 					<!-- green dot if good -->
@@ -38,12 +36,12 @@
 				<div class="p-5 sm:p-0">
 					<i class="pi pi-bell" style="font-size: 1.5rem" />
 				</div>
-				<div class="hidden sm:block">
+				<div>
 					<i class="pi pi-user" @click="toggleProfile" style="font-size: 1.5rem" />
 				</div>
 				<!-- <div class="hidden sm:block">
-					<i class="pi pi-cog" @click="toggleSettings" style="font-size: 1.5rem" />
-				</div> -->
+			<i class="pi pi-cog" @click="toggleSettings" style="font-size: 1.5rem" />
+		  </div> -->
 			</div>
 		</div>
 	</nav>

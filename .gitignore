@@ -36,3 +36,12 @@ __pycache__
 
 # vpp
 *.vpp.*
+
+# tif
+*.tif
+*.tfw
+
+# Rstudio
+.Rproj.user
+*.Rdata
+*.Rhistory

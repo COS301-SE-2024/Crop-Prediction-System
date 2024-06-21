@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<div class="justify-between flex items-center">
+		<div class="flex flex-col gap-5 px-4 sm:px-6 md:px-8 lg:px-0 py-4 sm:py-6 md:py-8 lg:py-0">
+			<h1 class="text-2xl font-semibold dark:text-white">Manage Team</h1>
 			<div class="flex gap-5">
-				<h1 class="text-2xl font-semibold dark:text-white">Manage Team</h1>
 				<div class="flex items-center gap-2">
 					<Dropdown
 						v-model="selectedCity"
@@ -11,13 +11,11 @@
 						placeholder="Switch Team"
 						checkmark
 						:highlightOnSelect="true"
-						class="w-full text-xs"
+						class="w-full text-sm"
 						filter
 					>
 					</Dropdown>
 				</div>
-			</div>
-			<div class="flex gap-5">
 				<Button label="Add Team Member" icon="pi pi-plus" class="text-sm" />
 			</div>
 		</div>
@@ -26,8 +24,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import TreeTable from 'primevue/treeTable'
-import Column from 'primevue/column'
 import Dropdown from 'primevue/dropdown'
 import Button from 'primevue/button'
 

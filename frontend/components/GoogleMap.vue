@@ -1,5 +1,5 @@
 <template>
-	<div class="h-full w-full" ref="mapContainer"></div>
+	<div class="md:h-screen h-[45rem] w-full _sm:h-[200px] _md:h-[850px]" ref="mapContainer"></div>
 </template>
 
 <script setup lang="js">
@@ -131,8 +131,6 @@ async function fetchField(fieldid) {
 		console.error(`Error fetching field with ID ${fieldid}:`, err.message)
 	}
 }
-
-// console.log(`FieldInfos`, fieldInfos.value[0].field_area.coordinates);
 
 defineExpose({
 	getPolygonPaths,
