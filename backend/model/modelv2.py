@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Input
+import inquirer
 
 # Ignore warnings
 import warnings
@@ -16,19 +17,44 @@ warnings.filterwarnings("ignore")
 import time
 times = []
 
-start_time = time.time()
 data = pd.read_csv('processed_data/model_data_imputed.csv')
 
-# Define the target variable
-crop = 'wheat_ton_per_hectare'
+crops = [
+    'maize_ton_per_hectare',
+    'maize_comm_ton_per_hectare',
+    'maize_non_comm_ton_per_hectare',
+    'wheat_ton_per_hectare',
+    'groundnuts_ton_per_hectare',
+    'sunflowerseed_ton_per_hectare',
+    'sorghum_ton_per_hectare',
+    'soybeans_ton_per_hectare',
+    'barley_ton_per_hectare',
+    'canola_ton_per_hectare',
+    'oats_ton_per_hectare'
+]
 
-# Not tested
-crops = ['maize_ton_per_hectare', 'maize_comm_ton_per_hectare', 'maize_non_comm_ton_per_hectare', 'wheat_ton_per_hectare', 'groundnuts_ton_per_hectare', 'sunflowerseed_ton_per_hectare', 'sorghum_ton_per_hectare', 'soybeans_ton_per_hectare', 'barley_ton_per_hectare', 'canola_ton_per_hectare', 'oats_ton_per_hectare']
+# Create a question for multi-choice selection
+questions = [
+    inquirer.List(
+        'selected_crops',
+        message="Select the crops you are interested in",
+        choices=crops,
+    ),
+]
 
+# Prompt the user to select crops
+answer = inquirer.prompt(questions)
+crop = answer['selected_crops']
+
+# Print the selected crops
+print("\n\033[93m" + "Selected Crops" + "\033[0m")
+print(crop)
+
+start_time = time.time()
 # Convert the data to a DataFrame
 df = pd.DataFrame(data)
 
-other_crops = [crop for crop in crops if crop != 'wheat_ton_per_hectare']
+other_crops = [c for c in crops if c != crop]
 
 # Ignore other crops but wheat
 df = df.drop(columns=other_crops)
@@ -200,13 +226,15 @@ X_2023 = X_2023[X.columns]
 # Predict the wheat yield for 2023
 wheat_yield_2023 = model.predict(X_2023_seq)
 wheat_yield_2023 = scaler_y.inverse_transform(wheat_yield_2023)
-
-# Calculate the total wheat yield in tons
-hectare = 537950
-wheat_yield = hectare * wheat_yield_2023[0][0]
-
 end_time = time.time()
 times.append(end_time - start_time)
+
+# Calculate the total wheat yield in tons
+# Let user input the hectare
+hectare = float(input("Enter the number of hectares: "))
+
+wheat_yield = hectare * wheat_yield_2023[0][0]
+
 
 print("\n\033[93m" + "Time Metrics" + "\033[0m")
 print(f"Data Preparation: {times[0]:.4f}s")
