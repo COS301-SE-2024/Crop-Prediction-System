@@ -40,6 +40,9 @@ class API:
         self.app.add_api_route("/removeFromTeam", self.removeFromTeam, methods=["GET"])
         self.app.add_api_route("/updateRoles", self.updateRoles, methods=["POST"])
 
+        # /getTeamId
+        self.app.add_api_route("/getTeamId", self.sb.getTeamId, methods=["GET"])
+
         # model routes
         self.app.add_api_route("/predict", self.predict, methods=["POST"])
         self.app.add_api_route("/calculateHealth", self.calculateHealth, methods=["GET"])
@@ -92,6 +95,10 @@ class API:
     #update roles
     def updateRoles(self, request: Request, user: dict):
         return self.sb.updateRoles(user)
+    
+    # get team id
+    def getTeamId(self, request: Request, user_id: str):
+        return self.sb.getTeamId(user_id)
     
     # model routes
     def predict(self, request: Request, data: dict):

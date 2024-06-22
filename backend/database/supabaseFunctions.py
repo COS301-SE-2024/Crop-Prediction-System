@@ -293,3 +293,14 @@ class supabaseFunctions:
         except Exception as e:
             print(e)
             return {"error": "Failed to update roles", "error_message": e}
+        
+    @staticmethod
+    def getTeamId(user_id: str):
+        try:
+            response = supabaseFunctions.__sbClient.table("profiles").select("team_id").eq("id", user_id).execute()
+            if response.data == []:
+                return {"error": "User not found"}
+            return response.data[0]
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get team ID", "error_message": e}
