@@ -15,3 +15,5 @@ pytest-mock==3.14.0
 supabase==2.4.0
 python-dotenv==1.0.1
 hypercorn==0.14.4
+shapely==2.0.4
+pyproj==3.6.1
