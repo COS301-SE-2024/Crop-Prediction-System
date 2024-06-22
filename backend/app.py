@@ -27,7 +27,6 @@ class API:
 
     def setup_routes(self):
         self.app.add_api_route("/", self.main, methods=["GET"])
-        # self.app.add_api_route("/startModel", self.initModel, methods=["GET"])
         self.app.add_api_route("/getFieldInfo", self.getFieldInfo, methods=["GET"])
         self.app.add_api_route("/getFieldData", self.getFieldData, methods=["GET"])
         self.app.add_api_route("/createField", self.createField, methods=["POST"])
@@ -41,6 +40,10 @@ class API:
         self.app.add_api_route("/removeFromTeam", self.removeFromTeam, methods=["GET"])
         self.app.add_api_route("/updateRoles", self.updateRoles, methods=["POST"])
 
+        # model routes
+        self.app.add_api_route("/predict", self.predict, methods=["POST"])
+        self.app.add_api_route("/calculateHealth", self.calculateHealth, methods=["GET"])
+
         # testing routes    
         self.app.add_api_route("/test", self.test, methods=["GET"])
                                
@@ -49,9 +52,6 @@ class API:
             "Welcome": "Welcome to the TerraByte API",
             "Link to Documentation": "https://documenter.getpostman.com/view/26558432/2sA3Qwaoyd"
         }
-
-    # def initModel(self, request: Request):
-    #     return self.ml.startModel()
 
     def getFieldInfo(self, request: Request, fieldid: int = 0):
         return self.sb.getFieldInfo(str(fieldid))
@@ -92,6 +92,14 @@ class API:
     #update roles
     def updateRoles(self, request: Request, user: dict):
         return self.sb.updateRoles(user)
+    
+    # model routes
+    def predict(self, request: Request, data: dict):
+        return self.ml.predict(data.get("data"), data.get("crop"), data.get("hectare"))
+    
+    def calculateHealth(self, request: Request, crop: str, n: int):
+        return self.ml.calculateHealth(crop, n)
+    
 
 api_instance = API()
 app = api_instance.app

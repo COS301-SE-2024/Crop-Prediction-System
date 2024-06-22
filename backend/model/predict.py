@@ -168,22 +168,28 @@ def predict(data_input, crop, hectare, data=None, optimums=None, retrain=False):
             'fitness': X_input_seq,
         }
 
+        # Change all '' to "" for JSON compatibility
+        result = str(result).replace("'", '"')
+
+        # Convert to dictionary
+        result = eval(result)
+
         return result
     return predict_yield(data_input, crop, hectare, retrain)
 
 # Example usage
-result = predict({
-    'date': '2023-01-01',
-    'potential_evapotranspiration': 5.6,
-    'cloud_cover': 43.1,
-    'precipitation': 89.4,
-    'maximum_temperature': 29.1, 
-    'rain_days': 10.4,
-    'minimum_temperature': 15.5,
-    'vapour_pressure': 15.1,
-    'ground_frost_frequency': 0.0,
-    'diurnal_temperature_range': 13.6,
-    'mean_temperature': 22.2
-}, "wheat", 4, None, None, True)
+# result = predict({
+#     'date': '2023-01-01',
+#     'potential_evapotranspiration': 5.6,
+#     'cloud_cover': 43.1,
+#     'precipitation': 89.4,
+#     'maximum_temperature': 29.1, 
+#     'rain_days': 10.4,
+#     'minimum_temperature': 15.5,
+#     'vapour_pressure': 15.1,
+#     'ground_frost_frequency': 0.0,
+#     'diurnal_temperature_range': 13.6,
+#     'mean_temperature': 22.2
+# }, "wheat", 4, None, None, True)
 
-print(result)
+# print(result)

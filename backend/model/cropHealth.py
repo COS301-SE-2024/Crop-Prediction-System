@@ -9,7 +9,7 @@ def calculateHealth(dFrame, crop, n, optimums=None):
     # Ensure crop is in title case
     crop = crop.title()
     if optimums is None:
-        optimums = pd.read_csv('optimums.csv')
+        optimums = pd.read_csv('backend/model/optimums.csv')
         optimums = pd.DataFrame(optimums)
 
     tmin = optimums.loc[optimums['Crop'] == crop, 'Tmin']
@@ -57,6 +57,9 @@ def calculateHealth(dFrame, crop, n, optimums=None):
 
     # Convert to array
     arr = dFrame['health_score'].tail(n).values
+
+    # Convert to list
+    arr = arr.tolist()
 
     result = {
         'crop': crop,
