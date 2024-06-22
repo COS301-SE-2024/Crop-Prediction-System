@@ -1,6 +1,7 @@
 from database import supabaseInstance
 from database.field import Field
 from database.entry import Entry
+from logic.calculateHectare import calculate_hectares_from_coordinates
 
 import asyncio
 
@@ -38,7 +39,15 @@ class supabaseFunctions:
     @staticmethod
     def createField(fieldInfo: Field):
         try:
-            supabaseFunctions.__sbClient.table("field_info").insert([{"field_area": fieldInfo.field_area, "field_name": fieldInfo.field_name, "field_tph": fieldInfo.field_tph, "field_health": fieldInfo.field_health, "crop_type": fieldInfo.crop_type, "user_id": fieldInfo.user_id}]).execute()
+            array = fieldInfo.field_area['coordinates']
+            print(array, flush=True)
+            # convert each element in array to tuple
+            array = [tuple(i) for i in array]
+            print(array, flush=True)
+            hectare = calculate_hectares_from_coordinates(array)
+            print(hectare, flush=True)
+            result = supabaseFunctions.__sbClient.table("field_info").insert([{"field_area": array, "field_name": fieldInfo.field_name, "field_tph": fieldInfo.field_tph, "field_health": fieldInfo.field_health, "crop_type": fieldInfo.crop_type, "team_id": fieldInfo.team_id, "hectare": hectare}]).execute()
+            return result
         except Exception as e:
             print(e)
             return {"error": "Failed to create field", "error_message": e, "type": "createField"}
