@@ -47,6 +47,9 @@ class API:
         self.app.add_api_route("/predict", self.predict, methods=["POST"])
         self.app.add_api_route("/calculateHealth", self.calculateHealth, methods=["GET"])
 
+        # recent n entries
+        self.app.add_api_route("/getRecentEntries", self.sb.getRecentEntries, methods=["GET"])
+
         # testing routes    
         self.app.add_api_route("/test", self.test, methods=["GET"])
                                
@@ -106,6 +109,9 @@ class API:
     
     def calculateHealth(self, request: Request, crop: str, n: int):
         return self.ml.calculateHealth(crop, n)
+    
+    def getRecentEntries(self, request: Request, n: int):
+        return self.sb.getRecentEntries(n)
     
 
 api_instance = API()

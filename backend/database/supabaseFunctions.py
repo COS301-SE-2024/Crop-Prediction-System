@@ -313,3 +313,14 @@ class supabaseFunctions:
         except Exception as e:
             print(e)
             return {"error": "Failed to get team ID", "error_message": e}
+        
+    @staticmethod
+    def getRecentEntries(n : int):
+        try:
+            response = supabaseFunctions.__sbClient.rpc("get_recent_entries", {"n": n}).execute()
+            if response.data == []:
+                return {"error": "Data not found. Please create an entry first."}
+            return response.data
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get recent entries", "error_message": e}
