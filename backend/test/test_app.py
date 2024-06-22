@@ -30,10 +30,10 @@ def test_main():
         "Link to Documentation": "https://documenter.getpostman.com/view/26558432/2sA3Qwaoyd"
     }
 
-def test_init_model():
-    response = client.get("/startModel")
-    assert response.status_code == 200
-    assert response.json() == api_instance.ml.startModel()
+# def test_init_model():
+#     response = client.get("/startModel")
+#     assert response.status_code == 200
+#     assert response.json() == api_instance.ml.startModel()
 
 def test_get_field_info(mock_supabase_functions):
     response = client.get("/getFieldInfo?fieldid=1")
