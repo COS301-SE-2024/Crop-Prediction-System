@@ -3,13 +3,13 @@ import warnings
 warnings.filterwarnings("ignore")
 
 def calculateHealth(dFrame, crop, n, optimums=None):
-    dFrame = pd.read_csv('backend/model/processed_data/model_data_soil_moisture.csv')
+    dFrame = pd.read_csv('model/processed_data/model_data_soil_moisture.csv')
     dFrame = pd.DataFrame(dFrame)
 
     # Ensure crop is in title case
     crop = crop.title()
     if optimums is None:
-        optimums = pd.read_csv('backend/model/optimums.csv')
+        optimums = pd.read_csv('model/optimums.csv')
         optimums = pd.DataFrame(optimums)
 
     tmin = optimums.loc[optimums['Crop'] == crop, 'Tmin']

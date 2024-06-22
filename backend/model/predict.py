@@ -11,8 +11,8 @@ from model.cropHealth import calculateHealth
 import time
 
 def predict(data_input, crop, hectare, data=None, optimums=None, retrain=False):
-    data = pd.read_csv('backend/model/processed_data/model_data_soil_moisture.csv')
-    optimums = pd.read_csv('backend/model/optimums.csv')
+    data = pd.read_csv('model/processed_data/model_data_soil_moisture.csv')
+    optimums = pd.read_csv('model/optimums.csv')
 
     data = pd.DataFrame(data)
     optimums = pd.DataFrame(optimums)
