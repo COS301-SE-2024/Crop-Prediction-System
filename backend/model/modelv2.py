@@ -9,7 +9,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Input
 import inquirer
 
-from backend.model.cropHealth import calculateHealth
+from model.cropHealth import calculateHealth
 optimums = pd.read_csv('misc/optimums.csv')
 optimums = pd.DataFrame(optimums)
 

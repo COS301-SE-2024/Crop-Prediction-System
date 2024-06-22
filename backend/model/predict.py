@@ -6,8 +6,8 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, m
 import tensorflow as tf
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import LSTM, Dense, Input
-from backend.model.knn_function import knn_impute
-from backend.model.cropHealth import calculateHealth
+from model.knn_function import knn_impute
+from model.cropHealth import calculateHealth
 import time
 
 def predict(data_input, crop, hectare, data=None, optimums=None, retrain=False):

@@ -1,10 +1,10 @@
 from fastapi import FastAPI, Request
-from backend.database.supabaseFunctions import supabaseFunctions
+from database.supabaseFunctions import supabaseFunctions
 from pydantic import BaseModel
 
-from backend.model.base import MLModel
-from backend.database.field import Field
-from backend.database.entry import Entry
+from model.base import MLModel
+from database.field import Field
+from database.entry import Entry
 from functools import wraps
 
 class API:

@@ -1,5 +1,5 @@
-from backend.model.predict import predict
-from backend.model.cropHealth import calculateHealth
+from model.predict import predict
+from model.cropHealth import calculateHealth
 
 class MLModel:
     def __init__(self):

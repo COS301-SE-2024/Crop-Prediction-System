@@ -1,6 +1,6 @@
-from backend.database import supabaseInstance
-from backend.database.field import Field
-from backend.database.entry import Entry
+from database import supabaseInstance
+from database.field import Field
+from database.entry import Entry
 
 import asyncio
 

@@ -7,7 +7,7 @@ pip install -r requirements.txt
 
 ## Running the server
 ```bash
-uvicorn backend.app:app --reload --host 127.0.0.1 --port 8000
+uvicorn app:app --reload --host 127.0.0.1 --port 8000
 ```
 Note: The server will be running on http://localhost:8000.
 Be sure to run this command from the root directory of the project.
