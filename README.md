@@ -33,29 +33,37 @@ Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learni
 [![codecov](https://codecov.io/gh/COS301-SE-2024/Crop-Prediction-System/graph/badge.svg?token=WwjFFuFVr7)](https://codecov.io/gh/COS301-SE-2024/Crop-Prediction-System)
 [![System Uptime](https://img.shields.io/pingpong/uptime/sp_bf59a60096094040a09ea511e5b93cee?label=Website%20Uptime)](https://terrabyte.pingpong.host/)
 
-<a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSgVMkTErwWrJGdGzM_3w7RC7OsFPbqp4zZD121R0UgJkWVNemy5hXqnPF_FVaBdYwa9QF-dJ7IasdD/pubchart?oid=993253821&format=interactive">Current Iteration Burndown Chart</a>
-
 ### Project Day Countdown
 
 <img src="https://i.countdownmail.com/3aprft.gif" style="width:210px;" border="0" alt="countdownmail.com"/> 
 
 ## Demo Material
 
-![Demo1 Video]()
+<a href="https://youtu.be/JHFqWU64STM)">Demo 1 Video</a>
 
-![Demo1 Presentation]()
+<a href="https://www.canva.com/design/DAGGzo2_JZ0/q4WXYNgFuAQ9xFbv1Uo55A/edit?utm_content=DAGGzo2_JZ0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Demo 1 Presentation</a>
+
+<a href="https://youtu.be/JHFqWU64STM)">Demo 2 Video</a>
+
+<a href="https://www.canva.com/design/DAGItX_W4V8/OzXuycDqygKwqtf94wqkxg/edit?utm_content=DAGItX_W4V8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Demo 2 Presentation</a>
 
 ## Documentation
 
-![Link to Wiki](https://github.com/COS301-SE-2024/Crop-Prediction-System/wiki)
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/wiki">Link to Wiki</a>
 
-![Link to Functional Requirements (SRS)](https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/SRS%20Demo%201.pdf)
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/SRS%20Demo%202.pdf">Link to Functional Requirements (SRS)</a>
 
-![API Documentation](https://documenter.getpostman.com/view/26558432/2sA3Qwaoyd)
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Architectural%20Requirements.pdf">Link to Architectural Requirements</a>
 
-![Link to Github Project Board](https://github.com/orgs/COS301-SE-2024/projects/57/views/4)
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Coding%20Standards.pdf">Link to Coding Standards</a>
 
-![Link to Deployment Documentation](https://github.com/COS301-SE-2024/Crop-Prediction-System/wiki/Netlify-Deployment)
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/User%20Manual.pdf">Link to User Manual</a>
+
+<a href="https://documenter.getpostman.com/view/26558432/2sA3Qwaoyd">API Documentation</a>
+
+<a href="https://github.com/orgs/COS301-SE-2024/projects/57/views/4">Link to Github Project Board</a>
+
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/wiki/Netlify-Deployment">Link to Deployment Documentation</a>
 
 ## Meet The Team
 
