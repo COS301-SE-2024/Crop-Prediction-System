@@ -27,7 +27,7 @@ class API:
 
     def setup_routes(self):
         self.app.add_api_route("/", self.main, methods=["GET"])
-        self.app.add_api_route("/startModel", self.initModel, methods=["GET"])
+        # self.app.add_api_route("/startModel", self.initModel, methods=["GET"])
         self.app.add_api_route("/getFieldInfo", self.getFieldInfo, methods=["GET"])
         self.app.add_api_route("/getFieldData", self.getFieldData, methods=["GET"])
         self.app.add_api_route("/createField", self.createField, methods=["POST"])
@@ -47,8 +47,8 @@ class API:
             "Link to Documentation": "https://documenter.getpostman.com/view/26558432/2sA3Qwaoyd"
         }
 
-    def initModel(self, request: Request):
-        return self.ml.startModel()
+    # def initModel(self, request: Request):
+    #     return self.ml.startModel()
 
     def getFieldInfo(self, request: Request, fieldid: int = 0):
         return self.sb.getFieldInfo(str(fieldid))

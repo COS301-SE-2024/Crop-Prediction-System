@@ -1,16 +1,23 @@
-def calculateHealth(dFrame, crop, df):
+import pandas as pd
+import warnings
+warnings.filterwarnings("ignore")
+
+def calculateHealth(dFrame, crop, n, optimums=None):
+    dFrame = pd.read_csv('backend/model/processed_data/model_data_soil_moisture.csv')
+    dFrame = pd.DataFrame(dFrame)
+
     # Ensure crop is in title case
     crop = crop.title()
+    if optimums is None:
+        optimums = pd.read_csv('optimums.csv')
+        optimums = pd.DataFrame(optimums)
 
-    # print(crop)
-    # print(df)
-
-    tmin = df.loc[df['Crop'] == crop, 'Tmin']
-    tmax = df.loc[df['Crop'] == crop, 'Tmax']
-    pmin = df.loc[df['Crop'] == crop, 'Pmin']
-    pmax = df.loc[df['Crop'] == crop, 'Pmax']
-    smmin = df.loc[df['Crop'] == crop, 'SMmin']
-    smmax = df.loc[df['Crop'] == crop, 'SMmax']
+    tmin = optimums.loc[optimums['Crop'] == crop, 'Tmin']
+    tmax = optimums.loc[optimums['Crop'] == crop, 'Tmax']
+    pmin = optimums.loc[optimums['Crop'] == crop, 'Pmin']
+    pmax = optimums.loc[optimums['Crop'] == crop, 'Pmax']
+    smmin = optimums.loc[optimums['Crop'] == crop, 'SMmin']
+    smmax = optimums.loc[optimums['Crop'] == crop, 'SMmax']
 
     # print(tmin, tmax, pmin, pmax, smmin, smmax)
     
@@ -43,9 +50,21 @@ def calculateHealth(dFrame, crop, df):
     # Normalize the health score
     dFrame['health_score'] = dFrame['health_score'] / dFrame['health_score'].max()
 
-    print(dFrame['health_score'])
+    # print(dFrame['health_score'])
 
     # Drop unnecessary columns
     dFrame.drop(columns=['temperature_score', 'precipitation_score', 'soil_moisture_score', 'nutrient_availability_score'], inplace=True)
 
-    return dFrame
+    # Convert to array
+    arr = dFrame['health_score'].tail(n).values
+
+    result = {
+        'crop': crop,
+        'health_score': arr
+    }
+
+    return result
+
+# # Sample usage
+# res = calculateHealth(None, 'Maize', 10)
+# print(res)
