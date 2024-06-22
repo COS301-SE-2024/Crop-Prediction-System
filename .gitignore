@@ -33,3 +33,7 @@ __pycache__
 # Pytest cache
 .pytest_cache
 .tool-versions
+
+# R package cache
+.RData
+.Rhistory
