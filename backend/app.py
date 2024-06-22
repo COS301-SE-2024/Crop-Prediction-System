@@ -44,7 +44,7 @@ class API:
         self.app.add_api_route("/getTeamId", self.sb.getTeamId, methods=["GET"])
 
         # model routes
-        self.app.add_api_route("/predict", self.predict, methods=["GET"])
+        self.app.add_api_route("/predict", self.predict, methods=["POST"])
         self.app.add_api_route("/calculateHealth", self.calculateHealth, methods=["GET"])
 
         # testing routes    
