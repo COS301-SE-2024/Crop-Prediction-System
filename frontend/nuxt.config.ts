@@ -3,7 +3,10 @@ import path from 'path';
 export default defineNuxtConfig({
   css: ['./assets/css/tailwind.css', 'primeicons/primeicons.css'],
   devtools: { enabled: true },
-  modules: ["@nuxt/eslint", "@nuxtjs/tailwindcss", "nuxt-primevue", "@nuxtjs/supabase", "@nuxt/test-utils/module"],
+  modules: ["@nuxt/eslint", "@nuxtjs/tailwindcss", "@nuxtjs/color-mode", "nuxt-primevue", "@nuxtjs/supabase", "@nuxt/test-utils/module"],
+  colorMode: {
+    classSuffix: ""
+  },
   primevue: {
     options: {
       unstyled: true
@@ -24,6 +27,11 @@ export default defineNuxtConfig({
     },
   },
   supabase: {
-    redirect: false,
+    redirect: true,
+    redirectOptions: {
+      login: '/login',
+      callback: '/confirm',
+      exclude: ['/signup']
+    }
   }
 })

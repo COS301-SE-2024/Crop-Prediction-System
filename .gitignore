@@ -51,3 +51,11 @@ big_data/
 *.xlsx
 *.per
 
+# tif
+*.tif
+*.tfw
+
+# Rstudio
+.Rproj.user
+*.Rdata
+*.Rhistory

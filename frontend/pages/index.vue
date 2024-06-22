@@ -1,5 +1,5 @@
 <template>
-	<div class="space-y-5 w-full">
+	<div class="space-y-5 w-full px-4 sm:px-6 md:px-8 lg:px-0 py-4 sm:py-6 md:py-8 lg:py-0">
 		<div class="flex space-x-5 w-full overflow-x-auto whitespace-nowrap">
 			<StatPanel
 				v-for="stat in stats"
@@ -11,9 +11,9 @@
 		</div>
 		<div class="grid xl:grid-cols-5 xl:grid-rows-2 w-full h-full gap-5 pb-5">
 			<div
-				class="xl:col-span-3 xl:row-span-2 border border-surface-border p-6 rounded-lg shadow-lg h-full flex flex-col gap-2"
+				class="xl:col-span-3 xl:row-span-2 border border-surface-border dark:border-surface-600 md:p-6 rounded-lg shadow-lg md:h-full h-96 _h-full flex flex-col md:gap-2"
 			>
-				<div class="flex justify-between items-center">
+				<div class="flex justify-between items-center p-2 pl-4">
 					<p class="text-xl font-[500] dark:text-white">Farm Map</p>
 					<NuxtLink to="/inputs/manage-fields" class="text-sm text-primary-500">
 						<Button label="Edit" icon="pi pi-pencil" severity="secondary" text />
@@ -23,7 +23,9 @@
 			</div>
 			<div class="xl:col-span-2 xl:row-span-2 grid gap-5 h-full">
 				<FieldData />
-				<div class="grid xl:grid-cols-2 gap-5 items-center border border-surface-border p-6 rounded-lg shadow-lg">
+				<div
+					class="grid xl:grid-cols-2 gap-5 items-center border border-surface-border dark:border-surface-600 p-6 rounded-lg shadow-lg"
+				>
 					<div class="flex flex-col gap-2">
 						<span class="text-lg font-[500] dark:text-surface-0">Polar Stats</span>
 						<!-- actionable results -->
@@ -67,6 +69,12 @@ import { ref } from 'vue'
 definePageMeta({
 	middleware: 'auth',
 })
+
+const visible = ref(false)
+
+function changeVisible() {
+	visible.value = !visible.value
+}
 
 const stats = [
 	{

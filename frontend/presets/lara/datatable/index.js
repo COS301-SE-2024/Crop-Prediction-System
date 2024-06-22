@@ -54,7 +54,10 @@ export default {
             // Color
             'bg-surface-50 dark:bg-surface-800',
             'border-surface-200 dark:border-surface-700',
-            'text-surface-700 dark:text-white/80'
+            'text-surface-700 dark:text-white/80',
+
+            // Position
+            'sticky top-0 z-40'
         ]
     }),
     table: {
