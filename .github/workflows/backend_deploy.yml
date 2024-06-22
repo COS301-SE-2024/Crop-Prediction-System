@@ -19,7 +19,7 @@ jobs:
           username: root
           password: ${{ secrets.DIGITAL_OCEAN_PASSWORD_V2 }}
           script: |
-            cd /home/farm/server/Crop-Prediction-System
+            cd /home/farm/server/Crop-Prediction-System/backend
             ls -la
             git pull
             su - farm -c "pm2 restart sample_farm_api"
