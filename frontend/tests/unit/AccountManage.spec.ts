@@ -4,6 +4,7 @@ import { it, expect, describe,vi } from 'vitest'
 import AccountManage from '~/components/AccountManage.vue'
 import { shallowMount,mount } from '@vue/test-utils'
 import { resolve } from 'chart.js/helpers'
+import auth from '~/middleware/auth'
 
 describe('AccountManage', () => {
     it('can mount the component', async () => {
@@ -19,7 +20,7 @@ describe('AccountManage', () => {
         const email = "test@example.com";
         const wrapper = shallowMount(AccountManage, {
             props: {
-            email,
+                email,
             },
         });
 
@@ -41,6 +42,13 @@ describe('AccountManage', () => {
         });
         // Assert email rendering
         expect(wrapper.find('h1').text()).toBe(email);
+    })
+    it('test signout function', async () => {
+        const wrapper = shallowMount(AccountManage);
+        const signOut = vi.fn();
+        const signOutSpy = vi.spyOn(wrapper.vm, 'signOut').withImplementation(() => signOut(), () => signOut());
+        await wrapper.vm.signOut();
+        expect(signOutSpy).toHaveBeenCalled();
     })
 })
 
