@@ -76,25 +76,61 @@ function changeVisible() {
 	visible.value = !visible.value
 }
 
+const recentEntries = await $fetch('/api/getRecentEntries')
+
+let recentWeather = []
+for (let i = 0; i < recentEntries.length; i++) {
+	recentWeather.push(recentEntries[i]['mean_temperature'])
+}
+
+console.log('Recent Weather', recentWeather)
+
+const userID = useSupabaseUser().value?.id
+
+const userFields = await $fetch('/api/getUserFields', {
+	params: { userid: userID },
+})
+
+let healts = []
+
+for (let i = 0; i < userFields.length; i++) {
+	const health = await $fetch('/api/getHealth', {
+		params: { crop: userFields[i].crop_type },
+	})
+	healts.push(health['health_score'][1])
+}
+
+console.log('Health', healts)
+
+let soilMoisture = []
+for (let i = 0; i < recentEntries.length; i++) {
+	soilMoisture.push(recentEntries[i]['soil_moisture'])
+}
+
+let precipitation = []
+for (let i = 0; i < recentEntries.length; i++) {
+	precipitation.push(recentEntries[i]['precipitation'])
+}
+
 const stats = [
 	{
 		title: 'Overall Crop Health',
-		chartData: [65, 59, 80, 81, 56, 55, 40],
+		chartData: healts.length ? healts : [88, 80, 99, 92],
 		chartType: 'line',
 	},
 	{
 		title: 'Current Temperature',
-		chartData: [24, 45, 67, 89, 34, 56, 78],
+		chartData: recentWeather.length ? recentWeather : [25, 27, 29, 30, 31],
 		chartType: 'line',
 	},
 	{
 		title: 'Soil Moisture',
-		chartData: [41, 56, 67, 24, 78, 45, 47],
+		chartData: soilMoisture.length ? soilMoisture : [0.5, 0.7, 0.2, 0.7, 0.9],
 		chartType: 'line',
 	},
 	{
 		title: 'Rainfall',
-		chartData: [51, 0, 67, 89, 45, 23, 78],
+		chartData: precipitation.length ? precipitation : [51, 0, 67, 89, 45, 23, 78],
 		chartType: 'bar',
 	},
 	{
@@ -104,10 +140,23 @@ const stats = [
 	},
 ]
 
+let polarStatData = []
+if (recentEntries.length > 0) {
+	polarStatData = [
+		recentEntries[0]['soil_moisture'],
+		recentEntries[0]['mean_temperature'] / 100,
+		0.7,
+		recentEntries[0]['soil_seed_nitrogen_per_unit_area'],
+		recentEntries[0]['precipitation'],
+	]
+} else {
+	polarStatData = [0.5, 0.7, 0.2, 0.7, 0.9]
+}
+
 const polarstat = [
 	{
 		title: 'Polar Stat',
-		chartData: [0.5, 0.7, 0.2, 0.7, 0.9],
+		chartData: polarStatData,
 		labels: ['Moisture', 'Temperature', 'Humidity', 'Soil', 'Rainfall'],
 		chartType: 'polarArea',
 	},
