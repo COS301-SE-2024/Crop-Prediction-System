@@ -143,15 +143,16 @@ const stats = [
 let polarStatData = []
 if (recentEntries.length > 0) {
 	polarStatData = [
-		recentEntries[0]['soil_moisture'],
+		recentEntries[0]['soil_moisture'] / 100,
 		recentEntries[0]['mean_temperature'] / 100,
 		0.7,
 		recentEntries[0]['soil_seed_nitrogen_per_unit_area'],
-		recentEntries[0]['precipitation'],
+		recentEntries[0]['precipitation'] / 100,
 	]
 } else {
 	polarStatData = [0.5, 0.7, 0.2, 0.7, 0.9]
 }
+console.log('Polar Stat Data', recentEntries[0]['soil_moisture'])
 
 const polarstat = [
 	{
