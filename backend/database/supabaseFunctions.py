@@ -1,6 +1,9 @@
-from backend.database import supabaseInstance
-from backend.database.field import Field
-from backend.database.entry import Entry
+from database import supabaseInstance
+from database.field import Field
+from database.entry import Entry
+from logic.calculateHectare import calculate_hectares_from_coordinates
+
+import asyncio
 
 class supabaseFunctions:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
@@ -11,15 +14,14 @@ class supabaseFunctions:
     @staticmethod
     def getFieldData(fieldid: str):
         try:
-            dict = {"fieldid": fieldid}
+            dict = {"field_id": fieldid}
             response = supabaseFunctions.__sbClient.rpc("get_field_data_by_id", dict).execute()
-        except Exception as e:
-            print(e)
-            return {"error": "Failed to get field data", "error_message": e}
-        finally:
             if response.data == []:
                 return {"error": "Data not found. Field ID may be invalid or may not have any data."}
             return response.data
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get field data", "error_message": e}
 
     @staticmethod
     def getFieldInfo(fieldid: str):
@@ -37,7 +39,15 @@ class supabaseFunctions:
     @staticmethod
     def createField(fieldInfo: Field):
         try:
-            supabaseFunctions.__sbClient.table("field_info").insert([{"field_area": fieldInfo.field_area, "field_name": fieldInfo.field_name, "field_tph": fieldInfo.field_tph, "field_health": fieldInfo.field_health, "crop_type": fieldInfo.crop_type, "user_id": fieldInfo.user_id}]).execute()
+            array = fieldInfo.field_area['coordinates']
+            print(array, flush=True)
+            # convert each element in array to tuple
+            array = [tuple(i) for i in array]
+            print(array, flush=True)
+            hectare = calculate_hectares_from_coordinates(array)
+            print(hectare, flush=True)
+            result = supabaseFunctions.__sbClient.table("field_info").insert([{"field_area": array, "field_name": fieldInfo.field_name, "field_tph": fieldInfo.field_tph, "field_health": fieldInfo.field_health, "crop_type": fieldInfo.crop_type, "team_id": fieldInfo.team_id, "hectare": hectare}]).execute()
+            return result
         except Exception as e:
             print(e)
             return {"error": "Failed to create field", "error_message": e, "type": "createField"}
@@ -98,7 +108,7 @@ class supabaseFunctions:
     @staticmethod
     def createEntry(fieldData: Entry):
         try:
-            supabaseFunctions.__sbClient.table("field_data").insert([{"weather_temperature": fieldData.weather_temperature, "weather_humidity": fieldData.weather_humidity, "weather_uv": fieldData.weather_uv, "weather_rainfall": fieldData.weather_rainfall, "soil_moisture": fieldData.soil_moisture, "soil_ph": fieldData.soil_ph, "soil_conductivity": fieldData.soil_conductivity, "is_manual": fieldData.is_manual, "field_id": fieldData.field_id}]).execute()
+            supabaseFunctions.__sbClient.table("data_feed").insert([{"entry_id": fieldData.entry_id, "weather_temperature": fieldData.weather_temperature, "weather_humidity": fieldData.weather_humidity, "weather_uv": fieldData.weather_uv, "weather_rainfall": fieldData.weather_rainfall, "soil_moisture": fieldData.soil_moisture, "soil_ph": fieldData.soil_ph, "soil_conductivity": fieldData.soil_conductivity, "is_manual": fieldData.is_manual, "field_id": fieldData.field_id}]).execute()
         except Exception as e:
             print(e)
             return {"error": "Failed to create entry", "error_message": e, "type": "createEntry"}
@@ -111,7 +121,7 @@ class supabaseFunctions:
             if fieldData.entry_id is None:
                 return {"error": "Entry ID is required"}
             
-            # isEntry = supabaseFunctions.__sbClient.table("field_data").select().eq("entry_id", fieldData.entry_id).execute()
+            # isEntry = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", fieldData.entry_id).execute()
             # if isEntry.data == []:
             #     return {"error": "Entry not found", "entry_id": fieldData.entry_id, "type": "updateEntry"}
             
@@ -134,7 +144,7 @@ class supabaseFunctions:
                 fields["is_manual"] = fieldData.is_manual
             if fieldData.field_id is not None:
                 fields["field_id"] = fieldData.field_id
-            supabaseFunctions.__sbClient.table("field_data").update(fields).eq("entry_id", fieldData.entry_id).execute()
+            supabaseFunctions.__sbClient.table("data_feed").update(fields).eq("entry_id", fieldData.entry_id).execute()
             return {"success": "Entry updated"}
         except Exception as e:
             print(e)
@@ -146,12 +156,171 @@ class supabaseFunctions:
             if entry_id is None:
                 return {"error": "Entry ID is required"}
 
-            # isEntry = supabaseFunctions.__sbClient.table("field_data").select().eq("entry_id", entry_id).execute()
+            # isEntry = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", entry_id).execute()
             # if isEntry.data == []:
             #     return {"error": "Entry not found", "entry_id": entry_id, "type": "deleteEntry"}
 
-            supabaseFunctions.__sbClient.table("field_data").delete().eq("entry_id", entry_id).execute()
+            supabaseFunctions.__sbClient.table("data_feed").delete().eq("entry_id", entry_id).execute()
             return {"success": "Entry deleted"}
         except Exception as e:
             print(e)
             return {"error": "Entry not found", "error_message": e, "entry_id": entry_id, "type": "deleteEntry"}
+        
+
+    # integration testing from get to post
+    @staticmethod
+    def test():
+        testsPassed = 0
+        response = None
+        try:
+            dict_params = {"field_id": 0}
+            response = supabaseFunctions.__sbClient.rpc("get_field_info", dict_params).execute()
+            if response.data == []:
+                raise Exception("Field not found")
+            testsPassed += 1
+
+            dict_params = {"field_id": 0}
+            response = supabaseFunctions.__sbClient.rpc("get_field_data_by_id", dict_params).execute()
+            if response.data == []:
+                raise Exception("Data not found")
+            testsPassed += 1
+            
+            dict_params = {"entry_id": "0", "weather_temperature": 30, "weather_humidity": 50, "weather_uv": 5, "weather_rainfall": 0, "soil_moisture": 50, "soil_ph": 6, "soil_conductivity": 0, "is_manual": False, "field_id": 0}
+
+            response = supabaseFunctions.__sbClient.table("data_feed").insert([dict_params]).execute()
+
+            # see if entry was created
+            dict_params = {"entry_id": "0"}
+            # response = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", dict_params.get("entry_id")).execute()
+
+            # asyncio.sleep(5)
+
+            # print(response.data, flush=True)
+            # if response.data == []:
+            #     raise Exception("Entry not created")
+            testsPassed += 1
+
+            dict_params = {"entry_id": "0", "weather_temperature": 30, "weather_humidity": 50, "weather_uv": 5, "weather_rainfall": 0, "soil_moisture": 50, "soil_ph": 6, "soil_conductivity": 0, "is_manual": True, "field_id": 0}
+
+            response = supabaseFunctions.__sbClient.table("data_feed").update(dict_params).eq("entry_id", dict_params.get("entry_id")).execute()
+
+            # see if entry was updated
+            # dict_params = {"entry_id": "0"}
+            # response = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", dict_params.get("entry_id")).execute()
+            # if response.data[0]["is_manual"] != True:
+            #     raise Exception("Entry not updated")
+            testsPassed += 1
+
+            dict_params = {"entry_id": "0"}
+
+            response = supabaseFunctions.__sbClient.table("data_feed").delete().eq("entry_id", dict_params.get("entry_id")).execute()
+
+            # see if entry was deleted
+            # dict_params = {"entry_id": "0"}
+            # response = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", dict_params.get("entry_id")).execute()
+            # if response.data != []:
+            #     raise Exception("Entry not deleted")
+            testsPassed += 1
+
+            # see if entry is still there
+            dict_params = {"entry_id": "0"}
+            response = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", dict_params.get("entry_id")).execute()
+
+            if response.data != []:
+                raise Exception("Entry not deleted")
+
+            
+            dict_params = {"id": 1, "field_area": 100, "field_name": "Test Field", "field_tph": 6, "field_health": 5, "crop_type": "Rice", "team_id": "592a7e6e-85f7-4830-8f1a-d2f396353a4b"}
+            supabaseFunctions.__sbClient.table("field_info").insert([dict_params]).execute()
+            testsPassed += 1
+            supabaseFunctions.__sbClient.table("field_info").update({"field_area": 200}).eq("id", 1).execute()
+            testsPassed += 1
+            supabaseFunctions.__sbClient.table("field_info").delete().eq("id", 1).execute()
+            testsPassed += 1
+
+            dict_params = {"field_id": 1}
+            response = supabaseFunctions.__sbClient.rpc("get_field_info", dict_params).execute()
+
+            if response.data != []:
+                raise Exception("Entry not deleted")
+
+            return {"success": "All tests passed", "tests_passed": testsPassed}
+        
+        except Exception as e:
+            print(e)
+            return {"error": "Test failed", "error_message": str(e)}
+    
+    @staticmethod
+    def getUserFields(user_id: str):
+        # get team id from profile and pass it to getTeamFieldsHelper
+        dict = {"userid": user_id}
+        response = supabaseFunctions.__sbClient.rpc("get_team_id", dict).execute()
+        if response.data == []:
+            return {"error": "Team not found. Please create a team first."}
+        # print(response.data[0]["id"])
+        userid = response.data[0]["team_id"]
+        dict2 = {"userid": userid}
+        team_id = response.data[0]["team_id"]
+        return supabaseFunctions.getTeamFieldsHelper(team_id)
+        
+    @staticmethod
+    def getTeamFieldsHelper(team_id: str):
+        try:
+            dict = {"teamid": team_id}
+            response = supabaseFunctions.__sbClient.rpc("get_all_fields_from_team", dict).execute()
+            if response.data == []:
+                return {"error": "Data not found. Team ID may be invalid or may not have any data."}
+            return response.data
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get team fields", "error_message": e}    
+
+    @staticmethod
+    def addToTeam(team: dict):
+        try:
+            supabaseFunctions.__sbClient.table("profiles").update({"team_id": team.get("team_id")}).eq("id", team.get("user_id")).execute()
+            return {"success": "Added to team"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to add user to team", "error_message": e}
+
+    @staticmethod
+    def removeFromTeam(user_id: str):
+        try:
+            response = supabaseFunctions.__sbClient.table("profiles").update({"team_id": None}).eq("id", user_id).execute()
+            print(response)
+            return {"success": "Removed from team"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to remove from team", "error_message": e}
+        
+    @staticmethod
+    def updateRoles(user: dict):
+        try:
+            supabaseFunctions.__sbClient.table("profiles").update({"role": user.get("role")}).eq("id", user.get("user_id")).execute()
+            return {"success": "Updated roles"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to update roles", "error_message": e}
+        
+    @staticmethod
+    def getTeamId(user_id: str):
+        try:
+            response = supabaseFunctions.__sbClient.table("profiles").select("team_id").eq("id", user_id).execute()
+            if response.data == []:
+                return {"error": "User not found"}
+            return response.data[0]
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get team ID", "error_message": e}
+        
+    @staticmethod
+    def getRecentEntries(n : int):
+        try:
+            response = supabaseFunctions.__sbClient.rpc("get_recent_entries", {"n": n}).execute()
+            if response.data == []:
+                return {"error": "Data not found. Please create an entry first."}
+            return response.data
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get recent entries", "error_message": e}

@@ -3,7 +3,7 @@ name: Deploy Backend
 on:
   push:
     branches:
-      - feature/api
+      - feature/APIv2
 
 jobs:
   build_and_deploy:
@@ -15,10 +15,11 @@ jobs:
       - name: Deploy to DigitalOcean
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.DIGITAL_OCEAN_IP }}
+          host: ${{ secrets.DIGITAL_OCEAN_IP_V2 }}
           username: root
-          password: ${{ secrets.DIGITAL_OCEAN_PASSWORD }}
+          password: ${{ secrets.DIGITAL_OCEAN_PASSWORD_V2 }}
           script: |
-            cd /var/www/app/Crop-Prediction-System
+            cd /home/farm/server/Crop-Prediction-System/backend
             ls -la
             git pull
+            su - farm -c "pm2 restart sample_farm_api"

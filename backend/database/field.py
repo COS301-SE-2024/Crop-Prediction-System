@@ -8,4 +8,5 @@ class Field(BaseModel):
     field_tph: Optional[float] = None
     field_health: Optional[float] = None
     crop_type: Optional[str] = None
-    user_id: Optional[str] = None
+    team_id: Optional[str] = None
+    hectare: Optional[float] = None

@@ -38,6 +38,20 @@ __pycache__
 # vpp
 *.vpp.*
 
+# ML data
+*.tif
+*.tfw
+pet/
+
+# RStudio
+*.RData
+*.Rhistory
+
+# Big data
+big_data/
+*.xlsx
+*.per
+
 # tif
 *.tif
 *.tfw
