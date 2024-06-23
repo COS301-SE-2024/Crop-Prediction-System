@@ -32,22 +32,48 @@ const userFields = await $fetch('/api/getUserFields', {
 	params: { userid: userID },
 })
 
-console.log('User Fields', userFields)
-
 const recentEntries = await $fetch('/api/getRecentEntries')
 
-console.log('Recent Entries', recentEntries)
+const newFields = [
+	{
+		name: 'Field 1',
+		health: 0.5,
+		yield: 0,
+		cropType: 'Mize',
+	},
+	{
+		name: 'Field 2',
+		health: 0.7,
+		yield: 0,
+		cropType: 'Wheat',
+	},
+	{
+		name: 'Field 3',
+		health: 0.3,
+		yield: 0,
+		cropType: 'Barley',
+	},
+]
 
-for (let i = 0; i < userFields.length; i++) {
-	const health = await $fetch('/api/getHealth', {
-		params: { crop: userFields[i].crop_type },
-	})
+if (!userFields.length) {
+	for (let i = 0; i < newFields.length; i++) {
+		fields.value.push(newFields[i])
+	}
+} else {
+	for (let i = 0; i < userFields.length; i++) {
+		const health = await $fetch('/api/getHealth', {
+			params: { crop: userFields[i].crop_type },
+		})
 
-	fields.value.push({
-		name: userFields[i].field_name,
-		health: health,
-		yield: userFields[i].field_tph,
-		cropType: userFields[i].crop_type,
-	})
+		const cropType = userFields[i].crop_type.toLowerCase() + '_ton_per_hectare'
+		const cropYield = recentEntries[0][cropType]
+
+		fields.value.push({
+			name: userFields.length ? userFields[i].field_name : `Field ${i + 1}`,
+			health: health,
+			yield: cropYield,
+			cropType: userFields[i].crop_type,
+		})
+	}
 }
 </script>
