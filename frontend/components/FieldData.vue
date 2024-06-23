@@ -24,14 +24,56 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const fields = ref([
-	{ name: 'Field 1', health: 0.34, yield: 12, cropType: 'Wheat' },
-	{ name: 'Field 2', health: 0.56, yield: 15, cropType: 'Rice' },
-	{ name: 'Field 3', health: 0.78, yield: 18, cropType: 'Corn' },
-	{ name: 'Field 4', health: 0.45, yield: 14, cropType: 'Soybean' },
-	{ name: 'Field 5', health: 0.67, yield: 17, cropType: 'Barley' },
-	{ name: 'Field 6', health: 0.89, yield: 20, cropType: 'Oats' },
-	{ name: 'Field 7', health: 0.23, yield: 10, cropType: 'Rye' },
-	{ name: 'Field 8', health: 0.45, yield: 14, cropType: 'Wheat' },
-])
+const fields = ref([])
+
+const userID = useSupabaseUser().value?.id
+
+const userFields = await $fetch('/api/getUserFields', {
+	params: { userid: userID },
+})
+
+const recentEntries = await $fetch('/api/getRecentEntries')
+
+const newFields = [
+	{
+		name: 'Field 1',
+		health: 0.5,
+		yield: 0,
+		cropType: 'Mize',
+	},
+	{
+		name: 'Field 2',
+		health: 0.7,
+		yield: 0,
+		cropType: 'Wheat',
+	},
+	{
+		name: 'Field 3',
+		health: 0.3,
+		yield: 0,
+		cropType: 'Barley',
+	},
+]
+
+if (!userFields.length) {
+	for (let i = 0; i < newFields.length; i++) {
+		fields.value.push(newFields[i])
+	}
+} else {
+	for (let i = 0; i < userFields.length; i++) {
+		const health = await $fetch('/api/getHealth', {
+			params: { crop: userFields[i].crop_type },
+		})
+
+		const cropType = userFields[i].crop_type.toLowerCase() + '_ton_per_hectare'
+		const cropYield = recentEntries[0][cropType]
+
+		fields.value.push({
+			name: userFields.length ? userFields[i].field_name : `Field ${i + 1}`,
+			health: health,
+			yield: cropYield,
+			cropType: userFields[i].crop_type,
+		})
+	}
+}
 </script>

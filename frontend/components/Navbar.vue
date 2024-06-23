@@ -92,6 +92,13 @@ const items = ref([
 		},
 	},
 	{
+		label: 'Help',
+		icon: 'pi pi-question-circle',
+		command: () => {
+			window.location.href = '/help'
+		},
+	},
+	{
 		label: 'Settings',
 		icon: 'pi pi-cog',
 		command: () => {
