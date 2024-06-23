@@ -1,9 +1,8 @@
 // @vitest-environment nuxt
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { it, expect, describe } from 'vitest'
+import { it, expect, describe,vi } from 'vitest'
 import AccountManage from '~/components/AccountManage.vue'
 import { shallowMount,mount } from '@vue/test-utils'
-import { vi } from 'vitest'
 import { resolve } from 'chart.js/helpers'
 
 describe('AccountManage', () => {
@@ -16,6 +15,32 @@ describe('AccountManage', () => {
         const onCLickToggle = wrapper.find('div[class="w-full flex flex-row gap-3 items-center dark:hover:bg-surface-400/10 hover:bg-surface-100 cursor-pointer p-2 rounded-lg"]')
         expect(onCLickToggle.exists()).toBe(true)
     })
-    
+    it('calls the toggle function on click', async () => {
+        const email = "test@example.com";
+        const wrapper = shallowMount(AccountManage, {
+            props: {
+            email,
+            },
+        });
+
+        // Assert email rendering
+        expect(wrapper.find('h1').text()).toBe(email);
+        const toggle = vi.fn();
+        const toggleSpy = vi.spyOn(wrapper.vm, 'toggle').withImplementation(() => toggle(), () => toggle()); 
+        // Simulate click on the clickable div
+        await wrapper.find('.w-full.flex.flex-row.gap-3.items-center h1').trigger('click');
+        // check if the toggle function was called
+        expect(toggleSpy).toHaveBeenCalled();
+    })
+    it('renders the email correctly', async () => {
+        const email = "test@exmaple.com";
+        const wrapper = shallowMount(AccountManage, {
+            props: {
+            email,
+            },
+        });
+        // Assert email rendering
+        expect(wrapper.find('h1').text()).toBe(email);
+    })
 })
 
