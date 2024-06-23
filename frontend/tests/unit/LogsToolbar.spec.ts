@@ -1,13 +1,13 @@
 // @vitest-environment nuxt
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { it, expect, describe } from 'vitest'
-import LogsView from '~/components/LogsView.vue'
+import logsToolbar from '~/components/LogsToolbar.vue'
 
-describe('LogsView', () => {
+describe('Sidebar', () => {
 	it('can mount the component', async () => {
-		// const component = await mountSuspended(LogsView)
+		// const component = await mountSuspended(logsToolbar)
 		// expect(component.exists()).toBe(true)
-		// ! need to fix this test so that component can be mounted
 		expect(true).toBe(true)
+		// ! need to fix this test so that component can be mounted
 	})
 })

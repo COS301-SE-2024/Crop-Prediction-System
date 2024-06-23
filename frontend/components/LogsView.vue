@@ -80,19 +80,16 @@
 		<Button label="Print" icon="pi pi-print" @click="triggerPrint" />
 		<pre>{{ printableContent }}</pre>
 	</Dialog>
-	<Toast />
 </template>
 
 <script setup lang="ts">
 import { ref, toRaw } from 'vue'
 import { FilterMatchMode } from 'primevue/api'
-import { useToast } from 'primevue/usetoast'
 
 const selectedDataEntries = ref([])
 const dialogVisible = ref(false)
 const printableContent = ref('')
 const dataEntries = ref()
-const toast = useToast()
 // const selectAll = ref()
 const selectAll = ref<boolean>()
 
@@ -136,7 +133,7 @@ for (let i = 0; i < 100; i++) {
 		soil_moisture: parseFloat((Math.random() * 100).toFixed(2)),
 		soil_ph: parseFloat((Math.random() * 14).toFixed(2)),
 		soil_conductivity: parseFloat((Math.random() * 100).toFixed(2)),
-		is_manual: Math.random() > 0.5,
+		is_manual: true,
 		field_id: Math.floor(Math.random() * 10),
 	})
 }
@@ -177,12 +174,6 @@ const onRowUnselect = () => {
 const exportSelectedCSV = () => {
 	const rawSelectedData = selectedDataEntries.value.map((item) => toRaw(item))
 	if (rawSelectedData.length === 0) {
-		toast.add({
-			severity: 'warn',
-			summary: 'No Entries Selected',
-			detail: 'Please select at least one entry to export.',
-			life: 3000,
-		})
 		return
 	}
 	const headerLabels = columns.map((column) => column.header)
@@ -226,12 +217,6 @@ const convertToCSV = (objArray: DataEntry[], headers: string[]) => {
 const triggerPrint = () => {
 	const rawSelectedData = selectedDataEntries.value.map((item) => toRaw(item))
 	if (rawSelectedData.length === 0) {
-		toast.add({
-			severity: 'warn',
-			summary: 'No Entries Selected',
-			detail: 'Please select at least one entry to print.',
-			life: 3000,
-		})
 		return
 	}
 	const printContents = JSON.stringify(rawSelectedData, null, 2)

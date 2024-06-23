@@ -53,6 +53,7 @@ import { ref } from 'vue'
 import Button from 'primevue/button'
 import OverlayPanel from 'primevue/overlaypanel'
 import ToggleButton from 'primevue/togglebutton'
+import { useColorMode } from '@vueuse/core'
 
 const user = useSupabaseUser()
 const client = useSupabaseClient()
