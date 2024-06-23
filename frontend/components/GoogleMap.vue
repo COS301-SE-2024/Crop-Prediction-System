@@ -1,8 +1,8 @@
 <template>
-	<div class="h-full w-full" ref="mapContainer"></div>
+	<div class="md:h-screen h-[45rem] w-full _sm:h-[200px] _md:h-[850px]" ref="mapContainer"></div>
 </template>
 
-<script setup lang="js">
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 
 const emit = defineEmits(['polygonDrawn'])
@@ -26,13 +26,10 @@ const polygonOptions = {
 	draggable: true,
 }
 
-const fieldInfos = ref([])
-const error = ref(null)
+const userFields = ref([])
 
 onMounted(async () => {
 	await mapsLoader.load() // Use the loader from the plugin
-
-	await fetchField(108) // Fetch only the field with ID 108
 
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(
@@ -43,7 +40,33 @@ onMounted(async () => {
 	} else {
 		handleGeolocationError() // Geolocation not supported
 	}
+
+	await fetchUserFields()
 })
+
+async function fetchUserFields() {
+	const session = useSupabaseClient()
+	let currentUser = null
+	if (session) {
+		const {
+			data: { user },
+		} = await session.auth.getUser()
+		if (user) currentUser = user
+		console.error('user: ', user?.id)
+	}
+
+	if (currentUser) {
+		try {
+			const fields = await $fetch('/api/getUserFields', {
+				params: { userid: currentUser?.id },
+			})
+			userFields.value = fields
+			drawExistingPolygons()
+		} catch (error) {
+			console.error('Error fetching user fields:', error)
+		}
+	}
+}
 
 function initializeMap(position) {
 	const center = position ? { lat: position.coords.latitude, lng: position.coords.longitude } : { lat: -25.7479, lng: 28.2293 } // Default
@@ -81,8 +104,8 @@ function handleGeolocationError(error = null) {
 }
 
 function drawExistingPolygons() {
-	fieldInfos.value.forEach((field, index) => {
-		const polygonCoords = field.field_area.coordinates[0].map((coord) => ({
+	userFields.value.forEach((field) => {
+		const polygonCoords = field.field_area.map((coord) => ({
 			lat: parseFloat(coord[0]),
 			lng: parseFloat(coord[1]),
 		}))
@@ -113,26 +136,6 @@ function setDrawingMode(enabled) {
 function getPolygonPaths() {
 	return polygons.value.map((polygon) => polygon.getPath().getArray())
 }
-
-async function fetchField(fieldid) {
-	try {
-		console.log(`Fetching field with ID: ${fieldid}`)
-		const response = await $fetch('/api/fieldInfo', {
-			params: { fieldid: fieldid },
-		})
-
-		if (response.error) {
-			throw new Error(response.error)
-		}
-		console.log(`Fetched data for field ${fieldid}:`, response.value[0])
-		fieldInfos.value.push(response.value[0])
-	} catch (err) {
-		error.value = err.message
-		console.error(`Error fetching field with ID ${fieldid}:`, err.message)
-	}
-}
-
-// console.log(`FieldInfos`, fieldInfos.value[0].field_area.coordinates);
 
 defineExpose({
 	getPolygonPaths,

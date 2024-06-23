@@ -19,6 +19,9 @@ export default {
         class: [
             'relative',
 
+            // mobile
+            'hidden md:inline-flex',
+
             // Flex & Alignment
             'inline-flex items-center justify-center',
 
@@ -111,6 +114,9 @@ export default {
     lastpagebutton: ({ context }) => ({
         class: [
             'relative',
+
+            // mobile
+            'hidden md:inline-flex',
 
             // Flex & Alignment
             'inline-flex items-center justify-center',

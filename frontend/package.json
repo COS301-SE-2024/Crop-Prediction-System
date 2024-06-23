@@ -11,7 +11,7 @@
 		"format": "prettier --write .",
 		"lint": "eslint .",
 		"lint.fix": "eslint . --fix",
-		"test": "vitest --coverage"
+		"test": "vitest --coverage.enabled=true"
 	},
 	"dependencies": {
 		"@googlemaps/js-api-loader": "^1.16.6",
@@ -21,15 +21,20 @@
 		"chart.js": "^4.4.3",
 		"nuxt": "^3.11.2",
 		"nuxt-gmaps": "^1.2.10",
+		"nuxt-vitest": "^0.11.5",
 		"primeicons": "^7.0.0",
 		"primevue": "^3.52.0",
 		"vue": "^3.4.27",
 		"vue-router": "^4.3.2"
 	},
 	"devDependencies": {
+		"@jest/globals": "^29.7.0",
 		"@nuxt/test-utils": "^3.13.1",
+		"@nuxtjs/color-mode": "^3.4.1",
 		"@nuxtjs/supabase": "^1.2.2",
 		"@nuxtjs/tailwindcss": "^6.12.0",
+		"@testing-library/vue": "^8.1.0",
+		"@types/jest": "^29.5.12",
 		"@vitejs/plugin-vue": "^5.0.5",
 		"@vitest/coverage-v8": "^1.6.0",
 		"@vue/test-utils": "^2.4.6",

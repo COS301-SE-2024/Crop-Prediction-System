@@ -4,6 +4,7 @@ import { it, expect, describe } from 'vitest'
 import Navbar from '~/components/Navbar.vue'
 import Sidebar from '~/components/Sidebar.vue'
 import Button from 'primevue/button'
+import Menu from 'primevue/menu'
 
 describe('Navbar', () => {
 	it('can mount the component', async () => {

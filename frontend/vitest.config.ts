@@ -11,5 +11,22 @@ export default defineVitestConfig({
 			},
 		},
 		testTimeout: 10000,
+		coverage: {
+			enabled: true,
+			provider: 'v8',
+			exclude: [
+				'presets/**/*',
+				'nuxt.config.ts',
+				'tailwind.config.js',
+				'frontend/.nuxt',
+				'plugins/**/*',
+				'.nuxt/**/*',
+				'server/api/**/*',
+				'components/LogsView.vue',
+				'layouts/**/*',
+			],
+			reportsDirectory: 'coverage',
+			reporter: ['text', 'html', 'json'],
+		},
 	},
 })

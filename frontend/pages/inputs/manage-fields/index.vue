@@ -1,6 +1,6 @@
 <template>
-	<div class="h-screen w-full flex flex-col gap-5">
-		<div class="flex flex-row justify-between items-center">
+	<div class="h-full w-full flex flex-col gap-5 px-4 sm:px-6 md:px-8 lg:px-0 py-4 sm:py-6 md:py-8 lg:py-0">
+		<div class="flex flex-row justify-between items-center _mb-4">
 			<span class="font-bold text-xl dark:text-white">Fields</span>
 			<Button label="Add Field" @click="isDialogVisible = true" />
 		</div>
@@ -17,7 +17,9 @@
 		</Dialog>
 
 		<ConfirmDialog />
-		<GoogleMap ref="googleMapRef" :isDrawingEnabled="isDrawingEnabled" @polygonDrawn="handlePolygonDrawn" />
+		<div class="_flex-grow h-full bg-terrabyte-green-dark">
+			<GoogleMap ref="googleMapRef" :isDrawingEnabled="isDrawingEnabled" @polygonDrawn="handlePolygonDrawn" />
+		</div>
 	</div>
 </template>
 
@@ -34,7 +36,7 @@ if (session) {
 		data: { user },
 	} = await session.auth.getUser()
 	if (user) currentUser = user
-	console.log('user: ', user.id)
+	console.error('user: ', user?.id)
 }
 
 definePageMeta({
@@ -47,13 +49,19 @@ const isDrawingEnabled = ref(false)
 const fieldName = ref('')
 const selectedCropType = ref(null)
 const cropOptions = ref([
-	{ name: 'Corn', value: 'corn' },
-	{ name: 'Soybeans', value: 'soybeans' },
+	{ name: 'Maize', value: 'maize' },
 	{ name: 'Wheat', value: 'wheat' },
+	{ name: 'Groundnuts', value: 'groundnuts' },
+	{ name: 'Sunflower', value: 'sunflowerseed' },
+	{ name: 'Sorghum', value: 'sorghum' },
+	{ name: 'Soybeans', value: 'soybeans' },
+	{ name: 'Barley', value: 'barley' },
+	{ name: 'Canola', value: 'canola' },
+	{ name: 'Oats', value: 'oats' },
 ])
 const fieldsData = ref([])
 const confirm = useConfirm()
-const drawnPolygonPaths = ref([])
+const drawnPolygonPaths = ref<google.maps.LatLng[]>([])
 
 const proceedToDrawing = () => {
 	isDialogVisible.value = false
@@ -88,53 +96,42 @@ const showConfirmationDialog = () => {
 	})
 }
 
+const teamID = await useFetch('/api/getTeamID', {
+	params: { userid: currentUser?.id },
+})
+
 const saveField = async () => {
 	if (drawnPolygonPaths.value.length > 0) {
 		fieldsData.value.push({
 			name: fieldName.value,
 			cropType: selectedCropType.value,
-			paths: drawnPolygonPaths.value,
+			paths: drawnPolygonPaths.value.map((latLng) => [latLng.lat(), latLng.lng()]), // convert paths to array of arrays
 		})
-		console.log('Field saved:', {
-			name: fieldName.value,
-			cropType: selectedCropType.value,
-			paths: drawnPolygonPaths.value.toLocaleString(),
-		})
-		// class Field(BaseModel):
-		// field_id: Optional[int] = None
-		// field_area: Optional[object] = None
-		// field_name: Optional[str] = None
-		// field_tph: Optional[float] = None
-		// field_health: Optional[float] = None
-		// crop_type: Optional[str] = None
-		// user_id: Optional[str] = None
-		//  create an array called dataArray of objects to be sent to the backend
-		const FieldsDataPaths: number[][] = []
-		// convert fieldsData from string to float. '(23.00000,22.123)' to [23.00000, 22.123]
-		fieldsData.value.forEach((field: { name: string; cropType: { name: string }; paths: [] }) => {
-			const fieldPaths: number[] = []
-			field.paths.forEach((path: string) => {
-				const pathString = path.toString().replace('(', '').replace(')', '').split(',')
-				const pathFloat: number[] = pathString.map((path: string) => parseFloat(path))
-				fieldPaths.push(...pathFloat)
+
+		const FieldsDataPaths: number[] = []
+		fieldsData.value.forEach((field: { name: string; cropType: { name: string }; paths: number[][] }) => {
+			field.paths.forEach((path: number[]) => {
+				FieldsDataPaths.push(...path)
 			})
-			FieldsDataPaths.push(fieldPaths)
 		})
-		//  ! fix type to give the correct type
-		if (currentUser) {
-			// convert to string
-			currentUser.id = currentUser.id.toString()
+
+		// convert FieldsDataPaths to array of arrays
+		const coordinatesArray: number[][] = []
+		for (let index = 1; index < FieldsDataPaths.length; index += 2) {
+			const newPoint: number[] = [FieldsDataPaths[index - 1], FieldsDataPaths[index]]
+			console.log(`Adding new point: [${FieldsDataPaths[index - 1]}, ${FieldsDataPaths[index]}]`)
+			coordinatesArray.push(newPoint)
 		}
+
 		const returnData = {
 			field_name: fieldName.value,
 			crop_type: selectedCropType.value.name,
 			field_area: {
 				type: 'Polygon',
-				coordinates: FieldsDataPaths,
+				coordinates: coordinatesArray,
 			},
-			user_id: currentUser ? currentUser.id : 'null',
+			team_id: teamID.data.value.team_id,
 		}
-		console.log('returnData:', returnData)
 
 		try {
 			const response = await $fetch('/api/createField', {
@@ -150,4 +147,17 @@ const saveField = async () => {
 		selectedCropType.value = null
 	}
 }
+
+const userFields = await $fetch('/api/getUserFields', {
+	params: { userid: currentUser?.id },
+})
+
+console.log('User Fields: ', userFields)
 </script>
+
+<style>
+.card {
+	max-width: 800px;
+	margin: 0 auto;
+}
+</style>

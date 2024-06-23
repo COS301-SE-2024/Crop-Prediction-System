@@ -1,5 +1,5 @@
 <template>
-	<div class="w-96 grid gap-5 border border-surface-border p-6 rounded-lg shadow-lg">
+	<div class="w-96 grid gap-5 border border-surface-border dark:border-surface-600 p-6 rounded-lg shadow-lg">
 		<div>
 			<p class="text-lg font-[500] text-surface-400">{{ title }}</p>
 		</div>
