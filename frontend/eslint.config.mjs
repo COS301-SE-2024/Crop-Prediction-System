@@ -15,6 +15,7 @@ export default withNuxt({
     "@typescript-eslint/no-unused-vars": "off",
     "vue/no-multiple-template-root": "off",
     "@typescript-eslint/no-explicit-any": "off",
+    "prefer-const": "off",
   },
 })
 // Your custom configs here
