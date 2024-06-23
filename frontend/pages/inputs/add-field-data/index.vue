@@ -95,7 +95,7 @@
 			<template #footer>
 				<div class="flex gap-3">
 					<Button label="Cancel" severity="secondary" outlined class="w-full" />
-					<Button label="Save" class="w-full" />
+					<Button label="Save" class="w-full" @click="saveFieldData" />
 				</div>
 			</template>
 		</Card>
@@ -108,15 +108,55 @@ import Dropdown from 'primevue/dropdown'
 import InputNumber from 'primevue/inputnumber'
 import { ref } from 'vue'
 
+const user = useSupabaseUser()
+const userID = user.value?.id
+
 // Fetch fields from backend here
 const selectedField = ref()
-const fields = ref([
-	{ name: 'Wheat Field' },
-	{ name: 'Corn Field' },
-	{ name: 'Soya Field' },
-	{ name: 'Underberg' },
-	{ name: 'Down Under' },
-])
+const userFields = await $fetch('/api/getUserFields', {
+	params: { userid: userID },
+})
+
+console.log('User Fields', userFields)
+// Map field_name in userFields to name for dropdown
+const fields = ref([])
+if (userFields) {
+	fields.value = userFields.map((field: { field_name: any }) => {
+		return { name: field.field_name }
+	})
+} else {
+	fields.value.push({ name: 'No Fields Found' })
+}
+
+async function saveFieldData() {
+	const field_id = ref()
+	// for (let index = 0; index < userFields.length; index++) {
+	// 	if (selectedField.value.name === userFields[index].field_name) {
+	// 		field_id.value = userFields[index].id
+	// 	}
+	// }
+	const data = {
+		field_id: field_id.value,
+		weather_temperature: weather_temperature.value,
+		weather_humidity: weather_humidity.value,
+		weather_rainfall: weather_rainfall.value,
+		weather_uv: weather_uv.value,
+		soil_moisture: soil_moisture.value,
+		soil_ph: soil_ph.value,
+		soil_conductivity: soil_conductivity.value,
+		is_manual: true,
+	}
+
+	// try {
+	// 	const response = await $fetch('/api/createEntry', {
+	// 		method: 'POST',
+	// 		body: data,
+	// 	})
+	// 	console.log('Response:', response)
+	// } catch (error) {
+	// 	console.error('Error:', error)
+	// }
+}
 
 const weather_temperature = ref(0)
 const weather_humidity = ref(0)
