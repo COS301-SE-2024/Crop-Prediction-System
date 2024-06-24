@@ -37,3 +37,32 @@ __pycache__
 # R package cache
 .RData
 .Rhistory
+
+# vpp
+*.vpp.*
+
+# ML data
+*.tif
+*.tfw
+pet/
+
+# RStudio
+*.RData
+*.Rhistory
+
+# Big data
+big_data/
+*.xlsx
+*.per
+
+# tif
+*.tif
+*.tfw
+
+# Rstudio
+.Rproj.user
+*.Rdata
+*.Rhistory
+
+# coverage
+coverage/
