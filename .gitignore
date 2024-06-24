@@ -35,6 +35,10 @@ __pycache__
 .pytest_cache
 .tool-versions
 
+
+# R package cache
+.RData
+.Rhistory
 # vpp
 *.vpp.*
 
@@ -60,3 +64,7 @@ big_data/
 .Rproj.user
 *.Rdata
 *.Rhistory
+
+
+# coverage
+coverage/
