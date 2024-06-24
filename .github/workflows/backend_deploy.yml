@@ -1,0 +1,25 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - feature/APIv2
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to DigitalOcean
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DIGITAL_OCEAN_IP_V2 }}
+          username: root
+          password: ${{ secrets.DIGITAL_OCEAN_PASSWORD_V2 }}
+          script: |
+            cd /home/farm/server/Crop-Prediction-System/backend
+            ls -la
+            git pull
+            su - farm -c "pm2 restart sample_farm_api"

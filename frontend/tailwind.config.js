@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+	darkMode: 'selector',
 	content: ['presets/**/*.{js,vue,ts}'],
 	theme: {
 		extend: {
@@ -41,6 +42,8 @@ module.exports = {
 				'surface-800': 'rgb(var(--surface-800))',
 				'surface-900': 'rgb(var(--surface-900))',
 				'surface-950': 'rgb(var(--surface-950))',
+
+                'terrabyte-green-dark': '#40573B'
 			},
 		},
 	},
