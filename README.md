@@ -21,7 +21,8 @@ Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learni
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
 ![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)
-![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-black?style=for-the-badge)
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 ![pytest](https://img.shields.io/badge/pytest-20555A?style=for-the-badge&logo=pytest)
 ![cypress](https://img.shields.io/badge/-cypress-%23E5E5E5?style=for-the-badge&logo=cypress&logoColor=058a5e)
 
@@ -41,9 +42,13 @@ Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learni
 
 ## Demo Material
 
-<a href="https://youtu.be/JHFqWU64STM)">Demo 1 Video</a>
+<a href="https://youtu.be/JHFqWU64STM">Demo 1 Video</a>
 
 <a href="https://www.canva.com/design/DAGGzo2_JZ0/q4WXYNgFuAQ9xFbv1Uo55A/edit?utm_content=DAGGzo2_JZ0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Demo 1 Presentation</a>
+
+<a href="https://youtu.be/n9GdBw7bQcw">Demo 2 Video</a>
+
+<a href="https://www.canva.com/design/DAGItX_W4V8/OzXuycDqygKwqtf94wqkxg/edit?utm_content=DAGItX_W4V8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Demo 2 Presentation</a>
 
 ## Documentation
 
