@@ -1,12 +1,12 @@
 alive_progress==3.1.5
 fastapi==0.111.0
+setuptools==63.2.0
 inquirer==3.2.5
 numpy==1.24.0
 pandas==2.2.2
 pydantic==1.10.15
 pytest==8.1.1
 scikit_learn==1.5.0
-setuptools==63.2.0
 tensorflow==2.16.1
 typing_extensions==4.12.2
 pytest-cov==5.0.0
