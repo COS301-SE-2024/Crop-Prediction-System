@@ -46,7 +46,7 @@ Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learni
 
 <a href="https://www.canva.com/design/DAGGzo2_JZ0/q4WXYNgFuAQ9xFbv1Uo55A/edit?utm_content=DAGGzo2_JZ0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Demo 1 Presentation</a>
 
-<a href="https://youtu.be/JHFqWU64STM">Demo 2 Video</a>
+<a href="https://youtu.be/n9GdBw7bQcw">Demo 2 Video</a>
 
 <a href="https://www.canva.com/design/DAGItX_W4V8/OzXuycDqygKwqtf94wqkxg/edit?utm_content=DAGItX_W4V8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Demo 2 Presentation</a>
 
