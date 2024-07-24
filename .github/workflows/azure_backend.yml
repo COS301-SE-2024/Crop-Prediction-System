@@ -1,0 +1,37 @@
+name: Python application
+
+on:
+  push:
+    branches:
+      - feature/APIv2
+
+env:
+  AZURE_WEBAPP_NAME: apiterrabyte # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: "/backend" # set this to the path to your web app project, defaults to the repository root
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Deploy web App using GH Action azure/webapps-deploy
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+      - name: logout
+        run: |
+          az logout
