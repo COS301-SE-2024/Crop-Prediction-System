@@ -3,8 +3,8 @@ from database.supabaseFunctions import supabaseFunctions
 from pydantic import BaseModel
 
 from model.base import MLModel
-from database.field import Field
-from database.entry import Entry
+from backend.definitions.field import Field
+from backend.definitions.entry import Entry
 from functools import wraps
 
 class API:
