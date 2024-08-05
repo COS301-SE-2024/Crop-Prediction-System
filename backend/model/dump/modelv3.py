@@ -16,7 +16,7 @@ import time
 from cropHealth import calculateHealth
 from knn_function import knn_impute
 
-def predict(data_input, crop, hectare, data=None, optimums=None, retrain=False):
+def predict(data_input, crop, hectare, data=None, optimums=None, retrain=False): # data and optimums are not used
     # Production data
     # data = pd.read_csv('model/processed_data/model_data_soil_moisture.csv')
     # optimums = pd.read_csv('model/optimums.csv')
@@ -43,21 +43,21 @@ def predict(data_input, crop, hectare, data=None, optimums=None, retrain=False):
     ]
     crops = [c + '_ton_per_hectare' for c in crops]
 
-    def create_sequences(X, y, seq_length):
+    def create_sequences(X, y, seq_length): # X is the input data, y is the output data
         Xs, ys = [], []
         for i in range(len(X) - seq_length):
             Xs.append(X[i:i+seq_length])
             ys.append(y[i+seq_length])
         return np.array(Xs), np.array(ys)
 
-    def preprocess_data(df, crop):
+    def preprocess_data(df, crop): # df is the data, crop is the crop to predict
         other_crops = [c for c in crops if c != crop]
 
         df = df.drop(columns=other_crops)
         df = df[df[crop].notnull()]
         return df
 
-    def train_model(X_train, y_train, seq_length):
+    def train_model(X_train, y_train, seq_length): # X_train is the input data, y_train is the output data
         model = Sequential()
         model.add(Input(shape=(seq_length, X_train.shape[2])))
         model.add(LSTM(50, activation='relu'))
@@ -82,7 +82,7 @@ def predict(data_input, crop, hectare, data=None, optimums=None, retrain=False):
         X_weighted = scaler_X.fit_transform(X)
         y_weighted = scaler_y.fit_transform(y.values.reshape(-1, 1))
 
-        seq_length = 10
+        seq_length = 12
         X_seq, y_seq = create_sequences(X_weighted, y_weighted, seq_length)
 
         X_train, X_test, y_train, y_test = train_test_split(X_seq, y_seq, test_size=0.2, random_state=42)
@@ -93,13 +93,13 @@ def predict(data_input, crop, hectare, data=None, optimums=None, retrain=False):
 
         if retrain:
             model = train_model(X_train, y_train, seq_length)
-            model.save(crop + '_yield_prediction_model.keras')
+            model.save(crop + '_yield_prediction_model_v2.keras')
         else:
             try:
-                model = load_model(crop + '_yield_prediction_model.keras')
+                model = load_model(crop + '_yield_prediction_model_v2.keras')
             except:
                 model = train_model(X_train, y_train, seq_length)
-                model.save(crop + '_yield_prediction_model.keras')
+                model.save(crop + '_yield_prediction_model_v2.keras')
 
         end_time = time.time()
         times.append(end_time - start_time)
@@ -176,7 +176,7 @@ def predict(data_input, crop, hectare, data=None, optimums=None, retrain=False):
                     'prediction': times[2]
                 }
             },
-            'fitness': X_input_seq,
+            # 'fitness': X_input_seq,
         }
 
         # Change all '' to "" for JSON compatibility
@@ -188,19 +188,13 @@ def predict(data_input, crop, hectare, data=None, optimums=None, retrain=False):
         return result
     return predict_yield(data_input, crop, hectare, retrain)
 
-# Example usage
 result = predict({
     'date': '2023-01-01',
-    'potential_evapotranspiration': 5.6,
     'cloud_cover': 43.1,
     'precipitation': 89.4,
     'maximum_temperature': 29.1, 
-    'rain_days': 10.4,
     'minimum_temperature': 15.5,
-    'vapour_pressure': 15.1,
-    'ground_frost_frequency': 0.0,
-    'diurnal_temperature_range': 13.6,
-    'mean_temperature': 22.2
-}, "wheat", 4, None, None, False)
+    'vapour_pressure': 15.1
+}, "wheat", 4, None, None, True)
 
 print(result)
