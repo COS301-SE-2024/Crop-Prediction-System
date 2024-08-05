@@ -57,16 +57,6 @@ const items = ref([
 		],
 	},
 	{
-		label: 'ANALYTICS',
-		items: [
-			{
-				label: 'Crop Yield Data',
-				url: '/analytics/crop-yield-data',
-				icon: 'pi pi-chart-pie',
-			},
-		],
-	},
-	{
 		label: 'TEAM MANAGEMENT',
 		items: [
 			{
