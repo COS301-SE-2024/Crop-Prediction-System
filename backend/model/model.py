@@ -10,6 +10,7 @@ import xgboost as xgb
 from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.metrics import mean_squared_error
 import datetime
+import os
 
 class Model:
     def __init__(self, sb : supabaseInstance):
@@ -21,21 +22,13 @@ class Model:
             model_data = self.load_model_data(field_id)
             if "error" in model_data:
                 return model_data  # Return the error message if data loading failed
-            
-            print("Model Data:")
-            print(model_data)  # Debug: Print the first few rows of model_data
 
             historical_data = self.load_yields()
             if "error" in historical_data:
                 return historical_data  # Return the error message if data loading failed
 
-            print("Historical Data:")
-            print(historical_data)  # Debug: Print the first few rows of historical_data
-
             # Merge data and historical_data on the 'year' column
             data = pd.merge(model_data, historical_data, on='year', how='left')
-            print("Merged Data:")
-            print(data.head())  # Debug: Print the first few rows of the merged data
 
             return data
         except Exception as e:
