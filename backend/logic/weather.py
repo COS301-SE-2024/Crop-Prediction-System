@@ -28,6 +28,7 @@ class Weather:
                 rain = data['current']['rain'] or 0,
                 uvi = data['current']['uvi'],
             )
+        entry = self.get_features(entry)
         entries.append(entry)
         for i in range(7):
             entry = Entry(
@@ -46,7 +47,19 @@ class Weather:
                 rain = data['daily'][i]['rain'] or 0,
                 uvi = data['daily'][i]['uvi'],
             )
+            entry = self.get_features(entry)
             entries.append(entry)
+        return entries
+        
+    def get_features(self, e : Entry):
+        e.gff = min(e.dew_point, e.tempMin),
+        e.gdd=max(0, (e.tempMax + e.tempMin) / 2 - self.c.t_base),
+        e.hdd=max(0, e.tempean - self.c.t_base),
+        e.Tdiurnal=e.temp_max - e.temp_min,
+        e.Tmean=(e.temp_max + e.temp_min) / 2,
+        e.soil_moisture=(e.pet - e.precipitation) / e.pet,
+        e.soil_temperature=(e.temp_max + e.temp_min) / 2
+        return e
         
 
 

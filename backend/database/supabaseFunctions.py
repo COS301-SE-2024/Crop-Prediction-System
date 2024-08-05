@@ -1,14 +1,15 @@
+from logic import Weather
 from database import supabaseInstance
-from database.field import Field
-from database.entry import Entry
+from definitions.field import Field
+from definitions.entry import Entry
 from logic.calculateHectare import calculate_hectares_from_coordinates
 
 import asyncio
 
 class supabaseFunctions:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
-
     def __init__(self):
+        self.weather = Weather()
         pass
 
     @staticmethod
@@ -47,6 +48,8 @@ class supabaseFunctions:
             hectare = calculate_hectares_from_coordinates(array)
             print(hectare, flush=True)
             result = supabaseFunctions.__sbClient.table("field_info").insert([{"field_area": array, "field_name": fieldInfo.field_name, "field_tph": fieldInfo.field_tph, "field_health": fieldInfo.field_health, "crop_type": fieldInfo.crop_type, "team_id": fieldInfo.team_id, "hectare": hectare}]).execute()
+            weather.getWeather(array[0][0], array[0][1], result.data[0]["id"])
+            
             return result
         except Exception as e:
             print(e)
@@ -324,3 +327,32 @@ class supabaseFunctions:
         except Exception as e:
             print(e)
             return {"error": "Failed to get recent entries", "error_message": e}
+        
+    @staticmethod
+    def createSensorData(sensor_data: dict):
+        try:
+            # Extract data from the provided dictionary
+            nitrogen = sensor_data.get('Nitrogen')
+            phosphor = sensor_data.get('Phosphor')
+            potassium = sensor_data.get('Potassium')
+            soil_moisture = sensor_data.get('Soil_Moisture')
+
+            # Validate data
+            if nitrogen is None or phosphor is None or potassium is None or soil_moisture is None:
+                return {"error": "Missing required sensor data"}
+
+            # Insert data into the 'field_data' table
+            response = supabaseFunctions.__sbClient.table("field_data").insert({
+                "Nitrogen": nitrogen,
+                "Phosphor": phosphor,
+                "Potassium": potassium,
+                "Soil_Moisture": soil_moisture
+            }).execute()
+
+            if response.error:
+                return {"error": "Failed to insert sensor data", "error_message": response.error}
+
+            return {"success": "Sensor data inserted successfully", "data": response.data}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to insert sensor data", "error_message": str(e)}
