@@ -1,6 +1,7 @@
 # Defines the base model for crop prediction that predicts yield
 from pydantic import BaseModel
-# from definitions import Crop
+from definitions.crop import Crop
+from database.supabaseInstance import supabaseInstance
 
 # Model specific imports
 import pandas as pd
@@ -10,44 +11,8 @@ from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.metrics import mean_squared_error
 import datetime
 
-# Supabase imports
-from supabase import create_client, Client
-from dotenv import load_dotenv
-import os
-
-from pydantic import BaseModel, Field
-from typing import Dict, List
-
-class Crop(BaseModel):
-    name: str = Field(..., description="Name of the crop.")
-    t_base: float = Field(..., description="Base temperature for the crop.")
-    stages: Dict[str, Dict[str, float]] = Field(
-        ..., description="Associative 3D array for crop growth stages."
-    )
-
-class supabaseInstance:
-    __instance = None # private instance variable
-
-    def __init__(self):
-        # Load environment variables
-        load_dotenv()
-
-        # Get Supabase URL and Key
-        self.url = os.environ.get("SUPABASE_URL")
-        self.key = os.environ.get("SUPABASE_KEY")
-
-        # Create Supabase client
-        self.sbClient: Client = create_client(self.url, self.key)
-
-    def get_client(self):
-        if not supabaseInstance.__instance:
-            supabaseInstance.__instance = supabaseInstance()
-
-        return supabaseInstance.__instance.sbClient
-
 class Model:
-    def __init__(self, c : Crop, sb : supabaseInstance):
-        self.crop = c
+    def __init__(self, sb : supabaseInstance):
         self.sb = sb
 
     # Load data
@@ -86,8 +51,8 @@ class Model:
 
         return model_data
         
-    def load_yields(self):
-        cropClass = self.crop.name + "_ton_per_hectare"
+    def load_yields(self, c : Crop):
+        cropClass = c.name + "_ton_per_hectare"
         dict = {"crop": cropClass}
         
         # Execute RPC call
@@ -112,7 +77,6 @@ class Model:
         
         # Return the cleaned DataFrame
         return historical_data
-
 
     # Train
     def train(self, data):
@@ -225,9 +189,20 @@ class Model:
         return mse
 
     # Save
-    def save(self, model):
+    def save(self, model, field_id):
         # Save the model
         model.save_model('model.json')
+
+        # Upload the model to Supabase
+        with open('model.json', 'rb') as file:
+            self.sb.table('model').upsert({
+                'field_id': field_id,
+                'updated_at': datetime.datetime.now(),
+                'model': file.read()},
+                ['updated_at'])
+        
+        # Remove the local model file
+        os.remove('model.json')
 
 # Define Wheat model
 wheat = Crop(
@@ -242,23 +217,23 @@ wheat = Crop(
     }
 )
 
-# Create Supabase client
-sb = supabaseInstance().get_client()
+# # Create Supabase client
+# sb = supabaseInstance().get_client()
 
-# Create model
-model = Model(wheat, sb)
+# # Create model
+# model = Model(wheat, sb)
 
-# Load data
-data = model.load_data()
+# # Load data
+# data = model.load_data()
 
-# Print data
-print(data)
+# # Print data
+# print(data)
 
-# Train model
-model.train(data)
+# # Train model
+# model.train(data)
 
-# Evaluate model
-mse = model.evaluate()
+# # Evaluate model
+# mse = model.evaluate()
 
-# Print MSE
-print(f"Mean Squared Error: {mse}")
+# # Print MSE
+# print(f"Mean Squared Error: {mse}")

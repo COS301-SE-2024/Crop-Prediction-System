@@ -1,7 +1,7 @@
-from logic import Weather
 from database import supabaseInstance
 from definitions.field import Field
 from definitions.entry import Entry
+from logic.weather import Weather
 from logic.calculateHectare import calculate_hectares_from_coordinates
 
 import asyncio
@@ -168,90 +168,6 @@ class supabaseFunctions:
         except Exception as e:
             print(e)
             return {"error": "Entry not found", "error_message": e, "entry_id": entry_id, "type": "deleteEntry"}
-        
-
-    # integration testing from get to post
-    @staticmethod
-    def test():
-        testsPassed = 0
-        response = None
-        try:
-            dict_params = {"field_id": 0}
-            response = supabaseFunctions.__sbClient.rpc("get_field_info", dict_params).execute()
-            if response.data == []:
-                raise Exception("Field not found")
-            testsPassed += 1
-
-            dict_params = {"field_id": 0}
-            response = supabaseFunctions.__sbClient.rpc("get_field_data_by_id", dict_params).execute()
-            if response.data == []:
-                raise Exception("Data not found")
-            testsPassed += 1
-            
-            dict_params = {"entry_id": "0", "weather_temperature": 30, "weather_humidity": 50, "weather_uv": 5, "weather_rainfall": 0, "soil_moisture": 50, "soil_ph": 6, "soil_conductivity": 0, "is_manual": False, "field_id": 0}
-
-            response = supabaseFunctions.__sbClient.table("data_feed").insert([dict_params]).execute()
-
-            # see if entry was created
-            dict_params = {"entry_id": "0"}
-            # response = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", dict_params.get("entry_id")).execute()
-
-            # asyncio.sleep(5)
-
-            # print(response.data, flush=True)
-            # if response.data == []:
-            #     raise Exception("Entry not created")
-            testsPassed += 1
-
-            dict_params = {"entry_id": "0", "weather_temperature": 30, "weather_humidity": 50, "weather_uv": 5, "weather_rainfall": 0, "soil_moisture": 50, "soil_ph": 6, "soil_conductivity": 0, "is_manual": True, "field_id": 0}
-
-            response = supabaseFunctions.__sbClient.table("data_feed").update(dict_params).eq("entry_id", dict_params.get("entry_id")).execute()
-
-            # see if entry was updated
-            # dict_params = {"entry_id": "0"}
-            # response = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", dict_params.get("entry_id")).execute()
-            # if response.data[0]["is_manual"] != True:
-            #     raise Exception("Entry not updated")
-            testsPassed += 1
-
-            dict_params = {"entry_id": "0"}
-
-            response = supabaseFunctions.__sbClient.table("data_feed").delete().eq("entry_id", dict_params.get("entry_id")).execute()
-
-            # see if entry was deleted
-            # dict_params = {"entry_id": "0"}
-            # response = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", dict_params.get("entry_id")).execute()
-            # if response.data != []:
-            #     raise Exception("Entry not deleted")
-            testsPassed += 1
-
-            # see if entry is still there
-            dict_params = {"entry_id": "0"}
-            response = supabaseFunctions.__sbClient.table("data_feed").select().eq("entry_id", dict_params.get("entry_id")).execute()
-
-            if response.data != []:
-                raise Exception("Entry not deleted")
-
-            
-            dict_params = {"id": 1, "field_area": 100, "field_name": "Test Field", "field_tph": 6, "field_health": 5, "crop_type": "Rice", "team_id": "592a7e6e-85f7-4830-8f1a-d2f396353a4b"}
-            supabaseFunctions.__sbClient.table("field_info").insert([dict_params]).execute()
-            testsPassed += 1
-            supabaseFunctions.__sbClient.table("field_info").update({"field_area": 200}).eq("id", 1).execute()
-            testsPassed += 1
-            supabaseFunctions.__sbClient.table("field_info").delete().eq("id", 1).execute()
-            testsPassed += 1
-
-            dict_params = {"field_id": 1}
-            response = supabaseFunctions.__sbClient.rpc("get_field_info", dict_params).execute()
-
-            if response.data != []:
-                raise Exception("Entry not deleted")
-
-            return {"success": "All tests passed", "tests_passed": testsPassed}
-        
-        except Exception as e:
-            print(e)
-            return {"error": "Test failed", "error_message": str(e)}
     
     @staticmethod
     def getUserFields(user_id: str):

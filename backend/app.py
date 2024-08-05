@@ -2,16 +2,16 @@ from fastapi import FastAPI, Request
 from database.supabaseFunctions import supabaseFunctions
 from pydantic import BaseModel
 
-from model.base import MLModel
-from backend.definitions.field import Field
-from backend.definitions.entry import Entry
+from model.model import Model
+from definitions.field import Field
+from definitions.entry import Entry
 from functools import wraps
 
 class API:
     def __init__(self):
         self.app = FastAPI()
-        self.ml = MLModel()
         self.sb = supabaseFunctions()
+        self.ml = Model(sb=self.sb)
         self.setup_routes()
 
     # async def init_supabase(self):
@@ -49,9 +49,6 @@ class API:
 
         # recent n entries
         self.app.add_api_route("/getRecentEntries", self.sb.getRecentEntries, methods=["GET"])
-
-        # testing routes    
-        self.app.add_api_route("/test", self.test, methods=["GET"])
                                
     def main(self, request: Request):
         return {
