@@ -20,7 +20,7 @@ class API:
         # field routes
         self.app.add_api_route("/getFieldInfo", self.getFieldInfo, methods=["GET"])
         self.app.add_api_route("/getFieldData", self.getFieldData, methods=["GET"])
-        self.app.add_api_route("/getFieldLogs", self.getFieldLogs, methods=["GET"])
+        # self.app.add_api_route("/getFieldLogs", self.getFieldLogs, methods=["GET"])
 
         # field routes
         self.app.add_api_route("/createField", self.createField, methods=["POST"])

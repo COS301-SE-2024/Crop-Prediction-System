@@ -11,13 +11,28 @@ class Weather:
         self.unit = 'metric'
 
     def getWeather(self, lat, lon, field_id, c : Crop) -> Entry:
-        url = f'https`://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={self.part}&units={self.unit}&appid={self.api_key}'
+        url = f'https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={self.part}&units={self.unit}&appid={self.api_key}'
         response = requests.get(url)
         data = response.json()
+        # print(data, flush=True)
         entries = []
+        print(f"field_id: {field_id}", flush=True)
+        print(f"date: {data['current']['dt']}", flush=True)
+        print(f"summary: {data['current']['weather'][0]['description']}", flush=True)
+        print(f"pressure: {data['current']['pressure']}", flush=True)
+        print(f"humidity: {data['current']['humidity']}", flush=True)
+        print(f"wind_speed: {data['current']['wind_speed']}", flush=True)
+        print(f"wind_deg: {data['current']['wind_deg']}", flush=True)
+        val = data['current']['wind_gust'] if 'wind_gust' in data['current'] else 0
+        print(f"wind_gust: {val}", flush=True)
+        print(f"clouds: {data['current']['clouds']}", flush=True)
+        # print(f"pop: {data['current']['pop']}", flush=True)
+        # print(f"rain: {data['current']['rain']}", flush=True)
+        print(f"uvi: {data['current']['uvi']}", flush=True)
+        print(f"dew_point: {data['current']['dew_point']}", flush=True)
         entry = Entry(
                 field_id = field_id,
-                date = datetime.datetime.fromtimestamp(data['current']['dt']).date(), 
+                date = data['current']['dt'], 
                 summary = data['current']['weather'][0]['description'], 
                 pressure = data['current']['pressure'],
                 humidity = data['current']['humidity'],
@@ -26,11 +41,13 @@ class Weather:
                 wind_gust = data['current']['wind_gust'],
                 clouds = data['current']['clouds'],
                 pop = data['current']['pop'],
-                rain = data['current']['rain'] or 0,
+                rain = data['current']['rain'],
                 uvi = data['current']['uvi'],
                 dew_point = data['current']['dew_point'],
             )
-        entry = self.get_features(entry, c)
+        print(entry, flush=True)
+        entry = Weather.get_features(entry, c)
+        # print(entry, flush=True)
         entries.append(entry)
         for i in range(7):
             entry = Entry(
@@ -50,11 +67,13 @@ class Weather:
                 uvi = data['daily'][i]['uvi'],
                 dew_point = data['daily'][i]['dew_point'],
             )
-            entry = self.get_features(entry)
+            entry = Weather.get_features(entry)
             entries.append(entry)
         return entries
         
-    def get_features(self, e : Entry, c : Crop):
+    @staticmethod
+    def get_features(e : Entry, c : Crop):
+        # print(c.t_base, flush=True)
         e.gff = min(e.dew_point, e.tempMin),
         e.gdd = max(0, (e.tempMax + e.tempMin) / 2 - c.t_base),
         e.hdd = max(0, e.tempMean - c.t_base),

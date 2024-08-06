@@ -1,6 +1,7 @@
 from database import supabaseInstance
 from definitions.field import Field
 from definitions.entry import Entry
+from definitions.crop import Crop
 from logic.weather import Weather
 from logic.calculateHectare import calculate_hectares_from_coordinates
 
@@ -8,9 +9,28 @@ import asyncio
 
 class supabaseFunctions:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
+    weather = Weather()
+    
     def __init__(self):
-        self.weather = Weather()
         pass
+
+    @staticmethod
+    def getCrop(crop_type: str):
+        try:
+            response = supabaseFunctions.__sbClient.table("crop_info").select("*").eq("name", crop_type).execute()
+            if response.data == []:
+                return {"error": "Data not found. Crop type may be invalid or may not have any data."}
+            
+            c = Crop(
+                name = response.data[0]["name"],
+                t_base = response.data[0]["t_base"],
+                stages = response.data[0]["stages"]
+            )
+
+            return c
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get crop", "error_message": e}
 
     @staticmethod
     def getFieldData(fieldid: str):
@@ -47,8 +67,11 @@ class supabaseFunctions:
             print(array, flush=True)
             hectare = calculate_hectares_from_coordinates(array)
             print(hectare, flush=True)
-            result = supabaseFunctions.__sbClient.table("field_info").insert([{"field_area": array, "field_name": fieldInfo.field_name, "field_tph": fieldInfo.field_tph, "field_health": fieldInfo.field_health, "crop_type": fieldInfo.crop_type, "team_id": fieldInfo.team_id, "hectare": hectare}]).execute()
-            weather.getWeather(array[0][0], array[0][1], result.data[0]["id"])
+            result = supabaseFunctions.__sbClient.table("field_info").insert([{"field_area": array, "field_name": fieldInfo.field_name, "crop_type": fieldInfo.crop_type, "team_id": fieldInfo.team_id, "hectare": hectare}]).execute()
+
+            c = supabaseFunctions.getCrop(fieldInfo.crop_type)
+            w = supabaseFunctions.weather.getWeather(array[0][0], array[0][1], result.data[0]["id"], c)
+            # print(w, flush=True)
             
             return result
         except Exception as e:
