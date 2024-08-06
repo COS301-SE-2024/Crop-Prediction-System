@@ -24,6 +24,8 @@ export default defineNuxtConfig({
     public: {
       googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
       apiBaseUrl: process.env.API_BASE_URL,
+      openweatherApiUrl: "https://api.openweathermap.org/data/2.5/",
+      openweatherApiKey: process.env.OPENWEATHER_API_KEY,
     },
   },
   supabase: {

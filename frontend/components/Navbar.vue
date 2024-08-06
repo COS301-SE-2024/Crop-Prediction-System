@@ -53,6 +53,7 @@ import { ref } from 'vue'
 import Button from 'primevue/button'
 import OverlayPanel from 'primevue/overlaypanel'
 import ToggleButton from 'primevue/togglebutton'
+import { useColorMode } from '@vueuse/core'
 
 const user = useSupabaseUser()
 const client = useSupabaseClient()
@@ -89,6 +90,13 @@ const items = ref([
 		icon: useColorMode().preference == 'dark' ? 'pi pi-sun' : 'pi pi-moon',
 		command: () => {
 			setColorTheme(useColorMode().preference == 'dark' ? 'light' : 'dark')
+		},
+	},
+	{
+		label: 'Help',
+		icon: 'pi pi-question-circle',
+		command: () => {
+			window.location.href = '/help'
 		},
 	},
 	{

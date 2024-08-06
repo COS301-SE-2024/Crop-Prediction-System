@@ -19,72 +19,56 @@
 					</div>
 					<div class="flex flex-wrap gap-3 p-fluid">
 						<div class="flex-auto">
-							<label for="minmaxfraction" class="font-medium block mb-2"> Temperature </label>
+							<label for="temperature" class="font-medium block mb-2">Temperature</label>
 							<InputNumber
 								v-model="weather_temperature"
-								inputId="minmaxfraction"
+								inputId="temperature"
 								:min-fraction-digits="1"
 								:max-fraction-digits="2"
 								suffix="°C"
 							/>
 						</div>
-
 						<div class="flex-auto">
-							<label for="minmaxfraction" class="font-medium block mb-2"> Humidity </label>
+							<label for="humidity" class="font-medium block mb-2">Humidity</label>
 							<InputNumber
 								v-model="weather_humidity"
-								inputId="minmaxfraction"
+								inputId="humidity"
 								:min-fraction-digits="1"
 								:max-fraction-digits="2"
 							/>
 						</div>
-
 						<div class="flex-auto">
-							<label for="minmaxfraction" class="font-medium block mb-2"> Rainfall </label>
+							<label for="rainfall" class="font-medium block mb-2">Rainfall</label>
 							<InputNumber
 								v-model="weather_rainfall"
-								inputId="minmaxfraction"
+								inputId="rainfall"
 								:min-fraction-digits="1"
 								:max-fraction-digits="2"
 								suffix="mm"
 							/>
 						</div>
-
 						<div class="flex-auto">
-							<label for="minmaxfraction" class="font-medium block mb-2"> UV Index </label>
-							<InputNumber
-								v-model="weather_uv"
-								inputId="minmaxfraction"
-								:min-fraction-digits="1"
-								:max-fraction-digits="2"
-							/>
+							<label for="uv" class="font-medium block mb-2">UV Index</label>
+							<InputNumber v-model="weather_uv" inputId="uv" :min-fraction-digits="1" :max-fraction-digits="2" />
 						</div>
-
 						<div class="flex-auto">
-							<label for="minmaxfraction" class="font-medium block mb-2"> Soil Moisture </label>
+							<label for="soilMoisture" class="font-medium block mb-2">Soil Moisture</label>
 							<InputNumber
 								v-model="soil_moisture"
-								inputId="minmaxfraction"
+								inputId="soilMoisture"
 								:min-fraction-digits="1"
 								:max-fraction-digits="2"
 							/>
 						</div>
-
 						<div class="flex-auto">
-							<label for="minmaxfraction" class="font-medium block mb-2"> Soil PH </label>
-							<InputNumber
-								v-model="soil_ph"
-								inputId="minmaxfraction"
-								:min-fraction-digits="1"
-								:max-fraction-digits="2"
-							/>
+							<label for="soilPh" class="font-medium block mb-2">Soil PH</label>
+							<InputNumber v-model="soil_ph" inputId="soilPh" :min-fraction-digits="1" :max-fraction-digits="2" />
 						</div>
-
 						<div class="flex-auto">
-							<label for="minmaxfraction" class="font-medium block mb-2"> Soil Conductivity </label>
+							<label for="soilConductivity" class="font-medium block mb-2">Soil Conductivity</label>
 							<InputNumber
 								v-model="soil_conductivity"
-								inputId="minmaxfraction"
+								inputId="soilConductivity"
 								:min-fraction-digits="1"
 								:max-fraction-digits="2"
 							/>
@@ -95,7 +79,7 @@
 			<template #footer>
 				<div class="flex gap-3">
 					<Button label="Cancel" severity="secondary" outlined class="w-full" />
-					<Button label="Save" class="w-full" />
+					<Button label="Save" class="w-full" @click="saveFieldData" />
 				</div>
 			</template>
 		</Card>
@@ -106,18 +90,12 @@
 import Card from 'primevue/card'
 import Dropdown from 'primevue/dropdown'
 import InputNumber from 'primevue/inputnumber'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
-// Fetch fields from backend here
+const user = useSupabaseUser()
+const userID = user.value?.id
+
 const selectedField = ref()
-const fields = ref([
-	{ name: 'Wheat Field' },
-	{ name: 'Corn Field' },
-	{ name: 'Soya Field' },
-	{ name: 'Underberg' },
-	{ name: 'Down Under' },
-])
-
 const weather_temperature = ref(0)
 const weather_humidity = ref(0)
 const weather_rainfall = ref(0)
@@ -125,6 +103,105 @@ const weather_uv = ref(0)
 const soil_moisture = ref(0)
 const soil_ph = ref(0)
 const soil_conductivity = ref(0)
+
+const fields = ref([])
+
+const loadUserFields = async () => {
+	try {
+		const userFields = await $fetch('/api/getUserFields', {
+			params: { userid: userID },
+		})
+
+		console.log('User Fields', userFields)
+		// Map field_name in userFields to name for dropdown
+		const newFields = [
+			{
+				name: 'Field 1',
+				health: 0.5,
+				yield: 0,
+				cropType: 'Mize',
+			},
+			{
+				name: 'Field 2',
+				health: 0.7,
+				yield: 0,
+				cropType: 'Wheat',
+			},
+			{
+				name: 'Field 3',
+				health: 0.3,
+				yield: 0,
+				cropType: 'Barley',
+			},
+		]
+
+		if (!userFields.length) {
+			for (let i = 0; i < newFields.length; i++) {
+				fields.value.push(newFields[i])
+			}
+		} else {
+			fields.value = userFields.map((field: { field_name: string; id: number }) => {
+				return { name: field.field_name, id: field.id }
+			})
+		}
+	} catch (error) {
+		console.error('Error loading user fields:', error)
+	}
+}
+
+onMounted(() => {
+	// Add a delay before loading user fields
+	setTimeout(() => {
+		loadUserFields()
+	}, 2000) // 2-second delay
+})
+
+async function saveFieldData() {
+	console.log('Save Field Data called')
+
+	let field_id = null
+	for (let index = 0; index < fields.value.length; index++) {
+		if (selectedField.value.name === fields.value[index].name) {
+			field_id = fields.value[index].id
+			break
+		}
+	}
+
+	const data = {
+		field_id,
+		weather_temperature: weather_temperature.value,
+		weather_humidity: weather_humidity.value,
+		weather_rainfall: weather_rainfall.value,
+		weather_uv: weather_uv.value,
+		soil_moisture: soil_moisture.value,
+		soil_ph: soil_ph.value,
+		soil_conductivity: soil_conductivity.value,
+		is_manual: true,
+	}
+
+	console.log('Data to be sent:', data)
+
+	try {
+		const response = await fetch('/api/createEntry', {
+			method: 'POST',
+			body: JSON.stringify(data),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+
+		console.log('Response:', response)
+		if (!response.ok) {
+			const errorData = await response.json()
+			console.error('Error response:', errorData)
+		} else {
+			const responseData = await response.json()
+			console.log('Success response:', responseData)
+		}
+	} catch (error) {
+		console.error('Error:', error)
+	}
+}
 
 definePageMeta({
 	middleware: 'auth',

@@ -3,8 +3,8 @@ from fastapi.testclient import TestClient
 from unittest.mock import MagicMock
 
 from database.supabaseFunctions import supabaseFunctions
-from database.field import Field
-from database.entry import Entry
+from backend.definitions.field import Field
+from backend.definitions.entry import Entry
 from app import app, api_instance  # Adjust the import according to your project structure
 
 # Create a TestClient instance
