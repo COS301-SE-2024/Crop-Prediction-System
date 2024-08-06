@@ -54,11 +54,11 @@ class API:
             "Link to Documentation": "https://documenter.getpostman.com/view/26558432/2sA3Qwaoyd"
         }
 
-    def getFieldInfo(self, request: Request, fieldid: uuid):
+    def getFieldInfo(self, request: Request, fieldid: str):
         return self.sb.getFieldInfo(str(fieldid))
 
-    def getFieldData(self, request: Request, fieldid: uuid, input_date: date):
-        return self.sb.getFieldData(str(fieldid))
+    def getFieldData(self, request: Request, fieldid: str, input_date: str):
+        return self.sb.getFieldData(fieldid, input_date)
 
     def createField(self, request: Request, fieldInfo: Field):
         return self.sb.createField(fieldInfo)

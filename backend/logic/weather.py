@@ -70,7 +70,8 @@ class Weather:
                     'hdd': entry.hdd,
                     'soil_temperature': entry.soil_temperature,
                     'pet': entry.pet
-                }).execute()
+                }, returning='representation'
+                ).execute()
                 print(response, flush=True)
             except Exception as e:
                 print(e, flush=True)
