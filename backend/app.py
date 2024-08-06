@@ -1,3 +1,5 @@
+from datetime import date
+import uuid
 from fastapi import FastAPI, Request
 from database.supabaseFunctions import supabaseFunctions
 from pydantic import BaseModel
@@ -21,6 +23,7 @@ class API:
         self.app.add_api_route("/getFieldInfo", self.getFieldInfo, methods=["GET"])
         self.app.add_api_route("/getFieldData", self.getFieldData, methods=["GET"])
         # self.app.add_api_route("/getFieldLogs", self.getFieldLogs, methods=["GET"])
+        self.app.add_api_route("/fetchWeather", self.sb.fetchWeatherForAllFields, methods=["GET"])
 
         # field routes
         self.app.add_api_route("/createField", self.createField, methods=["POST"])
@@ -51,10 +54,10 @@ class API:
             "Link to Documentation": "https://documenter.getpostman.com/view/26558432/2sA3Qwaoyd"
         }
 
-    def getFieldInfo(self, request: Request, fieldid: int = 0):
+    def getFieldInfo(self, request: Request, fieldid: uuid):
         return self.sb.getFieldInfo(str(fieldid))
 
-    def getFieldData(self, request: Request, fieldid: int = 0):
+    def getFieldData(self, request: Request, fieldid: uuid, input_date: date):
         return self.sb.getFieldData(str(fieldid))
 
     def createField(self, request: Request, fieldInfo: Field):
