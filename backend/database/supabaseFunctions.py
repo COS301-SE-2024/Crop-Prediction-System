@@ -1,3 +1,4 @@
+from datetime import date
 from database import supabaseInstance
 from definitions.field import Field
 from definitions.entry import Entry
@@ -47,9 +48,9 @@ class supabaseFunctions:
             return {"error": "Failed to fetch weather for all fields", "error_message": e}
 
     @staticmethod
-    def getFieldData(fieldid: str):
+    def getFieldData(fieldid: str, input_date: date):
         try:
-            dict = {"field_id": fieldid}
+            dict = {"field_id": fieldid, "input_date": input_date}
             response = supabaseFunctions.__sbClient.rpc("get_field_data_by_id", dict).execute()
             if response.data == []:
                 return {"error": "Data not found. Field ID may be invalid or may not have any data."}
