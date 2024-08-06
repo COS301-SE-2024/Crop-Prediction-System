@@ -6,7 +6,7 @@ from datetime import date
 class Response(BaseModel):
     id: Optional[UUID] = None      
     field_id: Optional[int] = None
-    date: Optional[date] = None
+    date = None
     summary: Optional[str] = None
     xYield: Optional[float] = None
     health: Optional[float] = None
@@ -68,7 +68,7 @@ class Response(BaseModel):
 #         {
 #             "id": "b3b9c7c3-5b8b-4a5e-9d0e-4f1f3c7c3f4e",
 #             "field_id": 0,
-#             "date": "2021-08-01",
+#             "date": "2021-08-02",
 #             "summary": "This is a summary of the field",
 #             "xYield": 0.0,
 #             "health": 0.0,

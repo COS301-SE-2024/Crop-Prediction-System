@@ -5,8 +5,8 @@ from datetime import date
 
 class Entry(BaseModel):
     id: Optional[UUID] = None      
-    field_id: Optional[int] = None
-    date: Optional[date] = None
+    field_id: Optional[UUID] = None
+    timestamp: Optional[int] = None
     summary: Optional[str] = None
     tempMax: Optional[float] = None  
     tempMin: Optional[float] = None 
