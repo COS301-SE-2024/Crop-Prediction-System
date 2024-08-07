@@ -42,6 +42,7 @@ class Weather:
             entry = Weather.get_features(entry, c)
             entries.append(entry)
         Weather.upload(entries)
+        Weather.getSummary(lat, lon, field_id)
         return entries
     
     # Gemini Summary
