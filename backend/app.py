@@ -24,6 +24,8 @@ class API:
         self.app.add_api_route("/getFieldData", self.getFieldData, methods=["GET"])
         # self.app.add_api_route("/getFieldLogs", self.getFieldLogs, methods=["GET"])
         self.app.add_api_route("/fetchWeather", self.sb.fetchWeatherForAllFields, methods=["GET"])
+        self.app.add_api_route("/fetchSummary", self.sb.fetchSummary, methods=["GET"])
+        
 
         # field routes
         self.app.add_api_route("/createField", self.createField, methods=["POST"])

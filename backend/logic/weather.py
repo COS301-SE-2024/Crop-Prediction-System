@@ -4,9 +4,11 @@ import requests
 from definitions.entry import Entry
 from definitions.crop import Crop
 from database import supabaseInstance
+from logic.gemini import Gemini
 
 class Weather:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
+    __gemini = Gemini()
     def __init__(self):
         self.api_key = 'c0c1ea0d60f1f744ac9ef92c0b4bc7fd'
         self.part = 'hourly,alerts'
@@ -16,6 +18,7 @@ class Weather:
         url = f'https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={self.part}&units={self.unit}&appid={self.api_key}'
         response = requests.get(url)
         data = response.json()
+
         entries = []
         for i in range(7):
             entry = Entry(
@@ -35,11 +38,32 @@ class Weather:
                 uvi = data['daily'][i]['uvi'] if 'uvi' in data['daily'][i] else 0,
                 dew_point = data['daily'][i]['dew_point'] if 'dew_point' in data['daily'][i] else 0,
             )
-            print(entry, flush=True)
+            # print(entry, flush=True)
             entry = Weather.get_features(entry, c)
             entries.append(entry)
         Weather.upload(entries)
         return entries
+    
+    # Gemini Summary
+    def getSummary(self, lat, lon, field_id):
+        summary_url = f'https://api.openweathermap.org/data/3.0/onecall/overview?lat={lat}&lon={lon}&exclude={self.part}&units={self.unit}&appid={self.api_key}'
+        summary_response = requests.get(summary_url)
+        summary_data = summary_response.json()
+
+        print(summary_data['weather_overview'], flush=True)
+
+        message = self.__gemini.send_message(summary_data['weather_overview'])
+
+        try:
+            response = Weather.__sbClient.table('field_data').upsert({
+                'field_id': str(field_id),
+                'date': datetime.datetime.now().strftime('%Y-%m-%d'),
+                'summary': message,
+            }).execute()
+        except Exception as e:
+            print(e, flush=True)
+
+        return response
     
     # Uploads array of Entry objects to the database
     @staticmethod

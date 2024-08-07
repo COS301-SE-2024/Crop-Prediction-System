@@ -47,6 +47,19 @@ class supabaseFunctions:
         except Exception as e:
             print(e)
             return {"error": "Failed to fetch weather for all fields", "error_message": e}
+        
+    @staticmethod
+    def fetchSummary():
+        try:
+            response = supabaseFunctions.__sbClient.table("field_info").select("*").execute()
+            if response.data == []:
+                return {"error": "Data not found. Please create a field first."}
+            for field in response.data:
+                supabaseFunctions.weather.getSummary(field["field_area"][0][0], field["field_area"][0][1], field["id"])
+            return {"success": "Summary fetched for all fields"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to fetch summary for all fields", "error_message": e}
 
     @staticmethod
     def getFieldData(fieldid: str, input_date: str):
