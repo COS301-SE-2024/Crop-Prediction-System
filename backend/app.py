@@ -10,7 +10,7 @@ class API:
     def __init__(self):
         self.app = FastAPI()
         self.sb = supabaseFunctions()
-        self.ml = Model(sb=self.sb)
+        self.ml = Model()
         self.setup_routes()
 
     def setup_routes(self):
@@ -45,8 +45,8 @@ class API:
 
         # model routes
         self.app.add_api_route("/aggregate", self.aggregate, methods=["GET"])
-        self.app.add_api_route("/predict", self.predict, methods=["POST"])
-        self.app.add_api_route("/train", self.ml.train, methods=["GET"])
+        self.app.add_api_route("/predict", self.predict, methods=["GET"])
+        self.app.add_api_route("/train", self.train, methods=["GET"])
                                
     def main(self, request: Request):
         return {
@@ -96,11 +96,18 @@ class API:
         return self.sb.getTeamId(user_id)
     
     # model routes
-    def predict(self, request: Request, data: dict):
-        return self.ml.predict(data.get("data"), data.get("crop"), data.get("hectare"))
-    
     def aggregate(self, request: Request):
         return self.sb.aggregate()
+    
+    def predict(self, request: Request, field_id: str = None, batch: bool = False):
+        if batch:
+            return self.ml.predict_all()
+        return self.ml.predict(field_id)
+    
+    def train(self, request: Request, field_id: str = None, crop: str = None, batch: bool = False):
+        if batch:
+            return self.ml.train_all()
+        return self.ml.train(field_id, crop)
 
 api_instance = API()
 app = api_instance.app
