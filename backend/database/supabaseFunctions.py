@@ -67,6 +67,25 @@ class supabaseFunctions:
             return {"error": "Failed to fetch summary for all fields", "error_message": e}
         
     @staticmethod
+    def getCurrentStage(c : Crop):
+        # Determine current day of the year
+        today = date.today()
+        day_of_year = today.timetuple().tm_yday
+
+        # Sort stages by day before iterating
+        c.stages = dict(sorted(c.stages.items(), key=lambda item: item[1]["day"]))
+
+        # Determine the current stage
+        stage = None
+        for s_name, s_info in c.stages.items():
+            if day_of_year >= s_info["day"]:
+                stage = s_name
+            else:
+                break
+        
+        return stage
+        
+    @staticmethod
     def aggregate():
         try:
             # Fetch fields
@@ -85,24 +104,10 @@ class supabaseFunctions:
                 
                 for entry in response2.data:
                     # Get crop info
-                    c: Crop = supabaseFunctions.getCrop(field["crop_type"])
+                    c = supabaseFunctions.getCrop(field["crop_type"])
 
-                    # Determine current day of the year
-                    today = date.today()
-                    day_of_year = today.timetuple().tm_yday
-
-                    # Sort stages by day before iterating
-                    c.stages = dict(sorted(c.stages.items(), key=lambda item: item[1]["day"]))
-
-                    # Determine the current stage
-                    stage = None
-                    for s_name, s_info in c.stages.items():
-                        if day_of_year >= s_info["day"]:
-                            stage = s_name
-                        else:
-                            break  # Exit loop if the current stage is not met
-
-                    print(entry, flush=True)
+                    # Determine current stage
+                    stage = supabaseFunctions.getCurrentStage(c)
 
                     # Build an Entry object
                     e = Entry(
@@ -163,13 +168,10 @@ class supabaseFunctions:
         try:
             dict = {"field_id": fieldid}
             response = supabaseFunctions.__sbClient.rpc("get_field_info", dict).execute()
+            return response.data[0]
         except Exception as e:
             print(e)
             return {"error": "Failed to get field info", "error_message": e}
-        finally:
-            if response.data == []:
-                return {"error": "Field not found. Please create a field first."}
-            return response.data
 
     @staticmethod
     def createField(fieldInfo: Field):

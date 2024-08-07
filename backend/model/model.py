@@ -2,6 +2,7 @@
 from pydantic import BaseModel
 from definitions.crop import Crop
 from database.supabaseInstance import supabaseInstance
+from database.supabaseFunctions import supabaseFunctions
 
 # Model specific imports
 import pandas as pd
@@ -13,17 +14,41 @@ import datetime
 import os
 
 class Model:
-    def __init__(self, sb : supabaseInstance):
-        self.sb = sb
+    def __init__(self):
+        self.sb = supabaseInstance().get_client()
+        self.sf = supabaseFunctions()
+
+    def train_all(self):
+        fields = self.sb.table('field_info').select('id').execute().data
+        for field in fields:
+            self.train(field['id'])
+        return {"status": "All models trained successfully"}
+        
+    def predict_all(self):
+        fields = self.sb.table('field_info').select('id').execute().data
+        for field in fields:
+            self.predict(field['id'])
+        return {"status": "All fields predicted successfully"}
 
     # Load data
-    def load_data(self, field_id = None):
+    def load_data(self, field_id = None, crop = None):
         try:
             model_data = self.load_model_data(field_id)
             if "error" in model_data:
                 return model_data  # Return the error message if data loading failed
+            
+            c = None
+            if crop == None:
+                print("Crop name not provided. Using field ID to determine crop.", flush=True)
+                f = self.sf.getFieldInfo(field_id)
+                print(f, flush=True)
+                crop = f['crop_type']
+                c = self.sf.getCrop(crop)
+            else:
+                c = self.sf.getCrop(crop)
 
-            historical_data = self.load_yields()
+            # Load historical data
+            historical_data = self.load_yields(c)
             if "error" in historical_data:
                 return historical_data  # Return the error message if data loading failed
 
@@ -41,6 +66,10 @@ class Model:
             return {"error": "Data not found. Field ID may be invalid or may not have any data."}
         
         model_data = pd.DataFrame(response.data)
+
+        # Drop yield column if it exists
+        if 'yield' in model_data.columns:
+            model_data.drop('yield', axis=1, inplace=True)
 
         return model_data
         
@@ -72,20 +101,34 @@ class Model:
         return historical_data
 
     # Train
-    def train(self, data):
-        # Assuming 'day' represents the day of the year
-        today = datetime.datetime.now()
-        day_of_year = today.timetuple().tm_yday
+    def train(self, field_id = None, crop = None):
+        # Load the data
+        if field_id == None and crop == None:
+            return {"error": "Both Field ID and crop name cannot be empty."}
+        
+        data = self.load_data(field_id, crop)
 
-        xgbins = [stage['day'] for stage in self.crop.stages.values()]
-        # append the last day of the year
-        xgbins.append(365)
+        print(data, flush=True)
 
-        # Determine the current stage
-        current_stage = pd.cut([day_of_year], bins=xgbins, labels=self.crop.stages.keys())[0]
+        c : Crop = None
+        if crop == None:
+            f = self.sf.getFieldInfo(field_id)
+            crop = f['crop_type']
+            c = self.sf.getCrop(crop)
+        else:
+            c = self.sf.getCrop(crop)
+
+        # print(f"Data loaded for crop: {crop}", flush=True)
+
+        # Get the current stage
+        current_stage = self.sf.getCurrentStage(c)
+
+        # print(f"Current stage: {current_stage}", flush=True)
 
         # Filter data based on the current stage
         stage_data = data[data['stage'] == current_stage]
+
+        print(stage_data, flush=True)
 
         X = stage_data.drop(['year', 'stage', 'yield', 'field_id', 'id'], axis=1)
         y = stage_data['yield']
@@ -127,13 +170,46 @@ class Model:
         mse = mean_squared_error(y, y_pred)
 
         # Save the model
-        self.save(best_model)
+        best_model.save_model(f"{field_id}.json")
+        # self.save(field_id)
+
+        prediction = self.predict(field_id)
+
+        print(f"Mean Squared Error: {mse}", flush=True)
+        print(f"Predictions: {prediction}", flush=True)
+        return {
+            "status" : "Model trained successfully",
+            "mse" : mse,
+            "predictions" : prediction
+        }
 
     # Predict
-    def predict(self, data):
+    def predict(self, field_id):
+        # Load the model
+        # model_response = self.sb.table('model').select('model').eq('field_id', field_id).execute()
+        # if model_response.data == []:
+        #     return {"error": "Model not found. Field ID may be invalid or may not have a model."}
+
+        dict = {"fieldid": field_id} if field_id else {}
+        response = self.sb.rpc('get_model_data', dict).execute()
+
+        data = pd.DataFrame(response.data)
+
+        print(data, flush=True)
+
+        # Exclude rows where 'field_id' is null
+        data = data[data['field_id'].notnull()]
+
         # Load the model
         model = xgb.Booster()
-        model.load_model('model.json')
+        # model.load_model(model_response.data[0]['model'])
+        try:
+            model.load_model(f"{field_id}.json")
+        except:
+            return self.train(field_id)
+
+        # drop  Invalid columns:id: object, field_id: object, stage: object, yield: objec
+        data = data.drop(['id', 'field_id', 'stage', 'yield', 'year'], axis=1)
 
         # Convert data to a DMatrix
         dmatrix = xgb.DMatrix(data)
@@ -141,74 +217,70 @@ class Model:
         # Make predictions
         predictions = model.predict(dmatrix)
 
-        return predictions
-
-    # Evaluate
-    def evaluate(self):
-        # Load the model
-        model = xgb.Booster()
-        model.load_model('model.json')
-
-        # Load the data
-        data = self.load_data()
-
-        today = datetime.datetime.now() 
-        day_of_year = today.timetuple().tm_yday
-
-        xgbins = [stage['day'] for stage in self.crop.stages.values()]
-        # append the last day of the year
-        xgbins.append(365)
-
-        # Determine the current stage
-        current_stage = pd.cut([day_of_year], bins=xgbins, labels=self.crop.stages.keys())[0]
-
-        print(f"Current stage: {current_stage}")
-
-        # Filter data based on the current stage
-        stage_data = data[data['stage'] == current_stage]
-
-        X = stage_data.drop(['year', 'stage', 'yield', 'field_id', 'id'], axis=1)
-        y_true = stage_data['yield']  # Assuming 'yield' is the actual target value you want to compare against
-
-        # Convert X to a DMatrix
-        dmatrix = xgb.DMatrix(X)
-
-        # Make predictions
-        predictions = model.predict(dmatrix)
-
-        # Evaluate the model
-        mse = mean_squared_error(y_true, predictions)
-
-        return mse
-
-    # Save
-    def save(self, model, field_id):
-        # Save the model
-        model.save_model('model.json')
-
-        # Upload the model to Supabase
-        with open('model.json', 'rb') as file:
-            self.sb.table('model').upsert({
+        # Upsert the predictions
+        try:
+            result = self.sb.table('field_data').upsert({
                 'field_id': field_id,
-                'updated_at': datetime.datetime.now(),
-                'model': file.read()},
-                ['updated_at'])
-        
-        # Remove the local model file
-        os.remove('model.json')
+                'date': datetime.datetime.now().isoformat(),
+                'yield': predictions.tolist()[0]
+            }).execute()
+
+            print(f"Predictions upserted successfully: {result}", flush=True)
+        except Exception as e:
+            print(f"An error occurred while upserting predictions: {str(e)}", flush=True)
+
+        return predictions.tolist()[0]
+
+    # # Evaluate
+    # def evaluate(self):
+    #     # Load the model
+    #     model = xgb.Booster()
+    #     model.load_model('model.json')
+
+    #     # Load the data
+    #     data = self.load_data()
+
+    #     today = datetime.datetime.now() 
+    #     day_of_year = today.timetuple().tm_yday
+
+    #     xgbins = [stage['day'] for stage in self.crop.stages.values()]
+    #     # append the last day of the year
+    #     xgbins.append(365)
+
+    #     # Determine the current stage
+    #     current_stage = pd.cut([day_of_year], bins=xgbins, labels=self.crop.stages.keys())[0]
+
+    #     print(f"Current stage: {current_stage}")
+
+    #     # Filter data based on the current stage
+    #     stage_data = data[data['stage'] == current_stage]
+
+    #     X = stage_data.drop(['year', 'stage', 'yield', 'field_id', 'id'], axis=1)
+    #     y_true = stage_data['yield']  # Assuming 'yield' is the actual target value you want to compare against
+
+    #     # Convert X to a DMatrix
+    #     dmatrix = xgb.DMatrix(X)
+
+    #     # Make predictions
+    #     predictions = model.predict(dmatrix)
+
+    #     # Evaluate the model
+    #     mse = mean_squared_error(y_true, predictions)
+
+    #     return mse
 
 # Define Wheat model
-wheat = Crop(
-    name="wheat",
-    t_base=5.0, 
-    stages={
-        "sowing": {"day": 111},
-        "germination": {"day": 151},
-        "tillering": {"day": 182},
-        "heading": {"day": 243},
-        "maturity": {"day": 304}
-    }
-)
+# wheat = Crop(
+#     name="wheat",
+#     t_base=5.0, 
+#     stages={
+#         "sowing": {"day": 111},
+#         "germination": {"day": 151},
+#         "tillering": {"day": 182},
+#         "heading": {"day": 243},
+#         "maturity": {"day": 304}
+#     }
+# )
 
 # # Create Supabase client
 # sb = supabaseInstance().get_client()
