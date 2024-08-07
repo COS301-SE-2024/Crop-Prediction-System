@@ -74,6 +74,7 @@ class Weather:
                     'field_id': str(entry.field_id),
                     'date': datetime.datetime.fromtimestamp(entry.timestamp).strftime('%Y-%m-%d'),
                     'summary': entry.summary,
+                    'sprayability': Weather.calculate_sprayability(entry),
                     'tempmax': entry.tempMax,
                     'tempmin': entry.tempMin,
                     'humidity': entry.humidity,
@@ -104,31 +105,64 @@ class Weather:
     @staticmethod
     def get_features(e : Entry, c : Crop):
         # print(c.t_base, flush=True)
-        e.gff = min(e.dew_point, e.tempMin)
-        e.gdd = max(0, (e.tempMax + e.tempMin) / 2 - c.t_base)
         e.tempMean = (e.tempMax + e.tempMin) / 2
-        e.hdd = max(0, e.tempMean - c.t_base)
+        e.gdd = max(0, e.tempMean - c.t_base)
+        e.hdd = max(0, c.t_base - e.tempMin)
+        e.gff = 1 if e.tempMin < 0 else 0
         e.tempDiurnal = e.tempMax - e.tempMin
-        es = 0.6108 * math.exp(17.27 * e.tempMean/ (e.tempMean + 237.3))
-        ea = 0.6108 * math.exp(17.27 * e.dew_point/ (e.dew_point + 237.3))
+        es = 0.6108 * math.exp(17.27 * e.tempMean / (e.tempMean + 237.3))
+        ea = 0.6108 * math.exp(17.27 * e.dew_point / (e.dew_point + 237.3))
         delta = 4098 * es / (e.tempMean + 237.3) ** 2
         gamma = (0.655 * 0.001 * 101.5) / 2.45
         Rn = 0.0864 * e.uvi
         u2 = 7.92 / 3.6
-        e.pet = (0.408 * delta * (Rn - 0) + gamma * (900 / e.tempMean + 273) * u2 * (es - ea)) / (delta + gamma * (1 + 0.34 * u2))
+        
+        ep = (0.408 * delta * (Rn - 0) + gamma * (900 / e.tempMean + 273) * u2 * (es - ea)) / (delta + gamma * (1 + 0.34 * u2))
 
-        humidity_effect = 1 + (e.humidity / 100) * 0.1  # Assume higher humidity retains moisture
-        wind_effect = 1 - (e.wind_speed / 100) * 0.2  # Higher wind speeds increase evaporation
-        temp_effect = 1 + (e.tempMean - c.t_base) * 0.05  # Assuming 15°C as a baseline
+        max_pet = 220
+        e.pet = min(ep / max_pet, 1)  # Scale PET to a max of 1
+
+        humidity_effect = 1 + (e.humidity / 100) * 0.05
+        wind_effect = 1 - (e.wind_speed / 100) * 0.05
+        temp_effect = 1 + (e.tempMean - c.t_base) * 0.05
 
         if e.pet > 0:
             adjusted_pet = e.pet * wind_effect * temp_effect
             e.soil_moisture = (e.rain - adjusted_pet + humidity_effect) / max(1, adjusted_pet)
         else:
-            e.soil_moisture = 1  # Saturated when PET is zero
+            e.soil_moisture = 1
         e.soil_moisture = math.sqrt(e.soil_moisture * e.soil_moisture)
 
-        damping_factor = 0.5  # Assume a constant or vary based on soil moisture
+        damping_factor = 0.2  # Assume a constant or vary based on soil moisture
         e.soil_temperature = e.tempMean + e.tempDiurnal * damping_factor
 
         return e
+    
+    @staticmethod
+    def calculate_sprayability(entry: Entry) -> float:
+        wind_factor = 1 - min(entry.wind_speed / 10.0, 1.0) if entry.wind_speed else 1.0
+        humidity_factor = entry.humidity / 100.0 if entry.humidity else 0.5
+        temperature_factor = min(max((entry.tempMean - 10) / 20.0, 0.0), 1.0) if entry.tempMean else 0.5
+        soil_moisture_factor = min(entry.soil_moisture / 100.0, 1.0) if entry.soil_moisture else 0.5
+        
+        sprayability = (
+            0.3 * wind_factor +
+            0.25 * humidity_factor +
+            0.4 * temperature_factor +
+            0.05 * soil_moisture_factor
+        )
+        
+        return round(sprayability, 2)
+    
+    def calculate_health(entry: Entry) -> float:
+        ndvi_factor = entry.ndvi if entry.ndvi else 0.5
+        temp_factor = min(max((entry.tempMean - 10) / 20.0, 0.0), 1.0) if entry.tempMean else 0.5
+        soil_moisture_factor = min(max((entry.soil_moisture - 20) / 60.0, 0.0), 1.0) if entry.soil_moisture else 0.5
+        
+        health_score = (
+            0.4 * ndvi_factor +
+            0.3 * temp_factor +
+            0.3 * soil_moisture_factor
+        )
+        
+        return round(health_score, 2) 
