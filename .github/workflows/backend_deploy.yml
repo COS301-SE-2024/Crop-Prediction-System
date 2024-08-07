@@ -34,8 +34,14 @@ jobs:
           username: root
           password: ${{ secrets.DIGITAL_OCEAN_PASSWORD_V2 }}
           script: |
-            cd /home/farm/server/Crop-Prediction-System/backend
+            cd /home/farm/server/Crop-Prediction-System
             ls -la
             git pull
-            pip install -r requirements.txt
             su - farm -c "pm2 restart sample_farm_api"
+
+# Server-side commands:
+# su - farm -c "pm2 delete sample_farm_api"
+# su - farm -c "pm2 save"
+# su - farm -c "cd /home/farm/server/Crop-Prediction-System/backend && pm2 start \"gunicorn -k uvicorn.workers.UvicornWorker --config /etc/gunicorn.d/gunicorn.py app:app\"  --name \"sample_farm_api\""
+# sudo env "PATH=$PATH:/usr/bin" /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u farm --hp /home/farm
+# su - farm -c "pm2 save"

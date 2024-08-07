@@ -7,3 +7,5 @@ class Crop(BaseModel):
     stages: Dict[str, Dict[str, float]] = Field(
         ..., description="Associative 3D array for crop growth stages."
     )
+
+
