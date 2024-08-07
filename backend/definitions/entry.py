@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
 from uuid import UUID
-from datetime import date
 
 class Entry(BaseModel):
     id: Optional[UUID] = None      

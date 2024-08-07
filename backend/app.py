@@ -1,13 +1,10 @@
-from datetime import date
-import uuid
 from fastapi import FastAPI, Request
 from database.supabaseFunctions import supabaseFunctions
-from pydantic import BaseModel
 
 from model.model import Model
 from definitions.field import Field
 from definitions.entry import Entry
-from functools import wraps
+from definitions.crop import Crop
 
 class API:
     def __init__(self):
@@ -24,6 +21,8 @@ class API:
         self.app.add_api_route("/getFieldData", self.getFieldData, methods=["GET"])
         # self.app.add_api_route("/getFieldLogs", self.getFieldLogs, methods=["GET"])
         self.app.add_api_route("/fetchWeather", self.sb.fetchWeatherForAllFields, methods=["GET"])
+        self.app.add_api_route("/fetchSummary", self.sb.fetchSummary, methods=["GET"])
+        
 
         # field routes
         self.app.add_api_route("/createField", self.createField, methods=["POST"])
@@ -45,6 +44,7 @@ class API:
         self.app.add_api_route("/getTeamId", self.sb.getTeamId, methods=["GET"])
 
         # model routes
+        self.app.add_api_route("/aggregate", self.aggregate, methods=["GET"])
         self.app.add_api_route("/predict", self.predict, methods=["POST"])
         self.app.add_api_route("/train", self.ml.train, methods=["GET"])
                                
@@ -98,6 +98,9 @@ class API:
     # model routes
     def predict(self, request: Request, data: dict):
         return self.ml.predict(data.get("data"), data.get("crop"), data.get("hectare"))
+    
+    def aggregate(self, request: Request):
+        return self.sb.aggregate()
 
 api_instance = API()
 app = api_instance.app

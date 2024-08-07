@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
@@ -38,6 +39,7 @@ class Gemini:
             },
         ])
 
-    def send_message(self, chat_session, message):
-        self.start_chat()
-        return chat_session.send_message(message)
+    def send_message(self, message):
+        chat_session = self.start_chat()
+        result = chat_session.send_message(message)
+        return result.candidates[0].content.parts[0].text
