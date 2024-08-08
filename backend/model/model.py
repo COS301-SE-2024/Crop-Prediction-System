@@ -229,7 +229,7 @@ class Model:
         except Exception as e:
             print(f"An error occurred while upserting predictions: {str(e)}", flush=True)
 
-        return predictions.tolist()[0]
+        return predictions.tolist()[0] if predictions else None
 
     # # Evaluate
     # def evaluate(self):
