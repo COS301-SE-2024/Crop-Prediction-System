@@ -183,14 +183,17 @@ class supabaseFunctions:
                 if response.data == []:
                     return {"error": "Data not found. User ID may be invalid or may not have any data."}
                 
+                # sort entries by date
+                response.data = sorted(response.data, key=lambda x: x["date"])
+                
                 # return the last n entries
                 if n > 0:
                     return response.data[-n:]
                 return response.data
+            else:
+                return {"error": "User not found"}
         except Exception as e:
             return {"error": "Failed to get user field data", "error_message": e}
-        finally:
-            return {"failed": "Failed to get user field data"}
 
     @staticmethod
     def createField(fieldInfo: Field):
