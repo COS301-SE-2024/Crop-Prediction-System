@@ -22,6 +22,7 @@ class API:
         # self.app.add_api_route("/getFieldLogs", self.getFieldLogs, methods=["GET"])
         self.app.add_api_route("/fetchWeather", self.sb.fetchWeatherForAllFields, methods=["GET"])
         self.app.add_api_route("/fetchSummary", self.sb.fetchSummary, methods=["GET"])
+        self.app.add_api_route("/getRecentData", self.getRecentData, methods=["GET"])
         
 
         # field routes
@@ -94,6 +95,9 @@ class API:
 
     def getTeamId(self, request: Request, user_id: str):
         return self.sb.getTeamId(user_id)
+    
+    def getRecentData(self, request: Request, user_id: str):
+        return self.sb.getUserFieldData(user_id)
     
     # model routes
     def aggregate(self, request: Request):
