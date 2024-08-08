@@ -92,6 +92,16 @@ const fields = ref([
 	},
 ])
 
+const currentUser = useSupabaseUser()
+
+console.log(currentUser.value)
+
+const userFields = await $fetch('/api/getUserFields', {
+	params: { userid: currentUser?.value.id },
+})
+
+console.log('User Fields: ', userFields)
+
 definePageMeta({
 	middleware: 'auth',
 })
