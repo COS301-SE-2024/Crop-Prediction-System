@@ -96,8 +96,8 @@ class API:
     def getTeamId(self, request: Request, user_id: str):
         return self.sb.getTeamId(user_id)
     
-    def getRecentData(self, request: Request, user_id: str):
-        return self.sb.getUserFieldData(user_id)
+    def getRecentData(self, request: Request, user_id: str, n : int = -1):
+        return self.sb.getUserFieldData(user_id, n)
     
     # model routes
     def aggregate(self, request: Request):

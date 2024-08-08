@@ -173,7 +173,7 @@ class supabaseFunctions:
             print(e)
             return {"error": "Failed to get field info", "error_message": e}
         
-    def getUserFieldData(self, userid: str):
+    def getUserFieldData(self, userid: str, n: int):
         try:
             dict = {"userid": userid}
             team = supabaseFunctions.__sbClient.rpc("get_team_id", dict).execute()
@@ -182,6 +182,10 @@ class supabaseFunctions:
                 response = supabaseFunctions.__sbClient.rpc("get_data_from_team", dict).execute()
                 if response.data == []:
                     return {"error": "Data not found. User ID may be invalid or may not have any data."}
+                
+                # return the last n entries
+                if n > 0:
+                    return response.data[-n:]
                 return response.data
         except Exception as e:
             return {"error": "Failed to get user field data", "error_message": e}
