@@ -125,7 +125,7 @@ const saveField = async () => {
 
 		const returnData = {
 			field_name: fieldName.value,
-			crop_type: selectedCropType.value.name,
+			crop_type: selectedCropType.value.name.toLowerCase(),
 			field_area: {
 				type: 'Polygon',
 				coordinates: coordinatesArray,
