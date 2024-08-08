@@ -16,10 +16,12 @@ const props = defineProps({
 	},
 })
 
+const emit = defineEmits(['update:selectedField'])
+
 const mapsLoader = useNuxtApp().$mapsLoader
 const mapContainer = ref(null)
-let map = null
-const polygons = ref({}) // Store polygons in an object keyed by field ID
+let map: { fitBounds: (arg0: any) => void; getZoom: () => any; setZoom: (arg0: number) => void } | null = null
+let polygons = ref<google.maps.Polygon[]>([])
 
 const polygonOptions = {
 	fillColor: '#00FF00', // Green fill color (change as needed)
@@ -36,8 +38,6 @@ onMounted(async () => {
 
 	initializeMap()
 
-	drawAllFields(props.fields)
-
 	watch(
 		() => props.selectedField,
 		(newField) => {
@@ -45,20 +45,45 @@ onMounted(async () => {
 				panToField(newField)
 			}
 		},
-		{ immediate: false },
 	)
+
+	drawPolygons(props.fields)
 })
 
 function initializeMap() {
 	const center = { lat: -25.7479, lng: 28.2293 } // Default center
 	map = new google.maps.Map(mapContainer.value, {
 		center,
-		zoom: 19, // Set an initial zoom level that makes sense for your map
+		zoom: 15, // Set an initial zoom level that makes sense for your map
 		mapTypeId: 'satellite',
 	})
 }
 
-function drawAllFields(fields) {
+function panToField(field) {
+	if (!map) return
+
+	const polygonCoords = field.field_area.map((coord) => ({
+		lat: parseFloat(coord[0]),
+		lng: parseFloat(coord[1]),
+	}))
+
+	const bounds = new google.maps.LatLngBounds()
+	polygonCoords.forEach((coord) => {
+		bounds.extend(coord)
+	})
+	map.fitBounds(bounds)
+
+	// Set a timeout to ensure fitBounds has finished before adjusting the zoom
+	setTimeout(() => {
+		const currentZoom = map.getZoom()
+		if (currentZoom > 19) {
+			// Adjust this value as needed
+			map.setZoom(19) // Set the desired maximum zoom level
+		}
+	}, 500) // Delay to allow fitBounds to finish
+}
+
+function drawPolygons(fields) {
 	fields.forEach((field) => {
 		const polygonCoords = field.field_area.map((coord) => ({
 			lat: parseFloat(coord[0]),
@@ -71,44 +96,22 @@ function drawAllFields(fields) {
 			map: map,
 		})
 
-		polygons.value[field.id] = polygon
+		polygon.addListener('click', () => {
+			alert(`Field Name: ${field.field_name}`)
+			emit('update:selectedField', field)
+			panToField(field)
+		})
+
+		polygons.value.push(polygon)
 	})
 }
 
-function panToField(field) {
-	if (!map || !field) return
-
-	const polygon = polygons.value[field.id]
-
-	if (polygon) {
-		const bounds = new google.maps.LatLngBounds()
-		polygon
-			.getPath()
-			.getArray()
-			.forEach((coord) => {
-				bounds.extend(coord)
-			})
-		map.fitBounds(bounds)
-
-		// Set a timeout to ensure fitBounds has finished before adjusting the zoom
-		setTimeout(() => {
-			const currentZoom = map.getZoom()
-			if (currentZoom > 19) {
-				// Adjust this value as needed
-				map.setZoom(19) // Set the desired maximum zoom level
-			}
-		}, 500) // Delay to allow fitBounds to finish
-	}
+function clearPolygons() {
+	polygons.value.forEach((polygon) => polygon.setMap(null))
+	polygons.value = []
 }
 
 onUnmounted(() => {
 	google.maps.event.clearListeners(map, 'overlaycomplete')
 })
 </script>
-
-<style scoped>
-/* Ensure the map height matches the card height */
-.h-full {
-	height: 100%;
-}
-</style>
