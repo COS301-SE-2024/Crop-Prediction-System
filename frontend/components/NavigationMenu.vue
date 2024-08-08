@@ -57,26 +57,6 @@ const items = ref([
 		],
 	},
 	{
-		label: 'MODEL TRAINING',
-		items: [
-			{
-				label: 'Manage Model',
-				url: '/model-training/manage-model',
-				icon: 'pi pi-microchip-ai',
-			},
-		],
-	},
-	{
-		label: 'ANALYTICS',
-		items: [
-			{
-				label: 'Crop Yield Data',
-				url: '/analytics/crop-yield-data',
-				icon: 'pi pi-chart-pie',
-			},
-		],
-	},
-	{
 		label: 'TEAM MANAGEMENT',
 		items: [
 			{

@@ -1,169 +1,108 @@
 <template>
-	<div class="space-y-5 w-full px-4 sm:px-6 md:px-8 lg:px-0 py-4 sm:py-6 md:py-8 lg:py-0">
-		<div class="flex space-x-5 w-full overflow-x-auto whitespace-nowrap">
-			<StatPanel
-				v-for="stat in stats"
-				:key="stat.title"
-				:title="stat.title"
-				:chart-input="stat.chartData"
-				:chart-type="stat.chartType"
-			/>
-		</div>
-		<div class="grid xl:grid-cols-5 xl:grid-rows-2 w-full h-full gap-5 pb-5">
-			<div
-				class="xl:col-span-3 xl:row-span-2 border border-surface-border dark:border-surface-600 md:p-6 rounded-lg shadow-lg md:h-full h-96 _h-full flex flex-col md:gap-2"
-			>
-				<div class="flex justify-between items-center p-2 pl-4">
-					<p class="text-xl font-[500] dark:text-white">Farm Map</p>
-					<NuxtLink to="/inputs/manage-fields" class="text-sm text-primary-500">
-						<Button label="Edit" icon="pi pi-pencil" severity="secondary" text />
-					</NuxtLink>
+	<div class="flex w-full justify-center items-start p-4">
+		<div class="flex flex-col justify-start items-start gap-4 w-full">
+			<div class="flex flex-col md:flex-row w-full gap-5">
+				<div class="w-full md:w-1/3">
+					<FieldCard v-model="selectedField" :fields="fields" />
 				</div>
-				<GoogleMap class="w-full h-full" />
-			</div>
-			<div class="xl:col-span-2 xl:row-span-2 grid gap-5 h-full">
-				<FieldData />
-				<div
-					class="grid xl:grid-cols-2 gap-5 items-center border border-surface-border dark:border-surface-600 p-6 rounded-lg shadow-lg"
-				>
-					<div class="flex flex-col gap-2">
-						<span class="text-lg font-[500] dark:text-surface-0">Polar Stats</span>
-						<!-- actionable results -->
-						<p class="text-sm text-surface-500 dark:text-surface-100">Actionable results based on the data</p>
-						<p class="dark:text-surface-400">
-							We'd suggest increasing the moisture levels in the soil to improve the overall crop health. This will
-							also help with the current temperature and humidity levels.
-						</p>
-						<div class="grid gap-3">
-							<div v-for="(value, i) in polarSupportingStat" :key="value">
-								<span class="text-sm font-[500] dark:text-surface-300"
-									>{{ polarstat[0].labels[i] }}: {{ value * 100 }}%</span
-								>
-								<ProgressBar :value="value * 100" :showValue="false" style="height: 12px" />
-							</div>
-						</div>
-					</div>
-					<PolarStat
-						v-for="stat in polarstat"
-						:key="stat.title"
-						:title="stat.title"
-						:chart-input="stat.chartData"
-						:chart-type="stat.chartType"
-						class="w-full"
-					/>
+				<div class="w-full md:w-2/3 h-96 md:h-auto rounded overflow-hidden border-surface-600 shadow-md">
+					<GoogleMapsField :selectedField="selectedField" :fields="fields" />
 				</div>
 			</div>
 		</div>
 	</div>
 </template>
 
-<script setup lang="ts">
-import StatPanel from '~/components/StatPanel.vue'
-import GoogleMap from '~/components/GoogleMap.vue'
-import Button from 'primevue/button'
-import ProgressBar from 'primevue/progressbar'
-import FieldData from '~/components/FieldData.vue'
-import PolarStat from '~/components/PolarStat.vue'
+<script setup>
 import { ref } from 'vue'
+import FieldCard from '~/components/FieldCard.vue'
+import GoogleMapsField from '~/components/GoogleMapsField.vue'
+
+const selectedField = ref(null)
+
+// Define the fields here
+const fields = ref([
+	{
+		id: 10,
+		created_at: '2024-06-23T19:11:49.43101+00:00',
+		field_area: [
+			[-25.8707939665029, 28.1601760921001],
+			[-25.8714238619316, 28.160146587801],
+			[-25.8713321532275, 28.1593794760227],
+			[-25.8708446478686, 28.1595377263546],
+		],
+		field_name: 'Maize Down',
+		field_tph: 0.7,
+		field_health: 0.7,
+		crop_type: 'Maize',
+		team_id: '17383e3d-f211-4724-8515-8c4cb836c812',
+		updated_at: '2024-06-23T19:11:49.43101+00:00',
+		hectare: 0.644354929407972,
+	},
+	{
+		id: 8,
+		created_at: '2024-06-23T13:52:42.724541+00:00',
+		field_area: [
+			[-25.8703366265299, 28.1593566772461],
+			[-25.8703317997134, 28.160236441803],
+			[-25.8706431289766, 28.1602659461021],
+			[-25.8707975866012, 28.1594344613075],
+		],
+		field_name: 'First Field',
+		field_tph: 0.8,
+		field_health: 0.85,
+		crop_type: 'Wheat',
+		team_id: '17383e3d-f211-4724-8515-8c4cb836c812',
+		updated_at: '2024-06-23T13:52:42.724541+00:00',
+		hectare: 0.546557915300319,
+	},
+	{
+		id: 28,
+		created_at: '2024-06-24T09:36:02.484727+00:00',
+		field_area: [
+			[-25.755436539304, 28.2323061052948],
+			[-25.7558472161549, 28.232161266008],
+			[-25.7559535087556, 28.2324724022537],
+			[-25.7554993487967, 28.2326038304954],
+		],
+		field_name: 'Up 1',
+		field_tph: 1.2,
+		field_health: 0.95,
+		crop_type: 'Barley',
+		team_id: '17383e3d-f211-4724-8515-8c4cb836c812',
+		updated_at: '2024-06-24T09:36:02.484727+00:00',
+		hectare: 0.233207014962497,
+	},
+	{
+		id: 13,
+		created_at: '2024-06-24T05:58:25.142173+00:00',
+		field_area: [
+			[-25.8495617478938, 28.1452494848141],
+			[-25.8494893328991, 28.145600854195],
+			[-25.8497234745553, 28.1456813204655],
+			[-25.849793475579, 28.1453272688755],
+		],
+		field_name: 'Field 4',
+		field_tph: 2.5,
+		field_health: 0.82,
+		crop_type: 'Oats',
+		team_id: '17383e3d-f211-4724-8515-8c4cb836c812',
+		updated_at: '2024-06-24T05:58:25.142173+00:00',
+		hectare: 0.143355503464841,
+	},
+])
+
+const currentUser = useSupabaseUser()
+
+console.log(currentUser.value)
+
+const userFields = await $fetch('/api/getUserFields', {
+	params: { userid: currentUser?.value.id },
+})
+
+console.log('User Fields: ', userFields)
 
 definePageMeta({
 	middleware: 'auth',
 })
-
-const visible = ref(false)
-
-function changeVisible() {
-	visible.value = !visible.value
-}
-
-const recentEntries = await $fetch('/api/getRecentEntries')
-
-let recentWeather = []
-for (let i = 0; i < recentEntries.length; i++) {
-	recentWeather.push(recentEntries[i]['mean_temperature'])
-}
-
-console.log('Recent Weather', recentWeather)
-
-const userID = useSupabaseUser().value?.id
-
-const userFields = await $fetch('/api/getUserFields', {
-	params: { userid: userID },
-})
-
-let healts = []
-
-for (let i = 0; i < userFields.length; i++) {
-	const health = await $fetch('/api/getHealth', {
-		params: { crop: userFields[i].crop_type },
-	})
-	healts.push(health['health_score'][1])
-}
-
-console.log('Health', healts)
-
-let soilMoisture = []
-for (let i = 0; i < recentEntries.length; i++) {
-	soilMoisture.push(recentEntries[i]['soil_moisture'])
-}
-
-let precipitation = []
-for (let i = 0; i < recentEntries.length; i++) {
-	precipitation.push(recentEntries[i]['precipitation'])
-}
-
-const stats = [
-	{
-		title: 'Overall Crop Health',
-		chartData: healts.length ? healts : [88, 80, 99, 92],
-		chartType: 'line',
-	},
-	{
-		title: 'Current Temperature',
-		chartData: recentWeather.length ? recentWeather : [25, 27, 29, 30, 31],
-		chartType: 'line',
-	},
-	{
-		title: 'Soil Moisture',
-		chartData: soilMoisture.length ? soilMoisture : [0.5, 0.7, 0.2, 0.7, 0.9],
-		chartType: 'line',
-	},
-	{
-		title: 'Rainfall',
-		chartData: precipitation.length ? precipitation : [51, 0, 67, 89, 45, 23, 78],
-		chartType: 'bar',
-	},
-	{
-		title: 'Humidity',
-		chartData: [45, 67, 89, 34, 56, 78, 23],
-		chartType: 'line',
-	},
-]
-
-let polarStatData = []
-if (recentEntries.length > 0) {
-	polarStatData = [
-		recentEntries[0]['soil_moisture'],
-		recentEntries[0]['mean_temperature'] / 100,
-		0.7,
-		recentEntries[0]['soil_seed_nitrogen_per_unit_area'],
-		recentEntries[0]['precipitation'],
-	]
-} else {
-	polarStatData = [0.5, 0.7, 0.2, 0.7, 0.9]
-}
-
-const polarstat = [
-	{
-		title: 'Polar Stat',
-		chartData: polarStatData,
-		labels: ['Moisture', 'Temperature', 'Humidity', 'Soil', 'Rainfall'],
-		chartType: 'polarArea',
-	},
-]
-
-const polarSupportingStat: number[] = []
-for (let i = 0; i < polarstat[0].chartData.length; i++) {
-	polarSupportingStat.push(polarstat[0].chartData[i])
-}
 </script>
