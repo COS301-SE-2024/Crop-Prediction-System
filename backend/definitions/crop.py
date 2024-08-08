@@ -8,4 +8,3 @@ class Crop(BaseModel):
         ..., description="Associative 3D array for crop growth stages."
     )
 
-

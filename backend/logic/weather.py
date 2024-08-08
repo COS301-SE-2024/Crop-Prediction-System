@@ -51,7 +51,7 @@ class Weather:
         summary_response = requests.get(summary_url)
         summary_data = summary_response.json()
 
-        print(summary_data['weather_overview'], flush=True)
+        # print(summary_data['weather_overview'], flush=True)
 
         message = self.__gemini.send_message(summary_data['weather_overview'])
 
@@ -62,7 +62,9 @@ class Weather:
                 'summary': message,
             }).execute()
         except Exception as e:
-            print(e, flush=True)
+            # print(e, flush=True)
+            # do nothing
+            pass
 
         return response
     
