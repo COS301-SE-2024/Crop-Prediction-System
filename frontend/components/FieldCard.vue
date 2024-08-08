@@ -3,7 +3,7 @@
 		<template #header>
 			<div class="flex flex-row items-center justify-center">
 				<Dropdown
-					v-model="selectedField"
+					v-model="internalSelectedField"
 					:options="fields"
 					optionLabel="field_name"
 					placeholder="Select a Field"
@@ -13,10 +13,12 @@
 				/>
 			</div>
 		</template>
-		<template #title>{{ selectedField?.crop_type || 'Select a field' }}</template>
+		<template #title>{{ internalSelectedField?.crop_type.toUpperCase() || 'Select a field' }}</template>
 		<template #subtitle>
-			<div class="flex flex-row justify-between items-center">
-				<h4 class="text-lg">{{ selectedField?.field_tph ? `Expected T/H: ${selectedField.field_tph}` : '' }}</h4>
+			<div class="flex flex-col justify-between items-start gap-1">
+				<h4 class="text-lg">
+					{{ internalSelectedField?.field_tph ? `Expected T/H: ${internalSelectedField.field_tph}` : '' }}
+				</h4>
 				<Tag value="Healthy" severity="success" rounded></Tag>
 			</div>
 		</template>
@@ -69,15 +71,15 @@
 							<div class="flex flex-col w-full gap-1 justify-between items-start mt-5">
 								<strong class="text-lg">Sprayability Categories:</strong>
 								<span
-									><strong style="color: rgba(76, 175, 80, 1)">Suitable: </strong>Ideal conditions for
+									><strong style="color: rgba(76, 175, 80, 1)">Suitable:</strong> Ideal conditions for
 									spraying.</span
 								>
 								<span
-									><strong style="color: rgba(255, 205, 86, 1)">Partially Suitable: </strong>Conditions may not
+									><strong style="color: rgba(255, 205, 86, 1)">Partially Suitable:</strong> Conditions may not
 									be optimal for spraying.</span
 								>
 								<span
-									><strong style="color: rgba(255, 99, 132, 1)">Not Suitable: </strong>Conditions are
+									><strong style="color: rgba(255, 99, 132, 1)">Not Suitable:</strong> Conditions are
 									unfavorable for spraying.</span
 								>
 							</div>
@@ -98,6 +100,8 @@ import Card from 'primevue/card'
 import Dropdown from 'primevue/dropdown'
 import Chart from 'primevue/chart'
 import Tag from 'primevue/tag'
+import Button from 'primevue/button'
+import Dialog from 'primevue/dialog'
 import CustomLegend from './CustomLegend.vue'
 
 const healthVisible = ref(false)
@@ -129,9 +133,16 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-const selectedField = ref<Field | null>(props.modelValue)
+const internalSelectedField = ref<Field | null>(props.modelValue)
 
-watch(selectedField, (newField) => {
+watch(
+	() => props.modelValue,
+	(newField) => {
+		internalSelectedField.value = newField
+	},
+)
+
+watch(internalSelectedField, (newField) => {
 	emit('update:modelValue', newField)
 })
 
