@@ -57,8 +57,11 @@ async function fetchUserFields() {
 
 	if (currentUser) {
 		try {
-			const fields = await $fetch('/api/getUserFields', {
+			const teamID = await $fetch('/api/getTeamID', {
 				params: { userid: currentUser?.id },
+			})
+			const fields = await $fetch('/api/getUserFields', {
+				params: { team_id: teamID.team_id },
 			})
 			userFields.value = fields
 			drawExistingPolygons()

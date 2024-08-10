@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 		})
 		return response
 	} catch (e) {
-		console.log(e)
+		console.error(e)
 		return {
 			statusCode: 500,
 			body: { e: 'Failed to create field' },
