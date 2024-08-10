@@ -169,6 +169,28 @@ class supabaseFunctions:
         except Exception as e:
             print(e)
             return {"error": "Failed to get field info", "error_message": e}
+        
+    def getUserFieldData(self, userid: str, n: int):
+        try:
+            dict = {"userid": userid}
+            team = supabaseFunctions.__sbClient.rpc("get_team_id", dict).execute()
+            if team.data != []:
+                dict = {"teamid": team.data[0]["team_id"]}
+                response = supabaseFunctions.__sbClient.rpc("get_data_from_team", dict).execute()
+                if response.data == []:
+                    return {"error": "Data not found. User ID may be invalid or may not have any data."}
+                
+                # sort entries by date
+                response.data = sorted(response.data, key=lambda x: x["date"])
+                
+                # return the last n entries
+                if n > 0:
+                    return response.data[-n:]
+                return response.data
+            else:
+                return {"error": "User not found"}
+        except Exception as e:
+            return {"error": "Failed to get user field data", "error_message": e}
 
     @staticmethod
     def createField(fieldInfo: Field):

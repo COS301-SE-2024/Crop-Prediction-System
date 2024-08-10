@@ -170,7 +170,7 @@ class Model:
         mse = mean_squared_error(y, y_pred)
 
         # Save the model
-        best_model.save_model(f"{field_id}.json")
+        best_model.save_model(f"/home/farm/server/Crop-Prediction-System/backend/{field_id}.json")
         # self.save(field_id)
 
         prediction = self.predict(field_id)
@@ -204,7 +204,7 @@ class Model:
         model = xgb.Booster()
         # model.load_model(model_response.data[0]['model'])
         try:
-            model.load_model(f"{field_id}.json")
+            model.load_model(f"/home/farm/server/Crop-Prediction-System/backend/{field_id}.json")
         except:
             return self.train(field_id)
 
@@ -229,7 +229,7 @@ class Model:
         except Exception as e:
             print(f"An error occurred while upserting predictions: {str(e)}", flush=True)
 
-        return predictions.tolist()[0]
+        return predictions.tolist()[0] if predictions else None
 
     # # Evaluate
     # def evaluate(self):
