@@ -113,7 +113,7 @@ class Model:
         c : Crop = None
         if crop == None:
             f = self.sf.getFieldInfo(field_id)
-            crop = f['crop_type']
+            crop = f.crop_type
             c = self.sf.getCrop(crop)
         else:
             c = self.sf.getCrop(crop)
