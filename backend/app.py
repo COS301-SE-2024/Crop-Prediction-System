@@ -17,17 +17,17 @@ class API:
         self.app.add_api_route("/", self.main, methods=["GET"])
 
         # field routes
-        self.app.add_api_route("/getFieldInfo", self.getFieldInfo, methods=["GET"])
-        self.app.add_api_route("/getFieldData", self.getFieldData, methods=["GET"])
+        self.app.add_api_route("/getFieldInfo", self.getFieldInfo, methods=["GET"]) # TODO: Test this route
+        self.app.add_api_route("/getFieldData", self.getFieldData, methods=["GET"]) # TODO: Test this route
         # self.app.add_api_route("/getFieldLogs", self.getFieldLogs, methods=["GET"])
-        self.app.add_api_route("/fetchWeather", self.sb.fetchWeatherForAllFields, methods=["GET"])
-        self.app.add_api_route("/fetchSummary", self.sb.fetchSummary, methods=["GET"])
+        self.app.add_api_route("/fetchWeather", self.sb.fetchWeatherForAllFields, methods=["GET"]) # TODO: Test this route
+        self.app.add_api_route("/fetchSummary", self.sb.fetchSummary, methods=["GET"]) # TODO: Test this route
         
 
         # field routes
-        self.app.add_api_route("/createField", self.createField, methods=["POST"])
-        self.app.add_api_route("/updateField", self.updateField, methods=["PUT"])
-        self.app.add_api_route("/deleteField", self.deleteField, methods=["POST"])
+        self.app.add_api_route("/createField", self.createField, methods=["POST"]) # TODO: Test this route
+        self.app.add_api_route("/updateField", self.updateField, methods=["PUT"]) # TODO: Test this route
+        self.app.add_api_route("/deleteField", self.deleteField, methods=["POST"]) # TODO: Test this route
 
         # entry routes
         # self.app.add_api_route("/createEntry", self.createEntry, methods=["POST"])
@@ -35,18 +35,18 @@ class API:
         # self.app.add_api_route("/deleteEntry", self.deleteEntry, methods=["POST"])
 
         # user routes
-        self.app.add_api_route("/getUserFields", self.getUserFields, methods=["GET"])
-        self.app.add_api_route("/addToTeam", self.addToTeam, methods=["POST"])
-        self.app.add_api_route("/removeFromTeam", self.removeFromTeam, methods=["GET"])
-        self.app.add_api_route("/updateRoles", self.updateRoles, methods=["POST"])
+        self.app.add_api_route("/getUserFields", self.getUserFields, methods=["GET"]) # TODO: Test this route
+        self.app.add_api_route("/addToTeam", self.addToTeam, methods=["POST"]) # TODO: Test this route
+        self.app.add_api_route("/removeFromTeam", self.removeFromTeam, methods=["GET"]) # TODO: Test this route
+        self.app.add_api_route("/updateRoles", self.updateRoles, methods=["POST"]) # TODO: Test this route
 
         # /getTeamId
-        self.app.add_api_route("/getTeamId", self.sb.getTeamId, methods=["GET"])
+        self.app.add_api_route("/getTeamId", self.sb.getTeamId, methods=["GET"]) # TODO: Test this route
 
         # model routes
-        self.app.add_api_route("/aggregate", self.aggregate, methods=["GET"])
-        self.app.add_api_route("/predict", self.predict, methods=["GET"])
-        self.app.add_api_route("/train", self.train, methods=["GET"])
+        self.app.add_api_route("/aggregate", self.aggregate, methods=["GET"]) # TODO: Test this route
+        self.app.add_api_route("/predict", self.predict, methods=["GET"]) # TODO: Test this route
+        self.app.add_api_route("/train", self.train, methods=["GET"]) # TODO: Test this route
                                
     def main(self, request: Request):
         return {

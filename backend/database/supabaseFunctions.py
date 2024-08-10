@@ -9,9 +9,6 @@ from logic.calculateHectare import calculate_hectares_from_coordinates
 from logic.aggregate import Aggregate
 import datetime
 from collections import defaultdict
-from typing import List
-
-import asyncio
 
 class supabaseFunctions:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
@@ -177,21 +174,23 @@ class supabaseFunctions:
     def createField(fieldInfo: Field):
         try:
             array = fieldInfo.field_area['coordinates']
-            print(array, flush=True)
-            # convert each element in array to tuple
+
+            fieldid = uuid.uuid4()
+            fieldid = str(fieldid)
+
             array = [tuple(i) for i in array]
-            print(array, flush=True)
             hectare = calculate_hectares_from_coordinates(array)
-            print(hectare, flush=True)
-            result = supabaseFunctions.__sbClient.table("field_info").insert([{"field_area": array, "field_name": fieldInfo.field_name, "crop_type": fieldInfo.crop_type, "team_id": fieldInfo.team_id, "hectare": hectare}]).execute()
+
+            result = supabaseFunctions.__sbClient.table("field_info").insert([{"id": fieldid, "field_area": array, "field_name": fieldInfo.field_name, "crop_type": fieldInfo.crop_type, "team_id": fieldInfo.team_id, "hectare": hectare}]).execute()
 
             c = supabaseFunctions.getCrop(fieldInfo.crop_type)
-            w = supabaseFunctions.weather.getWeather(array[0][0], array[0][1], result.data[0]["id"], c)
+            w = supabaseFunctions.weather.getWeather(array[0][0], array[0][1], fieldid, c)
+            s = supabaseFunctions.weather.getSummary(array[0][0], array[0][1], fieldid)
             # print(w, flush=True)
             
-            return result
+            return result.data
         except Exception as e:
-            print(e)
+            # print(e)
             return {"error": "Failed to create field", "error_message": e, "type": "createField"}
         finally:
             return {"success": "Field created"}

@@ -42,7 +42,6 @@ class Weather:
             entry = Weather.get_features(entry, c)
             entries.append(entry)
         Weather.upload(entries)
-        Weather.getSummary(lat, lon, field_id)
         return entries
     
     # Gemini Summary
@@ -62,11 +61,11 @@ class Weather:
                 'summary': message,
             }).execute()
         except Exception as e:
-            # print(e, flush=True)
-            # do nothing
-            pass
+            return {
+                'error': e
+            }
 
-        return response
+        return response.data
     
     # Uploads array of Entry objects to the database
     @staticmethod
