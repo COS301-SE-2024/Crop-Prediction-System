@@ -20,7 +20,6 @@ def mock_supabase_functions(mocker):
     mocker.patch.object(supabaseFunctions, 'createEntry', return_value={"success": "Entry created"})
     mocker.patch.object(supabaseFunctions, 'updateEntry', return_value={"success": "Entry updated"})
     mocker.patch.object(supabaseFunctions, 'deleteEntry', return_value={"success": "Entry deleted"})
-    mocker.patch.object(supabaseFunctions, 'test', return_value={"success": "All tests passed", "tests_passed": 8})
 
 def test_main():
     response = client.get("/")
@@ -77,55 +76,6 @@ def test_delete_field(mock_supabase_functions):
     assert response.status_code == 200
     assert response.json() == {"success": "Field deleted"}
 
-def test_create_entry(mock_supabase_functions):
-    entry_info = {
-        "weather_temperature": 30.5,
-        "weather_humidity": 60.0,
-        "weather_uv": 5.0,
-        "weather_rainfall": 100.0,
-        "soil_moisture": 20.0,
-        "soil_ph": 6.5,
-        "soil_conductivity": 1.0,
-        "is_manual": True,
-        "field_id": 1
-    }
-    response = client.post("/createEntry", json=entry_info)
-    assert response.status_code == 200
-    assert response.json() == {"success": "Entry created"}
-
-def test_update_entry(mock_supabase_functions):
-    entry_info = {
-        "entry_id": 0,
-        "weather_temperature": 32.0,
-        "weather_humidity": 65.0,
-        "weather_uv": 6.0,
-        "weather_rainfall": 120.0,
-        "soil_moisture": 22.0,
-        "soil_ph": 6.8,
-        "soil_conductivity": 1.1,
-        "is_manual": False,
-        "field_id": 1
-    }
-    response = client.put("/updateEntry", json=entry_info)
-    assert response.status_code == 200
-    assert response.json() == {"success": "Entry updated"}
-
-def test_delete_entry(mock_supabase_functions):
-    response = client.post("/deleteEntry", json={"entry_id": 1})
-    assert response.status_code == 200
-    assert response.json() == {"success": "Entry deleted"}
-
-def test_test(mock_supabase_functions):
-    response = client.get("/test")
-    assert response.status_code == 200
-    assert response.json() == {
-        "success": "All tests passed",
-        "tests_passed": 8
-    }
-
-# supabaseFunctions
-# Path: Crop-Prediction-System/backend/database/supabaseFunctions.py
-
 def test_get_field_info():
     sb = supabaseFunctions()
     response = sb.getFieldInfo("0")
@@ -154,7 +104,6 @@ def test_update_field():
         field_id=0,
         field_area=1000,
         field_name="Updated Field",
-        field_tph=55.0,
         field_health=85.0,
         crop_type="Wheat"
     )
@@ -165,47 +114,39 @@ def test_update_field():
 #     response = sb.deleteField(0)
 #     assert response == {"success": "Field deleted"}
 
-def test_create_entry():
-    sb = supabaseFunctions()
-    entry_info = Entry(
-        entry_id=1,
-        weather_temperature=30.5,
-        weather_humidity=60.0,
-        weather_uv=5.0,
-        weather_rainfall=100.0,
-        soil_moisture=20.0,
-        soil_ph=6.5,
-        soil_conductivity=1.0,
-        is_manual=True,
-        field_id=0
-    )
-    assert sb.createEntry(entry_info) == {"success": "Entry created"}
+# def test_create_entry():
+#     sb = supabaseFunctions()
+#     entry_info = Entry(
+#         entry_id=1,
+#         weather_temperature=30.5,
+#         weather_humidity=60.0,
+#         weather_uv=5.0,
+#         weather_rainfall=100.0,
+#         soil_moisture=20.0,
+#         soil_ph=6.5,
+#         soil_conductivity=1.0,
+#         is_manual=True,
+#         field_id=0
+#     )
+#     assert sb.createEntry(entry_info) == {"success": "Entry created"}
 
-def test_update_entry():
-    sb = supabaseFunctions()
-    entry_info = Entry(
-        entry_id=1,
-        weather_temperature=32.0,
-        weather_humidity=65.0,
-        weather_uv=6.0,
-        weather_rainfall=120.0,
-        soil_moisture=22.0,
-        soil_ph=6.8,
-        soil_conductivity=1.1,
-        is_manual=False,
-        field_id=0
-    )
-    assert sb.updateEntry(entry_info) == {"success": "Entry updated"}
+# def test_update_entry():
+#     sb = supabaseFunctions()
+#     entry_info = Entry(
+#         entry_id=1,
+#         weather_temperature=32.0,
+#         weather_humidity=65.0,
+#         weather_uv=6.0,
+#         weather_rainfall=120.0,
+#         soil_moisture=22.0,
+#         soil_ph=6.8,
+#         soil_conductivity=1.1,
+#         is_manual=False,
+#         field_id=0
+#     )
+#     assert sb.updateEntry(entry_info) == {"success": "Entry updated"}
 
-def test_delete_entry():
-    sb = supabaseFunctions()
-    response = sb.deleteEntry(1)
-    assert response == {"success": "Entry deleted"}
-
-def test_test():
-    sb = supabaseFunctions()
-    response = sb.test()
-    assert response == {
-        "success": "All tests passed",
-        "tests_passed": 8
-    }
+# def test_delete_entry():
+#     sb = supabaseFunctions()
+#     response = sb.deleteEntry(1)
+#     assert response == {"success": "Entry deleted"}

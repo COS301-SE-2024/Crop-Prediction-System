@@ -11,7 +11,7 @@ uvicorn app:app --reload --host 127.0.0.1 --port 8000
 
 ```
 Note: The server will be running on http://localhost:8000.
-Be sure to run this command from the root directory of the project.
+Be sure to run this command from the backend directory of the project.
 
 ## Running tests
 ```bash
@@ -20,7 +20,7 @@ python3 -m pytest
 
 ## Generating coverage report
 ```bash
-python3 -m pytest --cov=myproj tests/ 
+python3 -m pytest --cov=myproj test/ 
 ```
 
 ## Postman Workspace
