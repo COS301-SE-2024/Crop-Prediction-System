@@ -26,7 +26,7 @@ class API:
         
 
         # field routes
-        self.app.add_api_route("/createField", self.createField, methods=["POST"]) # TODO: Test this route
+        self.app.add_api_route("/createField/", self.createField, methods=["POST"]) # TODO: Test this route
         self.app.add_api_route("/updateField", self.updateField, methods=["PUT"]) # TODO: Test this route
         self.app.add_api_route("/deleteField", self.deleteField, methods=["POST"]) # TODO: Test this route
 
