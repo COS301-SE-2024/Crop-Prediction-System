@@ -5,6 +5,7 @@ from model.model import Model
 from definitions.field import Field
 from definitions.entry import Entry
 from definitions.crop import Crop
+from fastapi.middleware.cors import CORSMiddleware
 
 class API:
     def __init__(self):
@@ -115,3 +116,10 @@ class API:
 
 api_instance = API()
 app = api_instance.app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
