@@ -75,6 +75,7 @@ class Weather:
                 'field_id': str(entry.field_id),
                 'date': datetime.datetime.fromtimestamp(entry.timestamp).strftime('%Y-%m-%d'),
                 'summary': entry.summary,
+                'health': Weather.calculate_health(entry),
                 'sprayability': Weather.calculate_sprayability(entry),
                 'tempmax': entry.tempMax,
                 'tempmin': entry.tempMin,
@@ -153,14 +154,6 @@ class Weather:
         return round(sprayability, 2)
     
     def calculate_health(entry: Entry) -> float:
-        ndvi_factor = entry.ndvi if entry.ndvi else 0.5
-        temp_factor = min(max((entry.tempMean - 10) / 20.0, 0.0), 1.0) if entry.tempMean else 0.5
-        soil_moisture_factor = min(max((entry.soil_moisture - 20) / 60.0, 0.0), 1.0) if entry.soil_moisture else 0.5
-        
-        health_score = (
-            0.4 * ndvi_factor +
-            0.3 * temp_factor +
-            0.3 * soil_moisture_factor
-        )
-        
-        return round(health_score, 2) 
+        health = 0.25 * entry.tempMean + 0.25 * entry.humidity + 0.25 * entry.wind_speed + 0.25 * entry.soil_moisture + 0.25 * entry.uvi + 0.25 * entry.rain + 0.25 * entry.clouds + 0.25 * entry.pressure + 0.25 * entry.dew_point + 0.25 * entry.gdd + 0.25 * entry.hdd + 0.25 * entry.gff + 0.25 * entry.pet
+
+        return round(health, 2)
