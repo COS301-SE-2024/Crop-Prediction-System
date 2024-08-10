@@ -1,8 +1,8 @@
 # Defines the base model for crop prediction that predicts yield
 from pydantic import BaseModel
-from definitions.crop import Crop
-from database.supabaseInstance import supabaseInstance
-from database.supabaseFunctions import supabaseFunctions
+from backend.definitions.crop import Crop
+from backend.database.supabaseInstance import supabaseInstance
+from backend.database.supabaseFunctions import supabaseFunctions
 
 # Model specific imports
 import pandas as pd
@@ -32,6 +32,8 @@ class Model:
 
     # Load data
     def load_data(self, field_id = None, crop = None):
+        if field_id == None and crop == None:
+            return {"error": "Both Field ID and crop name cannot be empty."}
         try:
             model_data = self.load_model_data(field_id)
             if "error" in model_data:
@@ -108,8 +110,6 @@ class Model:
         
         data = self.load_data(field_id, crop)
 
-        print(data, flush=True)
-
         c : Crop = None
         if crop == None:
             f = self.sf.getFieldInfo(field_id)
@@ -127,8 +127,6 @@ class Model:
 
         # Filter data based on the current stage
         stage_data = data[data['stage'] == current_stage]
-
-        print(stage_data, flush=True)
 
         X = stage_data.drop(['year', 'stage', 'yield', 'field_id', 'id'], axis=1)
         y = stage_data['yield']
@@ -170,7 +168,7 @@ class Model:
         mse = mean_squared_error(y, y_pred)
 
         # Save the model
-        best_model.save_model(f"/home/farm/server/Crop-Prediction-System/backend/{field_id}.json")
+        best_model.save_model(f"{field_id}.json")
         # self.save(field_id)
 
         prediction = self.predict(field_id)
@@ -184,7 +182,7 @@ class Model:
         }
 
     # Predict
-    def predict(self, field_id):
+    def predict(self, field_id, test=False):
         # Load the model
         # model_response = self.sb.table('model').select('model').eq('field_id', field_id).execute()
         # if model_response.data == []:
@@ -204,7 +202,7 @@ class Model:
         model = xgb.Booster()
         # model.load_model(model_response.data[0]['model'])
         try:
-            model.load_model(f"/home/farm/server/Crop-Prediction-System/backend/{field_id}.json")
+            model.load_model(f"{field_id}.json")
         except:
             return self.train(field_id)
 
@@ -216,18 +214,18 @@ class Model:
 
         # Make predictions
         predictions = model.predict(dmatrix)
+        if not test:
+            # Upsert the predictions
+            try:
+                result = self.sb.table('field_data').upsert({
+                    'field_id': field_id,
+                    'date': datetime.datetime.now().isoformat(),
+                    'yield': predictions.tolist()[0]
+                }).execute()
 
-        # Upsert the predictions
-        try:
-            result = self.sb.table('field_data').upsert({
-                'field_id': field_id,
-                'date': datetime.datetime.now().isoformat(),
-                'yield': predictions.tolist()[0]
-            }).execute()
-
-            print(f"Predictions upserted successfully: {result}", flush=True)
-        except Exception as e:
-            print(f"An error occurred while upserting predictions: {str(e)}", flush=True)
+                print(f"Predictions upserted successfully: {result}", flush=True)
+            except Exception as e:
+                print(f"An error occurred while upserting predictions: {str(e)}", flush=True)
 
         return predictions.tolist()[0] if predictions else None
 

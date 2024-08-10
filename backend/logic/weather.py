@@ -1,10 +1,10 @@
 import datetime
 import math
 import requests
-from definitions.entry import Entry
-from definitions.crop import Crop
-from database import supabaseInstance
-from logic.gemini import Gemini
+from backend.definitions.entry import Entry
+from backend.definitions.crop import Crop
+from backend.database import supabaseInstance
+from backend.logic.gemini import Gemini
 
 class Weather:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
@@ -71,37 +71,33 @@ class Weather:
     @staticmethod
     def upload(entries):
         for entry in entries:
-            try:
-                response = Weather.__sbClient.table('field_data').upsert({
-                    'field_id': str(entry.field_id),
-                    'date': datetime.datetime.fromtimestamp(entry.timestamp).strftime('%Y-%m-%d'),
-                    'summary': entry.summary,
-                    'sprayability': Weather.calculate_sprayability(entry),
-                    'tempmax': entry.tempMax,
-                    'tempmin': entry.tempMin,
-                    'humidity': entry.humidity,
-                    'tempdiurnal': entry.tempDiurnal,
-                    'pressure': entry.pressure,
-                    'tempmean': entry.tempMean,
-                    'soil_moisture': entry.soil_moisture,
-                    'dew_point': entry.dew_point,
-                    'wind_speed': entry.wind_speed,
-                    'wind_deg': entry.wind_deg,
-                    'wind_gust': entry.wind_gust,
-                    'clouds': entry.clouds,
-                    'pop': entry.pop,
-                    'rain': entry.rain,
-                    'uvi': entry.uvi,
-                    'gff': entry.gff,
-                    'gdd': entry.gdd,
-                    'hdd': entry.hdd,
-                    'soil_temperature': entry.soil_temperature,
-                    'pet': entry.pet
-                }, returning='representation'
-                ).execute()
-                print(response, flush=True)
-            except Exception as e:
-                print(e, flush=True)
+            response = Weather.__sbClient.table('field_data').upsert({
+                'field_id': str(entry.field_id),
+                'date': datetime.datetime.fromtimestamp(entry.timestamp).strftime('%Y-%m-%d'),
+                'summary': entry.summary,
+                'sprayability': Weather.calculate_sprayability(entry),
+                'tempmax': entry.tempMax,
+                'tempmin': entry.tempMin,
+                'humidity': entry.humidity,
+                'tempdiurnal': entry.tempDiurnal,
+                'pressure': entry.pressure,
+                'tempmean': entry.tempMean,
+                'soil_moisture': entry.soil_moisture,
+                'dew_point': entry.dew_point,
+                'wind_speed': entry.wind_speed,
+                'wind_deg': entry.wind_deg,
+                'wind_gust': entry.wind_gust,
+                'clouds': entry.clouds,
+                'pop': entry.pop,
+                'rain': entry.rain,
+                'uvi': entry.uvi,
+                'gff': entry.gff,
+                'gdd': entry.gdd,
+                'hdd': entry.hdd,
+                'soil_temperature': entry.soil_temperature,
+                'pet': entry.pet
+            }, returning='representation'
+            ).execute()
         return
         
     @staticmethod

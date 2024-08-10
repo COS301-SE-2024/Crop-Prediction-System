@@ -1,9 +1,9 @@
 # This function aggregates data from daily to staged
 
-from definitions.entry import Entry
-from definitions.crop import Crop
-from definitions.data import Data
-from database import supabaseInstance
+from backend.definitions.entry import Entry
+from backend.definitions.crop import Crop
+from backend.definitions.data import Data
+from backend.database import supabaseInstance
 import datetime
 from typing import List
 
@@ -14,7 +14,7 @@ class Aggregate:
         pass
 
     @staticmethod
-    def aggregate(entries: List[Entry], stage: str, field_id: str):
+    def aggregate(entries: List[Entry], stage: str, field_id: str, test=False) -> Data:
         print("Aggregating data for stage:", stage, flush=True)
         print("Field ID:", field_id, flush=True)
 
@@ -74,22 +74,24 @@ class Aggregate:
             mean_temperature=sum_values['mean_temperature'] / count,
             precipitation=sum_values['precipitation'] / count,
             rain_days=sum_values['rain_days'],
-            ground_frost_frequency=sum_values['ground_frost_frequency'] / count,
+            ground_frost_frequency=sum_values['ground_frost_frequency'],
             gdd=sum_values['gdd'] / count,
             hdd=sum_values['hdd'] / count,
-            cumulative_precipitation=sum_values['cumulative_precipitation'] / count,
+            cumulative_precipitation=sum_values['cumulative_precipitation'],
             soil_moisture_index=sum_values['soil_moisture_index'] / count,
             soil_temperature_index=sum_values['soil_temperature_index'] / count,
             uv_index=sum_values['uv_index'] / count
         )
         
         # Upload aggregated data
-        Aggregate.upload(d, field_id)
-        print("Aggregation completed.", flush=True)
+        Aggregate.upload(d, field_id, test)
+        # print("Aggregation completed.", flush=True)
         return d
     
     @staticmethod
-    def upload(d : Data, field_id):
+    def upload(d : Data, field_id, test=False):
+        if test or not d:
+            return
         try:
             response = Aggregate.__sbClient.table('model_data').upsert({
                 'field_id': field_id,
@@ -112,13 +114,14 @@ class Aggregate:
                 'soil_temperature_index': d.soil_temperature_index,
                 'uv_index': d.uv_index
             }).execute()
-            print(response, flush=True)
         except Exception as e:
-            print(e, flush=True)
+            return
         return
 
     @staticmethod
     def countRainDays(arr, val):
+        if not arr:
+            return 0
         count = 0
         for i in arr:
             if i > val:
@@ -127,6 +130,8 @@ class Aggregate:
 
     @staticmethod
     def countGFF(arr1, arr2):
+        if not arr1 or not arr2:
+            return 0
         count = 0
         for i in range(len(arr1)):
             if arr1[i] < 0 or arr2[i] < 0:
