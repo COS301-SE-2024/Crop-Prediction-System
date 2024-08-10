@@ -31,7 +31,7 @@ class Model:
         return {"status": "All fields predicted successfully"}
 
     # Load data
-    def load_data(self, field_id = None, crop = None):
+    def load_data(self, field_id = None, crop = None) -> pd.DataFrame:
         if field_id == None and crop == None:
             return {"error": "Both Field ID and crop name cannot be empty."}
         try:
@@ -44,7 +44,7 @@ class Model:
                 print("Crop name not provided. Using field ID to determine crop.", flush=True)
                 f = self.sf.getFieldInfo(field_id)
                 print(f, flush=True)
-                crop = f['crop_type']
+                crop = f.crop_type
                 c = self.sf.getCrop(crop)
             else:
                 c = self.sf.getCrop(crop)
@@ -61,7 +61,7 @@ class Model:
         except Exception as e:
             return {"error": f"An error occurred while loading data: {str(e)}"}
         
-    def load_model_data(self, field_id = None):
+    def load_model_data(self, field_id = None) -> pd.DataFrame:
         dict = {"fieldid": field_id} if field_id else {}
         response = self.sb.rpc('get_model_data', dict).execute()
         if response.data == []:
@@ -75,7 +75,7 @@ class Model:
 
         return model_data
         
-    def load_yields(self, c : Crop):
+    def load_yields(self, c : Crop) -> pd.DataFrame:
         cropClass = c.name + "_ton_per_hectare"
         dict = {"crop": cropClass}
         
