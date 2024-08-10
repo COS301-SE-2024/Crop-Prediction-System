@@ -138,20 +138,48 @@ class Weather:
         return e
     
     @staticmethod
-    def calculate_sprayability(entry: Entry) -> float:
-        wind_factor = 1 - min(entry.wind_speed / 10.0, 1.0) if entry.wind_speed else 1.0
-        humidity_factor = entry.humidity / 100.0 if entry.humidity else 0.5
-        temperature_factor = min(max((entry.tempMean - 10) / 20.0, 0.0), 1.0) if entry.tempMean else 0.5
-        soil_moisture_factor = min(entry.soil_moisture / 100.0, 1.0) if entry.soil_moisture else 0.5
+    def calculate_sprayability(e: Entry) -> float:
+        # Extract variables from the data
+        humidity = e.humidity
+        wind_speed = e.wind_speed
+        temp_mean = e.tempMean
+        dew_point = e.dew_point
         
-        sprayability = (
-            0.3 * wind_factor +
-            0.25 * humidity_factor +
-            0.4 * temperature_factor +
-            0.05 * soil_moisture_factor
-        )
+        # Define normalization functions
+        def normalize_humidity(humidity):
+            return 1 - humidity / 100
         
-        return round(sprayability, 2)
+        def normalize_wind_speed(wind_speed):
+            return max(0, 1 - wind_speed / 10)  # Assuming wind speed > 10 is not typical
+
+        def normalize_temperature(temp_mean):
+            min_temp = 10
+            max_temp = 25
+            return max(0, min(1, (temp_mean - min_temp) / (max_temp - min_temp)))
+        
+        def normalize_dew_point(dew_point):
+            # Adjust based on expected dew point range
+            return max(0, 1 - (dew_point + 10) / 10)
+        
+        # Calculate normalized indices
+        humidity_index = normalize_humidity(humidity)
+        wind_speed_index = normalize_wind_speed(wind_speed)
+        temperature_index = normalize_temperature(temp_mean)
+        dew_point_index = normalize_dew_point(dew_point)
+        
+        # Define weights
+        w1 = 0.25
+        w2 = 0.25
+        w3 = 0.25
+        w4 = 0.25
+        
+        # Calculate sprayability score
+        sprayability = (w1 * humidity_index +
+                        w2 * wind_speed_index +
+                        w3 * temperature_index +
+                        w4 * dew_point_index)
+        
+        return sprayability
     
     @staticmethod
     def calculate_health(entry: Entry) -> float:
