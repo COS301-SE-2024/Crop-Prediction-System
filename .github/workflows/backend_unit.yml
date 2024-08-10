@@ -28,7 +28,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
-          pytest --cov=backend
+          pytest python3 -m pytest --cov=backend test/
           pytest --cov-report xml
 
       - name: Upload coverage report to Codecov
