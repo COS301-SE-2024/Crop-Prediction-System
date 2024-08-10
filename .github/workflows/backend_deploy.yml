@@ -42,6 +42,7 @@ jobs:
   test-curl-action:
     name: "Assertible API"
     runs-on: ubuntu-latest
+    needs: build_and_deploy
     steps:
       - name: "Call API"
         uses: indiesdev/curl@v1.1
