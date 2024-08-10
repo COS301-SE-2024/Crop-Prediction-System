@@ -1,5 +1,5 @@
 <template>
-	<Card style="overflow: hidden; padding: 10px">
+	<Card style="overflow: hidden; padding: 10px; box-shadow: none">
 		<template #header>
 			<div class="flex flex-row items-center justify-center">
 				<Dropdown
@@ -13,13 +13,22 @@
 				/>
 			</div>
 		</template>
-		<template #title>{{ internalSelectedField?.crop_type.toUpperCase() || 'Select a field' }}</template>
+		<template #title>{{ capitalizeFirstCharacter(internalSelectedField?.crop_type as string) }}</template>
 		<template #subtitle>
-			<div class="flex flex-col justify-between items-start gap-1">
-				<h4 class="text-lg">
-					{{ internalSelectedField?.field_tph ? `Expected T/H: ${internalSelectedField.field_tph}` : '' }}
-				</h4>
-				<Tag value="Healthy" severity="success" rounded></Tag>
+			<div class="flex flex-row justify-between items-center">
+				<h4 class="text-lg">Expected Yield: {{ calculateYield() }}t</h4>
+				<Tag :value="healthStatus.value" :severity="healthStatus.severity" rounded></Tag>
+			</div>
+			<div class="mt-4 rounded-md bg-gradient-to-r from-[#7951B4] to-[#1C8EDB] p-[0.07rem]">
+				<div class="bg-surface-800 rounded-md p-4 space-y-2">
+					<div class="flex gap-2 items-center">
+						<img src="../assets/google-gemini-icon.webp" alt="Field Image" class="rounded-lg h-6 w-6 spinner" />
+						<span class="text-sm text-gray-400">AI Weather Summary</span>
+					</div>
+					<p>
+						{{ getCurrentSummary() }}
+					</p>
+				</div>
 			</div>
 		</template>
 		<template #content>
@@ -85,7 +94,6 @@
 							</div>
 						</Dialog>
 					</div>
-
 					<Chart type="bar" :data="barChartData" :options="barChartOptions" class="h-34 w-full" />
 					<CustomLegend />
 				</div>
@@ -95,7 +103,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import Card from 'primevue/card'
 import Dropdown from 'primevue/dropdown'
 import Chart from 'primevue/chart'
@@ -118,6 +126,7 @@ interface Field {
 	team_id: string
 	updated_at: string
 	hectare: number
+	data?: any // assuming this holds the transformed data
 }
 
 const props = defineProps({
@@ -144,6 +153,8 @@ watch(
 
 watch(internalSelectedField, (newField) => {
 	emit('update:modelValue', newField)
+	updateLineChartData()
+	updateBarChartData() // Update bar chart data when selected field changes
 })
 
 const lineChartData = ref()
@@ -152,19 +163,21 @@ const barChartData = ref()
 const barChartOptions = ref()
 
 onMounted(() => {
-	lineChartData.value = setLineChartData()
 	lineChartOptions.value = setChartOptions()
-	barChartData.value = setBarChartData()
 	barChartOptions.value = setBarChartOptions()
+	updateLineChartData() // Initialize the line chart with the selected field data
+	updateBarChartData() // Initialize the bar chart with the selected field data
 })
 
-const setLineChartData = () => {
-	return {
-		labels: ['07-25', '07-26', '07-27', '07-28', '07-29', '07-30', '07-31', '08-01'],
+function updateLineChartData() {
+	if (!internalSelectedField.value || !internalSelectedField.value.data) return
+
+	lineChartData.value = {
+		labels: internalSelectedField.value.data.date, // Use the field's dates as labels
 		datasets: [
 			{
 				label: 'Field Health',
-				data: [65, 59, 80, 81, 56, 55, 82, 95],
+				data: internalSelectedField.value.data.health, // Use the field's health data
 				fill: false,
 				backgroundColor: 'rgba(76, 175, 80, 0.2)',
 				borderColor: '#4CAF50',
@@ -174,36 +187,47 @@ const setLineChartData = () => {
 	}
 }
 
-const sprayAbility = [0.6, 0.4, 0, 0.05, 0.8, 0.92, 0.82, 0.37]
+function updateBarChartData() {
+	if (!internalSelectedField.value || !internalSelectedField.value.data) return
 
-const getColor = (value: number, opacity: number) => {
-	if (value <= 0.4) {
-		return `rgba(255, 99, 132, ${opacity})` // Red
-	} else if (value <= 0.74) {
-		return `rgba(255, 205, 86, ${opacity})` // Orange
-	} else {
-		return `rgba(76, 175, 80, ${opacity})` // Green
-	}
-}
+	const sprayabilityData = internalSelectedField.value.data.sprayability || []
+	const backgroundColors = sprayabilityData.map((value: number) => getColor(value, 0.2))
+	const borderColors = sprayabilityData.map((value: number) => getColor(value, 1))
 
-const setBarChartData = () => {
-	const backgroundColors = sprayAbility.map((value) => getColor(value, 0.2))
-	const borderColors = sprayAbility.map((value) => getColor(value, 1))
-
-	return {
-		labels: ['07-25', '07-26', '07-27', '07-28', '07-29', '07-30', '07-31', '08-01'],
+	barChartData.value = {
+		labels: internalSelectedField.value.data.date, // Use the field's dates as labels
 		datasets: [
 			{
-				label: 'Precipitation',
-				data: [2.3, 5.14, 0.0, 12, 1.8, 0.9, 2.1, 4.7],
+				type: 'bar',
+				label: 'Sprayability',
+				data: sprayabilityData,
 				backgroundColor: backgroundColors,
 				borderColor: borderColors,
 				borderWidth: 1,
 				barPercentage: 0.8,
-				categoryPercentage: 0.8,
+				categoryPercentage: 1,
 				maxBarThickness: 45,
 			},
+			{
+				type: 'line',
+				label: 'Precipitation',
+				data: internalSelectedField.value.data.rain,
+				fill: false,
+				backgroundColor: 'rgba(34, 140, 255, 0.2)',
+				borderColor: 'rgba(34, 140, 255, 1)',
+				tension: 0.4,
+			},
 		],
+	}
+}
+
+const getColor = (value: number, opacity: number) => {
+	if (value <= 40) {
+		return `rgba(255, 99, 132, ${opacity})` // Red
+	} else if (value <= 74) {
+		return `rgba(255, 205, 86, ${opacity})` // Orange
+	} else {
+		return `rgba(76, 175, 80, ${opacity})` // Green
 	}
 }
 
@@ -227,7 +251,7 @@ const setChartOptions = () => {
 				},
 			},
 			y: {
-				beginAtZero: true,
+				beginAtZero: false,
 				ticks: {
 					stepSize: 10,
 				},
@@ -246,7 +270,7 @@ const setBarChartOptions = () => {
 		responsive: true,
 		plugins: {
 			legend: {
-				display: false,
+				display: true,
 			},
 		},
 		scales: {
@@ -260,9 +284,9 @@ const setBarChartOptions = () => {
 				},
 			},
 			y: {
-				beginAtZero: true,
+				beginAtZero: false,
 				ticks: {
-					stepSize: 5,
+					stepSize: 10,
 				},
 				grid: {
 					color: 'rgba(192, 192, 192, 0.3)',
@@ -272,8 +296,81 @@ const setBarChartOptions = () => {
 		},
 	}
 }
+
+function capitalizeFirstCharacter(str: string) {
+	if (!str) return '' // Handle empty strings
+	return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+function getCurrentDateFormatted() {
+	const date = new Date()
+
+	const month = String(date.getMonth() + 1).padStart(2, '0')
+	const day = String(date.getDate()).padStart(2, '0')
+
+	return `${month}-${day}`
+}
+
+function getCurrentSummary() {
+	if (!internalSelectedField.value || !internalSelectedField.value.data) return 'No summary available'
+
+	const currentDate = getCurrentDateFormatted()
+	const index = internalSelectedField.value.data.date.indexOf(currentDate)
+
+	if (index === -1) return 'No summary available'
+
+	return internalSelectedField.value.data.summary[index] || 'No summary available'
+}
+
+function calculateYield() {
+	if (!internalSelectedField.value || !internalSelectedField.value.data) return '0'
+
+	const currentDate = getCurrentDateFormatted()
+	const index = internalSelectedField.value.data.date.indexOf(currentDate)
+
+	if (index === -1) return '0'
+
+	const yieldPerHectare = internalSelectedField.value.data.yield[index] || 0
+
+	return (yieldPerHectare * internalSelectedField.value.hectare).toFixed(2)
+}
+
+// Computed property to get the current day's health status and determine the tag
+const healthStatus = computed(() => {
+	if (!internalSelectedField.value || !internalSelectedField.value.data) {
+		return { value: 'Unknown', severity: 'secondary' }
+	}
+
+	const currentDate = getCurrentDateFormatted()
+	const index = internalSelectedField.value.data.date.indexOf(currentDate)
+
+	if (index === -1) return { value: 'Unknown', severity: 'secondary' }
+
+	const currentHealth = internalSelectedField.value.data.health[index] || 0
+
+	if (currentHealth >= 70) {
+		return { value: 'Healthy', severity: 'success' }
+	} else if (currentHealth >= 40) {
+		return { value: 'Moderate', severity: 'warning' }
+	} else {
+		return { value: 'Severe', severity: 'danger' }
+	}
+})
 </script>
 
 <style scoped>
-/* Add any necessary styles here */
+.spinner {
+	animation-name: spin;
+	animation-duration: 4s;
+	animation-iteration-count: infinite;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
 </style>

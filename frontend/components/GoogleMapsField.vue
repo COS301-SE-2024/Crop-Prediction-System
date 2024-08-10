@@ -97,7 +97,7 @@ function drawPolygons(fields) {
 		})
 
 		polygon.addListener('click', () => {
-			alert(`Field Name: ${field.field_name}`)
+			console.log('Field', field)
 			emit('update:selectedField', field)
 			panToField(field)
 		})
