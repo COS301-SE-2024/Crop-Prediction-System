@@ -33,9 +33,9 @@
 						<span>System Status</span>
 					</div>
 				</div>
-				<div class="p-5 sm:p-0">
+				<!-- <div class="p-5 sm:p-0">
 					<i class="pi pi-bell" style="font-size: 1.5rem" />
-				</div>
+				</div> -->
 				<div>
 					<i class="pi pi-user" @click="toggleProfile" style="font-size: 1.5rem" />
 				</div>
