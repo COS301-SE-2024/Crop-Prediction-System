@@ -155,6 +155,6 @@ class Weather:
     
     @staticmethod
     def calculate_health(entry: Entry) -> float:
-        health = 0.25 * entry.tempMean + 0.25 * entry.humidity + 0.25 * entry.wind_speed + 0.25 * entry.soil_moisture + 0.25 * entry.uvi + 0.25 * entry.rain + 0.25 * entry.clouds + 0.25 * entry.pressure + 0.25 * entry.dew_point + 0.25 * entry.gdd + 0.25 * entry.hdd + 0.25 * entry.gff + 0.25 * entry.pet / 300.0 * 100.0
+        health = (0.25 * entry.tempMean + 0.25 * entry.humidity + 0.25 * entry.wind_speed + 0.25 * entry.soil_moisture + 0.25 * entry.uvi + 0.25 * entry.rain + 0.25 * entry.clouds + 0.25 * entry.pressure + 0.25 * entry.dew_point + 0.25 * entry.gdd + 0.25 * entry.hdd + 0.25 * entry.gff + 0.25 * entry.pet) / 300.0 * 100.0
 
         return round(health, 2)
