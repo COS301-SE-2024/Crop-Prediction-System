@@ -5,12 +5,15 @@ from backend.definitions.entry import Entry
 from backend.definitions.crop import Crop
 from backend.database import supabaseInstance
 from backend.logic.gemini import Gemini
+from dotenv import load_dotenv
+import os
 
 class Weather:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
     __gemini = Gemini()
     def __init__(self):
-        self.api_key = 'c0c1ea0d60f1f744ac9ef92c0b4bc7fd'
+        load_dotenv()
+        self.api_key = os.environ.get('OPENWEATHER_API_KEY')
         self.part = 'hourly,alerts'
         self.unit = 'metric'
 
