@@ -29,15 +29,7 @@ import GoogleMap from '~/components/GoogleMap.vue'
 import { useConfirm } from 'primevue/useconfirm'
 
 // get userID
-const session = useSupabaseClient()
-let currentUser = null
-if (session) {
-	const {
-		data: { user },
-	} = await session.auth.getUser()
-	if (user) currentUser = user
-	console.error('user: ', user?.id)
-}
+const currentUser = useSupabaseUser()
 
 definePageMeta({
 	middleware: 'auth',
@@ -96,9 +88,11 @@ const showConfirmationDialog = () => {
 	})
 }
 
-const teamID = await useFetch('/api/getTeamID', {
-	params: { userid: currentUser?.id },
+const teamID = await $fetch('/api/getTeamID', {
+	params: { userid: currentUser?.value.id },
 })
+
+console.log(teamID.team_id)
 
 const saveField = async () => {
 	if (drawnPolygonPaths.value.length > 0) {
@@ -130,9 +124,10 @@ const saveField = async () => {
 				type: 'Polygon',
 				coordinates: coordinatesArray,
 			},
-			team_id: teamID.data.value.team_id,
+			team_id: teamID.team_id,
 		}
 
+		console.log('Return Data:', returnData)
 		try {
 			const response = await $fetch('/api/createField', {
 				method: 'POST',
@@ -149,7 +144,7 @@ const saveField = async () => {
 }
 
 const userFields = await $fetch('/api/getUserFields', {
-	params: { userid: currentUser?.id },
+	params: { team_id: teamID.team_id },
 })
 
 console.log('User Fields: ', userFields)
