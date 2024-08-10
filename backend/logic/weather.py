@@ -177,7 +177,7 @@ class Weather:
         sprayability = (w1 * humidity_index +
                         w2 * wind_speed_index +
                         w3 * temperature_index +
-                        w4 * dew_point_index)
+                        w4 * dew_point_index) * 100
         
         return sprayability
     
