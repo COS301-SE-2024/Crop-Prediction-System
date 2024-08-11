@@ -16,7 +16,10 @@
 		<template #title>{{ capitalizeFirstCharacter(internalSelectedField?.crop_type as string) }}</template>
 		<template #subtitle>
 			<div class="flex flex-row justify-between items-center">
-				<h4 class="text-lg">Expected Yield: {{ calculateYield() }}t</h4>
+				<div class="flex flex-col gap-1 justify-between items-start">
+					<h4 class="text-lg">Expected Yield: {{ calculateYield() }}t</h4>
+					<h4 class="text-lg">Hectare: {{ internalSelectedField?.hectare.toFixed(2) }}ha</h4>
+				</div>
 				<Tag :value="healthStatus.value" :severity="healthStatus.severity" rounded></Tag>
 			</div>
 			<div class="mt-4 rounded-md bg-gradient-to-r from-[#7951B4] to-[#1C8EDB] p-[0.07rem]">

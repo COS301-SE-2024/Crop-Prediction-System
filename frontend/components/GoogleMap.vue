@@ -17,9 +17,9 @@ let drawingManager = null
 const polygons = ref([])
 
 const polygonOptions = {
-	fillColor: '#00FF00', // Green fill color (change as needed)
-	fillOpacity: 0.3, // Transparency (0-1)
-	strokeColor: '#000000', // Black border (change as needed)
+	fillColor: '#ba55f4', // Green fill color (change as needed)
+	fillOpacity: 0.5, // Transparency (0-1)
+	strokeColor: '#ba55f4', // Black border (change as needed)
 	strokeWeight: 2, // Border thickness
 	clickable: true,
 	editable: true,

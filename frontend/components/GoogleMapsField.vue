@@ -20,22 +20,31 @@ const emit = defineEmits(['update:selectedField'])
 
 const mapsLoader = useNuxtApp().$mapsLoader
 const mapContainer = ref(null)
-let map: { fitBounds: (arg0: any) => void; getZoom: () => any; setZoom: (arg0: number) => void } | null = null
+let map = null
 let polygons = ref<google.maps.Polygon[]>([])
 
-const polygonOptions = {
-	fillColor: '#00FF00', // Green fill color (change as needed)
-	fillOpacity: 0.3, // Transparency (0-1)
-	strokeColor: '#000000', // Black border (change as needed)
+const defaultPolygonOptions = {
+	fillColor: '#ba55f4', // Green fill color for unselected fields
+	fillOpacity: 0.5, // Transparency
+	strokeColor: '#ba55f4', // Black border
 	strokeWeight: 2, // Border thickness
 	clickable: true,
 	editable: false,
 	draggable: false,
 }
 
-onMounted(async () => {
-	await mapsLoader.load() // Use the loader from the plugin
+const selectedPolygonOptions = {
+	fillColor: '#b3df91', // Red fill color for the selected field
+	fillOpacity: 0.7, // Higher transparency for the selected field
+	strokeColor: '#ba55f4', // Black border
+	strokeWeight: 2,
+	clickable: true,
+	editable: false,
+	draggable: false,
+}
 
+onMounted(async () => {
+	await mapsLoader.load()
 	initializeMap()
 
 	watch(
@@ -54,7 +63,7 @@ function initializeMap() {
 	const center = { lat: -25.7479, lng: 28.2293 } // Default center
 	map = new google.maps.Map(mapContainer.value, {
 		center,
-		zoom: 15, // Set an initial zoom level that makes sense for your map
+		zoom: 15, // Set an initial zoom level
 		mapTypeId: 'satellite',
 	})
 }
@@ -71,24 +80,32 @@ function panToField(field) {
 	polygonCoords.forEach((coord) => {
 		bounds.extend(coord)
 	})
+
+	// Pan to the selected field
 	map.fitBounds(bounds)
 
-	// Set a timeout to ensure fitBounds has finished before adjusting the zoom
+	// Adjust zoom level after panning
 	setTimeout(() => {
 		const currentZoom = map.getZoom()
 		if (currentZoom > 19) {
-			// Adjust this value as needed
-			map.setZoom(19) // Set the desired maximum zoom level
+			map.setZoom(19) // Adjust this value as needed
 		}
-	}, 500) // Delay to allow fitBounds to finish
+	}, 500)
+
+	// After panning, highlight the selected field
+	highlightSelectedField(field)
 }
 
 function drawPolygons(fields) {
+	clearPolygons()
+
 	fields.forEach((field) => {
 		const polygonCoords = field.field_area.map((coord) => ({
 			lat: parseFloat(coord[0]),
 			lng: parseFloat(coord[1]),
 		}))
+
+		const polygonOptions = field.id === props.selectedField?.id ? selectedPolygonOptions : defaultPolygonOptions
 
 		const polygon = new google.maps.Polygon({
 			paths: polygonCoords,
@@ -97,12 +114,19 @@ function drawPolygons(fields) {
 		})
 
 		polygon.addListener('click', () => {
-			console.log('Field', field)
 			emit('update:selectedField', field)
-			panToField(field)
 		})
 
 		polygons.value.push(polygon)
+	})
+}
+
+function highlightSelectedField(selectedField) {
+	polygons.value.forEach((polygon, index) => {
+		const field = props.fields[index]
+		const isSelected = field.id === selectedField.id
+
+		polygon.setOptions(isSelected ? selectedPolygonOptions : defaultPolygonOptions)
 	})
 }
 
