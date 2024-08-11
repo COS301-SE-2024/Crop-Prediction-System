@@ -71,13 +71,13 @@ definePageMeta({
 </script>
 
 <template>
-	<div class="w-full h-screen flex flex-col justify-center items-center p-4">
-		<div class="self-center">
-			<div class="flex flex-col gap-5 items-center w-[400px] max-w-lg">
+	<div class="w-full h-screen flex flex-col justify-center items-center p-4 overflow-auto">
+		<div class="w-full max-w-[450px] px-4 overflow-auto">
+			<!-- <div class="flex flex-col gap-5 items-center w-[400px] max-w-lg"> -->
 				<Card class="w-full border border-surface-border">
 					<template #header>
 						<div class="flex justify-center items-center p-4">
-							<img src="../../assets/logo.png" alt="Logo" class="pt-5 w-[auto] h-[80px] self-center" />
+							<img src="../../assets/logo.png" alt="Logo" class="pt-1 w-[auto] h-[70px] self-center" />
 						</div>
 					</template>
 					<template #title>
@@ -168,5 +168,5 @@ definePageMeta({
 				</Card>
 			</div>
 		</div>
-	</div>
+	<!-- </div> -->
 </template>
