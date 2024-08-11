@@ -7,7 +7,11 @@
 					<FieldCard v-model="selectedField" :fields="userFieldsWithData" />
 				</div>
 				<div class="w-full md:w-2/3 h-96 md:h-auto rounded overflow-hidden border-surface-600 shadow-md">
-					<GoogleMapsField :selectedField="selectedField" :fields="userFieldsWithData" />
+					<GoogleMapsField
+						:selectedField="selectedField"
+						:fields="userFieldsWithData"
+						@update:selectedField="updateSelectedField"
+					/>
 				</div>
 			</div>
 
@@ -116,6 +120,10 @@ const dewPointChartData = ref({})
 const humidityChartData = ref({})
 const pressureChartData = ref({})
 const uvChartData = ref({})
+
+function updateSelectedField(newField) {
+	selectedField.value = newField
+}
 
 watch(selectedField, (newField) => {
 	if (newField && newField.data) {
