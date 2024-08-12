@@ -143,7 +143,7 @@ const saveField = async () => {
 	}
 }
 
-const userFields = await $fetch('/api/getUserFields', {
+const userFields = await $fetch('/api/getTeamFields', {
 	params: { team_id: teamID.team_id },
 })
 
