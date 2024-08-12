@@ -37,13 +37,13 @@
 // }
 
 Cypress.Commands.add('login', (email, password) => {
-    cy.visit('/login')
+	cy.visit('/login')
 
-    cy.wait(500)
-    cy.get('#email').clear().type(email)
-    cy.get('input[type="password"]').clear().type(password)
-    cy.get('button').contains('Login').click()
-  
-    // Ensure redirection or successful login state
-    cy.url().should('include', '/confirm') // Adjust if necessary
-  })
+	cy.wait(500)
+	cy.get('#email').clear().type(email)
+	cy.get('input[type="password"]').clear().type(password)
+	cy.get('button').contains('Login').click()
+
+	// Ensure redirection or successful login state
+	cy.url().should('include', '/confirm') // Adjust if necessary
+})
