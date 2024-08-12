@@ -24,6 +24,7 @@ jobs:
             pip install -r backend/requirements.txt
             pip install --upgrade pydantic
             pip install --upgrade langchain_core
+            pip install google.generativeai
             pip install pytest pytest-cov codecov coverage
 
       - name: Run tests with pytest
