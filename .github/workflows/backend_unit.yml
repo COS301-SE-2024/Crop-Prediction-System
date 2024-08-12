@@ -26,6 +26,7 @@ jobs:
             pip install --upgrade langchain_core
             pip install google.generativeai
             pip install pytest pytest-cov codecov coverage
+            pip install uuid
 
       - name: Run tests with pytest
         env:
@@ -34,6 +35,7 @@ jobs:
         run: |
           pytest --cov=backend backend/test/
           pytest --cov-report xml
+        timeout-minutes: 10
 
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v4
