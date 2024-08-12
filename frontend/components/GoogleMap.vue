@@ -60,7 +60,7 @@ async function fetchUserFields() {
 			const teamID = await $fetch('/api/getTeamID', {
 				params: { userid: currentUser?.id },
 			})
-			const fields = await $fetch('/api/getUserFields', {
+			const fields = await $fetch('/api/getTeamFields', {
 				params: { team_id: teamID.team_id },
 			})
 			userFields.value = fields

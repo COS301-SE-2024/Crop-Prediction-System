@@ -127,7 +127,7 @@ const fetchEntryData = async () => {
 		params: { userid: user?.value?.id },
 	})
 
-	const entryData = await $fetch('/api/getRecent', {
+	const entryData = await $fetch('/api/getTeamFieldsData', {
 		params: { team_id: teamID.team_id },
 	})
 
