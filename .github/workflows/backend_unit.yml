@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   pull_request:
     branches: [main, dev]
-
+    
 jobs:
   automated-backend-unit-tests:
     runs-on: ubuntu-latest
@@ -19,15 +19,23 @@ jobs:
           python-version: 3.x
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+            pip install -r backend/requirements.txt
+            pip install --upgrade pydantic
+            pip install --upgrade langchain_core
+            pip install google.generativeai
+            pip install pytest pytest-cov codecov coverage
+            pip install uuid
+            pip install httpx
 
       - name: Run tests with pytest
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
-          pytest --cov=backend
+          pytest --cov=backend backend/test/
           pytest --cov-report xml
+        timeout-minutes: 10
 
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v4

@@ -16,9 +16,7 @@ Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learni
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
 ![DigitalOcean](https://img.shields.io/badge/DigitalOcean-%230167ff.svg?style=for-the-badge&logo=digitalOcean&logoColor=white)
-![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
 ![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)
 ![Vitest](https://img.shields.io/badge/Vitest-black?style=for-the-badge)
@@ -34,9 +32,9 @@ Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learni
 ![GitHub Release](https://img.shields.io/github/v/release/COS301-SE-2024/Crop-Prediction-System?logo=Github)
 [![codecov](https://codecov.io/gh/COS301-SE-2024/Crop-Prediction-System/graph/badge.svg?token=WwjFFuFVr7)](https://codecov.io/gh/COS301-SE-2024/Crop-Prediction-System)
 [![System Uptime](https://img.shields.io/pingpong/uptime/sp_bf59a60096094040a09ea511e5b93cee?label=Website%20Uptime)](https://terrabyte.pingpong.host/)
-[![assertible](https://assertible.com/tests/384056d8-aadc-46b1-b34b-b569b366e225/status?api_token=hF30yIrlSGpMqbfo)](https://assertible.com/dashboard#/services/60d94c06-00b8-466f-a1f5-f52e4f03f4b3/tests/384056d8-aadc-46b1-b34b-b569b366e225)
+[![Assertible](https://assertible.com/apis/9e78aa9b-a667-4256-93b3-f89a9b26961b/status?api_token=hF30yIrlSGpMqbfo)](https://assertible.com/dashboard#/services/9e78aa9b-a667-4256-93b3-f89a9b26961b/results)
 
-<img width="606" alt="image" src="https://github.com/COS301-SE-2024/Crop-Prediction-System/assets/29703077/251f8d33-d257-41ba-9216-96eb148c81fd">
+<img width="706" alt="image" src="https://github.com/user-attachments/assets/d216d508-081e-4bc9-88dc-fe541b218b75">
 
 ### Project Day Countdown
 
@@ -52,17 +50,23 @@ Meet TerraByte, the AI-Driven Crop Prediction System that applies Machine Learni
 
 <a href="https://www.canva.com/design/DAGItX_W4V8/OzXuycDqygKwqtf94wqkxg/edit?utm_content=DAGItX_W4V8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Demo 2 Presentation</a>
 
+<a href="https://youtu.be/n9GdBw7bQcw">Demo 3 Video</a>
+
+<a href="https://www.canva.com/design/DAGNoDGk9Xw/EF4AfOHztK41WQi1NOY2nw/edit?utm_content=DAGNoDGk9Xw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Demo 3 Presentation</a>
+
 ## Documentation
 
 <a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/wiki">Link to Wiki</a>
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/SRS%20Demo%202.pdf">Link to Functional Requirements (SRS)</a>
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/SRS%20Demo%203.pdf">Link to Functional Requirements (SRS)</a>
 
 <a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Architectural%20Requirements.pdf">Link to Architectural Requirements</a>
 
 <a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Coding%20Standards.pdf">Link to Coding Standards</a>
 
 <a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/User%20Manual.pdf">Link to User Manual</a>
+
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Technical%20Installation%20Manual.pdf">Link to Technical Installation Manual</a>
 
 <a href="https://documenter.getpostman.com/view/26558432/2sA3Qwaoyd">API Documentation</a>
 

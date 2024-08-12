@@ -6,7 +6,23 @@ on:
       - feature/APIv2
 
 jobs:
+#   upgrade_pip:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v4
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: '3.x'
+
+#       - name: Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
   build_and_deploy:
+    name: "Deploy API"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -19,7 +35,40 @@ jobs:
           username: root
           password: ${{ secrets.DIGITAL_OCEAN_PASSWORD_V2 }}
           script: |
-            cd /home/farm/server/Crop-Prediction-System/backend
+            cd /home/farm/server/Crop-Prediction-System
             ls -la
             git pull
             su - farm -c "pm2 restart sample_farm_api"
+  test-curl-action:
+    name: "Assertible API"
+    runs-on: ubuntu-latest
+    needs: build_and_deploy
+    steps:
+      - name: "Call API"
+        uses: indiesdev/curl@v1.1
+        with:
+          # The target URL
+          # Required: true if custom-config is not set
+          url: https://assertible.com/apis/9e78aa9b-a667-4256-93b3-f89a9b26961b/run?api_token=${{ secrets.ASSERTIBLE_API_TOKEN }}
+
+          # The request method, basically it's one of GET|POST|PUT|PATCH
+          # Default is GET
+          method: "GET"
+          accept: 200,201,204
+
+          # Request timeout (millisec)
+          timeout: 1000
+
+          # If it is set to true, it will show the response log in the GitHub UI
+          log-response: true
+
+          # The number of attempts before giving up
+          # Default: 1
+          retries: 3
+
+# Server-side commands:
+# su - farm -c "pm2 delete sample_farm_api"
+# su - farm -c "pm2 save"
+# su - farm -c "cd /home/farm/server/Crop-Prediction-System/backend && pm2 start \"gunicorn -k uvicorn.workers.UvicornWorker --config /etc/gunicorn.d/gunicorn.py app:app\"  --name \"sample_farm_api\""
+# sudo env "PATH=$PATH:/usr/bin" /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u farm --hp /home/farm
+# su - farm -c "pm2 save"

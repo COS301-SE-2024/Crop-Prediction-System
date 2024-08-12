@@ -1,10 +1,11 @@
-name: Automated API tests using Postman CLI
+name: Automated Integration tests using Postman CLI
 
-on: 
-  workflow_dispatch:
+on:
+  pull_request:
+    branches: [main, dev]
 
 jobs:
-  automated-api-tests:
+  automated-integration-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
