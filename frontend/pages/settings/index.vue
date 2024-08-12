@@ -41,8 +41,13 @@
 						</div>
 						<div>
 							<div class="flex flex-row justify-end gap-2 sm:gap-4">
-								<Button label="Cancel" severity="secondary" class="text-sm sm:text-base" />
-								<Button label="Save" class="text-sm sm:text-base" />
+								<Button
+									label="Cancel"
+									@click="cancelEditProfileRequest"
+									severity="secondary"
+									class="text-sm sm:text-base"
+								/>
+								<Button label="Save" @click="updateUserProfile" class="text-sm sm:text-base" />
 							</div>
 						</div>
 					</div>
@@ -104,12 +109,9 @@ import { ref } from 'vue'
 import TabView from 'primevue/tabview'
 import TabPanel from 'primevue/tabpanel'
 import InputText from 'primevue/inputtext'
-import Password from 'primevue/password'
 import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
-import Dropdown from 'primevue/dropdown'
-import MultiSelect from 'primevue/multiselect'
 
 const settings = ref([
 	{ label: 'Account', icon: 'pi pi-user' },
@@ -119,11 +121,35 @@ const settings = ref([
 
 const activeTabIndex = ref(0)
 
-const account = ref({
-	name: '',
-	email: '',
-	password: '',
-})
+// const account = ref({
+// 	name: '',
+// 	email: '',
+// 	password: '',
+// })
+
+// TODO: Select user from supabase
+
+const supabase = useSupabaseClient()
+
+const user = useSupabaseUser()
+console.log('User: ', user.value)
+const { data } = await supabase.from('profiles').select('full_name, email').eq('id', user.value.id)
+
+console.log('Profile: ', data)
+
+const first_name = ref('')
+const last_name = ref('')
+const email = ref(user.value?.email)
+
+console.log('First Name', first_name.value)
+console.log('Last Name', last_name.value)
+console.log('Email', email.value)
+
+const cancelEditProfileRequest = () => {
+	first_name.value = user.value?.user_metadata.full_name.split(' ')[0]
+	last_name.value = user.value?.user_metadata.full_name.split(' ')[1]
+	email.value = user.value?.email
+}
 
 const checked = ref(useColorMode().preference === 'dark')
 
@@ -200,6 +226,24 @@ function addUser(teamIndex) {
 
 function removeUser(teamIndex, userIndex) {
 	teams.value[teamIndex].users.splice(userIndex, 1)
+}
+
+async function updateUserProfile() {
+	try {
+		const user = useSupabaseUser()
+
+		const updates = {
+			id: user.value?.id,
+			full_name: `${first_name.value} ${last_name.value}`,
+			email: email.value,
+		}
+
+		// console.log('Updates: ', updates)
+		const { error } = await supabase.from('profiles').upsert(updates, { returning: 'minimal' })
+		if (error) throw error
+	} catch (error) {
+		console.error('Error updating user profile:', error)
+	}
 }
 </script>
 
