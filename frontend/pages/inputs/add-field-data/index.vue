@@ -92,9 +92,6 @@ import Dropdown from 'primevue/dropdown'
 import InputNumber from 'primevue/inputnumber'
 import { ref, onMounted } from 'vue'
 
-const user = useSupabaseUser()
-const userID = user.value?.id
-
 const selectedField = ref()
 const weather_temperature = ref(0)
 const weather_humidity = ref(0)
@@ -108,42 +105,17 @@ const fields = ref([])
 
 const loadUserFields = async () => {
 	try {
+		const currentUser = useSupabaseUser()
+		const teamID = await $fetch('/api/getTeamID', {
+			params: { userid: currentUser?.value?.id },
+		})
 		const userFields = await $fetch('/api/getUserFields', {
-			params: { userid: userID },
+			params: { team_id: teamID.team_id },
 		})
 
-		console.log('User Fields', userFields)
-		// Map field_name in userFields to name for dropdown
-		const newFields = [
-			{
-				name: 'Field 1',
-				health: 0.5,
-				yield: 0,
-				cropType: 'Mize',
-			},
-			{
-				name: 'Field 2',
-				health: 0.7,
-				yield: 0,
-				cropType: 'Wheat',
-			},
-			{
-				name: 'Field 3',
-				health: 0.3,
-				yield: 0,
-				cropType: 'Barley',
-			},
-		]
-
-		if (!userFields.length) {
-			for (let i = 0; i < newFields.length; i++) {
-				fields.value.push(newFields[i])
-			}
-		} else {
-			fields.value = userFields.map((field: { field_name: string; id: number }) => {
-				return { name: field.field_name, id: field.id }
-			})
-		}
+		fields.value = userFields.map((field: { field_name: string; id: number }) => {
+			return { name: field.field_name, id: field.id }
+		})
 	} catch (error) {
 		console.error('Error loading user fields:', error)
 	}
