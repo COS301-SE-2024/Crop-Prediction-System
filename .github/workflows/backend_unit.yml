@@ -27,14 +27,7 @@ jobs:
             pip install google.generativeai
             pip install pytest pytest-cov codecov coverage
             pip install uuid
-            pip install uvicorn
-
-      - name: Run Uvicorn server
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-        run: |
-          nohup uvicorn backend.app:app --host 0.0.0.0 --port 8000 &
+            pip install httpx
 
       - name: Run tests with pytest
         env:
