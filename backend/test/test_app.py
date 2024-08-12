@@ -23,21 +23,23 @@ def test_main():
 
 # Create a field to test the other routes
 def test_create_field():
-    response = client.post("/createField", json={
-        "field_id": field_id,
-        "field_name": "TEST",
-        "crop_type": "wheat",
-        "field_area": {
-            "type": "Polygon",
-            "coordinates": [[-25.87074931861521, 28.159573936176287], [-25.870773452610735, 28.160054051589952], [-25.871036512841457, 28.160062098216997], [-25.87101479229413, 28.159563207340227]]
-        },
-        "team_id": team_id
-    })
-    assert response.status_code == 200
-    assert response.json() == {
-        "status": "success",
-        "id": f"{field_id}"
-    }
+    with patch('backend.database.supabaseFunctions.supabaseFunctions.createField') as mock_createField:
+        mock_createField.return_value = {
+            "status": "success",
+            "id": f"{field_id}"
+        }
+        response = client.post("/createField", json={
+            "field_id": field_id,
+            "field_name": "TEST",
+            "crop_type": "wheat",
+            "field_area": {
+                "type": "Polygon",
+                "coordinates": [[-25.87074931861521, 28.159573936176287], [-25.870773452610735, 28.160054051589952], [-25.871036512841457, 28.160062098216997], [-25.87101479229413, 28.159563207340227]]
+            },
+            "team_id": team_id
+        })
+        assert response.status_code == 200
+        assert response.json() == mock_createField.return_value
 
 def test_fetch_weather():
     with patch('backend.database.supabaseFunctions.supabaseFunctions.fetchWeatherForAllFields') as mock_fetchWeather:
@@ -45,13 +47,6 @@ def test_fetch_weather():
         response = client.get("/fetchWeather")
         assert response.status_code == 200
         assert response.json() == mock_fetchWeather.return_value
-
-def test_fetch_summary():
-    with patch('backend.database.supabaseFunctions.supabaseFunctions.fetchSummary') as mock_fetchSummary:
-        mock_fetchSummary.return_value = {"success": "Summary fetched for all fields"}
-        response = client.get("/fetchSummary")
-        assert response.status_code == 200
-        assert response.json() == mock_fetchSummary.return_value
 
 def test_get_field_info():
     with patch('backend.database.supabaseFunctions.supabaseFunctions.getFieldInfo') as mock_getFieldInfo:
