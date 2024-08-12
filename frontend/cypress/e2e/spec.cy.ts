@@ -62,3 +62,42 @@ describe('Signup Page', () => {
       cy.url().should('include', '/login')  // Verify that the URL includes /login
   })
 })
+
+//====================================================================================================================================//
+
+describe('Login Page', () => {
+  beforeEach(() => {
+    cy.visit('/login')
+  })
+
+  it('should display the login form', () => {
+    cy.get('h1').should('contain', 'Log in')
+    cy.get('#email').should('be.visible')
+    cy.get('input[type="password"]').should('be.visible')
+    cy.get('button').contains('Login').should('be.visible')
+  })
+
+  it('should show error message with incorrect login', () => {
+    const email = `test${Date.now()}@example.com`
+    const password = 'WrongPassword'
+
+    cy.get('#email').clear().type(email)
+    cy.get('input[type="password"]').clear().type(password)
+    cy.get('button').contains('Login').click()
+
+    cy.get('small').contains('Invalid login credentials').should('be.visible')
+  })
+
+  // it('should login successfully', () => {
+  //   const email = `test${Date.now()}@example.com`
+  //   const password = 'Password123!'
+
+  //   cy.get('#email').clear().type(email)
+  //   cy.get('input[type="password"]').clear().type(password)
+  //   cy.get('button').contains('Login').click()
+
+  //   // Adjust based on the actual redirection
+  //   cy.url().should('include', '/confirm') 
+  // })
+})
+
