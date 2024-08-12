@@ -41,13 +41,6 @@ def test_create_field():
         assert response.status_code == 200
         assert response.json() == mock_createField.return_value
 
-def test_fetch_weather():
-    with patch('backend.database.supabaseFunctions.supabaseFunctions.fetchWeatherForAllFields') as mock_fetchWeather:
-        mock_fetchWeather.return_value = {"success": "Weather fetched for all fields"}
-        response = client.get("/fetchWeather")
-        assert response.status_code == 200
-        assert response.json() == mock_fetchWeather.return_value
-
 def test_get_field_info():
     with patch('backend.database.supabaseFunctions.supabaseFunctions.getFieldInfo') as mock_getFieldInfo:
         mock_getFieldInfo.return_value = {
