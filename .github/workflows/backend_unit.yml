@@ -4,8 +4,7 @@ on:
   workflow_dispatch:
   pull_request:
     branches: [main, dev]
-  push:
-
+    
 jobs:
   automated-backend-unit-tests:
     runs-on: ubuntu-latest
