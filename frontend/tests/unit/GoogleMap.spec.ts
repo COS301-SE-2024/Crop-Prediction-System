@@ -3,7 +3,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { shallowMount } from '@vue/test-utils'
 import GoogleMap from '~/components/GoogleMap.vue' // Adjust the import path accordingly
 
-// Mock Google Maps
+class MyClass {
+  // Mock Google Maps
+  /* eslint-disable @typescript-eslint/no-extraneous-class */
 globalThis.google = {
   maps: {
     Map: class {
