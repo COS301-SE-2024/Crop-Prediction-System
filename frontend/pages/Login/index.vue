@@ -60,9 +60,9 @@ definePageMeta({
 </script>
 
 <template>
-	<div class="w-full h-screen flex flex-col justify-center items-center p-4 dark:">
-		<div class="self-center">
-			<div class="flex flex-col gap-5 items-center w-[400px] max-w-md">
+	<div class="w-full h-screen flex flex-col justify-center items-center p-4 overflow-auto dark:">
+		<div class="w-full max-w-[450px] px-4 overflow-auto">
+			<!-- <div class="flex flex-col gap-5 items-center w-[400px] max-w-md"> -->
 				<Card class="w-full border border-surface-border bg-primary-inverse dark:bg-surface-800">
 					<template #header>
 						<div class="flex justify-center items-center p-4">
@@ -116,5 +116,5 @@ definePageMeta({
 				</Card>
 			</div>
 		</div>
-	</div>
+	<!-- </div> -->
 </template>
