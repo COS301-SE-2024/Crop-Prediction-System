@@ -46,37 +46,39 @@ describe('StatsCard', () => {
 		const component = await mountSuspended(StatsCard, { props })
 		const chart = component.findComponent(Chart)
 		expect(chart.exists()).toBe(true)
-	
+
 		const options = chart.props('options')
-		expect(options).toEqual(expect.objectContaining({
-			maintainAspectRatio: false,
-			responsive: true,
-			plugins: {
-				legend: {
-					display: true,
+		expect(options).toEqual(
+			expect.objectContaining({
+				maintainAspectRatio: false,
+				responsive: true,
+				plugins: {
+					legend: {
+						display: true,
+					},
 				},
-			},
-			scales: expect.objectContaining({
-				x: expect.objectContaining({
-					ticks: expect.objectContaining({
-						autoSkip: false,
+				scales: expect.objectContaining({
+					x: expect.objectContaining({
+						ticks: expect.objectContaining({
+							autoSkip: false,
+						}),
+						grid: expect.objectContaining({
+							color: 'rgba(192, 192, 192, 0.3)',
+							display: true,
+						}),
 					}),
-					grid: expect.objectContaining({
-						color: 'rgba(192, 192, 192, 0.3)',
-						display: true,
-					}),
-				}),
-				y: expect.objectContaining({
-					beginAtZero: false,
-					ticks: expect.objectContaining({
-						stepSize: 2,
-					}),
-					grid: expect.objectContaining({
-						color: 'rgba(192, 192, 192, 0.3)',
-						display: true,
+					y: expect.objectContaining({
+						beginAtZero: false,
+						ticks: expect.objectContaining({
+							stepSize: 2,
+						}),
+						grid: expect.objectContaining({
+							color: 'rgba(192, 192, 192, 0.3)',
+							display: true,
+						}),
 					}),
 				}),
 			}),
-		}))
+		)
 	})
 })

@@ -112,7 +112,6 @@ function getCurrentDateApiRequestFormatted() {
 	const day = String(date.getDate()).padStart(2, '0')
 	return `${year}-${month}-${day}`
 }
-console.log('Polar Stat Data', recentEntries[0]['soil_moisture'])
 
 const soilMoistureChartData = ref({})
 const soilTemperatureChartData = ref({})
