@@ -27,10 +27,6 @@ def mock_crop():
 @pytest.fixture
 def entry():
     return Entry(
-        id=uuid4(),
-        field_id=uuid4(),
-        timestamp=int(datetime.datetime.now().timestamp()),
-        summary="Example summary",
         tempMax=20,
         tempMin=10,
         tempDiurnal=10,
