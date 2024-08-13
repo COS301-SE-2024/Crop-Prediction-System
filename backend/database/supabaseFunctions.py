@@ -63,7 +63,7 @@ class supabaseFunctions:
             return {"error": "Failed to fetch summary for all fields", "error_message": e}
         
     @staticmethod
-    def getCurrentStage(c : Crop):
+    def getCurrentStage(c : Crop) -> str:
         # Determine current day of the year
         today = date.today()
         day_of_year = today.timetuple().tm_yday

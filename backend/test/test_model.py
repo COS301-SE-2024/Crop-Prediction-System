@@ -92,7 +92,7 @@ def test_load_yields(setup_supabase, setup_model):
 #     m = setup_model
 
 #     # Get the crop
-#     c = sf.getCrop(f.crop_type)
+#     c : Crop = sf.getCrop(f.crop_type)
 
 #     result = m.train(f.field_id, c)
 #     assert result is not None
