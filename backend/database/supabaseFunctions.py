@@ -333,7 +333,7 @@ class supabaseFunctions:
         try:
             response = supabaseFunctions.__sbClient.table("profiles").select("team_id").eq("id", user_id).execute()
             if response.data == []:
-                return {"error": "User not found"}
+                raise Exception("User not found")
             return response.data[0]
         except Exception as e:
             print(e)

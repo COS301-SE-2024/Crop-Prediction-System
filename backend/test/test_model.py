@@ -62,7 +62,7 @@ def test_create_and_get_crop(setup_field, setup_supabase):
 #     assert c.t_base == 10
 #     assert c is not None
 
-#     result = m.load_data(f.field_id, c)
+#     result = m.load_data("038f59ee-e1f1-49d8-94c2-96c2ada5852f", c)
 #     print(result)
 #     assert result is not None
 #     assert "error" not in result
