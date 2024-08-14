@@ -36,22 +36,20 @@ const signIn = async () => {
 	}
 }
 
+const origin = window.location.origin
+
 const signInWithOauth = async () => {
 	try {
 		const { error } = await client.auth.signInWithOAuth({
 			provider: 'google',
 			options: {
-				redirectTo: `https://terrabyte.software/confirm/`,
+				redirectTo: `${origin}/confirm/`,
 			},
 		})
 		if (error) throw error
 	} catch (error) {
 		errorMsg.value = error.message
 	}
-}
-
-if (user.value) {
-	console.log("I'm in here")
 }
 
 definePageMeta({
