@@ -2,7 +2,7 @@
 	<div class="flex justify-content-center w-full">
 		<OverlayPanel ref="op">
 			<div class="flex flex-col w-full">
-				<Menu :model="items" class="w-[200px]" />
+				<Menu :model="items" class="w-full" />
 			</div>
 		</OverlayPanel>
 		<div
