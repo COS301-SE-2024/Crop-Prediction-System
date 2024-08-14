@@ -1,57 +1,52 @@
 from fastapi import FastAPI, Request
-from database.supabaseFunctions import supabaseFunctions
-from pydantic import BaseModel
+from backend.database.supabaseFunctions import supabaseFunctions
 
-from model.base import MLModel
-from database.field import Field
-from database.entry import Entry
-from functools import wraps
+from backend.model.model import Model
+from backend.definitions.field import Field
+from backend.definitions.entry import Entry
+from backend.definitions.crop import Crop
+from fastapi.middleware.cors import CORSMiddleware
 
 class API:
     def __init__(self):
         self.app = FastAPI()
-        self.ml = MLModel()
         self.sb = supabaseFunctions()
+        self.ml = Model()
         self.setup_routes()
-
-    # async def init_supabase(self):
-    #     if self.sb is None:
-    #         self.sb = supabaseFunctions()
-
-    # def ensure_initialized(func):
-    #     @wraps(func)
-    #     def wrapper(self, *args, **kwargs):
-    #         self.init_supabase()
-    #         return func(self, *args, **kwargs)
-    #     return wrapper
 
     def setup_routes(self):
         self.app.add_api_route("/", self.main, methods=["GET"])
+
+        # field routes
         self.app.add_api_route("/getFieldInfo", self.getFieldInfo, methods=["GET"])
         self.app.add_api_route("/getFieldData", self.getFieldData, methods=["GET"])
+        # self.app.add_api_route("/getFieldLogs", self.getFieldLogs, methods=["GET"])
+        self.app.add_api_route("/fetchWeather", self.sb.fetchWeatherForAllFields, methods=["GET"])
+        self.app.add_api_route("/fetchSummary", self.sb.fetchSummary, methods=["GET"])
+        
+
+        # field routes
         self.app.add_api_route("/createField", self.createField, methods=["POST"])
         self.app.add_api_route("/updateField", self.updateField, methods=["PUT"])
         self.app.add_api_route("/deleteField", self.deleteField, methods=["POST"])
-        self.app.add_api_route("/createEntry", self.createEntry, methods=["POST"])
+
+        # entry routes)
         self.app.add_api_route("/updateEntry", self.updateEntry, methods=["PUT"])
-        self.app.add_api_route("/deleteEntry", self.deleteEntry, methods=["POST"])
-        self.app.add_api_route("/getUserFields", self.getUserFields, methods=["GET"])
-        self.app.add_api_route("/addToTeam", self.addToTeam, methods=["POST"])
-        self.app.add_api_route("/removeFromTeam", self.removeFromTeam, methods=["GET"])
-        self.app.add_api_route("/updateRoles", self.updateRoles, methods=["POST"])
+
+        # user routes
+        self.app.add_api_route("/getTeamFields", self.getTeamFields, methods=["GET"])
+        self.app.add_api_route("/getTeamFieldData", self.getTeamFieldData, methods=["GET"])
+        # self.app.add_api_route("/addToTeam", self.addToTeam, methods=["POST"]) # TODO: Test this route
+        # self.app.add_api_route("/removeFromTeam", self.removeFromTeam, methods=["GET"]) # TODO: Test this route
+        # self.app.add_api_route("/updateRoles", self.updateRoles, methods=["POST"]) # TODO: Test this route
 
         # /getTeamId
-        self.app.add_api_route("/getTeamId", self.sb.getTeamId, methods=["GET"])
+        self.app.add_api_route("/getTeamId", self.getTeamId, methods=["GET"]) # TODO: Test this route
 
         # model routes
-        self.app.add_api_route("/predict", self.predict, methods=["POST"])
-        self.app.add_api_route("/calculateHealth", self.calculateHealth, methods=["GET"])
-
-        # recent n entries
-        self.app.add_api_route("/getRecentEntries", self.sb.getRecentEntries, methods=["GET"])
-
-        # testing routes    
-        self.app.add_api_route("/test", self.test, methods=["GET"])
+        self.app.add_api_route("/aggregate", self.aggregate, methods=["GET"]) # TODO: Test this route
+        self.app.add_api_route("/predict", self.predict, methods=["GET"]) # TODO: Test this route
+        self.app.add_api_route("/train", self.train, methods=["GET"]) # TODO: Test this route
                                
     def main(self, request: Request):
         return {
@@ -59,11 +54,11 @@ class API:
             "Link to Documentation": "https://documenter.getpostman.com/view/26558432/2sA3Qwaoyd"
         }
 
-    def getFieldInfo(self, request: Request, fieldid: int = 0):
-        return self.sb.getFieldInfo(str(fieldid))
+    def getFieldInfo(self, request: Request, field_id: str):
+        return self.sb.getFieldInfo(str(field_id))
 
-    def getFieldData(self, request: Request, fieldid: int = 0):
-        return self.sb.getFieldData(str(fieldid))
+    def getFieldData(self, request: Request, field_id: str, input_date: str):
+        return self.sb.getFieldData(field_id, input_date)
 
     def createField(self, request: Request, fieldInfo: Field):
         return self.sb.createField(fieldInfo)
@@ -74,45 +69,49 @@ class API:
     def deleteField(self, request: Request, field_id: dict):
         return self.sb.deleteField(field_id.get("field_id"))
 
-    def createEntry(self, request: Request, entryInfo: Entry):
-        return self.sb.createEntry(entryInfo)
-
+    # entry routes
     def updateEntry(self, request: Request, entryInfo: Entry):
         return self.sb.updateEntry(entryInfo)
 
-    def deleteEntry(self, request: Request, entry_id: dict):
-        return self.sb.deleteEntry(entry_id.get("entry_id"))
-    
-    def test(self, request: Request):
-        return self.sb.test()
+    def getTeamFields(self, request: Request, team_id: str):
+        return self.sb.getTeamFields(team_id)
 
-    def getUserFields(self, request: Request, userid: str):
-        return self.sb.getUserFields(userid)
+    # team routes # * DEMO 4
+    # def addToTeam(self, request: Request, team: dict):
+    #     return self.sb.addToTeam(team)
+    
+    # def removeFromTeam(self, request: Request, user_id: str):
+    #     return self.sb.removeFromTeam(user_id)
 
-    # add to team, remove from team, update profiles (update email).
-    def addToTeam(self, request: Request, team: dict):
-        return self.sb.addToTeam(team)
-    
-    def removeFromTeam(self, request: Request, user_id: str):
-        return self.sb.removeFromTeam(user_id)
-    #update roles
-    def updateRoles(self, request: Request, user: dict):
-        return self.sb.updateRoles(user)
-    
-    # get team id
+    # def updateRoles(self, request: Request, user: dict):
+    #     return self.sb.updateRoles(user)
+
     def getTeamId(self, request: Request, user_id: str):
         return self.sb.getTeamId(user_id)
     
+    def getTeamFieldData(self, request: Request, team_id: str, n : int = -1):
+        return self.sb.getTeamFieldData(team_id, n)
+    
     # model routes
-    def predict(self, request: Request, data: dict):
-        return self.ml.predict(data.get("data"), data.get("crop"), data.get("hectare"))
+    def aggregate(self, request: Request):
+        return self.sb.aggregate()
     
-    def calculateHealth(self, request: Request, crop: str, n: int):
-        return self.ml.calculateHealth(crop, n)
+    def predict(self, request: Request, field_id: str = None, batch: bool = False):
+        if batch:
+            return self.ml.predict_all()
+        return self.ml.predict(field_id)
     
-    def getRecentEntries(self, request: Request, n: int):
-        return self.sb.getRecentEntries(n)
-    
+    def train(self, request: Request, field_id: str = None, crop: str = None, batch: bool = False):
+        if batch:
+            return self.ml.train_all()
+        return self.ml.train(field_id, crop)
 
 api_instance = API()
 app = api_instance.app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

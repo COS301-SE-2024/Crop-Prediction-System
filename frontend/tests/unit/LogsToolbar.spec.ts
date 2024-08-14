@@ -1,13 +1,22 @@
 // @vitest-environment nuxt
-import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { it, expect, describe } from 'vitest'
-import logsToolbar from '~/components/LogsToolbar.vue'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { shallowMount } from '@vue/test-utils'
+import LogsToolbar from '~/components/LogsToolbar.vue' // Adjust the import path accordingly
 
-describe('Sidebar', () => {
-	it('can mount the component', async () => {
-		// const component = await mountSuspended(logsToolbar)
-		// expect(component.exists()).toBe(true)
-		expect(true).toBe(true)
-		// ! need to fix this test so that component can be mounted
+describe('LogsToolbar', () => {
+	let wrapper
+
+	beforeEach(() => {
+		wrapper = shallowMount(LogsToolbar, {
+			global: {
+				mocks: {
+					$fetch: vi.fn(),
+				},
+			},
+		})
+	})
+
+	it('should mount the component', () => {
+		expect(wrapper.exists()).toBe(true)
 	})
 })

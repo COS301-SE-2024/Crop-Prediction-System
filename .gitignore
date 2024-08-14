@@ -68,3 +68,6 @@ big_data/
 
 # coverage
 coverage/
+
+# Models
+backend/*.json
