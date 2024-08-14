@@ -31,8 +31,8 @@ class Model:
         return {"status": "All fields predicted successfully"}
 
     # Load data
-    def load_data(self, field_id = None, crop = None) -> pd.DataFrame:
-        if field_id == None and crop == None:
+    def load_data(self, field_id = None, crop : Crop = None) -> pd.DataFrame:
+        if field_id == None and crop.name == None:
             return {"error": "Both Field ID and crop name cannot be empty."}
         try:
             model_data = self.load_model_data(field_id)
@@ -40,7 +40,7 @@ class Model:
                 return model_data  # Return the error message if data loading failed
             
             c = None
-            if crop == None:
+            if crop.name == None:
                 print("Crop name not provided. Using field ID to determine crop.", flush=True)
                 f = self.sf.getFieldInfo(field_id)
                 print(f, flush=True)

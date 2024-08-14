@@ -80,7 +80,7 @@ const teamId = await $fetch('/api/getTeamID', {
 })
 
 let userFields = []
-const userFieldsResponse = await $fetch('/api/getUserFields', {
+const userFieldsResponse = await $fetch('/api/getTeamFields', {
 	params: { team_id: teamId.team_id },
 })
 
@@ -112,7 +112,6 @@ function getCurrentDateApiRequestFormatted() {
 	const day = String(date.getDate()).padStart(2, '0')
 	return `${year}-${month}-${day}`
 }
-console.log('Polar Stat Data', recentEntries[0]['soil_moisture'])
 
 const soilMoistureChartData = ref({})
 const soilTemperatureChartData = ref({})
