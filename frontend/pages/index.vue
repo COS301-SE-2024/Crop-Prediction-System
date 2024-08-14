@@ -80,7 +80,7 @@ const teamId = await $fetch('/api/getTeamID', {
 })
 
 let userFields = []
-const userFieldsResponse = await $fetch('/api/getUserFields', {
+const userFieldsResponse = await $fetch('/api/getTeamFields', {
 	params: { team_id: teamId.team_id },
 })
 
