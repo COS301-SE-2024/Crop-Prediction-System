@@ -2,12 +2,12 @@
 	<div class="flex justify-content-center w-full">
 		<OverlayPanel ref="op">
 			<div class="flex flex-col w-full">
-				<Menu :model="items" />
+				<Menu :model="items" class="w-full" />
 			</div>
 		</OverlayPanel>
 		<div
 			class="w-full flex flex-row gap-3 items-center dark:hover:bg-surface-400/10 hover:bg-surface-100 cursor-pointer p-2 rounded-lg"
-			@click="toggle()"
+			@click="toggle"
 		>
 			<Avatar icon="pi pi-user" size="large" shape="circle" />
 			<h1>{{ props.email }}</h1>
@@ -38,7 +38,7 @@ const items = ref([
 		label: 'Settings',
 		icon: 'pi pi-cog',
 		command: () => {
-			window.location.href = '/settings'
+			navigateTo('/settings')
 		},
 	},
 	{
