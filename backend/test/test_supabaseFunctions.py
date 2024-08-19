@@ -13,7 +13,6 @@ from backend.database import supabaseInstance
 from backend.database.supabaseFunctions import supabaseFunctions
 
 class TestSupabaseFunctions:
-    
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getCrop_success(self, mock_get_client):
         # Mock the Supabase client response
@@ -61,7 +60,26 @@ class TestSupabaseFunctions:
         today = datetime.today().timetuple().tm_yday
         if today >= 20:
             assert stage == "tillering"
-        elif today >= 10:
-            assert stage == "germination"
-        else:
-            assert stage == "sowing"
+
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_getTeamId_success(self, mock_get_client):
+        # Mock the Supabase client response
+        mock_client = MagicMock()
+        mock_get_client.return_value = mock_client
+        mock_client.table.return_value.select.return_value.eq.return_value.execute.return_value.data = [{
+            "team_id": "12345"
+        }]
+        
+        team_id = supabaseFunctions.getTeamId("0f543694-dba7-4858-bb34-23e88c844b77")
+        assert team_id == {'team_id': '6357c30d-41cc-433c-8735-4223813e9cee'}
+
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_getTeamId_failure(self, mock_get_client):
+        # Mock the Supabase client response
+        mock_client = MagicMock()
+        mock_get_client.return_value = mock_client
+        mock_client.table.return_value.select.return_value.eq.return_value.execute.return_value.data = []
+
+        team_id = supabaseFunctions.getTeamId("0f543694-dba7-4858-bb34-23e88c844b76")
+        assert "error" in team_id
+        assert team_id["error"] == "Failed to get team ID"

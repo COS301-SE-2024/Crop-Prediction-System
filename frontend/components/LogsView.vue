@@ -56,7 +56,9 @@
 				</div>
 			</div>
 		</template>
-		<template #empty> <p class="text-red-500">No data entries found.</p> </template>
+		<template #empty>
+			<p class="text-red-500">No data entries found.</p>
+		</template>
 		<template #loading> Loading data entries. Please wait.</template>
 		<Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
 		<Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header" sortable></Column>
@@ -127,7 +129,7 @@ const fetchEntryData = async () => {
 		params: { userid: user?.value?.id },
 	})
 
-	const entryData = await $fetch('/api/getTeamFieldsData', {
+	const entryData = await $fetch('/api/getTeamFieldData', {
 		params: { team_id: teamID.team_id },
 	})
 

@@ -50,10 +50,6 @@ const signInWithOauth = async () => {
 	}
 }
 
-if (user.value) {
-	console.log("I'm in here")
-}
-
 definePageMeta({
 	layout: 'auth',
 })
