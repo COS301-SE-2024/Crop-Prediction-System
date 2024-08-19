@@ -50,10 +50,7 @@
 <script setup lang="ts">
 import Sidebar from '../components/Sidebar.vue'
 import { ref } from 'vue'
-// import Button from 'primevue/button'
 import OverlayPanel from 'primevue/overlaypanel'
-// import ToggleButton from 'primevue/togglebutton'
-// import { useColorMode } from '@vueuse/core'
 
 const user = useSupabaseUser()
 const client = useSupabaseClient()
@@ -154,4 +151,13 @@ type Theme = 'light' | 'dark'
 const setColorTheme = (newTheme: Theme) => {
 	useColorMode().preference = newTheme
 }
+
+onMounted(() => {
+  // Ensure the theme is correctly initialized on the first load
+  if (useColorMode().preference === 'system' && typeof window !== 'undefined') {
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    setColorTheme(systemTheme)
+  }
+})
+
 </script>
