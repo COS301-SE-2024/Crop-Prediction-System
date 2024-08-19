@@ -55,7 +55,14 @@
 							</p>
 						</Dialog>
 					</div>
-					<Chart type="line" :data="lineChartData" :options="lineChartOptions" class="h-34 w-full" />
+					<Chart
+						v-if="internalSelectedField !== null"
+						type="line"
+						:data="lineChartData"
+						:options="lineChartOptions"
+						class="h-[150px] w-full"
+					/>
+					<Skeleton v-if="internalSelectedField === null" height="150px"></Skeleton>
 				</div>
 				<div class="flex flex-col gap-2 justify-between items-center w-full">
 					<div class="flex flex-row justify-center items-center gap-4">
@@ -97,7 +104,14 @@
 							</div>
 						</Dialog>
 					</div>
-					<Chart type="bar" :data="barChartData" :options="barChartOptions" class="h-34 w-full" />
+					<Chart
+						v-if="internalSelectedField !== null"
+						type="bar"
+						:data="barChartData"
+						:options="barChartOptions"
+						class="h-[150px] w-full"
+					/>
+					<Skeleton v-if="internalSelectedField === null" height="150px"></Skeleton>
 					<CustomLegend />
 				</div>
 			</div>
@@ -107,6 +121,7 @@
 
 <script setup lang="ts">
 import { ref, watch, computed, onMounted } from 'vue'
+import Skeleton from 'primevue/skeleton'
 import Card from 'primevue/card'
 import Dropdown from 'primevue/dropdown'
 import Chart from 'primevue/chart'
@@ -374,6 +389,7 @@ const healthStatus = computed(() => {
 	0% {
 		transform: rotate(0deg);
 	}
+
 	100% {
 		transform: rotate(360deg);
 	}

@@ -14,12 +14,9 @@
 					/>
 				</div>
 			</div>
-
-			<!-- Render the Fieldset and StatsCards even if no field is selected -->
 			<div class="w-full">
 				<Fieldset legend="View More Statistics" :toggleable="true" collapsed>
-					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-						<!-- These StatsCard components will render, but they may not show any data if selectedField is null -->
+					<div v-if="selectedField" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 						<StatsCard title="Soil Moisture" :chartData="soilMoistureChartData" />
 						<StatsCard title="Soil Temperature" :chartData="soilTemperatureChartData" />
 						<StatsCard title="Temperature" :chartData="temperatureChartData" />
@@ -28,9 +25,9 @@
 						<StatsCard title="Pressure" :chartData="pressureChartData" />
 						<StatsCard title="UV Index" :chartData="uvChartData" />
 					</div>
+					<Skeleton v-if="!selectedField" height="200px"></Skeleton>
 				</Fieldset>
 			</div>
-			<!-- Show a message if no fields are available -->
 			<div v-if="userFieldsWithData.length === 0">
 				<p class="text-center text-gray-500">You have no fields available.</p>
 			</div>
