@@ -17,7 +17,7 @@
 		</Dialog>
 
 		<ConfirmDialog />
-		<div class="_flex-grow h-full bg-terrabyte-green-dark">
+		<div class="p-3 border border-surface-300 rounded-md dark:border-surface-600">
 			<GoogleMap ref="googleMapRef" :isDrawingEnabled="isDrawingEnabled" @polygonDrawn="handlePolygonDrawn" />
 		</div>
 	</div>
