@@ -41,7 +41,7 @@ const signInWithOauth = async () => {
 		const { error } = await client.auth.signInWithOAuth({
 			provider: 'google',
 			options: {
-				redirectTo: `https://terrabyte.software/confirm/`,
+				redirectTo: `http://localhost:3000/confirm/`,
 			},
 		})
 		if (error) throw error
