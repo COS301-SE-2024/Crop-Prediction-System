@@ -132,18 +132,11 @@ const activeTabIndex = ref(0)
 const supabase = useSupabaseClient()
 
 const user = useSupabaseUser()
-console.log('User: ', user.value)
 const { data } = await supabase.from('profiles').select('full_name, email').eq('id', user.value.id)
-
-console.log('Profile: ', data)
 
 const first_name = ref('')
 const last_name = ref('')
 const email = ref(user.value?.email)
-
-console.log('First Name', first_name.value)
-console.log('Last Name', last_name.value)
-console.log('Email', email.value)
 
 const cancelEditProfileRequest = () => {
 	first_name.value = user.value?.user_metadata.full_name.split(' ')[0]
@@ -238,7 +231,6 @@ async function updateUserProfile() {
 			email: email.value,
 		}
 
-		// console.log('Updates: ', updates)
 		const { error } = await supabase.from('profiles').upsert(updates, { returning: 'minimal' })
 		if (error) throw error
 	} catch (error) {
