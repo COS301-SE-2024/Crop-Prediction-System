@@ -1,5 +1,5 @@
 <template>
-	<div class="flex w-full justify-center items-start px-4 sm:px-4 md:px-0 lg:px-0 py-4 sm:py-4 md:py-0 lg:py-0">
+	<div class="flex w-full justify-center items-start">
 		<div class="flex flex-col justify-start items-start gap-4 w-full">
 			<!-- Ensure that FieldCard and GoogleMapsField are rendered even if userFieldsWithData is empty -->
 			<div class="flex flex-col md:flex-row w-full gap-5">
