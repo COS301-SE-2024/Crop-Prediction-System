@@ -1,5 +1,8 @@
 <template>
-	<div class="h-full w-full" ref="mapContainer"></div>
+	<div class="w-full h-full">
+		<Skeleton v-show="loading" width="100%" height="100%" animation="wave" />
+		<div v-show="!loading" class="h-full w-full" ref="mapContainer"></div>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -22,6 +25,7 @@ const mapsLoader = useNuxtApp().$mapsLoader
 const mapContainer = ref(null)
 let map = null
 let polygons = ref<google.maps.Polygon[]>([])
+const loading = ref(true)
 
 const defaultPolygonOptions = {
 	fillColor: '#ba55f4', // Green fill color for unselected fields
@@ -44,8 +48,13 @@ const selectedPolygonOptions = {
 }
 
 onMounted(async () => {
-	await mapsLoader.load()
-	initializeMap()
+	try {
+		await mapsLoader.load()
+		initializeMap()
+		drawPolygons(props.fields)
+	} finally {
+		loading.value = false
+	}
 
 	watch(
 		() => props.selectedField,
@@ -55,8 +64,6 @@ onMounted(async () => {
 			}
 		},
 	)
-
-	drawPolygons(props.fields)
 })
 
 function initializeMap() {
