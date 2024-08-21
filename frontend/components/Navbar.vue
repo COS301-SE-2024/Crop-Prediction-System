@@ -72,14 +72,14 @@ const items = computed(() => [
 		label: 'Manage Teams',
 		icon: 'pi pi-users',
 		command: () => {
-			window.location.href = '/teams'
+			window.location.href = '/team/manage'
 		},
 	},
 	{
 		label: 'IoT Devices',
 		icon: 'pi pi-globe',
 		command: () => {
-			window.location.href = '/devices'
+			window.location.href = '/settings'
 		},
 	},
 	{
