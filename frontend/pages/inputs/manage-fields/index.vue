@@ -18,7 +18,12 @@
 
 		<ConfirmDialog />
 		<div class="p-3 border border-surface-300 rounded-md dark:border-surface-600">
-			<GoogleMap ref="googleMapRef" :isDrawingEnabled="isDrawingEnabled" @polygonDrawn="handlePolygonDrawn" />
+			<GoogleMap
+				class="h-[40rem]"
+				ref="googleMapRef"
+				:isDrawingEnabled="isDrawingEnabled"
+				@polygonDrawn="handlePolygonDrawn"
+			/>
 		</div>
 	</div>
 </template>
@@ -27,7 +32,6 @@
 import { ref } from 'vue'
 import GoogleMap from '~/components/GoogleMap.vue'
 import { useConfirm } from 'primevue/useconfirm'
-import FieldTable from '~/components/FieldTable.vue'
 
 // get userID
 const currentUser = useSupabaseUser()
