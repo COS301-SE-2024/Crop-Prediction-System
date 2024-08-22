@@ -266,7 +266,7 @@ const setChartOptions = () => {
 					autoSkip: false,
 				},
 				grid: {
-					color: 'rgba(192, 192, 192, 0.3)',
+					color: 'rgba(192, 192, 192, 0.5)',
 					display: true,
 				},
 			},
@@ -276,7 +276,7 @@ const setChartOptions = () => {
 					stepSize: 10,
 				},
 				grid: {
-					color: 'rgba(192, 192, 192, 0.3)',
+					color: 'rgba(192, 192, 192, 0.5)',
 					display: true,
 				},
 			},
@@ -299,7 +299,7 @@ const setBarChartOptions = () => {
 					autoSkip: false,
 				},
 				grid: {
-					color: 'rgba(192, 192, 192, 0.3)',
+					color: 'rgba(192, 192, 192, 0.5)',
 					display: true,
 				},
 			},
@@ -309,7 +309,7 @@ const setBarChartOptions = () => {
 					stepSize: 10,
 				},
 				grid: {
-					color: 'rgba(192, 192, 192, 0.3)',
+					color: 'rgba(192, 192, 192, 0.5)',
 					display: true,
 				},
 			},
@@ -358,7 +358,7 @@ function calculateYield() {
 // Computed property to get the current day's health status and determine the tag
 const healthStatus = computed(() => {
 	if (!internalSelectedField.value || !internalSelectedField.value.data) {
-		return { value: 'Unknown', severity: 'secondary' }
+		return { value: 'Select Field', severity: 'contrast' }
 	}
 
 	const currentDate = getCurrentDateFormatted()

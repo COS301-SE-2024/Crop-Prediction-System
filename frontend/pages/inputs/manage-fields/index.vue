@@ -1,5 +1,5 @@
 <template>
-	<div class="h-full w-full flex flex-col gap-5 px-4 sm:px-6 md:px-8 lg:px-0 py-4 sm:py-6 md:py-8 lg:py-0">
+	<div class="h-full w-full flex flex-col gap-5">
 		<div class="flex flex-row justify-between items-center _mb-4">
 			<span class="font-bold text-xl dark:text-white">Fields</span>
 			<Button label="Add Field" @click="isDialogVisible = true" />
@@ -18,7 +18,12 @@
 
 		<ConfirmDialog />
 		<div class="p-3 border border-surface-300 rounded-md dark:border-surface-600">
-			<GoogleMap ref="googleMapRef" :isDrawingEnabled="isDrawingEnabled" @polygonDrawn="handlePolygonDrawn" />
+			<GoogleMap
+				class="h-[40rem]"
+				ref="googleMapRef"
+				:isDrawingEnabled="isDrawingEnabled"
+				@polygonDrawn="handlePolygonDrawn"
+			/>
 		</div>
 	</div>
 </template>
@@ -89,7 +94,7 @@ const showConfirmationDialog = () => {
 }
 
 const teamID = await $fetch('/api/getTeamID', {
-	params: { userid: currentUser?.value.id },
+	params: { userid: currentUser?.value?.id },
 })
 
 console.log(teamID.team_id)
@@ -146,13 +151,4 @@ const saveField = async () => {
 const userFields = await $fetch('/api/getTeamFields', {
 	params: { team_id: teamID.team_id },
 })
-
-console.log('User Fields: ', userFields)
 </script>
-
-<style>
-.card {
-	max-width: 800px;
-	margin: 0 auto;
-}
-</style>

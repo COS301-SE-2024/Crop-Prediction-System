@@ -1,10 +1,10 @@
 <template>
-	<div class="w-full flex flex-col justify-between gap-4 items-center">
+	<div class="w-full flex h-full flex-col justify-between gap-4 items-center">
 		<!-- PrimeVue Input -->
 		<InputText v-model="searchQuery" id="search-input" class="w-full" placeholder="Search for a place" />
 
 		<!-- Map Container -->
-		<div class="md:h-[500px] h-[35rem] w-full _sm:h-[200px] _md:h-[850px] rounded-md" ref="mapContainer"></div>
+		<div class="h-full w-full _sm:h-[200px] _md:h-[850px] rounded-md" ref="mapContainer"></div>
 	</div>
 </template>
 

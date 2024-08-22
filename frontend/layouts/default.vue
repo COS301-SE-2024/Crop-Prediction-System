@@ -6,7 +6,7 @@
 				<Navbar />
 			</header>
 			<!-- </div> -->
-			<div class="sm:p-5">
+			<div class="p-4">
 				<slot />
 			</div>
 		</div>
