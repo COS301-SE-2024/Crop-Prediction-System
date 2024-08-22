@@ -266,7 +266,7 @@ const setChartOptions = () => {
 					autoSkip: false,
 				},
 				grid: {
-					color: 'rgba(192, 192, 192, 0.3)',
+					color: 'rgba(192, 192, 192, 0.5)',
 					display: true,
 				},
 			},
@@ -276,7 +276,7 @@ const setChartOptions = () => {
 					stepSize: 10,
 				},
 				grid: {
-					color: 'rgba(192, 192, 192, 0.3)',
+					color: 'rgba(192, 192, 192, 0.5)',
 					display: true,
 				},
 			},
@@ -299,7 +299,7 @@ const setBarChartOptions = () => {
 					autoSkip: false,
 				},
 				grid: {
-					color: 'rgba(192, 192, 192, 0.3)',
+					color: 'rgba(192, 192, 192, 0.5)',
 					display: true,
 				},
 			},
@@ -309,7 +309,7 @@ const setBarChartOptions = () => {
 					stepSize: 10,
 				},
 				grid: {
-					color: 'rgba(192, 192, 192, 0.3)',
+					color: 'rgba(192, 192, 192, 0.5)',
 					display: true,
 				},
 			},
