@@ -358,7 +358,7 @@ function calculateYield() {
 // Computed property to get the current day's health status and determine the tag
 const healthStatus = computed(() => {
 	if (!internalSelectedField.value || !internalSelectedField.value.data) {
-		return { value: 'Select Field', severity: 'info' }
+		return { value: 'Select Field', severity: 'contrast' }
 	}
 
 	const currentDate = getCurrentDateFormatted()
