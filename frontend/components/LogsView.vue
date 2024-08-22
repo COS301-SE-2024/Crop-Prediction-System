@@ -57,7 +57,7 @@
 			</div>
 		</template>
 		<template #empty>
-			<Skeleton height="75px"></Skeleton>
+			<Skeleton height="20px"></Skeleton>
 		</template>
 		<template #loading> Loading data entries. Please wait.</template>
 		<Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
