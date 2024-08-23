@@ -65,21 +65,21 @@ const items = computed(() => [
 		label: user.value?.email,
 		icon: 'pi pi-user',
 		command: () => {
-			window.location.href = '/settings'
+			navigateTo('/settings')
 		},
 	},
 	{
 		label: 'Manage Teams',
 		icon: 'pi pi-users',
 		command: () => {
-			window.location.href = '/teams'
+			navigateTo('/team/manage')
 		},
 	},
 	{
 		label: 'IoT Devices',
 		icon: 'pi pi-globe',
 		command: () => {
-			window.location.href = '/devices'
+			navigateTo('/settings')
 		},
 	},
 	{
@@ -93,14 +93,14 @@ const items = computed(() => [
 		label: 'Help',
 		icon: 'pi pi-question-circle',
 		command: () => {
-			window.location.href = '/help'
+			navigateTo('/help')
 		},
 	},
 	{
 		label: 'Settings',
 		icon: 'pi pi-cog',
 		command: () => {
-			window.location.href = '/settings'
+			navigateTo('/settings')
 		},
 	},
 	{
