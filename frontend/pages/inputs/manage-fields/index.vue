@@ -91,6 +91,7 @@ import InputText from 'primevue/inputtext'
 // TODO: Add controls to edit field on map
 // TODO: Implement Edit Field put request functionality
 // TODO: Add drawing controls to GoogleMapsField on edit field
+// TODO: Add functionality to retrain selectedField or all fields
 
 // PERF: Get team_id and load fields
 const isLoading = ref(true)
