@@ -19,10 +19,8 @@
 
 		<div v-else class="grid lg:grid-cols-3 xl:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 w-full">
 			<Card v-for="field in filteredFields" :key="field.id">
-				<template #header>
-					<div class="text-center p-2">
-						<h2 class="text-2xl font-bold">{{ field.field_name }}</h2>
-					</div>
+				<template #title>
+					<h2 class="text-2xl font-bold">{{ field.field_name }}</h2>
 				</template>
 				<template #content>
 					<div class="text-gray-600 dark:text-gray-300 flex flex-col justify-between items-start gap-2">
