@@ -10,6 +10,15 @@
 				class="w-full sm:w-[250px]"
 				showClear
 			/>
+			<Button
+				label="Train All"
+				icon="pi pi-microchip-ai"
+				class="sm:w-auto w-full"
+				severity="secondary"
+				:loading="trainAllLoading"
+				@click="trainAllFields"
+				outlined
+			/>
 		</div>
 
 		<div v-if="isLoading" class="w-full h-full mt-48 gap-5 flex flex-col items-center justify-center">
@@ -20,7 +29,20 @@
 		<div v-else class="grid lg:grid-cols-3 xl:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 w-full">
 			<Card v-for="field in filteredFields" :key="field.id">
 				<template #title>
-					<h2 class="text-2xl font-bold">{{ field.field_name }}</h2>
+					<div class="flex flex-row justify-between items-center">
+						<h2 class="text-2xl font-bold">{{ field.field_name }}</h2>
+						<Button
+							:key="field.id"
+							:id="field.id"
+							size="small"
+							severity="secondary"
+							icon="pi pi-microchip-ai"
+							label="Train"
+							outlined
+							:loading="loadingStates.get(field.id) || false"
+							@click="trainingField(field)"
+						/>
+					</div>
 				</template>
 				<template #content>
 					<div class="text-gray-600 dark:text-gray-300 flex flex-col justify-between items-start gap-2">
@@ -64,7 +86,7 @@
 				</div>
 
 				<div class="flex flex-col gap-2 w-full">
-					<div class="w-full h-[400px] rounded overflow-hidden">
+					<div class="w-full h-[400px] md:h-[600px] rounded overflow-hidden">
 						<GoogleMapsField
 							:selectedField="selectedField"
 							:fields="teamFields"
@@ -85,13 +107,26 @@ import { useConfirm } from 'primevue/useconfirm'
 import Card from 'primevue/card'
 import GoogleMapsField from '~/components/GoogleMapsField.vue'
 import InputText from 'primevue/inputtext'
+import Button from 'primevue/button'
+import { useToast } from 'primevue/usetoast'
 
-// TODO: Maybe add toasts to notify users that they have updated or deleted a field
+// TODO: Implement Edit Field Functionality (with dialog to confirm)
+// TODO: Implement Delete Field Functionality (with dialog to confirm)
+// HACK: Maybe add toasts to notify users that they have updated or deleted a field
 // TODO: Move Add Field to a new page (with a search bar for places API)
 // TODO: Add controls to edit field on map
 // TODO: Implement Edit Field put request functionality
 // TODO: Add drawing controls to GoogleMapsField on edit field
-// TODO: Add functionality to retrain selectedField or all fields
+// TODO: Add functionality to 'Train' button on Cards to train fields
+// TODO: Add functionality to retrain all fields
+
+// PERF: Page Meta
+definePageMeta({
+	middleware: 'auth',
+})
+
+// INFO: toast initialize for messages
+const toast = useToast()
 
 // PERF: Get team_id and load fields
 const isLoading = ref(true)
@@ -156,6 +191,57 @@ watchEffect(() => {
 	})
 })
 
+// HACK: Loading state for field retraining, replace timeout with actual loading state
+// TODO: Replace with actual training calls to backend
+const loadingStates = ref(new Map())
+
+const showIndividualTrainSuccess = (field) => {
+	toast.add({
+		severity: 'success',
+		summary: 'Trained field',
+		detail: `You have successfully trained the field: ${field.field_name}`,
+		life: 3000,
+	})
+}
+
+const trainingField = (field) => {
+	loadingStates.value.set(field.id, true)
+	setTimeout(() => {
+		loadingStates.value.set(field.id, false)
+		showIndividualTrainSuccess(field)
+	}, 2000)
+}
+
+// HACK: Loading state for retraining all fields
+// TODO: Replace with actual training calls to backend
+const trainAllLoading = ref(false)
+
+const showAllTrainSuccess = () => {
+	toast.add({
+		severity: 'success',
+		summary: 'Trained all fields',
+		detail: 'You have successfully trained all fields',
+		life: 3000,
+	})
+}
+
+const trainAllFields = () => {
+	trainAllLoading.value = true
+
+	teamFields.value.forEach((field) => {
+		loadingStates.value.set(field.id, true)
+	})
+
+	setTimeout(() => {
+		teamFields.value.forEach((field) => {
+			loadingStates.value.set(field.id, false)
+		})
+		trainAllLoading.value = false
+		showAllTrainSuccess()
+	}, 2000)
+}
+
+// FIX: Revise a new way for the map functionality with drawing
 const googleMapRef = ref() // Reference to the GoogleMap component
 const isDialogVisible = ref(false)
 const isDrawingEnabled = ref(false)
@@ -251,9 +337,4 @@ function capitalizeFirstCharacter(str: string) {
 	if (!str) return '' // Handle empty strings
 	return str.charAt(0).toUpperCase() + str.slice(1)
 }
-
-// PERF: Page Meta
-definePageMeta({
-	middleware: 'auth',
-})
 </script>
