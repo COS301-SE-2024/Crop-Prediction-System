@@ -32,7 +32,7 @@ export default {
         ]
     },
     content: {
-        class: 'py-5' // Vertical padding.
+        class: 'py-0' // Vertical padding.
     },
     footer: {
         class: 'pt-5' // Top padding.
