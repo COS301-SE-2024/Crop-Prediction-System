@@ -2,7 +2,7 @@ name: Automated Integration tests using Postman CLI
 
 on:
   pull_request:
-    branches: [main, dev]
+    branches: [main, dev, feature/backend/**]
 
 jobs:
   automated-integration-tests:
