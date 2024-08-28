@@ -8,6 +8,7 @@
 					optionLabel="field_name"
 					placeholder="Select a Field"
 					checkmark
+					filter
 					:highlightOnSelect="false"
 					class="w-full"
 				/>
@@ -66,7 +67,7 @@
 				</div>
 				<div class="flex flex-col gap-2 justify-between items-center w-full">
 					<div class="flex flex-row justify-center items-center gap-4">
-						<h3 class="font-semibold text-lg">Precipitation (mm) and Sprayability</h3>
+						<h3 class="font-semibold text-lg">Sprayability and Precipitation (mm)</h3>
 						<Button
 							icon="pi pi-question-circle"
 							rounded
