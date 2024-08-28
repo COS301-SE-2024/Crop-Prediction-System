@@ -55,6 +55,8 @@ import OverlayPanel from 'primevue/overlaypanel'
 const user = useSupabaseUser()
 const client = useSupabaseClient()
 
+const colorMode = useColorMode()
+
 const settingsSwitch = ref(false)
 
 const op = ref<OverlayPanel | null>(null)
@@ -84,9 +86,9 @@ const items = computed(() => [
 	},
 	{
 		label: 'Toggle Theme',
-		icon: useColorMode().preference == 'dark' ? 'pi pi-sun' : 'pi pi-moon',
+		icon: colorMode.preference == 'dark' ? 'pi pi-sun' : 'pi pi-moon',
 		command: () => {
-			setColorTheme(useColorMode().preference == 'dark' ? 'light' : 'dark')
+			setColorTheme(colorMode.preference == 'dark' ? 'light' : 'dark')
 		},
 	},
 	{
@@ -146,18 +148,16 @@ const signOut = async () => {
 	}
 }
 
-type Theme = 'light' | 'dark'
-
-const setColorTheme = (newTheme: Theme) => {
-	useColorMode().preference = newTheme
-}
-
 onMounted(() => {
-  // Ensure the theme is correctly initialized on the first load
-  if (useColorMode().preference === 'system' && typeof window !== 'undefined') {
+  if (colorMode && colorMode.preference === 'system' && typeof window !== 'undefined') {
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-    setColorTheme(systemTheme)
+	console.log(colorMode)
   }
 })
 
+const setColorTheme = (newTheme: 'light' | 'dark') => {
+  if (colorMode) {
+    colorMode.preference = newTheme
+  }
+}
 </script>
