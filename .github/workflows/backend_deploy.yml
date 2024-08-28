@@ -3,7 +3,7 @@ name: Deploy Backend
 on:
   push:
     branches:
-      - feature/backend/API
+      - feature/API
 
 jobs:
   #   upgrade_pip:
