@@ -48,6 +48,9 @@ class API:
         self.app.add_api_route("/predict", self.predict, methods=["GET"]) # TODO: Test this route
         self.app.add_api_route("/train", self.train, methods=["GET"]) # TODO: Test this route
                                
+        #sensor routes
+        self.app.add_api_route("/storeUPSensorData", self.storeUPSensorData, methods=["GET"])
+
     def main(self, request: Request):
         return {
             "Welcome": "Welcome to the TerraByte API",
@@ -105,6 +108,10 @@ class API:
         if batch:
             return self.ml.train_all()
         return self.ml.train(field_id, crop)
+
+    # sensor routes
+    def storeUPSensorData(self, request: Request, sensorID: str = None):
+        return self.sb.createUpSensorData(sensorID)
 
 api_instance = API()
 app = api_instance.app

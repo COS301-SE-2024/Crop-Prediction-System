@@ -9,6 +9,7 @@ from backend.logic.calculateHectare import calculate_hectares_from_coordinates
 from backend.logic.aggregate import Aggregate
 import datetime
 from collections import defaultdict
+from backend.sensors.getData import getNewSensorData
 
 class supabaseFunctions:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
@@ -369,8 +370,9 @@ class supabaseFunctions:
     #         return {"error": "Failed to insert sensor data", "error_message": str(e)}
 
         @staticmethod
-        def createUpSensorData(sensor_data: dict):
+        def createUpSensorData(sensorID: str):
             try:
+                sensor_data = getNewSensorData(sensorID, 1)
                 # Extract soil_temperature, soil_moisture, temperature, relative_humidity, received_at from the dictionary
                 row = sensor_data['data']['queryTable']['rows'][0]
                 values = {column['key']: column['value'] for column in row['columns']}
