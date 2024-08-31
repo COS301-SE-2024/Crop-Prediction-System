@@ -374,19 +374,23 @@ class supabaseFunctions:
                 # Extract soil_temperature, soil_moisture, temperature, relative_humidity, received_at from the dictionary
                 row = sensor_data['data']['queryTable']['rows'][0]
                 values = {column['key']: column['value'] for column in row['columns']}
+                device_eui = values.get('device_eui')
                 soil_temperature = values.get('soil_temperature')
                 soil_moisture = values.get('soil_moisture')
                 temperature = values.get('temperature')
                 relative_humidity = values.get('relative_humidity')
+                battery = values.get('battery')
                 received_at = values.get('received_at')
 
 
-                response = supabaseFunctions.__sbClient.table("field_data").insert({
+                response = supabaseFunctions.__sbClient.table("up_sensor_data").insert({
+                    "device_eui": device_eui,
                     "soil_temperature": soil_temperature,
                     "soil_moisture": soil_moisture,
-                    "tempmean": temperature,
+                    "temperature": temperature,
                     "humidity": relative_humidity,
-                    "date": received_at
+                    "battery": battery,
+                    "received_at": received_at
                 }).execute()
 
                 if response.error:
