@@ -53,3 +53,25 @@ with open(f"dump.json", "w") as f:
     json.dump(r.json(), f, indent=4)
 
 print(r.json())
+
+def getNewSensorData(sensorID: str, number_of_rows: int = 1):
+    request = {
+        "request": {
+            "select": [{"column": "id"}, {"column": "device_eui"}, {"column": "soil_temperature"}, {"column": "soil_moisture"}, {"column": "temperature"}, {"column": "relative_humidity"}, {"column": "light"}, {"column": "co2"}, {"column": "battery"}, {"column": "received_at"}],
+            "from": "clid3g4xn000hs601tz9hr3rw.\"sensecap_data_dump\"",
+            "where": {
+                "args": [
+                    "device_eui",
+                    sensorID
+                ],
+                "operation": "IN"},
+            "order": [
+                {"column": "received_at", "ascending": False}
+            ],
+            "limit": number_of_rows
+        }
+    }
+
+    r = requests.post(url, headers=headers, json={'query': query, 'variables': request})
+
+    return r.json()
