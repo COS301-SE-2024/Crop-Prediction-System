@@ -16,6 +16,7 @@
 				class="sm:w-auto w-full"
 				severity="secondary"
 				:loading="trainAllLoading"
+				:disabled="!checkTeamFields"
 				@click="trainAllFields"
 				outlined
 			/>
@@ -27,7 +28,10 @@
 		</div>
 
 		<div v-else class="grid lg:grid-cols-3 xl:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 w-full">
-			<Card v-for="field in filteredFields" :key="field.id">
+			<h2 class="dark:text-white font-bold text-xl col-span-12" v-if="!checkTeamFields">
+				Go to the add fields to start adding fields.
+			</h2>
+			<Card v-else v-for="field in filteredFields" :key="field.id">
 				<template #title>
 					<div class="flex flex-row justify-between items-center">
 						<h2 class="text-2xl font-bold">{{ field.field_name }}</h2>
@@ -40,7 +44,7 @@
 							label="Train"
 							outlined
 							:loading="loadingStates.get(field.id) || false"
-							@click="trainingField(field)"
+							@click="trainField(field)"
 						/>
 					</div>
 				</template>
@@ -103,7 +107,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useConfirm } from 'primevue/useconfirm'
 import Card from 'primevue/card'
 import GoogleMapsField from '~/components/GoogleMapsField.vue'
 import InputText from 'primevue/inputtext'
@@ -133,6 +136,7 @@ const isLoading = ref(true)
 const currentUser = useSupabaseUser()
 
 const teamFields = ref([])
+const checkTeamFields = ref(true)
 
 onMounted(async () => {
 	try {
@@ -141,11 +145,31 @@ onMounted(async () => {
 			params: { userid: currentUser?.value?.id },
 		})
 
-		teamFields.value = await $fetch('/api/getTeamFields', {
+		const response = await $fetch('/api/getTeamFields', {
 			params: { team_id: teamID.team_id },
 		})
+
+		// Check if the response contains an error
+		if (response.error) {
+			toast.add({
+				severity: 'info',
+				summary: 'No Fields Found',
+				detail: 'No fields are associated with this team.',
+				life: 3000,
+			})
+			teamFields.value = [] // Set teamFields to an empty array
+			checkTeamFields.value = false
+		} else {
+			teamFields.value = response
+		}
 	} catch (error) {
 		console.error('Error fetching user fields:', error)
+		toast.add({
+			severity: 'error',
+			summary: 'Error',
+			detail: 'An error occurred while fetching fields.',
+			life: 3000,
+		})
 	} finally {
 		isLoading.value = false
 	}
@@ -191,8 +215,7 @@ watchEffect(() => {
 	})
 })
 
-// HACK: Loading state for field retraining, replace timeout with actual loading state
-// TODO: Replace with actual training calls to backend
+// PERF: Training of individual fields
 const loadingStates = ref(new Map())
 
 const showIndividualTrainSuccess = (field) => {
@@ -204,132 +227,71 @@ const showIndividualTrainSuccess = (field) => {
 	})
 }
 
-const trainingField = (field) => {
-	loadingStates.value.set(field.id, true)
-	setTimeout(() => {
-		loadingStates.value.set(field.id, false)
-		showIndividualTrainSuccess(field)
-	}, 2000)
-}
-
-// HACK: Loading state for retraining all fields
-// TODO: Replace with actual training calls to backend
-const trainAllLoading = ref(false)
-
-const showAllTrainSuccess = () => {
+const showIndividualTrainFailure = (field) => {
 	toast.add({
-		severity: 'success',
-		summary: 'Trained all fields',
-		detail: 'You have successfully trained all fields',
+		severity: 'error',
+		summary: 'Training field failed',
+		detail: `The following field could not be trained: ${field.field_name}`,
 		life: 3000,
 	})
 }
 
-const trainAllFields = () => {
+async function trainField(field) {
+	loadingStates.value.set(field.id, true)
+	try {
+		await $fetch('/api/trainField', {
+			params: { field_id: field.id },
+		})
+	} catch (error) {
+		showIndividualTrainFailure(field)
+	} finally {
+		loadingStates.value.set(field.id, false)
+		showIndividualTrainSuccess(field)
+	}
+}
+
+// PERF: Training of all fields
+const trainAllLoading = ref(false)
+
+const showAllTrainSuccess = () => {
+	toast.add({
+		severity: 'info',
+		summary: 'Trained all fields',
+		detail: 'You have successfully trained all fields.',
+		life: 3000,
+	})
+}
+
+const showAllTrainFailure = () => {
+	toast.add({
+		severity: 'error',
+		summary: 'Training fields failed',
+		detail: `There was en error training all fields.`,
+		life: 3000,
+	})
+}
+
+const trainAllFields = async () => {
 	trainAllLoading.value = true
 
 	teamFields.value.forEach((field) => {
 		loadingStates.value.set(field.id, true)
 	})
 
-	setTimeout(() => {
+	try {
+		for (const field of teamFields.value) {
+			await trainField(field)
+		}
+	} catch (error) {
+		showAllTrainFailure()
+	} finally {
 		teamFields.value.forEach((field) => {
 			loadingStates.value.set(field.id, false)
 		})
 		trainAllLoading.value = false
-		showAllTrainSuccess()
-	}, 2000)
-}
-
-// FIX: Revise a new way for the map functionality with drawing
-const googleMapRef = ref() // Reference to the GoogleMap component
-const isDialogVisible = ref(false)
-const isDrawingEnabled = ref(false)
-const fieldName = ref('')
-
-const fieldsData = ref([])
-const confirm = useConfirm()
-const drawnPolygonPaths = ref<google.maps.LatLng[]>([])
-
-const proceedToDrawing = () => {
-	isDialogVisible.value = false
-	isDrawingEnabled.value = true // Enable drawing mode after saving details
-	googleMapRef.value.setDrawingMode(true)
-}
-
-const cancelAddField = () => {
-	isDialogVisible.value = false
-	isDrawingEnabled.value = false
-	googleMapRef.value.clearPolygon()
-}
-
-const handlePolygonDrawn = (paths: google.maps.LatLng[]) => {
-	drawnPolygonPaths.value = paths
-	isDrawingEnabled.value = false
-	googleMapRef.value.setDrawingMode(false)
-	showConfirmationDialog()
-}
-
-const showConfirmationDialog = () => {
-	confirm.require({
-		message: 'Are you sure you want to save this field?',
-		header: 'Confirmation',
-		icon: 'pi pi-exclamation-triangle',
-		accept: () => {
-			saveField()
-		},
-		reject: () => {
-			cancelAddField() // Clear the polygon and reset the dialog
-		},
-	})
-}
-
-const saveField = async () => {
-	if (drawnPolygonPaths.value.length > 0) {
-		fieldsData.value.push({
-			name: fieldName.value,
-			cropType: selectedCropType.value,
-			paths: drawnPolygonPaths.value.map((latLng) => [latLng.lat(), latLng.lng()]), // convert paths to array of arrays
-		})
-
-		const FieldsDataPaths: number[] = []
-		fieldsData.value.forEach((field: { name: string; cropType: { name: string }; paths: number[][] }) => {
-			field.paths.forEach((path: number[]) => {
-				FieldsDataPaths.push(...path)
-			})
-		})
-
-		// convert FieldsDataPaths to array of arrays
-		const coordinatesArray: number[][] = []
-		for (let index = 1; index < FieldsDataPaths.length; index += 2) {
-			const newPoint: number[] = [FieldsDataPaths[index - 1], FieldsDataPaths[index]]
-			console.log(`Adding new point: [${FieldsDataPaths[index - 1]}, ${FieldsDataPaths[index]}]`)
-			coordinatesArray.push(newPoint)
-		}
-
-		const returnData = {
-			field_name: fieldName.value,
-			crop_type: selectedCropType.value.name.toLowerCase(),
-			field_area: {
-				type: 'Polygon',
-				coordinates: coordinatesArray,
-			},
-			team_id: teamID.team_id,
-		}
-
-		console.log('Return Data:', returnData)
-		try {
-			const response = await $fetch('/api/createField', {
-				method: 'POST',
-				body: returnData,
-			})
-		} catch (error) {
-			console.error('Error:', error)
-		}
-
-		// Reset for the next field
-		fieldName.value = ''
-		selectedCropType.value = null
+		setTimeout(() => {
+			showAllTrainSuccess()
+		}, 3000)
 	}
 }
 
