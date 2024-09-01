@@ -8,7 +8,7 @@ import pandas as pd
 # information hub graphql playground
 # https://api.informationhub.io/graphql
 
-apiKey = process.env.SENSOR_API_KEY
+apiKey = os.environ.get("SENSOR_API_KEY")
 
 sensors = "'2CF7F12025200009', '2CF7F1202520006A', '2CF7F1202520010D', '2CF7F120252000E7'"
 
@@ -43,7 +43,7 @@ request = {
 
 headers = {"Authorization": "Bearer " + apiKey}
 
-url = process.env.SENSOR_API_URL
+url = os.environ.get("SENSOR_API_URL")
 
 r = requests.post(url, headers=headers, json={'query': query, 'variables': request})
 
