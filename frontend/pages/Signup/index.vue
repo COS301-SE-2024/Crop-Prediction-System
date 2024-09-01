@@ -30,6 +30,11 @@ async function signUp() {
 		const { error } = await client.auth.signUp({
 			email: userEmail.value,
 			password: password.value,
+			options: {
+				data: {
+					email: userEmail.value,
+				},
+			},
 		})
 		if (error) throw error
 		successMsg.value = 'Check your email to confirm your account.'
