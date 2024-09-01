@@ -6,7 +6,7 @@
                     "columns": [
                         {
                             "key": "id",
-                            "value": "3305425"
+                            "value": "3310930"
                         },
                         {
                             "key": "device_eui",
@@ -22,11 +22,11 @@
                         },
                         {
                             "key": "temperature",
-                            "value": "10.5"
+                            "value": "12.7"
                         },
                         {
                             "key": "relative_humidity",
-                            "value": "75.5"
+                            "value": "72.5"
                         },
                         {
                             "key": "light",
@@ -38,11 +38,11 @@
                         },
                         {
                             "key": "battery",
-                            "value": "100"
+                            "value": null
                         },
                         {
                             "key": "received_at",
-                            "value": "2024-08-31T19:49:44.226324345Z"
+                            "value": "2024-09-01T19:53:01.936967618Z"
                         }
                     ]
                 }
