@@ -36,12 +36,14 @@ const signIn = async () => {
 	}
 }
 
+const config = useRuntimeConfig()
+
 const signInWithOauth = async () => {
 	try {
 		const { error } = await client.auth.signInWithOAuth({
 			provider: 'google',
 			options: {
-				redirectTo: `http://localhost:3000/confirm/`,
+				redirectTo: `${config.public.appBaseUrl}/confirm/`,
 			},
 		})
 		if (error) throw error
