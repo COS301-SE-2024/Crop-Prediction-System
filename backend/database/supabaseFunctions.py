@@ -300,33 +300,33 @@ class supabaseFunctions:
             print(e)
             return {"error": "Failed to get team fields", "error_message": e}    
 
-    # @staticmethod
-    # def addToTeam(team: dict):
-    #     try:
-    #         supabaseFunctions.__sbClient.table("profiles").update({"team_id": team.get("team_id")}).eq("id", team.get("user_id")).execute()
-    #         return {"success": "Added to team"}
-    #     except Exception as e:
-    #         print(e)
-    #         return {"error": "Failed to add user to team", "error_message": e}
+    @staticmethod
+    def addToTeam(team: dict):
+        try:
+            supabaseFunctions.__sbClient.table("profiles").update({"team_id": team.get("team_id")}).eq("id", team.get("user_id")).execute()
+            return {"success": "Added to team"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to add user to team", "error_message": e}
 
-    # @staticmethod
-    # def removeFromTeam(user_id: str):
-    #     try:
-    #         response = supabaseFunctions.__sbClient.table("profiles").update({"team_id": None}).eq("id", user_id).execute()
-    #         print(response)
-    #         return {"success": "Removed from team"}
-    #     except Exception as e:
-    #         print(e)
-    #         return {"error": "Failed to remove from team", "error_message": e}
+    @staticmethod
+    def removeFromTeam(user_id: str):
+        try:
+            response = supabaseFunctions.__sbClient.table("profiles").update({"team_id": None}).eq("id", user_id).execute()
+            print(response)
+            return {"success": "Removed from team"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to remove from team", "error_message": e}
         
-    # @staticmethod
-    # def updateRoles(user: dict):
-    #     try:
-    #         supabaseFunctions.__sbClient.table("profiles").update({"role": user.get("role")}).eq("id", user.get("user_id")).execute()
-    #         return {"success": "Updated roles"}
-    #     except Exception as e:
-    #         print(e)
-    #         return {"error": "Failed to update roles", "error_message": e}
+    @staticmethod
+    def updateRoles(user: dict):
+        try:
+            supabaseFunctions.__sbClient.table("profiles").update({"role": user.get("role")}).eq("id", user.get("user_id")).execute()
+            return {"success": "Updated roles"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to update roles", "error_message": e}
         
     @staticmethod
     def getTeamId(user_id: str):
