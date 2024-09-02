@@ -19,23 +19,29 @@ import { ref } from 'vue'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 
-const email = ref(null)
-const currentUser = useSupabaseUser()
-console.log(currentUser.value)
-
-const teamID = await $fetch('/api/getTeamID', {
-	params: { userid: currentUser?.value?.id },
-})
-
-console.log(teamID.team_id)
-
-const send = async () => {
-	await $fetch('/api/send', {
-		params: { to: email.value, team_id: teamID.team_id },
-	})
-}
+const teamid = ref('')
 
 definePageMeta({
 	middleware: 'auth',
 })
+
+onMounted(async () => {
+	const currentUser = useSupabaseUser()
+	console.log(currentUser.value.id)
+
+	const teamID = await $fetch('/api/getTeamID', {
+		params: { userid: currentUser?.value?.id },
+	})
+
+	console.log(teamID.team_id)
+	teamid.value = teamID.team_id
+})
+
+const email = ref(null)
+
+const send = async () => {
+	await $fetch('/api/send', {
+		params: { to: email.value, team_id: teamid },
+	})
+}
 </script>
