@@ -110,7 +110,7 @@ class API:
         return self.ml.train(field_id, crop)
 
     # sensor routes
-    def storeUPSensorData(self, request: Request, sensorID: str = None):
+    def storeUPSensorData(self, request: Request, sensorID: str):
         return self.sb.createUpSensorData(sensorID)
 
 api_instance = API()
