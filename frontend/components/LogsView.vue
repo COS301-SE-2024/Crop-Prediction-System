@@ -2,10 +2,13 @@
 	<DataTable
 		v-model:value="entries"
 		ref="dataEntries"
+		scrollable
+		scrollHeight="450px"
+		size="small"
 		paginator
 		:rows="5"
 		:rowsPerPageOptions="[5, 10, 20, 50, 100]"
-		tableStyle="min-width: 50rem"
+		tableStyle="min-width: 70rem"
 		paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
 		currentPageReportTemplate="{first} to {last} of {totalRecords}"
 		v-model:selection="selectedDataEntries"
@@ -57,7 +60,7 @@
 			</div>
 		</template>
 		<template #empty>
-			<p class="text-red-500">No data entries found.</p>
+			<Skeleton height="20px"></Skeleton>
 		</template>
 		<template #loading> Loading data entries. Please wait.</template>
 		<Column selectionMode="multiple" headerStyle="width: 3rem"></Column>

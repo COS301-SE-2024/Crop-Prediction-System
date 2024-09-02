@@ -25,6 +25,7 @@
 		"nuxt-vitest": "^0.11.5",
 		"primeicons": "^7.0.0",
 		"primevue": "^3.52.0",
+		"resend": "^4.0.0",
 		"vue": "^3.4.27",
 		"vue-router": "^4.3.2"
 	},

@@ -1,44 +1,197 @@
 <template>
-	<div class="h-full w-full flex flex-col gap-5 px-4 sm:px-6 md:px-8 lg:px-0 py-4 sm:py-6 md:py-8 lg:py-0">
-		<div class="flex flex-row justify-between items-center _mb-4">
-			<span class="font-bold text-xl dark:text-white">Fields</span>
-			<Button label="Add Field" @click="isDialogVisible = true" />
+	<div class="h-full w-full flex flex-col items-center justify-center gap-5">
+		<div v-show="!isLoading" class="flex flex-col sm:flex-row justify-start items-center gap-4 mt-4 w-full">
+			<InputText v-model="searchQuery" placeholder="Search Field Name..." class="w-full sm:w-[375px]" />
+			<Dropdown
+				v-model="selectedCropType"
+				:options="cropOptions"
+				optionLabel="name"
+				placeholder="Filter by Crop Type"
+				class="w-full sm:w-[250px]"
+				showClear
+			/>
+			<Button
+				label="Train All"
+				icon="pi pi-microchip-ai"
+				class="sm:w-auto w-full"
+				severity="secondary"
+				:loading="trainAllLoading"
+				:disabled="!checkTeamFields"
+				@click="trainAllFields"
+				outlined
+			/>
 		</div>
 
-		<Dialog v-model:visible="isDialogVisible" header="Add Field" :modal="true" :style="{ width: '450px' }">
-			<div class="flex flex-col space-y-2 mb-4">
-				<InputText v-model="fieldName" placeholder="Field Name" />
-				<Dropdown v-model="selectedCropType" :options="cropOptions" optionLabel="name" placeholder="Crop Type" />
+		<div v-if="isLoading" class="w-full h-full mt-48 gap-5 flex flex-col items-center justify-center">
+			<ProgressSpinner />
+			<h2 class="dark:text-white font-bold">Fetching Fields...</h2>
+		</div>
+
+		<div v-else class="grid lg:grid-cols-3 xl:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 w-full">
+			<h2 class="dark:text-white font-bold text-xl col-span-12" v-if="!checkTeamFields">
+				Go to the add fields to start adding fields.
+			</h2>
+			<Card v-else v-for="field in filteredFields" :key="field.id">
+				<template #title>
+					<div class="flex flex-row justify-between items-center">
+						<h2 class="text-2xl font-bold">{{ field.field_name }}</h2>
+						<Button
+							:key="field.id"
+							:id="field.id"
+							size="small"
+							severity="secondary"
+							icon="pi pi-microchip-ai"
+							label="Train"
+							outlined
+							:loading="loadingStates.get(field.id) || false"
+							@click="trainField(field)"
+						/>
+					</div>
+				</template>
+				<template #content>
+					<div class="text-gray-600 dark:text-gray-300 flex flex-col justify-between items-start gap-2">
+						<span> <strong>Crop Type: </strong>{{ capitalizeFirstCharacter(field.crop_type) }}</span>
+						<span><strong>Field Size: </strong>{{ field.hectare.toFixed(2) }}ha</span>
+						<span><strong>Field ID: </strong>{{ field.id }}</span>
+					</div>
+				</template>
+				<template #footer>
+					<div class="flex gap-3">
+						<Button label="Delete" severity="danger" size="small" outlined class="w-full" />
+						<Button label="View or Edit" size="small" class="w-full" @click="editField(field)" />
+					</div>
+				</template>
+			</Card>
+		</div>
+
+		<Dialog
+			maximizable
+			modal
+			header="View/Edit Field"
+			v-model:visible="editAndViewVisible"
+			class="w-[95%] md:w-[740px] lg:w-[950px]"
+		>
+			<div class="flex flex-col justify-between items-start gap-4">
+				<div class="flex flex-col gap-2 w-full">
+					<label for="fieldname">Field Name</label>
+					<InputText id="fieldname" class="w-full sm:w-[250px]" :placeholder="selectedField?.field_name" />
+				</div>
+
+				<div class="flex flex-col gap-2 w-full">
+					<label for="croptype">Crop Type</label>
+					<Dropdown
+						class="w-full sm:w-[250px]"
+						v-model="selectedCropType"
+						:options="cropOptions"
+						optionLabel="name"
+						:placeholder="capitalizeFirstCharacter(selectedField?.crop_type as string)"
+						showClear
+					/>
+				</div>
+
+				<div class="flex flex-col gap-2 w-full">
+					<div class="w-full h-[400px] md:h-[600px] rounded overflow-hidden">
+						<GoogleMapsField
+							:selectedField="selectedField"
+							:fields="teamFields"
+							@update:selectedField="updateSelectedField"
+						/>
+					</div>
+				</div>
 			</div>
-			<template #footer>
-				<Button label="Cancel" severity="danger" icon="pi pi-times" @click="cancelAddField" />
-				<Button label="Save" icon="pi pi-check" @click="proceedToDrawing" />
-			</template>
 		</Dialog>
 
-		<ConfirmDialog />
-		<div class="p-3 border border-surface-300 rounded-md dark:border-surface-600">
-			<GoogleMap ref="googleMapRef" :isDrawingEnabled="isDrawingEnabled" @polygonDrawn="handlePolygonDrawn" />
-		</div>
+		<Toast />
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import GoogleMap from '~/components/GoogleMap.vue'
-import { useConfirm } from 'primevue/useconfirm'
+import { ref, onMounted } from 'vue'
+import Card from 'primevue/card'
+import GoogleMapsField from '~/components/GoogleMapsField.vue'
+import InputText from 'primevue/inputtext'
+import Button from 'primevue/button'
+import { useToast } from 'primevue/usetoast'
 
-// get userID
-const currentUser = useSupabaseUser()
+// TODO: Implement Edit Field Functionality (with dialog to confirm)
+// TODO: Implement Delete Field Functionality (with dialog to confirm)
+// HACK: Maybe add toasts to notify users that they have updated or deleted a field
+// TODO: Move Add Field to a new page (with a search bar for places API)
+// TODO: Add controls to edit field on map
+// TODO: Implement Edit Field put request functionality
+// TODO: Add drawing controls to GoogleMapsField on edit field
+// TODO: Add functionality to 'Train' button on Cards to train fields
+// TODO: Add functionality to retrain all fields
 
+// PERF: Page Meta
 definePageMeta({
 	middleware: 'auth',
 })
 
-const googleMapRef = ref() // Reference to the GoogleMap component
-const isDialogVisible = ref(false)
-const isDrawingEnabled = ref(false)
-const fieldName = ref('')
+// INFO: toast initialize for messages
+const toast = useToast()
+
+// PERF: Get team_id and load fields
+const isLoading = ref(true)
+const currentUser = useSupabaseUser()
+
+const teamFields = ref([])
+const checkTeamFields = ref(true)
+
+onMounted(async () => {
+	try {
+		isLoading.value = true
+		const teamID = await $fetch('/api/getTeamID', {
+			params: { userid: currentUser?.value?.id },
+		})
+
+		const response = await $fetch('/api/getTeamFields', {
+			params: { team_id: teamID.team_id },
+		})
+
+		// Check if the response contains an error
+		if (response.error) {
+			toast.add({
+				severity: 'info',
+				summary: 'No Fields Found',
+				detail: 'No fields are associated with this team.',
+				life: 3000,
+			})
+			teamFields.value = [] // Set teamFields to an empty array
+			checkTeamFields.value = false
+		} else {
+			teamFields.value = response
+		}
+	} catch (error) {
+		console.error('Error fetching user fields:', error)
+		toast.add({
+			severity: 'error',
+			summary: 'Error',
+			detail: 'An error occurred while fetching fields.',
+			life: 3000,
+		})
+	} finally {
+		isLoading.value = false
+	}
+})
+
+// PERF: Dialog on Field info
+
+const editAndViewVisible = ref(false)
+const selectedField = ref(null)
+
+const editField = (field: any) => {
+	selectedField.value = field
+	editAndViewVisible.value = true
+}
+
+function updateSelectedField(newField) {
+	selectedField.value = newField
+}
+
+// PERF: Search by Field Name and filter by Crop Type functionality
+const filteredFields = ref([])
+const searchQuery = ref('')
 const selectedCropType = ref(null)
 const cropOptions = ref([
 	{ name: 'Maize', value: 'maize' },
@@ -51,108 +204,99 @@ const cropOptions = ref([
 	{ name: 'Canola', value: 'canola' },
 	{ name: 'Oats', value: 'oats' },
 ])
-const fieldsData = ref([])
-const confirm = useConfirm()
-const drawnPolygonPaths = ref<google.maps.LatLng[]>([])
 
-const proceedToDrawing = () => {
-	isDialogVisible.value = false
-	isDrawingEnabled.value = true // Enable drawing mode after saving details
-	googleMapRef.value.setDrawingMode(true)
-}
+watchEffect(() => {
+	filteredFields.value = teamFields.value.filter((field) => {
+		const matchesSearchQuery = field.field_name.toLowerCase().includes(searchQuery.value.toLowerCase())
+		const matchesCropType = selectedCropType.value
+			? field.crop_type.toLowerCase() === selectedCropType.value.value.toLowerCase()
+			: true
+		return matchesSearchQuery && matchesCropType
+	})
+})
 
-const cancelAddField = () => {
-	isDialogVisible.value = false
-	isDrawingEnabled.value = false
-	googleMapRef.value.clearPolygon()
-}
+// PERF: Training of individual fields
+const loadingStates = ref(new Map())
 
-const handlePolygonDrawn = (paths: google.maps.LatLng[]) => {
-	drawnPolygonPaths.value = paths
-	isDrawingEnabled.value = false
-	googleMapRef.value.setDrawingMode(false)
-	showConfirmationDialog()
-}
-
-const showConfirmationDialog = () => {
-	confirm.require({
-		message: 'Are you sure you want to save this field?',
-		header: 'Confirmation',
-		icon: 'pi pi-exclamation-triangle',
-		accept: () => {
-			saveField()
-		},
-		reject: () => {
-			cancelAddField() // Clear the polygon and reset the dialog
-		},
+const showIndividualTrainSuccess = (field) => {
+	toast.add({
+		severity: 'success',
+		summary: 'Trained field',
+		detail: `You have successfully trained the field: ${field.field_name}`,
+		life: 3000,
 	})
 }
 
-const teamID = await $fetch('/api/getTeamID', {
-	params: { userid: currentUser?.value.id },
-})
+const showIndividualTrainFailure = (field) => {
+	toast.add({
+		severity: 'error',
+		summary: 'Training field failed',
+		detail: `The following field could not be trained: ${field.field_name}`,
+		life: 3000,
+	})
+}
 
-console.log(teamID.team_id)
-
-const saveField = async () => {
-	if (drawnPolygonPaths.value.length > 0) {
-		fieldsData.value.push({
-			name: fieldName.value,
-			cropType: selectedCropType.value,
-			paths: drawnPolygonPaths.value.map((latLng) => [latLng.lat(), latLng.lng()]), // convert paths to array of arrays
+async function trainField(field) {
+	loadingStates.value.set(field.id, true)
+	try {
+		await $fetch('/api/trainField', {
+			params: { field_id: field.id },
 		})
-
-		const FieldsDataPaths: number[] = []
-		fieldsData.value.forEach((field: { name: string; cropType: { name: string }; paths: number[][] }) => {
-			field.paths.forEach((path: number[]) => {
-				FieldsDataPaths.push(...path)
-			})
-		})
-
-		// convert FieldsDataPaths to array of arrays
-		const coordinatesArray: number[][] = []
-		for (let index = 1; index < FieldsDataPaths.length; index += 2) {
-			const newPoint: number[] = [FieldsDataPaths[index - 1], FieldsDataPaths[index]]
-			console.log(`Adding new point: [${FieldsDataPaths[index - 1]}, ${FieldsDataPaths[index]}]`)
-			coordinatesArray.push(newPoint)
-		}
-
-		const returnData = {
-			field_name: fieldName.value,
-			crop_type: selectedCropType.value.name.toLowerCase(),
-			field_area: {
-				type: 'Polygon',
-				coordinates: coordinatesArray,
-			},
-			team_id: teamID.team_id,
-		}
-
-		console.log('Return Data:', returnData)
-		try {
-			const response = await $fetch('/api/createField', {
-				method: 'POST',
-				body: returnData,
-			})
-		} catch (error) {
-			console.error('Error:', error)
-		}
-
-		// Reset for the next field
-		fieldName.value = ''
-		selectedCropType.value = null
+	} catch (error) {
+		showIndividualTrainFailure(field)
+	} finally {
+		loadingStates.value.set(field.id, false)
+		showIndividualTrainSuccess(field)
 	}
 }
 
-const userFields = await $fetch('/api/getTeamFields', {
-	params: { team_id: teamID.team_id },
-})
+// PERF: Training of all fields
+const trainAllLoading = ref(false)
 
-console.log('User Fields: ', userFields)
-</script>
-
-<style>
-.card {
-	max-width: 800px;
-	margin: 0 auto;
+const showAllTrainSuccess = () => {
+	toast.add({
+		severity: 'info',
+		summary: 'Trained all fields',
+		detail: 'You have successfully trained all fields.',
+		life: 3000,
+	})
 }
-</style>
+
+const showAllTrainFailure = () => {
+	toast.add({
+		severity: 'error',
+		summary: 'Training fields failed',
+		detail: `There was en error training all fields.`,
+		life: 3000,
+	})
+}
+
+const trainAllFields = async () => {
+	trainAllLoading.value = true
+
+	teamFields.value.forEach((field) => {
+		loadingStates.value.set(field.id, true)
+	})
+
+	try {
+		for (const field of teamFields.value) {
+			await trainField(field)
+		}
+	} catch (error) {
+		showAllTrainFailure()
+	} finally {
+		teamFields.value.forEach((field) => {
+			loadingStates.value.set(field.id, false)
+		})
+		trainAllLoading.value = false
+		setTimeout(() => {
+			showAllTrainSuccess()
+		}, 3000)
+	}
+}
+
+function capitalizeFirstCharacter(str: string) {
+	if (!str) return '' // Handle empty strings
+	return str.charAt(0).toUpperCase() + str.slice(1)
+}
+</script>

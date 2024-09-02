@@ -1,7 +1,7 @@
 <template>
 	<nav class="p-2 px-5 z-50 w-full sm:w-full md:w-full shadow-md dark:bg-surface-400/10 sticky top-0 left-0">
 		<div class="flex justify-between xl:justify-normal xl:grid xl:grid-cols-3 h-full w-full">
-			<Sidebar class="justify-self-start" />
+			<Sidebar />
 			<NuxtLink to="/" class="text-2xl font-[500] text-primary-500 justify-self-center self-center h-full">
 				<img src="../assets/logo.png" alt="Logo" class="w-36 xl:h-14 xl:w-auto object-cover dark:hidden block" />
 				<img src="../assets/logo-alt.png" alt="Logo" class="w-36 xl:h-14 xl:w-auto object-cover hidden dark:block" />
@@ -65,21 +65,21 @@ const items = computed(() => [
 		label: user.value?.email,
 		icon: 'pi pi-user',
 		command: () => {
-			window.location.href = '/settings'
+			navigateTo('/settings')
 		},
 	},
 	{
 		label: 'Manage Teams',
 		icon: 'pi pi-users',
 		command: () => {
-			window.location.href = '/teams'
+			navigateTo('/team/manage')
 		},
 	},
 	{
 		label: 'IoT Devices',
 		icon: 'pi pi-globe',
 		command: () => {
-			window.location.href = '/devices'
+			navigateTo('/settings')
 		},
 	},
 	{
@@ -93,14 +93,14 @@ const items = computed(() => [
 		label: 'Help',
 		icon: 'pi pi-question-circle',
 		command: () => {
-			window.location.href = '/help'
+			navigateTo('/help')
 		},
 	},
 	{
 		label: 'Settings',
 		icon: 'pi pi-cog',
 		command: () => {
-			window.location.href = '/settings'
+			navigateTo('/settings')
 		},
 	},
 	{
@@ -153,11 +153,10 @@ const setColorTheme = (newTheme: Theme) => {
 }
 
 onMounted(() => {
-  // Ensure the theme is correctly initialized on the first load
-  if (useColorMode().preference === 'system' && typeof window !== 'undefined') {
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-    setColorTheme(systemTheme)
-  }
+	// Ensure the theme is correctly initialized on the first load
+	if (useColorMode().preference === 'system' && typeof window !== 'undefined') {
+		const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+		setColorTheme(systemTheme)
+	}
 })
-
 </script>

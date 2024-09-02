@@ -36,9 +36,9 @@ class API:
         # user routes
         self.app.add_api_route("/getTeamFields", self.getTeamFields, methods=["GET"])
         self.app.add_api_route("/getTeamFieldData", self.getTeamFieldData, methods=["GET"])
-        # self.app.add_api_route("/addToTeam", self.addToTeam, methods=["POST"]) # TODO: Test this route
-        # self.app.add_api_route("/removeFromTeam", self.removeFromTeam, methods=["GET"]) # TODO: Test this route
-        # self.app.add_api_route("/updateRoles", self.updateRoles, methods=["POST"]) # TODO: Test this route
+        self.app.add_api_route("/addToTeam", self.addToTeam, methods=["POST"]) # TODO: Test this route
+        self.app.add_api_route("/removeFromTeam", self.removeFromTeam, methods=["GET"]) # TODO: Test this route
+        self.app.add_api_route("/updateRoles", self.updateRoles, methods=["POST"]) # TODO: Test this route
 
         # /getTeamId
         self.app.add_api_route("/getTeamId", self.getTeamId, methods=["GET"]) # TODO: Test this route
@@ -76,15 +76,15 @@ class API:
     def getTeamFields(self, request: Request, team_id: str):
         return self.sb.getTeamFields(team_id)
 
-    # team routes # * DEMO 4
-    # def addToTeam(self, request: Request, team: dict):
-    #     return self.sb.addToTeam(team)
+    # team routes
+    def addToTeam(self, request: Request, team: dict):
+        return self.sb.addToTeam(team)
     
-    # def removeFromTeam(self, request: Request, user_id: str):
-    #     return self.sb.removeFromTeam(user_id)
+    def removeFromTeam(self, request: Request, user_id: str):
+        return self.sb.removeFromTeam(user_id)
 
-    # def updateRoles(self, request: Request, user: dict):
-    #     return self.sb.updateRoles(user)
+    def updateRoles(self, request: Request, user: dict):
+        return self.sb.updateRoles(user)
 
     def getTeamId(self, request: Request, user_id: str):
         return self.sb.getTeamId(user_id)

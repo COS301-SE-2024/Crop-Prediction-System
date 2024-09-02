@@ -36,12 +36,14 @@ const signIn = async () => {
 	}
 }
 
+const config = useRuntimeConfig()
+
 const signInWithOauth = async () => {
 	try {
 		const { error } = await client.auth.signInWithOAuth({
 			provider: 'google',
 			options: {
-				redirectTo: `https://terrabyte.software/confirm/`,
+				redirectTo: `${config.public.appBaseUrl}/confirm/`,
 			},
 		})
 		if (error) throw error
@@ -62,7 +64,7 @@ definePageMeta({
 			<Card class="w-full border border-surface-border bg-primary-inverse dark:bg-surface-800">
 				<template #header>
 					<div class="flex justify-center items-center p-4">
-						<img src="../../assets/logo_only.png" alt="Logo" class="w-[100px] h-[100px] self-center" />
+						<img src="../../assets/logo-alt.png" alt="Logo" class="w-[auto] h-[70px] self-center" />
 					</div>
 				</template>
 				<template #title>

@@ -1,8 +1,11 @@
 name: Automated Integration tests using Postman CLI
 
 on:
-  pull_request:
-    branches: [main, dev]
+  workflow_run:
+    workflows: ["Deploy Backend"]
+    branches: [main, dev, feature/backend/API]
+    types:
+      - completed
 
 jobs:
   automated-integration-tests:
