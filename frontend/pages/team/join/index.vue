@@ -33,8 +33,9 @@ onMounted(async () => {
 		params: { userid: currentUser?.value?.id },
 	})
 
-	console.log(teamID.team_id)
+	console.log(teamID)
 	teamid.value = teamID.team_id
+	console.log('Team ID from ref:', teamid.value)
 })
 
 const email = ref(null)
