@@ -30,6 +30,11 @@ async function signUp() {
 		const { error } = await client.auth.signUp({
 			email: userEmail.value,
 			password: password.value,
+			options: {
+				data: {
+					email: userEmail.value,
+				},
+			},
 		})
 		if (error) throw error
 		successMsg.value = 'Check your email to confirm your account.'
@@ -38,12 +43,14 @@ async function signUp() {
 	}
 }
 
+const config = useRuntimeConfig()
+
 const signInWithOauth = async () => {
 	try {
 		const { error } = await client.auth.signInWithOAuth({
 			provider: 'google',
 			options: {
-				redirectTo: `https://terrabyte.software/confirm/`,
+				redirectTo: `${config.public.appBaseUrl}/confirm/`,
 			},
 		})
 		if (error) throw error
@@ -73,12 +80,19 @@ definePageMeta({
 <template>
 	<div class="w-full h-screen flex flex-col justify-center items-center p-4 overflow-auto">
 		<div class="w-full max-w-[450px] px-4 overflow-auto">
-			<!-- <div class="flex flex-col gap-5 items-center w-[400px] max-w-lg"> -->
 			<Card class="w-full border border-surface-border">
 				<template #header>
 					<div class="flex justify-center items-center p-4">
-						<img src="../../assets/logo-alt.png" alt="Logo" class="hidden dark:block pt-1 w-[auto] h-[70px] self-center" />
-						<img src="../../assets/logo.png" alt="Logo" class="dark:hidden block pt-1 w-[auto] h-[70px] self-center" />
+						<img
+							src="../../assets/logo-alt.png"
+							alt="Logo"
+							class="hidden dark:block pt-1 w-[auto] h-[70px] self-center"
+						/>
+						<img
+							src="../../assets/logo.png"
+							alt="Logo"
+							class="dark:hidden block pt-1 w-[auto] h-[70px] self-center"
+						/>
 					</div>
 				</template>
 				<template #title>
