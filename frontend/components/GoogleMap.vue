@@ -1,5 +1,11 @@
 <template>
-	<div class="md:h-screen h-[45rem] w-full _sm:h-[200px] _md:h-[850px]" ref="mapContainer"></div>
+	<div class="w-full flex h-full flex-col justify-between gap-4 items-center">
+		<!-- PrimeVue Input -->
+		<InputText v-model="searchQuery" id="search-input" class="w-full" placeholder="Search for a place" />
+
+		<!-- Map Container -->
+		<div class="h-full w-full _sm:h-[200px] _md:h-[850px] rounded-md" ref="mapContainer"></div>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -15,12 +21,13 @@ const mapContainer = ref(null)
 let map = null
 let drawingManager = null
 const polygons = ref([])
+const searchQuery = ref('')
 
 const polygonOptions = {
-	fillColor: '#00FF00', // Green fill color (change as needed)
-	fillOpacity: 0.3, // Transparency (0-1)
-	strokeColor: '#000000', // Black border (change as needed)
-	strokeWeight: 2, // Border thickness
+	fillColor: '#ba55f4',
+	fillOpacity: 0.5,
+	strokeColor: '#ba55f4',
+	strokeWeight: 2,
 	clickable: true,
 	editable: true,
 	draggable: true,
@@ -29,16 +36,12 @@ const polygonOptions = {
 const userFields = ref([])
 
 onMounted(async () => {
-	await mapsLoader.load() // Use the loader from the plugin
+	await mapsLoader.load()
 
 	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(
-			initializeMap, // Pass the position directly to initializeMap
-			handleGeolocationError,
-			{ timeout: 10000 }, // Optional: Timeout after 10 seconds
-		)
+		navigator.geolocation.getCurrentPosition(initializeMap, handleGeolocationError, { timeout: 10000 })
 	} else {
-		handleGeolocationError() // Geolocation not supported
+		handleGeolocationError()
 	}
 
 	await fetchUserFields()
@@ -57,8 +60,11 @@ async function fetchUserFields() {
 
 	if (currentUser) {
 		try {
-			const fields = await $fetch('/api/getUserFields', {
+			const teamID = await $fetch('/api/getTeamID', {
 				params: { userid: currentUser?.id },
+			})
+			const fields = await $fetch('/api/getTeamFields', {
+				params: { team_id: teamID.team_id },
 			})
 			userFields.value = fields
 			drawExistingPolygons()
@@ -71,8 +77,8 @@ async function fetchUserFields() {
 function initializeMap(position) {
 	const center = position ? { lat: position.coords.latitude, lng: position.coords.longitude } : { lat: -25.7479, lng: 28.2293 } // Default
 	map = new google.maps.Map(mapContainer.value, {
-		center, // Set the map's center to the current location
-		zoom: 19, // Adjust the default zoom level as needed
+		center,
+		zoom: 18,
 		mapTypeId: 'satellite',
 	})
 
@@ -96,6 +102,29 @@ function initializeMap(position) {
 	})
 
 	drawExistingPolygons()
+	initializeAutocomplete()
+}
+
+function initializeAutocomplete() {
+	const input = document.getElementById('search-input')
+	const autocomplete = new google.maps.places.Autocomplete(input)
+	autocomplete.bindTo('bounds', map)
+
+	autocomplete.addListener('place_changed', () => {
+		const place = autocomplete.getPlace()
+
+		if (!place.geometry || !place.geometry.location) {
+			console.error('Place contains no geometry')
+			return
+		}
+
+		if (place.geometry.viewport) {
+			map.fitBounds(place.geometry.viewport)
+		} else {
+			map.setCenter(place.geometry.location)
+			map.setZoom(17)
+		}
+	})
 }
 
 function handleGeolocationError(error = null) {
@@ -143,3 +172,5 @@ defineExpose({
 	setDrawingMode,
 })
 </script>
+
+<style scoped></style>

@@ -1,5 +1,5 @@
 <template>
-	<div class="h-full w-full flex flex-col gap-5 px-4 sm:px-6 md:px-8 lg:px-0 py-4 sm:py-6 md:py-8 lg:py-0">
+	<div class="h-full w-full flex flex-col gap-5">
 		<div class="flex flex-row justify-between items-center _mb-4">
 			<span class="font-bold text-xl dark:text-white">Fields</span>
 			<Button label="Add Field" @click="isDialogVisible = true" />
@@ -17,8 +17,13 @@
 		</Dialog>
 
 		<ConfirmDialog />
-		<div class="_flex-grow h-full bg-terrabyte-green-dark">
-			<GoogleMap ref="googleMapRef" :isDrawingEnabled="isDrawingEnabled" @polygonDrawn="handlePolygonDrawn" />
+		<div class="p-3 border border-surface-300 rounded-md dark:border-surface-600">
+			<GoogleMap
+				class="h-[40rem]"
+				ref="googleMapRef"
+				:isDrawingEnabled="isDrawingEnabled"
+				@polygonDrawn="handlePolygonDrawn"
+			/>
 		</div>
 	</div>
 </template>
@@ -29,15 +34,7 @@ import GoogleMap from '~/components/GoogleMap.vue'
 import { useConfirm } from 'primevue/useconfirm'
 
 // get userID
-const session = useSupabaseClient()
-let currentUser = null
-if (session) {
-	const {
-		data: { user },
-	} = await session.auth.getUser()
-	if (user) currentUser = user
-	console.error('user: ', user?.id)
-}
+const currentUser = useSupabaseUser()
 
 definePageMeta({
 	middleware: 'auth',
@@ -96,9 +93,11 @@ const showConfirmationDialog = () => {
 	})
 }
 
-const teamID = await useFetch('/api/getTeamID', {
-	params: { userid: currentUser?.id },
+const teamID = await $fetch('/api/getTeamID', {
+	params: { userid: currentUser?.value?.id },
 })
+
+console.log(teamID.team_id)
 
 const saveField = async () => {
 	if (drawnPolygonPaths.value.length > 0) {
@@ -125,14 +124,15 @@ const saveField = async () => {
 
 		const returnData = {
 			field_name: fieldName.value,
-			crop_type: selectedCropType.value.name,
+			crop_type: selectedCropType.value.name.toLowerCase(),
 			field_area: {
 				type: 'Polygon',
 				coordinates: coordinatesArray,
 			},
-			team_id: teamID.data.value.team_id,
+			team_id: teamID.team_id,
 		}
 
+		console.log('Return Data:', returnData)
 		try {
 			const response = await $fetch('/api/createField', {
 				method: 'POST',
@@ -148,16 +148,7 @@ const saveField = async () => {
 	}
 }
 
-const userFields = await $fetch('/api/getUserFields', {
-	params: { userid: currentUser?.id },
+const userFields = await $fetch('/api/getTeamFields', {
+	params: { team_id: teamID.team_id },
 })
-
-console.log('User Fields: ', userFields)
 </script>
-
-<style>
-.card {
-	max-width: 800px;
-	margin: 0 auto;
-}
-</style>

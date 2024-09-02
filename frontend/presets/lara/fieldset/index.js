@@ -10,8 +10,8 @@ export default {
             // Shape
             'rounded-md',
             // Color
-            'border border-surface-200 dark:border-surface-700',
-            'bg-surface-0 dark:bg-surface-900',
+            'border border-surface-200 dark:border-surface-600',
+            'bg-surface-0 dark:bg-surface-800',
             'text-surface-700 dark:text-surface-0/80'
         ]
     },
@@ -29,8 +29,8 @@ export default {
 
             // Color
             'text-surface-700 dark:text-surface-0/80',
-            'border border-surface-200 dark:border-surface-700',
-            'bg-surface-50 dark:bg-surface-900',
+            'border border-surface-200 dark:border-surface-600',
+            'bg-surface-50 dark:bg-surface-800',
 
             // Transition
             'transition-none',
@@ -71,7 +71,7 @@ export default {
         class: 'flex items-center justify-center leading-none'
     },
     content: {
-        class: 'p-5'
+        class: 'p-0'
     },
     transition: {
         enterFromClass: 'max-h-0',

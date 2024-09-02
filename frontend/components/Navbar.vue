@@ -33,9 +33,9 @@
 						<span>System Status</span>
 					</div>
 				</div>
-				<div class="p-5 sm:p-0">
+				<!-- <div class="p-5 sm:p-0">
 					<i class="pi pi-bell" style="font-size: 1.5rem" />
-				</div>
+				</div> -->
 				<div>
 					<i class="pi pi-user" @click="toggleProfile" style="font-size: 1.5rem" />
 				</div>
@@ -50,10 +50,7 @@
 <script setup lang="ts">
 import Sidebar from '../components/Sidebar.vue'
 import { ref } from 'vue'
-import Button from 'primevue/button'
 import OverlayPanel from 'primevue/overlaypanel'
-import ToggleButton from 'primevue/togglebutton'
-import { useColorMode } from '@vueuse/core'
 
 const user = useSupabaseUser()
 const client = useSupabaseClient()
@@ -63,26 +60,26 @@ const settingsSwitch = ref(false)
 const op = ref<OverlayPanel | null>(null)
 const settingsPanel = ref<OverlayPanel | null>(null)
 
-const items = ref([
+const items = computed(() => [
 	{
 		label: user.value?.email,
 		icon: 'pi pi-user',
 		command: () => {
-			window.location.href = '/settings'
+			navigateTo('/settings')
 		},
 	},
 	{
 		label: 'Manage Teams',
 		icon: 'pi pi-users',
 		command: () => {
-			window.location.href = '/teams'
+			navigateTo('/team/manage')
 		},
 	},
 	{
 		label: 'IoT Devices',
 		icon: 'pi pi-globe',
 		command: () => {
-			window.location.href = '/devices'
+			navigateTo('/settings')
 		},
 	},
 	{
@@ -96,14 +93,14 @@ const items = ref([
 		label: 'Help',
 		icon: 'pi pi-question-circle',
 		command: () => {
-			window.location.href = '/help'
+			navigateTo('/help')
 		},
 	},
 	{
 		label: 'Settings',
 		icon: 'pi pi-cog',
 		command: () => {
-			window.location.href = '/settings'
+			navigateTo('/settings')
 		},
 	},
 	{
@@ -154,4 +151,13 @@ type Theme = 'light' | 'dark'
 const setColorTheme = (newTheme: Theme) => {
 	useColorMode().preference = newTheme
 }
+
+onMounted(() => {
+  // Ensure the theme is correctly initialized on the first load
+  if (useColorMode().preference === 'system' && typeof window !== 'undefined') {
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    setColorTheme(systemTheme)
+  }
+})
+
 </script>

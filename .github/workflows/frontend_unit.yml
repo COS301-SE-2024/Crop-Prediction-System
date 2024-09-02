@@ -3,7 +3,7 @@ name: Frontend Unit Tests
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main, dev]
+    branches: [main, dev, feature/frontend/**]
 jobs:
   test-upload:
     runs-on: ubuntu-latest

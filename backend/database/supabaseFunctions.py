@@ -63,7 +63,7 @@ class supabaseFunctions:
             return {"error": "Failed to fetch summary for all fields", "error_message": e}
         
     @staticmethod
-    def getCurrentStage(c : Crop):
+    def getCurrentStage(c : Crop) -> str:
         # Determine current day of the year
         today = date.today()
         day_of_year = today.timetuple().tm_yday
@@ -333,7 +333,7 @@ class supabaseFunctions:
         try:
             response = supabaseFunctions.__sbClient.table("profiles").select("team_id").eq("id", user_id).execute()
             if response.data == []:
-                return {"error": "User not found"}
+                raise Exception("User not found")
             return response.data[0]
         except Exception as e:
             print(e)

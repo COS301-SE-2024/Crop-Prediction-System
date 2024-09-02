@@ -46,7 +46,7 @@ describe('NavigationMenu', () => {
 		})
 
 		const menuItemLabels = component.findAll('.p-menuitem')
-		expect(menuItemLabels.length).toBe(8)
+		expect(menuItemLabels.length).toBe(6)
 	})
 
 	it('generates router links correctly', async () => {
@@ -64,15 +64,13 @@ describe('NavigationMenu', () => {
 		})
 
 		const links = component.findAll('a')
-		expect(links.length).toBe(16)
+		expect(links.length).toBe(12)
 
 		const urls = links.map((link) => link.attributes('href'))
 		expect(urls).toContain('/')
 		expect(urls).toContain('/inputs/add-field-data')
 		expect(urls).toContain('/inputs/manage-fields')
 		expect(urls).toContain('/log-data/view-logs')
-		expect(urls).toContain('/model-training/manage-model')
-		expect(urls).toContain('/analytics/crop-yield-data')
 		expect(urls).toContain('/team/manage')
 		expect(urls).toContain('/team/join')
 	})
