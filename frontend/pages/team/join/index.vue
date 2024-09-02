@@ -21,6 +21,7 @@ import InputText from 'primevue/inputtext'
 
 const email = ref(null)
 const currentUser = useSupabaseUser()
+console.log(currentUser.value)
 
 const teamID = await $fetch('/api/getTeamID', {
 	params: { userid: currentUser?.value?.id },
