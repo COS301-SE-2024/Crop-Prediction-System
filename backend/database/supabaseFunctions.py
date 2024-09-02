@@ -369,37 +369,33 @@ class supabaseFunctions:
     #         print(e)
     #         return {"error": "Failed to insert sensor data", "error_message": str(e)}
 
-        @staticmethod
-        def createUpSensorData(sensorID: str):
-            try:
-                sensor_data = getNewSensorData(sensorID, 1)
-                # Extract soil_temperature, soil_moisture, temperature, relative_humidity, received_at from the dictionary
-                row = sensor_data['data']['queryTable']['rows'][0]
-                values = {column['key']: column['value'] for column in row['columns']}
-                device_eui = values.get('device_eui')
-                soil_temperature = values.get('soil_temperature')
-                soil_moisture = values.get('soil_moisture')
-                temperature = values.get('temperature')
-                relative_humidity = values.get('relative_humidity')
-                battery = values.get('battery')
-                received_at = values.get('received_at')
-
-
-                response = supabaseFunctions.__sbClient.table("up_sensor_data").insert({
-                    "device_eui": device_eui,
-                    "soil_temperature": soil_temperature,
-                    "soil_moisture": soil_moisture,
-                    "temperature": temperature,
-                    "humidity": relative_humidity,
-                    "battery": battery,
-                    "received_at": received_at
-                }).execute()
-
-                if response.error:
-                    return {"error": "Failed to insert sensor data", "error_message": response.error}
-
-                return {"success": "Sensor data inserted successfully", "data": response.data}
-
-            except Exception as e:
-                print(e)
-                return {"error": "Failed to insert sensor data", "error_message": str(e)}
+    @staticmethod
+    def createUpSensorData(sensorID: str):
+        try:
+            sensor_data = getNewSensorData(sensorID, 1)
+            # Extract soil_temperature, soil_moisture, temperature, relative_humidity, received_at from the dictionary
+            row = sensor_data['data']['queryTable']['rows'][0]
+            values = {column['key']: column['value'] for column in row['columns']}
+            device_eui = values.get('device_eui')
+            soil_temperature = values.get('soil_temperature')
+            soil_moisture = values.get('soil_moisture')
+            temperature = values.get('temperature')
+            relative_humidity = values.get('relative_humidity')
+            battery = values.get('battery')
+            received_at = values.get('received_at')
+            print(device_eui, soil_temperature, soil_moisture, temperature, relative_humidity, battery, received_at)
+            response = supabaseFunctions.__sbClient.table("up_sensor_data").insert({
+                "device_eui": device_eui,
+                "soil_temperature": soil_temperature,
+                "soil_moisture": soil_moisture,
+                "temperature": temperature,
+                "relative_humidity": relative_humidity,
+                "battery": battery,
+                "received_at": received_at
+            }).execute() 
+            if response.error:
+                return {"error": "Failed to insert sensor data", "error_message": response.error}
+            return {"success": "Sensor data inserted successfully", "data": response.data}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to insert sensor data", "error_message": str(e)}
