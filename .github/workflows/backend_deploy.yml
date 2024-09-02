@@ -37,6 +37,7 @@ jobs:
           script: |
             cd /home/farm/server/Crop-Prediction-System
             ls -la
+            git checkout feature/backend/API
             git pull
             su - farm -c "pm2 restart sample_farm_api"
   test-curl-action:
