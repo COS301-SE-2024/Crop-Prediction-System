@@ -168,6 +168,12 @@ class Model:
         mse = mean_squared_error(y, y_pred)
 
         # Save the model
+        # First delete the existing model
+        try:
+            os.remove(f"{field_id}.json")
+        except:
+            pass
+        
         best_model.save_model(f"{field_id}.json")
         # self.save(field_id)
 
