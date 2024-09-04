@@ -1,7 +1,7 @@
 <template>
 	<nav class="p-2 px-5 z-50 w-full sm:w-full md:w-full shadow-md dark:bg-surface-400/10 sticky top-0 left-0">
 		<div class="flex justify-between xl:justify-normal xl:grid xl:grid-cols-3 h-full w-full">
-			<Sidebar class="justify-self-start" />
+			<Sidebar />
 			<NuxtLink to="/" class="text-2xl font-[500] text-primary-500 justify-self-center self-center h-full">
 				<img src="../assets/logo.png" alt="Logo" class="w-36 xl:h-14 xl:w-auto object-cover dark:hidden block" />
 				<img src="../assets/logo-alt.png" alt="Logo" class="w-36 xl:h-14 xl:w-auto object-cover hidden dark:block" />
@@ -151,7 +151,6 @@ const signOut = async () => {
 onMounted(() => {
   if (colorMode && colorMode.preference === 'system' && typeof window !== 'undefined') {
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-	console.log(colorMode)
   }
 })
 

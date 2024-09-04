@@ -28,8 +28,9 @@ export default defineNuxtConfig({
 	plugins: ['~/plugins/maps.client.js'],
 	runtimeConfig: {
 		public: {
+      appBaseUrl: process.env.APP_BASE_URL,
 			googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
-			apiBaseUrl: process.env.API_BASE_URL,
+			apiBaseUrl: 'https://api.terrabyte.software',
 			openweatherApiUrl: 'https://api.openweathermap.org/data/2.5/',
 			openweatherApiKey: process.env.OPENWEATHER_API_KEY,
 		},

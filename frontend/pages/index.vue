@@ -18,9 +18,9 @@
 				<Panel header="View More Statistics" toggleable collapsed>
 					<div v-if="selectedField" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 						<StatsCard title="Soil Moisture" :chartData="soilMoistureChartData" />
-						<StatsCard title="Soil Temperature" :chartData="soilTemperatureChartData" />
-						<StatsCard title="Temperature" :chartData="temperatureChartData" />
-						<StatsCard title="Dew Point" :chartData="dewPointChartData" />
+						<StatsCard title="Soil Temperature (°C)" :chartData="soilTemperatureChartData" />
+						<StatsCard title="Temperature (°C)" :chartData="temperatureChartData" />
+						<StatsCard title="Dew Point (°C)" :chartData="dewPointChartData" />
 						<StatsCard title="Humidity" :chartData="humidityChartData" />
 						<StatsCard title="Pressure" :chartData="pressureChartData" />
 						<StatsCard title="UV Index" :chartData="uvChartData" />

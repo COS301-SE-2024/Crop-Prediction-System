@@ -1,11 +1,11 @@
 export default defineEventHandler(async (event) => {
 	const proxyUrl = useRuntimeConfig().public.apiBaseUrl
-	const userid = getQuery(event).userid
+	const field_id = getQuery(event).field_id
 
-	const apiUrl = `${proxyUrl}/getTeamId?user_id=${userid}`
+	const callUrl = `${proxyUrl}/train?field_id=${field_id}`
 
 	try {
-		const response = await fetch(apiUrl)
+		const response = await fetch(callUrl)
 		if (!response.ok) {
 			throw new Error(`Error: ${response.statusText}`)
 		}
