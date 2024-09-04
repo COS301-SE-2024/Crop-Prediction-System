@@ -26,7 +26,7 @@ const items = ref([
 		items: [
 			{
 				label: 'Dashboard',
-				icon: 'pi pi-home',
+				icon: 'pi pi-chart-bar',
 				url: '/',
 			},
 		],
@@ -63,16 +63,6 @@ const items = ref([
 				label: 'Manage Team',
 				url: '/team/manage',
 				icon: 'pi pi-users',
-			},
-			// {
-			// 	label: 'Create a Team',
-			// 	url: '/team/create',
-			// 	icon: 'pi pi-plus-circle',
-			// },
-			{
-				label: 'Join a Team',
-				url: '/team/join',
-				icon: 'pi pi-sign-in',
 			},
 		],
 	},
