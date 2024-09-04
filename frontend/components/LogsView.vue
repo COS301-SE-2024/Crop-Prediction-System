@@ -164,26 +164,6 @@ const onRowUnselect = () => {
 	selectAll.value = false
 }
 
-const exportSelectedCSV = () => {
-	const rawSelectedData = selectedDataEntries.value.map((item) => toRaw(item))
-	if (rawSelectedData.length === 0) {
-		return
-	}
-	const headerLabels = columns.map((column) => column.header)
-	const csvData = convertToCSV(rawSelectedData, headerLabels)
-
-	const downloadLink = document.createElement('a')
-	const fileName = 'Exported_DataEntries.csv'
-
-	downloadLink.setAttribute('href', `data:text/csv;charset=utf-8,${encodeURIComponent(csvData)}`)
-	downloadLink.setAttribute('download', fileName)
-	downloadLink.style.display = 'none'
-
-	document.body.appendChild(downloadLink)
-	downloadLink.click()
-	document.body.removeChild(downloadLink)
-}
-
 const triggerPrint = () => {
 	const rawSelectedData = selectedDataEntries.value.map((item) => toRaw(item))
 	if (rawSelectedData.length === 0) {
@@ -225,5 +205,28 @@ const convertToCSV = (objArray: any[], headers: string[]) => {
 		str += line.slice(0, -1) + '\r\n'
 	}
 	return str
+}
+
+const exportSelectedCSV = () => {
+	const rawSelectedData = selectedDataEntries.value.map((item) => toRaw(item))
+	if (rawSelectedData.length === 0) {
+		return
+	}
+	const headerLabels = columns.map((column) => column.header)
+	const csvData = convertToCSV(rawSelectedData, headerLabels)
+
+	const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
+	const url = URL.createObjectURL(blob)
+
+	const downloadLink = document.createElement('a')
+	const fileName = 'Exported_DataEntries.csv'
+
+	downloadLink.href = url
+	downloadLink.setAttribute('download', fileName)
+	downloadLink.style.display = 'none'
+	document.body.appendChild(downloadLink)
+	downloadLink.click()
+	document.body.removeChild(downloadLink)
+	URL.revokeObjectURL(url)
 }
 </script>
