@@ -231,8 +231,8 @@ definePageMeta({
 				</template>
 				<template #content>
 					<p>
-						Please check your email to confirm your account to start using the app. If you haven't received an email,
-						please check your spam or junk folder.
+						Please check your email to confirm your account and to start using the app. If you haven't received an
+						email, please check your spam or junk folder.
 					</p>
 				</template>
 			</Card>
