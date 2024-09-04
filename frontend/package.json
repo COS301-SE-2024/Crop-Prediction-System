@@ -27,7 +27,8 @@
 		"primevue": "^3.52.0",
 		"resend": "^4.0.0",
 		"vue": "^3.4.27",
-		"vue-router": "^4.3.2"
+		"vue-router": "^4.3.2",
+		"xlsx": "^0.18.5"
 	},
 	"devDependencies": {
 		"@jest/globals": "^29.7.0",
