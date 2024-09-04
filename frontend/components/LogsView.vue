@@ -207,17 +207,19 @@ const triggerPrint = () => {
 
 const convertToCSV = (objArray: any[], headers: string[]) => {
 	const array = Array.isArray(objArray) ? objArray : JSON.parse(objArray)
-	let str = ''
+	let str = '\ufeff'
 
-	// Add headers as the first row
-	str += headers.map((header) => `"${header}"`).join(',') + '\r\n'
+	str += headers.join(';') + '\r\n'
 
 	for (let i = 0; i < array.length; i++) {
 		let line = ''
-		for (const key in array[i]) {
-			// eslint-disable-next-line no-prototype-builtins
-			if (array[i].hasOwnProperty(key)) {
-				line += `"${array[i][key]}",`
+		for (const column of columns) {
+			const value = array[i][column.field]
+			if (value !== undefined && value !== null) {
+				// Replace any semicolons in the value with a different character
+				line += String(value).replace(/;/g, ',') + ';'
+			} else {
+				line += ';'
 			}
 		}
 		str += line.slice(0, -1) + '\r\n'
