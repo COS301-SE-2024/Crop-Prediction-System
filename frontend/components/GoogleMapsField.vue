@@ -54,6 +54,9 @@ onMounted(async () => {
 		drawPolygons(props.fields)
 	} finally {
 		loading.value = false
+		if (props.selectedField !== null) {
+			panToField(props.selectedField)
+		}
 	}
 
 	watch(
