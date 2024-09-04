@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 			from: 'Terrabyte <terra@terrabyte.software>',
 			to: [`${to}`],
 			subject: 'Team Invite',
-			html: `<h2>You have been invited!</h2><p>You have been invited to join a team on the terrabyte app. Please use this code below for refernce when you join the team.</p><strong>Code: ${team_id}</strong> <p>Please follow the link below to register your account.</p><a href="${appURL}/join?team_id=${team_id}">${appURL}/join?team_id=${team_id}</a>`,
+			html: `<h2>You have been invited!</h2><p>You have been invited to join a team on the TerraByte app. Please use this code below for reference when you join the team.</p><strong>Code: ${team_id}</strong> <p>Please follow the link below to register your account.</p><a href="${appURL}/join?team_id=${team_id}">${appURL}/join?team_id=${team_id}</a>`,
 		})
 
 		return data
