@@ -39,6 +39,7 @@ class API:
         self.app.add_api_route("/addToTeam", self.addToTeam, methods=["POST"]) # TODO: Test this route
         self.app.add_api_route("/removeFromTeam", self.removeFromTeam, methods=["GET"]) # TODO: Test this route
         self.app.add_api_route("/updateRoles", self.updateRoles, methods=["POST"]) # TODO: Test this route
+        self.app.add_api_route("/getTeamDetails", self.getTeamDetails, methods=["GET"]) # TODO: Test this route
 
         # /getTeamId
         self.app.add_api_route("/getTeamId", self.getTeamId, methods=["GET"]) # TODO: Test this route
@@ -91,6 +92,9 @@ class API:
     
     def getTeamFieldData(self, request: Request, team_id: str, n : int = -1):
         return self.sb.getTeamFieldData(team_id, n)
+    
+    def getTeamDetails(self, request: Request, team_id: str):
+        return self.sb.getTeamDetails(team_id)
     
     # model routes
     def aggregate(self, request: Request):
