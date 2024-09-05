@@ -1,10 +1,10 @@
 <template>
 	<div class="flex flex-col gap-5 px-4 sm:px-6 md:px-8 lg:px-0 py-4 sm:py-6 md:py-8 lg:py-0">
-		<DataTable :value="users" responsiveLayout="scroll" tableStyle="min-width: 35rem" columnResizeMode="expand">
+		<DataTable :value="team" responsiveLayout="scroll" tableStyle="min-width: 35rem" columnResizeMode="expand">
 			<template #header>
 				<h1 class="text-lg font-bold dark:text-white">Team Members</h1>
 			</template>
-			<Column field="name" header="Name"></Column>
+			<Column field="full_name" header="Name"></Column>
 			<Column field="email" header="Email Address"></Column>
 			<Column field="role" header="Role"></Column>
 			<template #footer>
@@ -29,25 +29,41 @@
 </template>
 
 <script setup lang="ts">
-import { email } from '@vuelidate/validators'
 import { ref } from 'vue'
+import { useToast } from 'primevue/usetoast'
 
 // TODO: Fill table with data from new api call that needs to be implemented
 definePageMeta({
 	middleware: 'auth',
 })
 
+const toast = useToast()
+const team = ref([])
+
+onMounted(async () => {
+	await getTeamDetails()
+})
+
+async function getTeamDetails() {
+	try {
+		const currentUser = useSupabaseUser()
+		const teamID = await $fetch('/api/getTeamID', {
+			params: { userid: currentUser?.value?.id },
+		})
+		const data = await $fetch('/api/getTeamDetails', {
+			params: { team_id: teamID.team_id },
+		})
+		team.value = data
+	} catch (error) {
+		console.error('Error fetching team details:', error)
+	}
+}
+
 const role = ref()
 const roles = ref([
 	{ name: 'Farm Manager', value: 'farm_manager' },
 	{ name: 'Farmer', value: 'farmer' },
 	{ name: 'Data Analyst', value: 'data_analyst' },
-])
-
-const users = ref([
-	{ name: 'John Doe', email: 'john.doe@example.com', role: 'Farm Manager' },
-	{ name: 'Jane Smith', email: 'jane.smith@example.com', role: 'Farmer' },
-	{ name: 'James Brown', email: 'james.brown@example.com', role: 'Data Analyst' },
 ])
 
 const visible = ref(false)
@@ -69,6 +85,8 @@ const send = async () => {
 		console.error('Error sending invite:', error)
 	} finally {
 		loading.value = false
+		visible.value = false
+		toast.add({ severity: 'success', summary: 'Invite Sent', detail: 'Invite sent successfully', life: 3000 })
 	}
 }
 </script>
