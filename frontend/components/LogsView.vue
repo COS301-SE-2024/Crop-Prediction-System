@@ -60,7 +60,11 @@
 			</div>
 		</template>
 		<template #empty>
-			<Skeleton height="20px"></Skeleton>
+			<div class="flex flex-col gap-3">
+				<Skeleton height="20px"></Skeleton>
+				<Skeleton height="20px"></Skeleton>
+				<Skeleton height="20px"></Skeleton>
+			</div>
 		</template>
 		<template #loading> Loading data entries. Please wait.</template>
 		<Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
