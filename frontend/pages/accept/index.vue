@@ -9,6 +9,8 @@ const role = useRoute().query.role as string
 
 const toast = useToast()
 
+const loading = ref(false)
+
 const showInfo = () => {
 	toast.add({ severity: 'info', summary: 'Changed Teams', detail: 'You have successfully joined the team', life: 3000 })
 	setTimeout(() => navigateTo('/'), 3000)
@@ -20,6 +22,7 @@ const showError = () => {
 
 async function joinTeam() {
 	try {
+		loading.value = true
 		// Make a POST request to the server API to add the user to the team
 		const user = useSupabaseUser()
 		await $fetch('/api/addToTeam', {
@@ -34,6 +37,7 @@ async function joinTeam() {
 		// Handle any errors that occurred during the API call
 		showError()
 	} finally {
+		loading.value = false
 		showInfo()
 	}
 }
@@ -46,6 +50,7 @@ definePageMeta({
 
 <template>
 	<div class="w-full h-screen flex flex-col justify-center items-center p-4 overflow-auto">
+		<Toast />
 		<div class="w-full max-w-[450px] px-4 overflow-auto">
 			<!-- Step 2: Team Confirmation -->
 			<Card class="w-full border border-surface-border">
@@ -65,7 +70,7 @@ definePageMeta({
 					</div>
 				</template>
 				<template #footer>
-					<Button class="w-full" label="Join Team" @click="joinTeam" />
+					<Button class="w-full" label="Join Team" @click="joinTeam" :loading="loading" />
 				</template>
 			</Card>
 		</div>
