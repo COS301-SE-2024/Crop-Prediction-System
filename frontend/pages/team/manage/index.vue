@@ -29,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+import { email } from '@vuelidate/validators'
 import { ref } from 'vue'
 
 // TODO: Fill table with data from new api call that needs to be implemented
@@ -38,6 +39,7 @@ definePageMeta({
 
 const role = ref()
 const roles = ref([
+	{ name: 'Farm Manager', value: 'farm_manager' },
 	{ name: 'Farmer', value: 'farmer' },
 	{ name: 'Data Analyst', value: 'data_analyst' },
 ])
@@ -61,7 +63,7 @@ const send = async () => {
 
 	try {
 		await $fetch('/api/send', {
-			params: { to: newUserEmail.value, team_id: teamID.team_id },
+			params: { to: newUserEmail.value, team_id: teamID.team_id, role: role.value.value },
 		})
 	} catch (error) {
 		console.error('Error sending invite:', error)
