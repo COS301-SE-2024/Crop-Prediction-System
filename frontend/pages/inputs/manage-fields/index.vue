@@ -220,9 +220,9 @@ const loadingStates = ref(new Map())
 
 const showIndividualTrainSuccess = (field) => {
 	toast.add({
-		severity: 'success',
-		summary: 'Trained field',
-		detail: `You have successfully trained the field: ${field.field_name}`,
+		severity: 'info',
+		summary: 'Training scheduled',
+		detail: `The following field has been scheduled for training: ${field.field_name}`,
 		life: 3000,
 	})
 }
@@ -236,7 +236,7 @@ const showIndividualTrainFailure = (field) => {
 	})
 }
 
-async function trainField(field) {
+async function trainField(field, from: string) {
 	loadingStates.value.set(field.id, true)
 	try {
 		await $fetch('/api/trainField', {
@@ -246,7 +246,9 @@ async function trainField(field) {
 		showIndividualTrainFailure(field)
 	} finally {
 		loadingStates.value.set(field.id, false)
-		showIndividualTrainSuccess(field)
+		if (from !== 'trainAll') {
+			showIndividualTrainSuccess(field)
+		}
 	}
 }
 
@@ -255,9 +257,9 @@ const trainAllLoading = ref(false)
 
 const showAllTrainSuccess = () => {
 	toast.add({
-		severity: 'info',
-		summary: 'Trained all fields',
-		detail: 'You have successfully trained all fields.',
+		severity: 'success',
+		summary: 'Training scheduled',
+		detail: 'All fields have been scheduled for training.',
 		life: 3000,
 	})
 }
@@ -280,7 +282,7 @@ const trainAllFields = async () => {
 
 	try {
 		for (const field of teamFields.value) {
-			await trainField(field)
+			await trainField(field, 'trainAll')
 		}
 	} catch (error) {
 		showAllTrainFailure()
@@ -289,9 +291,7 @@ const trainAllFields = async () => {
 			loadingStates.value.set(field.id, false)
 		})
 		trainAllLoading.value = false
-		setTimeout(() => {
-			showAllTrainSuccess()
-		}, 3000)
+		showAllTrainSuccess()
 	}
 }
 
