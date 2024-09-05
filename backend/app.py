@@ -98,7 +98,7 @@ class API:
     
     # model routes
     def aggregate(self, background_tasks: BackgroundTasks, request: Request):
-        background_tasks.add_task(self.ml.aggregate)
+        background_tasks.add_task(self.sb.aggregate)
         return {"message": "Started aggregation"}
     
     def predict(self, background_tasks: BackgroundTasks, request: Request, field_id: str = None, batch: bool = False):
