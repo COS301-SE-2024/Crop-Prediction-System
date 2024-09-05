@@ -316,8 +316,10 @@ class supabaseFunctions:
     @staticmethod
     def removeFromTeam(user_id: str):
         try:
-            response = supabaseFunctions.__sbClient.table("profiles").update({"team_id": None}).eq("id", user_id).execute()
-            print(response)
+            newId = uuid.uuid4()
+            response = supabaseFunctions.__sbClient.table("profiles").update({"team_id": newId, "role": "farm_manager"}).eq("id", user_id).execute()
+            if response.error:
+                raise Exception(response.error)
             return {"success": "Removed from team"}
         except Exception as e:
             print(e)
