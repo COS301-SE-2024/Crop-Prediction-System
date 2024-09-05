@@ -107,10 +107,6 @@ class Model:
         
         data = self.load_data(c, field_id)
 
-        print(data, flush=True)
-
-        print(f"Data loaded for crop: {crop}", flush=True)
-
         # Get the current stage
         current_stage = self.sf.getCurrentStage(c)
 
@@ -127,7 +123,7 @@ class Model:
         y = stage_data['yield']
 
         # Define the XGBoost model
-        xgb_model = xgb.XGBRegressor(objective='reg:squarederror')
+        xgb_model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators = 10, seed = 123, booster = 'gbtree')
 
         # Define the parameter grid
         param_dist = {
@@ -137,7 +133,7 @@ class Model:
             'min_child_weight': [1, 3, 5, 7],
             'gamma': [0, 0.1, 0.2, 0.3],
             'subsample': [0.7, 0.8, 0.9, 1.0],
-            'colsample_bytree': [0.7, 0.8, 0.9, 1.0]
+            'colsample_bytree': [0.7, 0.8, 0.9, 1.0],
         }
 
         # Setup the random search with 3-fold cross-validation
@@ -149,7 +145,7 @@ class Model:
             cv=3,  # 3-fold cross-validation
             verbose=1,
             n_jobs=-1,
-            random_state=42
+            random_state=42,
         )
 
         # Fit the random search model
@@ -161,6 +157,7 @@ class Model:
         # Make predictions with the best model
         y_pred = best_model.predict(X)
         mse = mean_squared_error(y, y_pred)
+        rmse = np.sqrt(mse)
 
         # Save the model
         # First delete the existing model
@@ -179,6 +176,7 @@ class Model:
         return {
             "status" : "Model trained successfully",
             "mse" : mse,
+            "rmse" : rmse,
             "predictions" : prediction
         }
 
