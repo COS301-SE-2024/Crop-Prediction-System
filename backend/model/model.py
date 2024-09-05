@@ -107,18 +107,22 @@ class Model:
         
         data = self.load_data(c, field_id)
 
-        # print(data, flush=True)
+        print(data, flush=True)
 
-        # print(f"Data loaded for crop: {crop}", flush=True)
+        print(f"Data loaded for crop: {crop}", flush=True)
 
         # Get the current stage
         current_stage = self.sf.getCurrentStage(c)
 
-        # print(f"Current stage: {current_stage}", flush=True)
-
         # Filter data based on the current stage
         stage_data = data[data['stage'] == current_stage]
 
+        if current_stage == None:
+            return {
+                "status" : "Model training failed",
+                "error" : "Current stage not found"
+            }
+        
         X = stage_data.drop(['year', 'stage', 'yield', 'field_id', 'id'], axis=1)
         y = stage_data['yield']
 
@@ -196,7 +200,16 @@ class Model:
         try:
             model.load_model(f"{field_id}.json")
         except:
-            return self.train(field_id)
+            result = self.train(field_id)
+            if "error" in result:
+                # for now, and 5 days ahead
+                for i in range(0,6):
+                    self.sb.table('field_data').upsert({
+                        'field_id': field_id,
+                        'date': datetime.datetime.now().isoformat() + datetime.timedelta(days=i),
+                        'yield': 0
+                    }).execute()
+                return {"error": "Model not found. Model has been trained with 0 yield for the next 5 days."}
 
         # drop  Invalid columns:id: object, field_id: object, stage: object, yield: objec
         data = data.drop(['id', 'field_id', 'stage', 'yield', 'year'], axis=1)
@@ -206,19 +219,22 @@ class Model:
 
         # Make predictions
         predictions = model.predict(dmatrix)
+
+        print(f"Predictions: {predictions}", flush=True)
         if not test:
             # Upsert the predictions
             try:
-                result = self.sb.table('field_data').upsert({
-                    'field_id': field_id,
-                    'date': datetime.datetime.now().isoformat(),
-                    'yield': predictions.tolist()[0]
-                }).execute()
+                for i in range(0,6):
+                    result = self.sb.table('field_data').upsert({
+                        'field_id': field_id,
+                        'date': (datetime.datetime.now() + datetime.timedelta(days=i)).isoformat(),
+                        'yield': predictions.tolist()[0]
+                    }).execute()
 
                 # print(f"Predictions upserted successfully: {result}", flush=True)
             except Exception as e:
                 # print(f"An error occurred while upserting predictions: {str(e)}", flush=True)
                 pass
 
-        return predictions.tolist()[0] if predictions else None
+        return predictions.tolist()[0] if len(predictions) > 0 else None
 
