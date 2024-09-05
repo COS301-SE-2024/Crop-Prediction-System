@@ -37,7 +37,7 @@ class API:
         self.app.add_api_route("/getTeamFields", self.getTeamFields, methods=["GET"])
         self.app.add_api_route("/getTeamFieldData", self.getTeamFieldData, methods=["GET"])
         self.app.add_api_route("/addToTeam", self.addToTeam, methods=["POST"]) # TODO: Test this route
-        self.app.add_api_route("/removeFromTeam", self.removeFromTeam, methods=["GET"]) # TODO: Test this route
+        self.app.add_api_route("/removeFromTeam", self.removeFromTeam, methods=["PUT"]) # TODO: Test this route
         self.app.add_api_route("/updateRoles", self.updateRoles, methods=["POST"]) # TODO: Test this route
         self.app.add_api_route("/getTeamDetails", self.getTeamDetails, methods=["GET"]) # TODO: Test this route
 
