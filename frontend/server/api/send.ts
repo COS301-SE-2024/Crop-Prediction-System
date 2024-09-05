@@ -14,7 +14,9 @@ export default defineEventHandler(async (event) => {
 			from: 'Terrabyte <terra@terrabyte.software>',
 			to: [`${to}`],
 			subject: 'Team Invite',
-			html: `<h2>You have been invited!</h2><p>You have been invited to join a team on the TerraByte app. Please use this code below for reference when you join the team.</p><strong>Code: ${team_id}</strong> <p>Please follow the link below to register your account.</p><a href="${appURL}/join?team_id=${team_id}&role=${role}">${appURL}/join?team_id=${team_id}&role=${role}</a>`,
+			html: `<h2>You have been invited!</h2><p>You have been invited to join a team on the TerraByte app. Please use this code below for reference when you join the team.</p><strong>Code: ${team_id}</strong> <p>Please follow the link below to register your account.</p><a href="${appURL}/join?team_id=${team_id}&role=${role}">${appURL}/join?team_id=${team_id}&role=${role}</a>
+            <p>If you already have an account, please follow the link below to accept the invite.</p>
+            <a href="${appURL}/accept?team_id=${team_id}&role=${role}">${appURL}/accept?team_id=${team_id}&role=${role}</a>`,
 		})
 
 		return data

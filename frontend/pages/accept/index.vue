@@ -6,6 +6,7 @@ import Button from 'primevue/button'
 const team_id = '1111-2222-3333-4444' // Get team_id from the query params
 
 // TODO: add role
+// TODO: add updateRole (addToTeam API call)
 
 // async function joinTeam() {
 // 	try {
