@@ -6,6 +6,7 @@ const config = useRuntimeConfig()
 export default defineEventHandler(async (event) => {
 	const to = getQuery(event).to
 	const team_id = getQuery(event).team_id
+	const role = getQuery(event).role
 	const appURL = config.public.appBaseUrl
 
 	try {
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
 			from: 'Terrabyte <terra@terrabyte.software>',
 			to: [`${to}`],
 			subject: 'Team Invite',
-			html: `<h2>You have been invited!</h2><p>You have been invited to join a team on the TerraByte app. Please use this code below for reference when you join the team.</p><strong>Code: ${team_id}</strong> <p>Please follow the link below to register your account.</p><a href="${appURL}/join?team_id=${team_id}">${appURL}/join?team_id=${team_id}</a>`,
+			html: `<h2>You have been invited!</h2><p>You have been invited to join a team on the TerraByte app. Please use this code below for reference when you join the team.</p><strong>Code: ${team_id}</strong> <p>Please follow the link below to register your account.</p><a href="${appURL}/join?team_id=${team_id}&role=${role}">${appURL}/join?team_id=${team_id}&role=${role}</a>`,
 		})
 
 		return data

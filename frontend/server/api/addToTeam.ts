@@ -3,7 +3,7 @@ const config = useRuntimeConfig()
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
 
-	const { team_id, user_id } = body
+	const { team_id, user_id, role } = body
 
 	// Ensure both team_id and user_id are provided
 	if (!team_id || !user_id) {
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 		// Make a POST request to the external API
 		const response = await $fetch(`${apiBaseUrl}/addToTeam`, {
 			method: 'POST',
-			body: { team_id, user_id },
+			body: { team_id, user_id, role },
 		})
 
 		// Return the response from the API call
