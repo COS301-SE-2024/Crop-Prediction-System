@@ -10,6 +10,7 @@ import { required, email, minLength, sameAs, helpers } from '@vuelidate/validato
 
 const client = useSupabaseClient()
 const userEmail = ref('')
+const userFullName = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const errorMsg = ref('')
@@ -18,6 +19,7 @@ const successMsg = ref('')
 const newUserID = ref('')
 
 const team_id = useRoute().query.team_id as string // Get team_id from the query params
+const role = useRoute().query.role as string
 const step = ref(1) // Step state to manage multi-step
 
 const passwordPattern = helpers.regex('passwordPattern', /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{"':;?/>.<,]).{8,}$/)
@@ -38,6 +40,7 @@ async function signUp() {
 			options: {
 				data: {
 					email: userEmail.value,
+					full_name: userFullName.value,
 				},
 			},
 		})
@@ -73,6 +76,7 @@ async function joinTeam() {
 			body: {
 				team_id: team_id,
 				user_id: newUserID.value,
+				role: role,
 			},
 		})
 
@@ -122,6 +126,16 @@ definePageMeta({
 				</template>
 				<template #content>
 					<div class="flex flex-col gap-3">
+						<div class="flex flex-col gap-2 items-start">
+							<h3 class="font-semibold">Full Name</h3>
+							<InputText
+								id="userFullName"
+								type="text"
+								class="w-full"
+								v-model="userFullName"
+								placeholder="John Doe"
+							/>
+						</div>
 						<!-- Email -->
 						<div class="flex flex-col gap-2 items-start">
 							<h3 class="font-semibold">Email Address</h3>
