@@ -2,40 +2,45 @@
 import Card from 'primevue/card'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
+import { useToast } from 'primevue/usetoast'
 
-const team_id = '1111-2222-3333-4444' // Get team_id from the query params
+const team_id = useRoute().query.team_id as string
+const role = useRoute().query.role as string
 
-// TODO: add role
-// TODO: add updateRole (addToTeam API call)
+const toast = useToast()
 
-// async function joinTeam() {
-// 	try {
-// 		// Make a POST request to the server API to add the user to the team
-// 		const response = await $fetch('/api/addToTeam', {
-// 			method: 'POST',
-// 			body: {
-// 				team_id: team_id,
-// 				user_id: newUserID.value,
-// 				role: role,
-// 			},
-// 		})
-//
-// 		if (response?.error) {
-// 			throw new Error(response.error)
-// 		}
-//
-// 		// Handle success response
-// 		successMsg.value = 'You have successfully joined the team!'
-// 	} catch (error: any) {
-// 		// Handle any errors that occurred during the API call
-// 		errorMsg.value = error.message || 'Failed to join the team.'
-// 	} finally {
-// 		step.value = 3
-// 	}
-// }
+const showInfo = () => {
+	toast.add({ severity: 'info', summary: 'Changed Teams', detail: 'You have successfully joined the team', life: 3000 })
+	setTimeout(() => navigateTo('/'), 3000)
+}
+
+const showError = () => {
+	toast.add({ severity: 'error', summary: 'Join Failed', detail: 'Could not join the team, please try again', life: 3000 })
+}
+
+async function joinTeam() {
+	try {
+		// Make a POST request to the server API to add the user to the team
+		const user = useSupabaseUser()
+		await $fetch('/api/addToTeam', {
+			method: 'POST',
+			body: {
+				team_id: team_id,
+				user_id: user.value?.id,
+				role: role,
+			},
+		})
+	} catch (error: any) {
+		// Handle any errors that occurred during the API call
+		showError()
+	} finally {
+		showInfo()
+	}
+}
 
 definePageMeta({
 	middleware: 'auth',
+	layout: 'auth',
 })
 </script>
 
