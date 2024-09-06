@@ -2,6 +2,11 @@
 	<div class="bg-surface-0 dark:bg-surface-900">
 		<div id="home" class="landing-wrapper overflow-hidden">
 			<div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
+				<OverlayPanel ref="op" class="flex flex-col justify-center items-center mt-2">
+					<div class="flex flex-col items-center justify-center gap-5">
+						<Menu :model="items" />
+					</div>
+				</OverlayPanel>
 				<div
 					class="items-center bg-surface-0 dark:bg-surface-900 grow justify-between hidden lg:flex absolute lg:static w-full left-0 top-full px-12 lg:px-0 z-20 rounded-border"
 				>
@@ -61,7 +66,6 @@
 				>
 					<i class="pi pi-bars !text-2xl"></i>
 				</Button>
-
 				<div
 					class="items-center bg-surface-0 dark:bg-surface-900 grow justify-between hidden lg:flex absolute lg:static w-full left-0 top-full px-12 lg:px-0 z-20 rounded-border"
 				>
@@ -117,7 +121,8 @@ import OverlayPanel from 'primevue/overlaypanel'
 // import { useColorMode } from '@vueuse/core'
 
 const settingsSwitch = ref(false)
-
+const op = ref<OverlayPanel | null>(null)
+const settingsPanel = ref<OverlayPanel | null>(null)
 const items = computed(() => [
 	{
 		label: 'Toggle Theme',
