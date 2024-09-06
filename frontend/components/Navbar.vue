@@ -29,7 +29,7 @@
 					<i class="pi pi-bell" style="font-size: 1.5rem" />
 				</div> -->
 				<Button @click="toggleProfile" severity="secondary" text size="large" class="text-2xl"
-					><i class="pi pi-user" style="font-size: 1.5rem; color: white"
+					><i class="pi pi-user" style="font-size: 1.5rem"
 				/></Button>
 				<!-- <div class="hidden sm:block">
 			<i class="pi pi-cog" @click="toggleSettings" style="font-size: 1.5rem" />
