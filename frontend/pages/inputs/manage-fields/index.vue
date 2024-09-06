@@ -79,22 +79,50 @@
 
 				<div class="flex flex-col gap-2 w-full">
 					<label for="croptype">Crop Type</label>
-					<Dropdown
-						class="w-full sm:w-[250px]"
-						v-model="selectedCropType"
-						:options="cropOptions"
-						optionLabel="name"
-						:placeholder="capitalizeFirstCharacter(selectedField?.crop_type as string)"
-						showClear
+					<div class="flex gap-2">
+						<Dropdown
+							class="w-full sm:w-[250px]"
+							v-model="editingSelectedCropType"
+							:options="editingCropOptions"
+							optionLabel="name"
+							:placeholder="capitalizeFirstCharacter(selectedField?.crop_type as string)"
+							:disabled="!isEditingCropType"
+						/>
+						<Button
+							text
+							rounded
+							:icon="isEditingCropType ? 'pi pi-check' : 'pi pi-pencil'"
+							severity="secondary"
+							size="small"
+							@click="toggleCropEditMode"
+						/>
+					</div>
+				</div>
+
+				<div class="w-full flex flex-row justify-between items-center">
+					<h4 class="text-lg font-bold">Field Map</h4>
+					<Button
+						:severity="isFieldEditMode ? 'info' : 'secondary'"
+						:label="isFieldEditMode ? 'Save Changes' : 'Edit Map'"
+						:icon="isFieldEditMode ? 'pi pi-check' : 'pi pi-pencil'"
+						size="small"
+						outlined
+						@click="toggleFieldEditMode"
 					/>
 				</div>
 
+				<p class="mt-2" v-show="isFieldEditMode">
+					Adjust the size or shape of the field by pressing and dragging the dots on the corners of the field polygon.
+					If you wish to move the polygon, simply press and hold in the middle of the polygon and drag it.
+				</p>
 				<div class="flex flex-col gap-2 w-full">
 					<div class="w-full h-[400px] md:h-[600px] rounded overflow-hidden">
 						<GoogleMapsField
 							:selectedField="selectedField"
 							:fields="teamFields"
+							:isEditMode="isFieldEditMode"
 							@update:selectedField="updateSelectedField"
+							@savePolygonCoords="handlePolygonUpdate"
 						/>
 					</div>
 				</div>
@@ -144,6 +172,8 @@ onMounted(async () => {
 		const teamID = await $fetch('/api/getTeamID', {
 			params: { userid: currentUser?.value?.id },
 		})
+
+		console.log(teamID)
 
 		const response = await $fetch('/api/getTeamFields', {
 			params: { team_id: teamID.team_id },
@@ -298,5 +328,49 @@ const trainAllFields = async () => {
 function capitalizeFirstCharacter(str: string) {
 	if (!str) return '' // Handle empty strings
 	return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+// INFO: Editing Field Map
+const isFieldEditMode = ref(false) // Tracks if the map is in edit mode
+
+const toggleFieldEditMode = () => {
+	if (isFieldEditMode.value) {
+		// "Save Changes" clicked, now emit the polygon coordinates
+		toast.add({
+			severity: 'success',
+			summary: 'Map Saved',
+			detail: 'The new field coordinates have been saved.',
+			life: 3000,
+		})
+		// The coordinates will be logged via handlePolygonUpdate when emitted
+	}
+	// Toggle edit mode
+	isFieldEditMode.value = !isFieldEditMode.value
+}
+
+// Handle the updated polygon coordinates when editing is done
+function handlePolygonUpdate(newCoords) {
+	const transformedCoords = newCoords.map((coord) => [coord.lat, coord.lng])
+	console.log('Transformed polygon coordinates:', transformedCoords)
+}
+
+// INFO: Editing Field Crop Type
+const isEditingCropType = ref(false)
+
+const editingSelectedCropType = ref(null)
+const editingCropOptions = ref([
+	{ name: 'Maize', value: 'maize' },
+	{ name: 'Wheat', value: 'wheat' },
+	{ name: 'Groundnuts', value: 'groundnuts' },
+	{ name: 'Sunflower', value: 'sunflowerseed' },
+	{ name: 'Sorghum', value: 'sorghum' },
+	{ name: 'Soybeans', value: 'soybeans' },
+	{ name: 'Barley', value: 'barley' },
+	{ name: 'Canola', value: 'canola' },
+	{ name: 'Oats', value: 'oats' },
+])
+
+const toggleCropEditMode = () => {
+	isEditingCropType.value = !isEditingCropType.value
 }
 </script>
