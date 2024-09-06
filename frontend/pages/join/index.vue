@@ -42,6 +42,7 @@ async function signUp() {
 					email: userEmail.value,
 					full_name: userFullName.value,
 				},
+				emailRedirectTo: `${useRuntimeConfig().public.appBaseUrl}`,
 			},
 		})
 		if (error) throw error
