@@ -74,7 +74,22 @@
 			<div class="flex flex-col justify-between items-start gap-4">
 				<div class="flex flex-col gap-2 w-full">
 					<label for="fieldname">Field Name</label>
-					<InputText id="fieldname" class="w-full sm:w-[250px]" :placeholder="selectedField?.field_name" />
+					<div class="flex items-center gap-2">
+						<InputText
+							id="fieldname"
+							v-model="newFieldName"
+							class="w-full sm:w-[250px]"
+							:placeholder="selectedField?.field_name"
+							:disabled="!isEditingFieldName"
+						/>
+						<Button
+							size="small"
+							text
+							severity="secondary"
+							:icon="isEditingFieldName ? 'pi pi-check' : 'pi pi-pencil'"
+							@click="toggleNameEditMode"
+						/>
+					</div>
 				</div>
 
 				<div class="flex flex-col gap-2 w-full">
@@ -90,7 +105,6 @@
 						/>
 						<Button
 							text
-							rounded
 							:icon="isEditingCropType ? 'pi pi-check' : 'pi pi-pencil'"
 							severity="secondary"
 							size="small"
@@ -227,7 +241,7 @@ const cropOptions = ref([
 	{ name: 'Maize', value: 'maize' },
 	{ name: 'Wheat', value: 'wheat' },
 	{ name: 'Groundnuts', value: 'groundnuts' },
-	{ name: 'Sunflower', value: 'sunflowerseed' },
+	{ name: 'Sunflower', value: 'sunflower' },
 	{ name: 'Sorghum', value: 'sorghum' },
 	{ name: 'Soybeans', value: 'soybeans' },
 	{ name: 'Barley', value: 'barley' },
@@ -330,31 +344,62 @@ function capitalizeFirstCharacter(str: string) {
 	return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
-// INFO: Editing Field Map
+// PERF: Editing Field Map
 const isFieldEditMode = ref(false) // Tracks if the map is in edit mode
 
 const toggleFieldEditMode = () => {
-	if (isFieldEditMode.value) {
-		// "Save Changes" clicked, now emit the polygon coordinates
-		toast.add({
-			severity: 'success',
-			summary: 'Map Saved',
-			detail: 'The new field coordinates have been saved.',
-			life: 3000,
-		})
-		// The coordinates will be logged via handlePolygonUpdate when emitted
-	}
 	// Toggle edit mode
 	isFieldEditMode.value = !isFieldEditMode.value
 }
 
-// Handle the updated polygon coordinates when editing is done
-function handlePolygonUpdate(newCoords) {
+async function handlePolygonUpdate(newCoords) {
+	// Transform the new coordinates if needed (this is done already in your format)
 	const transformedCoords = newCoords.map((coord) => [coord.lat, coord.lng])
-	console.log('Transformed polygon coordinates:', transformedCoords)
+
+	// Define the API call for updating the field area
+	try {
+		const response = await $fetch('/api/updateFieldArea', {
+			method: 'POST', // You can use 'PUT' based on your API
+			body: {
+				field_id: selectedField.value.id, // The ID of the selected field
+				field_area: transformedCoords, // The new polygon coordinates
+			},
+		})
+
+		// Handle the response
+		if (response.statusCode === 200) {
+			toast.add({
+				severity: 'success',
+				summary: 'Field Map Updated',
+				detail: 'The field area has been updated successfully.',
+				life: 3000,
+			})
+
+			// Optionally update local teamFields data with the new field_area
+			const fieldToUpdate = teamFields.value.find((field) => field.id === selectedField.value.id)
+			if (fieldToUpdate) {
+				fieldToUpdate.field_area = transformedCoords
+			}
+		} else {
+			toast.add({
+				severity: 'error',
+				summary: 'Update Failed',
+				detail: response.message || 'Failed to update the field area.',
+				life: 3000,
+			})
+		}
+	} catch (error) {
+		toast.add({
+			severity: 'error',
+			summary: 'Error',
+			detail: 'Failed to update the field area. Please try again.',
+			life: 3000,
+		})
+		console.error('API error:', error)
+	}
 }
 
-// INFO: Editing Field Crop Type
+// TODO: Editing Field Crop Type
 const isEditingCropType = ref(false)
 
 const editingSelectedCropType = ref(null)
@@ -362,7 +407,7 @@ const editingCropOptions = ref([
 	{ name: 'Maize', value: 'maize' },
 	{ name: 'Wheat', value: 'wheat' },
 	{ name: 'Groundnuts', value: 'groundnuts' },
-	{ name: 'Sunflower', value: 'sunflowerseed' },
+	{ name: 'Sunflower', value: 'sunflower' },
 	{ name: 'Sorghum', value: 'sorghum' },
 	{ name: 'Soybeans', value: 'soybeans' },
 	{ name: 'Barley', value: 'barley' },
@@ -370,7 +415,98 @@ const editingCropOptions = ref([
 	{ name: 'Oats', value: 'oats' },
 ])
 
-const toggleCropEditMode = () => {
+const toggleCropEditMode = async () => {
+	if (isEditingCropType.value) {
+		try {
+			const response = await $fetch('/api/updateFieldCropType', {
+				method: 'POST',
+				body: {
+					field_id: selectedField.value.id, // The ID of the selected field
+					crop_type: editingSelectedCropType.value.value, // The updated crop type
+				},
+			})
+
+			if (response.statusCode === 200) {
+				toast.add({
+					severity: 'success',
+					summary: 'Crop Type Updated',
+					detail: 'The crop type has been updated successfully.',
+					life: 3000,
+				})
+
+				const fieldToUpdate = teamFields.value.find((field) => field.id === selectedField.value.id)
+				if (fieldToUpdate) {
+					fieldToUpdate.crop_type = editingSelectedCropType.value.value // Update the local crop type
+				}
+			} else {
+				toast.add({
+					severity: 'error',
+					summary: 'Update Failed',
+					detail: response.message || 'Failed to update crop type.',
+					life: 3000,
+				})
+			}
+		} catch (error) {
+			toast.add({
+				severity: 'error',
+				summary: 'Error',
+				detail: 'Failed to update the crop type. Please try again.',
+				life: 3000,
+			})
+			console.error('API error:', error)
+		}
+	}
+
 	isEditingCropType.value = !isEditingCropType.value
+}
+
+// PERF: Editing Field name
+const isEditingFieldName = ref(false)
+const newFieldName = ref('')
+
+const toggleNameEditMode = async () => {
+	if (isEditingFieldName.value) {
+		try {
+			const response = await $fetch('/api/updateFieldName', {
+				method: 'PUT',
+				body: {
+					field_id: selectedField.value.id, // Field ID from selected field
+					field_name: newFieldName.value, // New field name
+				},
+			})
+
+			if (response.statusCode === 200) {
+				const fieldToUpdate = teamFields.value.find((field) => field.id === selectedField.value.id)
+				if (fieldToUpdate) {
+					fieldToUpdate.field_name = newFieldName.value // Update the local field name
+				}
+
+				toast.add({
+					severity: 'success',
+					summary: 'Success',
+					detail: 'Field name updated successfully.',
+					life: 3000,
+				})
+			} else {
+				toast.add({
+					severity: 'error',
+					summary: 'Error',
+					detail: response.message || 'Failed to update field name.',
+					life: 3000,
+				})
+			}
+		} catch (error) {
+			toast.add({
+				severity: 'error',
+				summary: 'Error',
+				detail: 'Failed to update field name. Please try again.',
+				life: 3000,
+			})
+			console.error('API error:', error)
+		}
+	}
+
+	// Toggle the edit mode after the update
+	isEditingFieldName.value = !isEditingFieldName.value
 }
 </script>
