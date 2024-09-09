@@ -71,7 +71,7 @@ class TestSupabaseFunctions:
         }]
         
         team_id = supabaseFunctions.getTeamId("ac774d3a-921f-4154-b590-5e05831431a1")
-        assert team_id == {'team_id': '17383e3d-f211-4724-8515-8c4cb836c812'}
+        assert team_id == {'role': 'farm_manager','team_id': '17383e3d-f211-4724-8515-8c4cb836c812'}
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamId_failure(self, mock_get_client):
