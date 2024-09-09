@@ -1,10 +1,36 @@
 <template>
 	<div class="flex flex-col gap-5 px-4 sm:px-6 md:px-8 lg:px-0 py-4 sm:py-6 md:py-8 lg:py-0">
-		<DataTable :value="team" responsiveLayout="scroll" tableStyle="min-width: 50rem" columnResizeMode="expand">
+		<DataTable
+			:value="team"
+			responsiveLayout="scroll"
+			tableStyle="min-width: 50rem"
+			columnResizeMode="expand"
+			:loading="isLoading"
+		>
 			<template #header>
 				<h1 class="text-lg font-bold dark:text-white">
 					{{ teamOwner.valueOf() === '' ? 'Fetching Team Details...' : `${teamOwner} Team` }}
 				</h1>
+			</template>
+
+			<template #empty>
+				<div class="flex flex-col gap-2">
+					<div class="flex gap-2">
+						<Skeleton />
+						<Skeleton />
+						<Skeleton />
+					</div>
+					<div class="flex gap-2">
+						<Skeleton />
+						<Skeleton />
+						<Skeleton />
+					</div>
+					<div class="flex gap-2">
+						<Skeleton />
+						<Skeleton />
+						<Skeleton />
+					</div>
+				</div>
 			</template>
 
 			<!-- Name Column -->
@@ -30,6 +56,7 @@
 			<!-- Actions Column with Trash Button -->
 			<Column header="Actions">
 				<template #body="slotProps">
+					<Skeleton v-show="isLoading" />
 					<Button
 						outlined
 						rounded
@@ -86,6 +113,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useToast } from 'primevue/usetoast'
+import Skeleton from 'primevue/skeleton'
 
 // State for the team and editing
 const team = ref([])
@@ -95,6 +123,7 @@ const visible = ref(false) // State for invite member dialog
 const confirmVisible = ref(false) // State for confirmation dialog
 const selectedUserId = ref('') // State for the user being removed
 const toast = useToast()
+const isLoading = ref(false)
 
 onMounted(async () => {
 	await getTeamDetails()
@@ -102,6 +131,7 @@ onMounted(async () => {
 
 async function getTeamDetails() {
 	try {
+		isLoading.value = true
 		const currentUser = useSupabaseUser()
 		const teamID = await $fetch('/api/getTeamID', {
 			params: { userid: currentUser?.value?.id },
@@ -120,6 +150,8 @@ async function getTeamDetails() {
 		team.value = data
 	} catch (error) {
 		console.error('Error fetching team details:', error)
+	} finally {
+		isLoading.value = false
 	}
 }
 
