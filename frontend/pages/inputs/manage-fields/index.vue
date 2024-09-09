@@ -57,7 +57,14 @@
 				</template>
 				<template #footer>
 					<div class="flex gap-3">
-						<Button label="Delete" severity="danger" size="small" outlined class="w-full" />
+						<Button
+							label="Delete"
+							severity="danger"
+							size="small"
+							outlined
+							class="w-full"
+							@click="openDeleteDialog(field)"
+						/>
 						<Button label="View or Edit" size="small" class="w-full" @click="editField(field)" />
 					</div>
 				</template>
@@ -74,30 +81,84 @@
 			<div class="flex flex-col justify-between items-start gap-4">
 				<div class="flex flex-col gap-2 w-full">
 					<label for="fieldname">Field Name</label>
-					<InputText id="fieldname" class="w-full sm:w-[250px]" :placeholder="selectedField?.field_name" />
+					<div class="flex items-center gap-2">
+						<InputText
+							id="fieldname"
+							v-model="newFieldName"
+							class="w-full sm:w-[250px]"
+							:placeholder="selectedField?.field_name"
+							:disabled="!isEditingFieldName"
+						/>
+						<Button
+							size="small"
+							text
+							severity="secondary"
+							:icon="isEditingFieldName ? 'pi pi-check' : 'pi pi-pencil'"
+							@click="toggleNameEditMode"
+						/>
+					</div>
 				</div>
 
 				<div class="flex flex-col gap-2 w-full">
 					<label for="croptype">Crop Type</label>
-					<Dropdown
-						class="w-full sm:w-[250px]"
-						v-model="selectedCropType"
-						:options="cropOptions"
-						optionLabel="name"
-						:placeholder="capitalizeFirstCharacter(selectedField?.crop_type as string)"
-						showClear
+					<div class="flex gap-2">
+						<Dropdown
+							class="w-full sm:w-[250px]"
+							v-model="editingSelectedCropType"
+							:options="editingCropOptions"
+							optionLabel="name"
+							:placeholder="capitalizeFirstCharacter(selectedField?.crop_type as string)"
+							:disabled="!isEditingCropType"
+						/>
+						<Button
+							text
+							:icon="isEditingCropType ? 'pi pi-check' : 'pi pi-pencil'"
+							severity="secondary"
+							size="small"
+							@click="toggleCropEditMode"
+						/>
+					</div>
+				</div>
+
+				<div class="w-full flex flex-row justify-between items-center">
+					<h4 class="text-lg font-bold">Field Map</h4>
+					<Button
+						:severity="isFieldEditMode ? 'info' : 'secondary'"
+						:label="isFieldEditMode ? 'Save Changes' : 'Edit Map'"
+						:icon="isFieldEditMode ? 'pi pi-check' : 'pi pi-pencil'"
+						size="small"
+						outlined
+						@click="toggleFieldEditMode"
 					/>
 				</div>
 
+				<p class="mt-2" v-show="isFieldEditMode">
+					Adjust the size or shape of the field by pressing and dragging the dots on the corners of the field polygon.
+					If you wish to move the polygon, simply press and hold in the middle of the polygon and drag it.
+				</p>
 				<div class="flex flex-col gap-2 w-full">
 					<div class="w-full h-[400px] md:h-[600px] rounded overflow-hidden">
 						<GoogleMapsField
 							:selectedField="selectedField"
 							:fields="teamFields"
+							:isEditMode="isFieldEditMode"
 							@update:selectedField="updateSelectedField"
+							@savePolygonCoords="handlePolygonUpdate"
 						/>
 					</div>
 				</div>
+			</div>
+		</Dialog>
+
+		<!-- Delete field dialog -->
+		<Dialog header="Confirm Delete" v-model:visible="deleteDialogVisible" modal :style="{ width: '25rem' }">
+			<p>
+				Are you sure you want to delete the field "<strong>{{ fieldToDelete?.field_name }}</strong
+				>"?
+			</p>
+			<div class="flex justify-end gap-2 mt-4">
+				<Button label="Cancel" outlined severity="secondary" @click="cancelDelete" />
+				<Button label="Delete" severity="danger" @click="deleteField" />
 			</div>
 		</Dialog>
 
@@ -144,6 +205,8 @@ onMounted(async () => {
 		const teamID = await $fetch('/api/getTeamID', {
 			params: { userid: currentUser?.value?.id },
 		})
+
+		console.log(teamID)
 
 		const response = await $fetch('/api/getTeamFields', {
 			params: { team_id: teamID.team_id },
@@ -197,7 +260,7 @@ const cropOptions = ref([
 	{ name: 'Maize', value: 'maize' },
 	{ name: 'Wheat', value: 'wheat' },
 	{ name: 'Groundnuts', value: 'groundnuts' },
-	{ name: 'Sunflower', value: 'sunflowerseed' },
+	{ name: 'Sunflower', value: 'sunflower' },
 	{ name: 'Sorghum', value: 'sorghum' },
 	{ name: 'Soybeans', value: 'soybeans' },
 	{ name: 'Barley', value: 'barley' },
@@ -220,9 +283,9 @@ const loadingStates = ref(new Map())
 
 const showIndividualTrainSuccess = (field) => {
 	toast.add({
-		severity: 'success',
-		summary: 'Trained field',
-		detail: `You have successfully trained the field: ${field.field_name}`,
+		severity: 'info',
+		summary: 'Training scheduled',
+		detail: `The following field has been scheduled for training: ${field.field_name}`,
 		life: 3000,
 	})
 }
@@ -236,7 +299,7 @@ const showIndividualTrainFailure = (field) => {
 	})
 }
 
-async function trainField(field) {
+async function trainField(field, from: string) {
 	loadingStates.value.set(field.id, true)
 	try {
 		await $fetch('/api/trainField', {
@@ -246,7 +309,9 @@ async function trainField(field) {
 		showIndividualTrainFailure(field)
 	} finally {
 		loadingStates.value.set(field.id, false)
-		showIndividualTrainSuccess(field)
+		if (from !== 'trainAll') {
+			showIndividualTrainSuccess(field)
+		}
 	}
 }
 
@@ -255,9 +320,9 @@ const trainAllLoading = ref(false)
 
 const showAllTrainSuccess = () => {
 	toast.add({
-		severity: 'info',
-		summary: 'Trained all fields',
-		detail: 'You have successfully trained all fields.',
+		severity: 'success',
+		summary: 'Training scheduled',
+		detail: 'All fields have been scheduled for training.',
 		life: 3000,
 	})
 }
@@ -280,7 +345,7 @@ const trainAllFields = async () => {
 
 	try {
 		for (const field of teamFields.value) {
-			await trainField(field)
+			await trainField(field, 'trainAll')
 		}
 	} catch (error) {
 		showAllTrainFailure()
@@ -289,14 +354,227 @@ const trainAllFields = async () => {
 			loadingStates.value.set(field.id, false)
 		})
 		trainAllLoading.value = false
-		setTimeout(() => {
-			showAllTrainSuccess()
-		}, 3000)
+		showAllTrainSuccess()
 	}
 }
 
 function capitalizeFirstCharacter(str: string) {
 	if (!str) return '' // Handle empty strings
 	return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+// PERF: Editing Field Map
+const isFieldEditMode = ref(false) // Tracks if the map is in edit mode
+
+const toggleFieldEditMode = () => {
+	// Toggle edit mode
+	isFieldEditMode.value = !isFieldEditMode.value
+}
+
+async function handlePolygonUpdate(newCoords) {
+	const transformedCoords = newCoords.map((coord) => [coord.lat, coord.lng])
+	try {
+		const response = await $fetch('/api/updateFieldArea', {
+			method: 'PUT',
+			body: {
+				field_id: selectedField.value.id, // The ID of the selected field
+				field_area: transformedCoords, // The new polygon coordinates
+			},
+		})
+
+		if (response.statusCode === 200) {
+			toast.add({
+				severity: 'success',
+				summary: 'Field Map Updated',
+				detail: 'The field area has been updated successfully.',
+				life: 3000,
+			})
+
+			const fieldToUpdate = teamFields.value.find((field) => field.id === selectedField.value.id)
+			if (fieldToUpdate) {
+				fieldToUpdate.field_area = transformedCoords
+			}
+		} else {
+			toast.add({
+				severity: 'error',
+				summary: 'Update Failed',
+				detail: response.message || 'Failed to update the field area.',
+				life: 3000,
+			})
+		}
+	} catch (error) {
+		toast.add({
+			severity: 'error',
+			summary: 'Error',
+			detail: 'Failed to update the field area. Please try again.',
+			life: 3000,
+		})
+		console.error('API error:', error)
+	}
+}
+
+// TODO: Editing Field Crop Type
+const isEditingCropType = ref(false)
+
+const editingSelectedCropType = ref(null)
+const editingCropOptions = ref([
+	{ name: 'Maize', value: 'maize' },
+	{ name: 'Wheat', value: 'wheat' },
+	{ name: 'Groundnuts', value: 'groundnuts' },
+	{ name: 'Sunflower', value: 'sunflower' },
+	{ name: 'Sorghum', value: 'sorghum' },
+	{ name: 'Soybeans', value: 'soybeans' },
+	{ name: 'Barley', value: 'barley' },
+	{ name: 'Canola', value: 'canola' },
+	{ name: 'Oats', value: 'oats' },
+])
+
+const toggleCropEditMode = async () => {
+	if (isEditingCropType.value) {
+		try {
+			const response = await $fetch('/api/updateFieldCropType', {
+				method: 'PUT',
+				body: {
+					field_id: selectedField.value.id, // The ID of the selected field
+					crop_type: editingSelectedCropType.value.value, // The updated crop type
+				},
+			})
+
+			if (response.statusCode === 200) {
+				toast.add({
+					severity: 'success',
+					summary: 'Crop Type Updated',
+					detail: 'The crop type has been updated successfully.',
+					life: 3000,
+				})
+
+				const fieldToUpdate = teamFields.value.find((field) => field.id === selectedField.value.id)
+				if (fieldToUpdate) {
+					fieldToUpdate.crop_type = editingSelectedCropType.value.value // Update the local crop type
+				}
+			} else {
+				toast.add({
+					severity: 'error',
+					summary: 'Update Failed',
+					detail: response.message || 'Failed to update crop type.',
+					life: 3000,
+				})
+			}
+		} catch (error) {
+			toast.add({
+				severity: 'error',
+				summary: 'Error',
+				detail: 'Failed to update the crop type. Please try again.',
+				life: 3000,
+			})
+			console.error('API error:', error)
+		}
+	}
+
+	isEditingCropType.value = !isEditingCropType.value
+}
+
+// PERF: Editing Field name
+const isEditingFieldName = ref(false)
+const newFieldName = ref('')
+
+const toggleNameEditMode = async () => {
+	if (isEditingFieldName.value) {
+		try {
+			const response = await $fetch('/api/updateFieldName', {
+				method: 'PUT',
+				body: {
+					field_id: selectedField.value.id, // Field ID from selected field
+					field_name: newFieldName.value, // New field name
+				},
+			})
+
+			if (response.statusCode === 200) {
+				const fieldToUpdate = teamFields.value.find((field) => field.id === selectedField.value.id)
+				if (fieldToUpdate) {
+					fieldToUpdate.field_name = newFieldName.value // Update the local field name
+				}
+
+				toast.add({
+					severity: 'success',
+					summary: 'Success',
+					detail: 'Field name updated successfully.',
+					life: 3000,
+				})
+			} else {
+				toast.add({
+					severity: 'error',
+					summary: 'Error',
+					detail: response.message || 'Failed to update field name.',
+					life: 3000,
+				})
+			}
+		} catch (error) {
+			toast.add({
+				severity: 'error',
+				summary: 'Error',
+				detail: 'Failed to update field name. Please try again.',
+				life: 3000,
+			})
+			console.error('API error:', error)
+		}
+	}
+
+	// Toggle the edit mode after the update
+	isEditingFieldName.value = !isEditingFieldName.value
+}
+
+// PERF: Deleting a field
+const deleteDialogVisible = ref(false)
+const fieldToDelete = ref(null)
+
+const openDeleteDialog = (field) => {
+	fieldToDelete.value = field
+	deleteDialogVisible.value = true
+}
+
+const deleteField = async () => {
+	try {
+		const response = await $fetch('/api/deleteField', {
+			method: 'POST',
+			body: { field_id: fieldToDelete.value.id }, // Send the field ID to delete
+		})
+
+		if (response.statusCode === 200) {
+			// Remove the deleted field from the local teamFields array
+			teamFields.value = teamFields.value.filter((field) => field.id !== fieldToDelete.value.id)
+
+			toast.add({
+				severity: 'info',
+				summary: 'Field Deleted',
+				detail: `Field "${fieldToDelete.value.field_name}" has been deleted successfully.`,
+				life: 3000,
+			})
+		} else {
+			toast.add({
+				severity: 'error',
+				summary: 'Delete Failed',
+				detail: response.message || 'Failed to delete the field.',
+				life: 3000,
+			})
+		}
+	} catch (error) {
+		toast.add({
+			severity: 'error',
+			summary: 'Error',
+			detail: 'Failed to delete the field. Please try again.',
+			life: 3000,
+		})
+		console.error('API error:', error)
+	}
+
+	// Close the delete dialog
+	deleteDialogVisible.value = false
+	fieldToDelete.value = null
+}
+
+const cancelDelete = () => {
+	deleteDialogVisible.value = false
+	fieldToDelete.value = null
 }
 </script>

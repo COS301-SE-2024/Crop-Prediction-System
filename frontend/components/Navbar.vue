@@ -25,20 +25,12 @@
 				</div>
 			</OverlayPanel>
 			<div class="flex flex-row items-center justify-end gap-4 justify-self-end dark:text-white cursor-pointer opacity-60">
-				<!-- System Status -->
-				<div class="hidden sm:block">
-					<!-- green dot if good -->
-					<div class="flex items-center gap-1 text-xs border p-2 rounded-lg" @click="toggleStatus">
-						<i class="pi pi-circle-on text-xs text-green-400" />
-						<span>System Status</span>
-					</div>
-				</div>
 				<!-- <div class="p-5 sm:p-0">
 					<i class="pi pi-bell" style="font-size: 1.5rem" />
 				</div> -->
-				<div>
-					<i class="pi pi-user" @click="toggleProfile" style="font-size: 1.5rem" />
-				</div>
+				<Button @click="toggleProfile" severity="secondary" text size="large" class="text-2xl"
+					><i class="pi pi-user" style="font-size: 1.5rem"
+				/></Button>
 				<!-- <div class="hidden sm:block">
 			<i class="pi pi-cog" @click="toggleSettings" style="font-size: 1.5rem" />
 		  </div> -->
