@@ -70,8 +70,8 @@ class TestSupabaseFunctions:
             "team_id": "12345"
         }]
         
-        team_id = supabaseFunctions.getTeamId("0f543694-dba7-4858-bb34-23e88c844b77")
-        assert team_id == {'team_id': '6357c30d-41cc-433c-8735-4223813e9cee'}
+        team_id = supabaseFunctions.getTeamId("ac774d3a-921f-4154-b590-5e05831431a1")
+        assert team_id == {'team_id': '17383e3d-f211-4724-8515-8c4cb836c812'}
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamId_failure(self, mock_get_client):
