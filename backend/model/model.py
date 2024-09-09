@@ -31,26 +31,15 @@ class Model:
         return {"status": "All fields predicted successfully"}
 
     # Load data
-    def load_data(self, field_id = None, crop : Crop = None) -> pd.DataFrame:
-        if field_id == None and crop.name == None:
-            return {"error": "Both Field ID and crop name cannot be empty."}
+    def load_data(self, crop : Crop, field_id = None) -> pd.DataFrame:
+        # print(f"Loading data for field ID: {field_id} and crop: {crop}", flush=True)
         try:
             model_data = self.load_model_data(field_id)
             if "error" in model_data:
                 return model_data  # Return the error message if data loading failed
-            
-            c = None
-            if crop.name == None:
-                print("Crop name not provided. Using field ID to determine crop.", flush=True)
-                f = self.sf.getFieldInfo(field_id)
-                print(f, flush=True)
-                crop = f.crop_type
-                c = self.sf.getCrop(crop)
-            else:
-                c = self.sf.getCrop(crop)
 
             # Load historical data
-            historical_data = self.load_yields(c)
+            historical_data = self.load_yields(crop)
             if "error" in historical_data:
                 return historical_data  # Return the error message if data loading failed
 
@@ -108,8 +97,6 @@ class Model:
         if field_id == None and crop == None:
             return {"error": "Both Field ID and crop name cannot be empty."}
         
-        data = self.load_data(field_id, crop)
-
         c : Crop = None
         if crop == None:
             f = self.sf.getFieldInfo(field_id)
@@ -117,22 +104,26 @@ class Model:
             c = self.sf.getCrop(crop)
         else:
             c = self.sf.getCrop(crop)
-
-        # print(f"Data loaded for crop: {crop}", flush=True)
+        
+        data = self.load_data(c, field_id)
 
         # Get the current stage
         current_stage = self.sf.getCurrentStage(c)
 
-        # print(f"Current stage: {current_stage}", flush=True)
-
         # Filter data based on the current stage
         stage_data = data[data['stage'] == current_stage]
 
+        if current_stage == None:
+            return {
+                "status" : "Model training failed",
+                "error" : "Current stage not found"
+            }
+        
         X = stage_data.drop(['year', 'stage', 'yield', 'field_id', 'id'], axis=1)
         y = stage_data['yield']
 
         # Define the XGBoost model
-        xgb_model = xgb.XGBRegressor(objective='reg:squarederror')
+        xgb_model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators = 10, seed = 123, booster = 'gbtree')
 
         # Define the parameter grid
         param_dist = {
@@ -142,7 +133,7 @@ class Model:
             'min_child_weight': [1, 3, 5, 7],
             'gamma': [0, 0.1, 0.2, 0.3],
             'subsample': [0.7, 0.8, 0.9, 1.0],
-            'colsample_bytree': [0.7, 0.8, 0.9, 1.0]
+            'colsample_bytree': [0.7, 0.8, 0.9, 1.0],
         }
 
         # Setup the random search with 3-fold cross-validation
@@ -154,7 +145,7 @@ class Model:
             cv=3,  # 3-fold cross-validation
             verbose=1,
             n_jobs=-1,
-            random_state=42
+            random_state=42,
         )
 
         # Fit the random search model
@@ -166,6 +157,7 @@ class Model:
         # Make predictions with the best model
         y_pred = best_model.predict(X)
         mse = mean_squared_error(y, y_pred)
+        rmse = np.sqrt(mse)
 
         # Save the model
         # First delete the existing model
@@ -179,27 +171,23 @@ class Model:
 
         prediction = self.predict(field_id)
 
-        print(f"Mean Squared Error: {mse}", flush=True)
-        print(f"Predictions: {prediction}", flush=True)
+        # print(f"Mean Squared Error: {mse}", flush=True)
+        # print(f"Predictions: {prediction}", flush=True)
         return {
             "status" : "Model trained successfully",
             "mse" : mse,
+            "rmse" : rmse,
             "predictions" : prediction
         }
 
     # Predict
     def predict(self, field_id, test=False):
-        # Load the model
-        # model_response = self.sb.table('model').select('model').eq('field_id', field_id).execute()
-        # if model_response.data == []:
-        #     return {"error": "Model not found. Field ID may be invalid or may not have a model."}
-
         dict = {"fieldid": field_id} if field_id else {}
         response = self.sb.rpc('get_model_data', dict).execute()
 
         data = pd.DataFrame(response.data)
 
-        print(data, flush=True)
+        # print(data, flush=True)
 
         # Exclude rows where 'field_id' is null
         data = data[data['field_id'].notnull()]
@@ -210,7 +198,16 @@ class Model:
         try:
             model.load_model(f"{field_id}.json")
         except:
-            return self.train(field_id)
+            result = self.train(field_id)
+            if "error" in result:
+                # for now, and 5 days ahead
+                for i in range(0,6):
+                    self.sb.table('field_data').upsert({
+                        'field_id': field_id,
+                        'date': datetime.datetime.now().isoformat() + datetime.timedelta(days=i),
+                        'yield': 0
+                    }).execute()
+                return {"error": "Model not found. Model has been trained with 0 yield for the next 5 days."}
 
         # drop  Invalid columns:id: object, field_id: object, stage: object, yield: objec
         data = data.drop(['id', 'field_id', 'stage', 'yield', 'year'], axis=1)
@@ -220,89 +217,22 @@ class Model:
 
         # Make predictions
         predictions = model.predict(dmatrix)
+
+        print(f"Predictions: {predictions}", flush=True)
         if not test:
             # Upsert the predictions
             try:
-                result = self.sb.table('field_data').upsert({
-                    'field_id': field_id,
-                    'date': datetime.datetime.now().isoformat(),
-                    'yield': predictions.tolist()[0]
-                }).execute()
+                for i in range(0,6):
+                    result = self.sb.table('field_data').upsert({
+                        'field_id': field_id,
+                        'date': (datetime.datetime.now() + datetime.timedelta(days=i)).isoformat(),
+                        'yield': predictions.tolist()[0]
+                    }).execute()
 
-                print(f"Predictions upserted successfully: {result}", flush=True)
+                # print(f"Predictions upserted successfully: {result}", flush=True)
             except Exception as e:
-                print(f"An error occurred while upserting predictions: {str(e)}", flush=True)
+                # print(f"An error occurred while upserting predictions: {str(e)}", flush=True)
+                pass
 
-        return predictions.tolist()[0] if predictions else None
+        return predictions.tolist()[0] if len(predictions) > 0 else None
 
-    # # Evaluate
-    # def evaluate(self):
-    #     # Load the model
-    #     model = xgb.Booster()
-    #     model.load_model('model.json')
-
-    #     # Load the data
-    #     data = self.load_data()
-
-    #     today = datetime.datetime.now() 
-    #     day_of_year = today.timetuple().tm_yday
-
-    #     xgbins = [stage['day'] for stage in self.crop.stages.values()]
-    #     # append the last day of the year
-    #     xgbins.append(365)
-
-    #     # Determine the current stage
-    #     current_stage = pd.cut([day_of_year], bins=xgbins, labels=self.crop.stages.keys())[0]
-
-    #     print(f"Current stage: {current_stage}")
-
-    #     # Filter data based on the current stage
-    #     stage_data = data[data['stage'] == current_stage]
-
-    #     X = stage_data.drop(['year', 'stage', 'yield', 'field_id', 'id'], axis=1)
-    #     y_true = stage_data['yield']  # Assuming 'yield' is the actual target value you want to compare against
-
-    #     # Convert X to a DMatrix
-    #     dmatrix = xgb.DMatrix(X)
-
-    #     # Make predictions
-    #     predictions = model.predict(dmatrix)
-
-    #     # Evaluate the model
-    #     mse = mean_squared_error(y_true, predictions)
-
-    #     return mse
-
-# Define Wheat model
-# wheat = Crop(
-#     name="wheat",
-#     t_base=5.0, 
-#     stages={
-#         "sowing": {"day": 111},
-#         "germination": {"day": 151},
-#         "tillering": {"day": 182},
-#         "heading": {"day": 243},
-#         "maturity": {"day": 304}
-#     }
-# )
-
-# # Create Supabase client
-# sb = supabaseInstance().get_client()
-
-# # Create model
-# model = Model(wheat, sb)
-
-# # Load data
-# data = model.load_data()
-
-# # Print data
-# print(data)
-
-# # Train model
-# model.train(data)
-
-# # Evaluate model
-# mse = model.evaluate()
-
-# # Print MSE
-# print(f"Mean Squared Error: {mse}")
