@@ -57,7 +57,14 @@
 				</template>
 				<template #footer>
 					<div class="flex gap-3">
-						<Button label="Delete" severity="danger" size="small" outlined class="w-full" />
+						<Button
+							label="Delete"
+							severity="danger"
+							size="small"
+							outlined
+							class="w-full"
+							@click="openDeleteDialog(field)"
+						/>
 						<Button label="View or Edit" size="small" class="w-full" @click="editField(field)" />
 					</div>
 				</template>
@@ -140,6 +147,18 @@
 						/>
 					</div>
 				</div>
+			</div>
+		</Dialog>
+
+		<!-- Delete field dialog -->
+		<Dialog header="Confirm Delete" v-model:visible="deleteDialogVisible" modal :style="{ width: '25rem' }">
+			<p>
+				Are you sure you want to delete the field "<strong>{{ fieldToDelete?.field_name }}</strong
+				>"?
+			</p>
+			<div class="flex justify-end gap-2 mt-4">
+				<Button label="Cancel" outlined severity="secondary" @click="cancelDelete" />
+				<Button label="Delete" severity="danger" @click="deleteField" />
 			</div>
 		</Dialog>
 
@@ -353,20 +372,16 @@ const toggleFieldEditMode = () => {
 }
 
 async function handlePolygonUpdate(newCoords) {
-	// Transform the new coordinates if needed (this is done already in your format)
 	const transformedCoords = newCoords.map((coord) => [coord.lat, coord.lng])
-
-	// Define the API call for updating the field area
 	try {
 		const response = await $fetch('/api/updateFieldArea', {
-			method: 'POST', // You can use 'PUT' based on your API
+			method: 'PUT',
 			body: {
 				field_id: selectedField.value.id, // The ID of the selected field
 				field_area: transformedCoords, // The new polygon coordinates
 			},
 		})
 
-		// Handle the response
 		if (response.statusCode === 200) {
 			toast.add({
 				severity: 'success',
@@ -375,7 +390,6 @@ async function handlePolygonUpdate(newCoords) {
 				life: 3000,
 			})
 
-			// Optionally update local teamFields data with the new field_area
 			const fieldToUpdate = teamFields.value.find((field) => field.id === selectedField.value.id)
 			if (fieldToUpdate) {
 				fieldToUpdate.field_area = transformedCoords
@@ -419,7 +433,7 @@ const toggleCropEditMode = async () => {
 	if (isEditingCropType.value) {
 		try {
 			const response = await $fetch('/api/updateFieldCropType', {
-				method: 'POST',
+				method: 'PUT',
 				body: {
 					field_id: selectedField.value.id, // The ID of the selected field
 					crop_type: editingSelectedCropType.value.value, // The updated crop type
@@ -508,5 +522,59 @@ const toggleNameEditMode = async () => {
 
 	// Toggle the edit mode after the update
 	isEditingFieldName.value = !isEditingFieldName.value
+}
+
+// PERF: Deleting a field
+const deleteDialogVisible = ref(false)
+const fieldToDelete = ref(null)
+
+const openDeleteDialog = (field) => {
+	fieldToDelete.value = field
+	deleteDialogVisible.value = true
+}
+
+const deleteField = async () => {
+	try {
+		const response = await $fetch('/api/deleteField', {
+			method: 'POST',
+			body: { field_id: fieldToDelete.value.id }, // Send the field ID to delete
+		})
+
+		if (response.statusCode === 200) {
+			// Remove the deleted field from the local teamFields array
+			teamFields.value = teamFields.value.filter((field) => field.id !== fieldToDelete.value.id)
+
+			toast.add({
+				severity: 'info',
+				summary: 'Field Deleted',
+				detail: `Field "${fieldToDelete.value.field_name}" has been deleted successfully.`,
+				life: 3000,
+			})
+		} else {
+			toast.add({
+				severity: 'error',
+				summary: 'Delete Failed',
+				detail: response.message || 'Failed to delete the field.',
+				life: 3000,
+			})
+		}
+	} catch (error) {
+		toast.add({
+			severity: 'error',
+			summary: 'Error',
+			detail: 'Failed to delete the field. Please try again.',
+			life: 3000,
+		})
+		console.error('API error:', error)
+	}
+
+	// Close the delete dialog
+	deleteDialogVisible.value = false
+	fieldToDelete.value = null
+}
+
+const cancelDelete = () => {
+	deleteDialogVisible.value = false
+	fieldToDelete.value = null
 }
 </script>
