@@ -32,7 +32,7 @@ const items = ref([
 		],
 	},
 	{
-		label: 'INPUTS',
+		label: 'FIELDS',
 		items: [
 			{
 				label: 'Add Field Data',
@@ -42,7 +42,12 @@ const items = ref([
 			{
 				label: 'Manage Fields',
 				url: '/inputs/manage-fields',
-				icon: 'pi pi-map-marker',
+				icon: 'pi pi-pen-to-square',
+			},
+			{
+				label: 'Add New Field',
+				url: '/inputs/add-field',
+				icon: 'pi pi-map',
 			},
 		],
 	},
