@@ -5,7 +5,16 @@ watch(
 	user,
 	() => {
 		if (user.value) {
-			// Redirect to protected page
+			// Get the redirect path from query parameters
+			const route = useRoute()
+			const redirectTo = route.query.redirectTo as string | undefined
+
+			// If a redirect path exists, navigate to it
+			if (redirectTo) {
+				return navigateTo(redirectTo)
+			}
+
+			// Fallback: Navigate to default route if no redirect path is provided
 			return navigateTo('/')
 		}
 	},

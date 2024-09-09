@@ -39,7 +39,7 @@
 			<div class="flex flex-col justify-between items-center gap-8 w-full">
 				<div class="flex flex-col gap-2 justify-between items-center w-full">
 					<div class="flex flex-row justify-center items-center gap-4">
-						<h3 class="font-semibold text-lg">Field Health</h3>
+						<h3 class="font-semibold text-lg">Predicted TPH</h3>
 						<Button
 							icon="pi pi-question-circle"
 							rounded
@@ -49,10 +49,13 @@
 							v-tooltip
 							@click="healthVisible = true"
 						/>
-						<Dialog v-model:visible="healthVisible" modal header="Field Health" :style="{ width: '350px' }">
+						<Dialog v-model:visible="healthVisible" modal header="Predicted TPH" :style="{ width: '350px' }">
+							<!-- TODO: change description of chart to fit predicted yields -->
 							<p>
-								The Field Health chart shows the health status of the field over time. It helps monitor trends in
-								field health for better management.
+								The Predicted TPH graph shows the estimated crop yield in tons per hectare. This helps you track
+								and predict how much produce your land is likely to yield over time. Use this information to make
+								informed decisions about managing resources, optimizing productivity, and improving overall farm
+								performance. Keep an eye on the trends to ensure you're on track to meet your yield goals.
 							</p>
 						</Dialog>
 					</div>
@@ -196,7 +199,7 @@ function updateLineChartData() {
 		datasets: [
 			{
 				label: 'Field Health',
-				data: internalSelectedField.value.data.health, // Use the field's health data
+				data: internalSelectedField.value.data.yield, // Use the field's health data
 				fill: false,
 				backgroundColor: 'rgba(76, 175, 80, 0.2)',
 				borderColor: '#4CAF50',
@@ -272,7 +275,7 @@ const setChartOptions = () => {
 				},
 			},
 			y: {
-				beginAtZero: false,
+				beginAtZero: true,
 				ticks: {
 					stepSize: 10,
 				},
@@ -305,7 +308,7 @@ const setBarChartOptions = () => {
 				},
 			},
 			y: {
-				beginAtZero: false,
+				beginAtZero: true,
 				ticks: {
 					stepSize: 10,
 				},

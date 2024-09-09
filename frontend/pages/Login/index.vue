@@ -7,6 +7,7 @@ import { ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, email } from '@vuelidate/validators'
 
+const route = useRoute()
 const client = useSupabaseClient()
 const user = useSupabaseUser()
 const userEmail = ref('')
@@ -20,6 +21,8 @@ const rules = {
 
 const validation = useVuelidate(rules, { email: userEmail, password })
 
+const redirectTo = route.query.redirectTo || '/'
+
 const signIn = async () => {
 	try {
 		validation.value.$touch()
@@ -30,7 +33,7 @@ const signIn = async () => {
 			password: password.value,
 		})
 		if (error) throw error
-		navigateTo('/confirm')
+		navigateTo(`/confirm?redirectTo=${redirectTo}`)
 	} catch (error) {
 		errorMsg.value = error.message
 	}
@@ -43,7 +46,7 @@ const signInWithOauth = async () => {
 		const { error } = await client.auth.signInWithOAuth({
 			provider: 'google',
 			options: {
-				redirectTo: `${config.public.appBaseUrl}/confirm/`,
+				redirectTo: `${config.public.appBaseUrl}/confirm?redirectTo=${redirectTo}`,
 			},
 		})
 		if (error) throw error

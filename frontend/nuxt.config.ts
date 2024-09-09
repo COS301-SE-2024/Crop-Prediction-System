@@ -30,9 +30,7 @@ export default defineNuxtConfig({
 		public: {
       appBaseUrl: process.env.APP_BASE_URL,
 			googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
-			apiBaseUrl: 'https://api.terrabyte.software',
-			openweatherApiUrl: 'https://api.openweathermap.org/data/2.5/',
-			openweatherApiKey: process.env.OPENWEATHER_API_KEY,
+			apiBaseUrl: process.env.API_BASE_URL,
 		},
 	},
 	supabase: {
@@ -40,7 +38,7 @@ export default defineNuxtConfig({
 		redirectOptions: {
 			login: '/login',
 			callback: '/confirm',
-			exclude: ['/signup'],
+			exclude: ['/signup', '/join'],
 		},
 	},
 })

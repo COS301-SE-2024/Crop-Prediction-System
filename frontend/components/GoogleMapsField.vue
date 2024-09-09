@@ -17,9 +17,55 @@ const props = defineProps({
 		type: Array,
 		default: () => [],
 	},
+	isEditMode: {
+		type: Boolean,
+		default: false,
+	},
 })
 
-const emit = defineEmits(['update:selectedField'])
+watch(
+	() => props.isEditMode,
+	(newEditMode) => {
+		if (props.selectedField) {
+			togglePolygonEditability(props.selectedField, newEditMode)
+		}
+	},
+)
+
+function togglePolygonEditability(field, isEditable) {
+	polygons.value.forEach((polygon, index) => {
+		const isSelected = field.id === props.fields[index].id
+		if (isSelected) {
+			polygon.setOptions({ editable: isEditable, draggable: isEditable })
+
+			if (isEditable) {
+				google.maps.event.addListener(polygon.getPath(), 'set_at', () => {
+					// Keep track of changes, but don't emit yet
+					logNewPolygonCoords(polygon)
+				})
+				google.maps.event.addListener(polygon.getPath(), 'insert_at', () => {
+					logNewPolygonCoords(polygon)
+				})
+			} else {
+				// When edit mode ends (Save Changes clicked), emit the new coordinates
+				const updatedCoords = polygon
+					.getPath()
+					.getArray()
+					.map((coord) => ({
+						lat: coord.lat(),
+						lng: coord.lng(),
+					}))
+				emit('savePolygonCoords', updatedCoords)
+			}
+		}
+	})
+}
+
+function logNewPolygonCoords(polygon) {
+	// You can track real-time changes here if needed, but only emit on save
+}
+
+const emit = defineEmits(['update:selectedField', 'savePolygonCoords'])
 
 const mapsLoader = useNuxtApp().$mapsLoader
 const mapContainer = ref(null)
