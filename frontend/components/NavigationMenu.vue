@@ -26,13 +26,13 @@ const items = ref([
 		items: [
 			{
 				label: 'Dashboard',
-				icon: 'pi pi-home',
+				icon: 'pi pi-chart-bar',
 				url: '/',
 			},
 		],
 	},
 	{
-		label: 'INPUTS',
+		label: 'FIELDS',
 		items: [
 			{
 				label: 'Add Field Data',
@@ -42,7 +42,12 @@ const items = ref([
 			{
 				label: 'Manage Fields',
 				url: '/inputs/manage-fields',
-				icon: 'pi pi-map-marker',
+				icon: 'pi pi-pen-to-square',
+			},
+			{
+				label: 'Add New Field',
+				url: '/inputs/add-field',
+				icon: 'pi pi-map',
 			},
 		],
 	},
@@ -63,16 +68,6 @@ const items = ref([
 				label: 'Manage Team',
 				url: '/team/manage',
 				icon: 'pi pi-users',
-			},
-			// {
-			// 	label: 'Create a Team',
-			// 	url: '/team/create',
-			// 	icon: 'pi pi-plus-circle',
-			// },
-			{
-				label: 'Join a Team',
-				url: '/team/join',
-				icon: 'pi pi-sign-in',
 			},
 		],
 	},
