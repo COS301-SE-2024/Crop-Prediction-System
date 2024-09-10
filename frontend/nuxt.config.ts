@@ -11,6 +11,7 @@ export default defineNuxtConfig({
 		'@nuxtjs/supabase',
 		'@nuxt/test-utils/module',
 		'@vueuse/nuxt',
+		'@nuxt/fonts',
 	],
 	colorMode: {
 		classSuffix: '',

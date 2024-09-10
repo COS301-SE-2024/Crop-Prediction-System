@@ -6,7 +6,7 @@
 				<div class="w-full md:w-1/3">
 					<FieldCard v-model="selectedField" :fields="userFieldsWithData" />
 				</div>
-				<div class="w-full md:w-2/3 h-96 md:h-auto rounded overflow-hidden border-surface-600 shadow-md">
+				<div class="relative z-30 w-full md:w-2/3 h-96 md:h-auto rounded-md shadow-md overflow-hidden">
 					<GoogleMapsField
 						:selectedField="selectedField"
 						:fields="userFieldsWithData"
@@ -15,7 +15,11 @@
 				</div>
 			</div>
 			<div class="w-full">
-				<Panel header="View More Statistics" toggleable collapsed>
+				<Panel
+					:header="!selectedField ? 'Select a field to view stats' : 'View Field Stats'"
+					:toggleable="!selectedField ? false : true"
+					collapsed
+				>
 					<div v-if="selectedField" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 						<StatsCard title="Soil Moisture" :chartData="soilMoistureChartData" />
 						<StatsCard title="Soil Temperature (°C)" :chartData="soilTemperatureChartData" />
@@ -161,10 +165,11 @@ watch(selectedField, (newField) => {
 					label: 'Temp Max',
 					data: newField.data.tempmax || [],
 					fill: false,
-					backgroundColor: 'rgba(76, 175, 80, 0.2)',
+					backgroundColor: 'rgba(76, 175, 80, 1)',
 					borderColor: 'rgba(76, 175, 80, 1)',
 					borderWidth: 3,
 					tension: 0.4,
+					pointRadius: 4,
 				},
 				{
 					label: 'Temp Mean',

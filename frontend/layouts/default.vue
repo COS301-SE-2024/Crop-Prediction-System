@@ -1,5 +1,5 @@
 <template>
-	<div class="bg-primary-inverse dark:bg-surface-800">
+	<div class="bg-surface-300/60 dark:bg-surface-900">
 		<div class="w-full min-h-screen">
 			<!-- <div class="h-auto"> -->
 			<header class="sticky">
@@ -16,3 +16,9 @@
 <script setup lang="ts">
 import Navbar from '~/components/Navbar.vue'
 </script>
+
+<style scoped>
+div {
+	font-family: 'Inter', sans-serif;
+}
+</style>

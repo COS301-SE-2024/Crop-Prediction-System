@@ -1,6 +1,6 @@
 <template>
 	<div class="sm:px-32 sm:py-8 lg:px-52 flex justify-center">
-		<Stepper :orientation="isMobile ? 'vertical' : 'horizontal'">
+		<Stepper :orientation="isMobile ? 'vertical' : 'horizontal'" linear>
 			<!-- Step 1: Field Info -->
 			<StepperPanel header="Field Info">
 				<template #content="{ nextCallback }">
@@ -27,6 +27,7 @@
 					<div class="flex pt-4 justify-end">
 						<Button
 							label="Next"
+							size="small"
 							icon="pi pi-arrow-right"
 							iconPos="right"
 							@click="nextCallback"
@@ -43,8 +44,15 @@
 						<GoogleMap @polygonDrawn="handlePolygonDrawn" @polygonUpdated="handlePolygonUpdated" />
 					</div>
 					<div class="flex pt-4 justify-between">
-						<Button label="Back" severity="secondary" class="mr-2" icon="pi pi-arrow-left" @click="prevCallback" />
-						<Button label="Next" icon="pi pi-arrow-right" iconPos="right" @click="nextCallback" />
+						<Button
+							label="Back"
+							size="small"
+							severity="secondary"
+							class="mr-2"
+							icon="pi pi-arrow-left"
+							@click="prevCallback"
+						/>
+						<Button label="Next" size="small" icon="pi pi-arrow-right" iconPos="right" @click="nextCallback" />
 					</div>
 				</template>
 			</StepperPanel>
@@ -69,8 +77,8 @@
 						</div>
 					</div>
 					<div class="flex pt-4 justify-between">
-						<Button label="Back" severity="secondary" icon="pi pi-arrow-left" @click="prevCallback" />
-						<Button label="Save Field" icon="pi pi-check" @click="saveField" :loading="isLoading" />
+						<Button label="Back" size="small" severity="secondary" icon="pi pi-arrow-left" @click="prevCallback" />
+						<Button label="Save Field" size="small" icon="pi pi-check" @click="saveField" :loading="isLoading" />
 					</div>
 				</template>
 			</StepperPanel>

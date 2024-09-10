@@ -1,5 +1,5 @@
 <template>
-	<Card style="overflow: hidden; padding: 10px; box-shadow: none">
+	<Card style="overflow: hidden; padding: 10px">
 		<template #header>
 			<div class="flex flex-row items-center justify-center">
 				<Dropdown

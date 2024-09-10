@@ -1,5 +1,5 @@
 <template>
-	<Menu :model="items" class="border-none dark:bg-surface-800">
+	<Menu :model="items" class="border-none">
 		<template #submenuheader="{ item }">
 			<span class="text-black dark:text-white ml-[-12px] font-[500] p-0">{{ item.label }}</span>
 		</template>

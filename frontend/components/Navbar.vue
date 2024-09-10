@@ -1,5 +1,5 @@
 <template>
-	<nav class="p-2 px-5 z-50 w-full sm:w-full md:w-full shadow-md dark:bg-surface-400/10 sticky top-0 left-0">
+	<nav class="p-2 px-5 z-50 w-full sm:w-full md:w-full shadow-sm bg-surface-100 dark:bg-surface-800 sticky top-0 left-0">
 		<div class="flex justify-between xl:justify-normal xl:grid xl:grid-cols-3 h-full w-full">
 			<Sidebar />
 			<NuxtLink to="/" class="text-2xl font-[500] text-primary-500 justify-self-center self-center h-full">
@@ -11,7 +11,10 @@
 					<Menu :model="items" />
 				</div>
 			</OverlayPanel>
-			<OverlayPanel ref="settingsPanel" class="flex flex-col justify-center items-center p-2">
+			<OverlayPanel
+				ref="settingsPanel"
+				class="flex flex-col justify-center items-center p-2 bg-surface-100 dark:bg-surface-800 rounded-md border-black border-2"
+			>
 				<!-- system status showing operation -->
 				<div class="w-full grid gap-2">
 					<Menu :model="status">
@@ -63,9 +66,7 @@ const items = computed(() => [
 	{
 		label: 'Manage Teams',
 		icon: 'pi pi-users',
-		command: () => {
-			navigateTo('/team/manage')
-		},
+		url: '/team/manage',
 	},
 	{
 		label: 'IoT Devices',

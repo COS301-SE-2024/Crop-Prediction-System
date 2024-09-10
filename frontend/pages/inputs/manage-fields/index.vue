@@ -73,6 +73,7 @@
 
 		<Dialog
 			maximizable
+			id="dialog"
 			modal
 			header="View/Edit Field"
 			v-model:visible="editAndViewVisible"
@@ -578,3 +579,9 @@ const cancelDelete = () => {
 	fieldToDelete.value = null
 }
 </script>
+
+<style scoped>
+#dialog {
+	font-family: 'Roboto Slab', sans-serif;
+}
+</style>

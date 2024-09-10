@@ -1,7 +1,15 @@
 <template>
-	<div class="w-full h-full">
-		<Skeleton v-show="loading" width="100%" height="100%" animation="wave" />
-		<div v-show="!loading" class="h-full w-full" ref="mapContainer"></div>
+	<div v-show="!loading" class="w-full h-full rounded-md bg-surface-100 dark:bg-surface-800">
+		<div class="h-full w-full" ref="mapContainer"></div>
+	</div>
+	<div
+		v-show="loading"
+		class="w-full h-full rounded-md bg-surface-100 dark:bg-surface-800 flex flex-col justify-center items-center gap-4"
+	>
+		<h2 class="text-2xl font-bold text-surface-700 dark:text-surface-0">Loading Map...</h2>
+		<div
+			class="w-16 h-16 border-4 border-t-4 rounded-full border-gray-300 dark:border-gray-600 border-t-gray-700 dark:border-t-white animate-spin"
+		></div>
 	</div>
 </template>
 
@@ -94,6 +102,7 @@ const selectedPolygonOptions = {
 }
 
 onMounted(async () => {
+	loading.value = true
 	try {
 		await mapsLoader.load()
 		initializeMap()
@@ -195,3 +204,31 @@ onUnmounted(() => {
 	google.maps.event.clearListeners(map, 'overlaycomplete')
 })
 </script>
+
+<style scoped>
+.custom-spinner {
+	width: 60px; /* Larger size */
+	height: 60px; /* Larger size */
+	border: 6px solid rgba(0, 0, 0, 0.1);
+	border-top-color: rgba(0, 0, 0, 0.8);
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+/* Dark mode variant */
+@media (prefers-color-scheme: dark) {
+	.custom-spinner {
+		border: 6px solid rgba(255, 255, 255, 0.1); /* Light gray for dark mode */
+		border-top-color: rgba(255, 255, 255, 0.8); /* White for dark mode */
+	}
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
 	<div class="flex flex-col h-full px-4 sm:px-6 md:px-8 lg:px-0 py-4 sm:py-6 md:py-8 lg:py-0">
-		<Card class="border border-surface-border p-fluid h-full">
+		<Card>
 			<template #title>
 				<h1>Manual Field Inputs</h1>
 			</template>

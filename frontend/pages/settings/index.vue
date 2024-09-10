@@ -134,7 +134,7 @@ const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const { data } = await supabase.from('profiles').select('full_name, email').eq('id', user.value.id)
 
-const first_name = ref('')
+const first_name = ref(data[0]?.full_name as string)
 const last_name = ref('')
 const email = ref(user.value?.email)
 

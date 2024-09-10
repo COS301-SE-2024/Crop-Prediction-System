@@ -1,5 +1,5 @@
 <template>
-	<Sidebar v-model:visible="visible">
+	<Sidebar v-model:visible="visible" class="bg-surface-100 dark:bg-surface-800">
 		<template #container="{ closeCallback }">
 			<div class="bg-none flex flex-col justify-between h-screen w-full items-center p-4 gap-2">
 				<div class="flex flex-row justify-between items-center w-full">

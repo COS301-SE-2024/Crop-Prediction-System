@@ -5,6 +5,7 @@
 		scrollable
 		scrollHeight="450px"
 		size="small"
+		class="bg-surface-100 dark:bg-surface-800 rounded-md"
 		paginator
 		:rows="5"
 		:rowsPerPageOptions="[5, 10, 20, 50, 100]"

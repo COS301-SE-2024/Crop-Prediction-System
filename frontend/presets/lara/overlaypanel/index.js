@@ -3,14 +3,14 @@ export default {
         class: [
             // Shape
             'rounded-md shadow-lg',
-            'border-0 dark:border',
+            'border',
 
             // Position
             'absolute left-0 top-0',
             'z-40 transform origin-center',
 
             // Color
-            'bg-surface-0 dark:bg-surface-800',
+            'bg-surface-100 dark:bg-surface-800',
             'text-surface-700 dark:text-surface-0/80',
             'dark:border-surface-700',
 
