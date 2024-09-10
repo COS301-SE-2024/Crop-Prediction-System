@@ -29,23 +29,6 @@
 							</a>
 						</li>
 					</ul>
-
-					<!-- Additional menu items -->
-					<div class="ml-8 flex items-center">
-						<button
-							@click="setColorTheme(useColorMode().preference === 'dark' ? 'light' : 'dark')"
-							class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out cursor-pointer"
-						>
-							<span class="sr-only">Toggle theme</span>
-							<i :class="useColorMode().preference === 'dark' ? 'pi pi-sun' : 'pi pi-moon'" aria-hidden="true"></i>
-						</button>
-						<button
-							@click="() => (window.location.href = '/help')"
-							class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out cursor-pointer"
-						>
-							REGISTER
-						</button>
-					</div>
 				</div>
 
 				<!-- Mobile menu button -->
