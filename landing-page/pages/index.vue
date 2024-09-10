@@ -10,8 +10,7 @@ function smoothScroll(id) {
 	})
 }
 
-const settingsSwitch = ref(false)
-const op = ref<OverlayPanel | null>(null)
+const menu = ref()
 const items = computed(() => [
 	{
 		label: 'Toggle Theme',
@@ -36,10 +35,8 @@ const items = computed(() => [
 	},
 ])
 
-const toggleProfile = (event: Event) => {
-	if (op.value) {
-		op.value.toggle(event)
-	}
+const toggle = (event) => {
+	menu.value.toggle(event)
 }
 
 type Theme = 'light' | 'dark'
@@ -52,8 +49,51 @@ const setColorTheme = (newTheme: Theme) => {
 <template>
 	<div class="bg-surface-0 dark:bg-surface-900">
 		<div id="home" class="landing-wrapper overflow-hidden">
-			<div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
-				<div
+			<!-- <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static"> -->
+			<!-- <template>
+				<div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
+					<div class="flex justify-between px-0 py-0 text-surface-900 dark:text-surface-0 font-medium text-xl w-full">
+						<Menubar :model="menu">
+							<template #start>
+								<img
+									src="../assets/logo.png"
+									alt="Logo"
+									class="w-36 xl:h-14 xl:w-auto object-cover dark:hidden block"
+								/>
+								<img
+									src="../assets/logo-alt.png"
+									alt="Logo"
+									class="w-36 xl:h-14 xl:w-auto object-cover hidden dark:block"
+								/>
+							</template>
+							<template #item="{ item, props, hasSubmenu, root }">
+								<a
+									v-ripple
+									class="items rounded-md transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600"
+									v-bind="props.action"
+								>
+									<span :class="item.icon" />
+									<span class="ml-2">{{ item.label }}</span>
+									<Badge v-if="item.badge" :class="{ 'ml-auto': !root, 'ml-2': root }" :value="item.badge" />
+									<span
+										v-if="item.shortcut"
+										class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1"
+										>{{ item.shortcut }}</span
+									>
+									<i
+										v-if="hasSubmenu"
+										:class="[
+											'pi pi-angle-down',
+											{ 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root },
+										]"
+									></i>
+								</a>
+							</template>
+						</Menubar>
+					</div>
+				</div>
+			</template> -->
+			<!-- <div
 					class="items-center bg-surface-0 dark:bg-surface-900 grow justify-between hidden lg:flex absolute lg:static w-full left-0 top-full px-12 lg:px-0 z-20 rounded-border"
 				>
 					<NuxtLink to="/" class="text-2xl font-[500] text-primary-500 justify-self-center self-center h-full">
@@ -103,14 +143,6 @@ const setColorTheme = (newTheme: Theme) => {
 						</li>
 						<li>
 							<a
-								@click="() => smoothScroll('#highlights')"
-								class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl"
-							>
-								<span>HIGHLIGHTS</span>
-							</a>
-						</li>
-						<li>
-							<a
 								@click="() => smoothScroll('#about')"
 								class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl"
 							>
@@ -125,23 +157,27 @@ const setColorTheme = (newTheme: Theme) => {
 								<span>CONTACT</span>
 							</a>
 						</li>
+						<li>
+							<a class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+								<Button>Register</Button>
+							</a>
+						</li>
+						<li>
+							<a
+								@click="() => smoothScroll('#contact')"
+								class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl"
+								label: 'Toggle Theme',
+								icon: useColorMode().preference == 'dark' ? 'pi pi-sun' : 'pi pi-moon',
+								command: () => {
+									setColorTheme(useColorMode().preference == 'dark' ? 'light' : 'dark')
+								},
+							>
+								<span>Theme</span>
+							</a>
+						</li>
 					</ul>
 				</div>
-				<div>
-					<div
-						class="flex flex-row items-center justify-end gap-4 justify-self-end cursor-pointer text-surface-900 dark:text-surface-0 font-medium text-xl"
-					>
-						<div>
-							<i class="pi pi-user" @click="toggleProfile" style="font-size: 1.5rem" />
-						</div>
-					</div>
-					<OverlayPanel ref="op" class="flex flex-col justify-center items-center mt-2">
-						<div class="flex flex-col items-center justify-center gap-5">
-							<Menu :model="items" />
-						</div>
-					</OverlayPanel>
-				</div>
-			</div>
+			</div> -->
 			<div
 				id="hero"
 				class="flex flex-col pt-6 px-6 lg:px-20 overflow-hidden"
