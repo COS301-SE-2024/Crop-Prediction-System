@@ -85,8 +85,8 @@ const menu = ref()
 const menuItems = [
 	{ name: 'HOME', icon: 'pi pi-home', href: '#hero' },
 	{ name: 'FEATURES', icon: 'pi pi-star', href: '#features' },
+	{ name: 'HIGHLIGHTS', icon: 'pi pi-star-fill', href: '#highlights' },
 	{ name: 'ABOUT', icon: 'pi pi-info-circle', href: '#about' },
-	{ name: 'CONTACT', icon: 'pi pi-envelope', href: '#contact' },
 ]
 
 const items = computed(() => [
