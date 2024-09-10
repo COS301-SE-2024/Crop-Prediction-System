@@ -186,6 +186,26 @@ function updatePolygonCoords(polygon) {
 	emit('polygonUpdated', updatedPaths)
 }
 
+defineExpose({
+	setDrawingMode: (mode) => {
+		if (drawingManager) {
+			if (mode === true) {
+				drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON)
+			} else {
+				drawingManager.setDrawingMode(null)
+			}
+		}
+	},
+	getPolygonPaths: () => {
+		return polygons.value.map((poly) =>
+			poly
+				.getPath()
+				.getArray()
+				.map((point) => [point.lat(), point.lng()]),
+		)
+	},
+})
+
 // Cleanup listeners and map when the component is unmounted
 onBeforeUnmount(() => {
 	if (drawingManager) {
