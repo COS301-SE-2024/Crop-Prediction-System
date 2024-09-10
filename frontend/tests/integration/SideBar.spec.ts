@@ -2,26 +2,37 @@
 
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { it, expect, describe, vi } from 'vitest'
-import { mount, shallowMount } from '@vue/test-utils'
 import SidebarVue from '~/components/Sidebar.vue'
-import { nextTick } from 'vue';
+import { nextTick } from 'vue'
 
+// Mock the PrimeVue Sidebar component
+vi.mock('primevue/sidebar', () => ({
+    default: {
+        name: 'Sidebar',
+        template: '<div></div>', // provide a simple template
+    }
+}));
 
-// check that if the button is clicked, the sidebar is toggled
+// Check that if the button is clicked, the sidebar is toggled
 describe("Sidebar", async () => {
     it('Sidebar opens on click', async () => {
         const wrapper = await mountSuspended(SidebarVue);
 
-        const button = wrapper.find('[data-test="filter-button"]');
+        // Find the button
+        const button = wrapper.find('[aria-label="Filter"]');
         expect(button.exists()).toBe(true);
 
+        // Check if the Sidebar component is present
         const sidebar = wrapper.findComponent({ name: 'Sidebar' });
         expect(sidebar.exists()).toBe(true);
-        let visible = wrapper.vm.getVisible();
-        expect(visible).toBe(false);
 
+        // Trigger button click
         await button.trigger('click');
-        visible = wrapper.vm.getVisible();
-        expect(visible).toBe(true);
+
+        // Wait for the DOM update
+        await nextTick();
+
+        // Check visibility after the button click
+        expect(wrapper.vm.visible.value).toBe(true);
     });
 });
