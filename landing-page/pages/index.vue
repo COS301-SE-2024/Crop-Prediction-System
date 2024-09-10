@@ -155,7 +155,11 @@ import Card from 'primevue/card'
 						class="flex justify-center col-span-12 lg:col-span-6 bg-purple-100 p-0 order-1 lg:order-none"
 						style="border-radius: 8px"
 					>
-						<img src="" class="w-11/12" alt="mockup mobile" />
+						<img
+							src="../assets/mockups/phone/Screenshot 2024-09-10 142053-portrait.png"
+							class="w-11/12"
+							alt="mockup mobile"
+						/>
 					</div>
 					<div class="col-span-12 lg:col-span-6 my-auto flex flex-col lg:items-end text-center lg:text-right gap-4">
 						<div
