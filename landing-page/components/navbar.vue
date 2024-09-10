@@ -1,6 +1,6 @@
 <template>
 	<nav class="bg-white dark:bg-gray-800 shadow-md">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+		<div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
 			<div class="flex items-center justify-between h-16">
 				<!-- Logo -->
 				<div class="flex-shrink-0">
@@ -16,6 +16,7 @@
 								@click="() => smoothScroll(item.href)"
 								class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out cursor-pointer"
 							>
+								<i :class="item.icon" class="mr-2"></i>
 								{{ item.name }}
 							</a>
 						</li>
@@ -58,6 +59,7 @@
 					"
 					class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
 				>
+					<i :class="item.icon" class="mr-2"></i>
 					{{ item.name }}
 				</a>
 				<a
@@ -81,10 +83,10 @@ const mobileMenuOpen = ref(false)
 const menu = ref()
 
 const menuItems = [
-	{ name: 'HOME', href: '#hero' },
-	{ name: 'FEATURES', href: '#features' },
-	{ name: 'ABOUT', href: '#about' },
-	{ name: 'CONTACT', href: '#contact' },
+	{ name: 'HOME', icon: 'pi pi-home', href: '#hero' },
+	{ name: 'FEATURES', icon: 'pi pi-star', href: '#features' },
+	{ name: 'ABOUT', icon: 'pi pi-info-circle', href: '#about' },
+	{ name: 'CONTACT', icon: 'pi pi-envelope', href: '#contact' },
 ]
 
 const items = computed(() => [
