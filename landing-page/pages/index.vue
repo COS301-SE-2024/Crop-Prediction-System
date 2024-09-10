@@ -1,183 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import OverlayPanel from 'primevue/overlaypanel'
-import Menu from 'primevue/menu'
-
-function smoothScroll(id) {
-	document.body.click()
-	document.querySelector(id).scrollIntoView({
-		behavior: 'smooth',
-	})
-}
-
-const menu = ref()
-const items = computed(() => [
-	{
-		label: 'Toggle Theme',
-		icon: useColorMode().preference == 'dark' ? 'pi pi-sun' : 'pi pi-moon',
-		command: () => {
-			setColorTheme(useColorMode().preference == 'dark' ? 'light' : 'dark')
-		},
-	},
-	{
-		label: 'Signup',
-		icon: 'pi pi-signup',
-		command: () => {
-			window.location.href = '/help'
-		},
-	},
-	{
-		label: 'Login',
-		icon: 'pi pi-login',
-		command: () => {
-			window.location.href = '/settings'
-		},
-	},
-])
-
-const toggle = (event) => {
-	menu.value.toggle(event)
-}
-
-type Theme = 'light' | 'dark'
-
-const setColorTheme = (newTheme: Theme) => {
-	useColorMode().preference = newTheme
-}
+import Card from 'primevue/card'
 </script>
 
 <template>
-	<div class="bg-surface-0 dark:bg-surface-900">
+	<div class="bg-surface-0 dark:bg-surface-900 text-surface-900 dark:text-surface-0">
 		<div id="home" class="landing-wrapper overflow-hidden">
-			<!-- <div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static"> -->
-			<!-- <template>
-				<div class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static">
-					<div class="flex justify-between px-0 py-0 text-surface-900 dark:text-surface-0 font-medium text-xl w-full">
-						<Menubar :model="menu">
-							<template #start>
-								<img
-									src="../assets/logo.png"
-									alt="Logo"
-									class="w-36 xl:h-14 xl:w-auto object-cover dark:hidden block"
-								/>
-								<img
-									src="../assets/logo-alt.png"
-									alt="Logo"
-									class="w-36 xl:h-14 xl:w-auto object-cover hidden dark:block"
-								/>
-							</template>
-							<template #item="{ item, props, hasSubmenu, root }">
-								<a
-									v-ripple
-									class="items rounded-md transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600"
-									v-bind="props.action"
-								>
-									<span :class="item.icon" />
-									<span class="ml-2">{{ item.label }}</span>
-									<Badge v-if="item.badge" :class="{ 'ml-auto': !root, 'ml-2': root }" :value="item.badge" />
-									<span
-										v-if="item.shortcut"
-										class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1"
-										>{{ item.shortcut }}</span
-									>
-									<i
-										v-if="hasSubmenu"
-										:class="[
-											'pi pi-angle-down',
-											{ 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root },
-										]"
-									></i>
-								</a>
-							</template>
-						</Menubar>
-					</div>
-				</div>
-			</template> -->
-			<!-- <div
-					class="items-center bg-surface-0 dark:bg-surface-900 grow justify-between hidden lg:flex absolute lg:static w-full left-0 top-full px-12 lg:px-0 z-20 rounded-border"
-				>
-					<NuxtLink to="/" class="text-2xl font-[500] text-primary-500 justify-self-center self-center h-full">
-						<img src="../assets/logo.png" alt="Logo" class="w-36 xl:h-14 xl:w-auto object-cover dark:hidden block" />
-						<img
-							src="../assets/logo-alt.png"
-							alt="Logo"
-							class="w-36 xl:h-14 xl:w-auto object-cover hidden dark:block"
-						/>
-					</NuxtLink>
-				</div>
-				<Button
-					class="lg:!hidden"
-					text
-					severity="secondary"
-					rounded
-					v-styleclass="{
-						selector: '@next',
-						enterFromClass: 'hidden',
-						enterActiveClass: 'animate-scalein',
-						leaveToClass: 'hidden',
-						leaveActiveClass: 'animate-fadeout',
-						hideOnOutsideClick: true,
-					}"
-				>
-					<i class="pi pi-bars !text-2xl"></i>
-				</Button>
-				<div
-					class="items-center bg-surface-0 dark:bg-surface-900 grow justify-between hidden lg:flex absolute lg:static w-full left-0 top-full px-12 lg:px-0 z-20 rounded-border"
-				>
-					<ul class="list-none p-0 m-0 flex lg:items-center select-none flex-col lg:flex-row cursor-pointer gap-8">
-						<li>
-							<a
-								@click="() => smoothScroll('#hero')"
-								class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl"
-							>
-								<span>HOME</span>
-							</a>
-						</li>
-						<li>
-							<a
-								@click="() => smoothScroll('#features')"
-								class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl"
-							>
-								<span>FEATURES</span>
-							</a>
-						</li>
-						<li>
-							<a
-								@click="() => smoothScroll('#about')"
-								class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl"
-							>
-								<span>ABOUT</span>
-							</a>
-						</li>
-						<li>
-							<a
-								@click="() => smoothScroll('#contact')"
-								class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl"
-							>
-								<span>CONTACT</span>
-							</a>
-						</li>
-						<li>
-							<a class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
-								<Button>Register</Button>
-							</a>
-						</li>
-						<li>
-							<a
-								@click="() => smoothScroll('#contact')"
-								class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl"
-								label: 'Toggle Theme',
-								icon: useColorMode().preference == 'dark' ? 'pi pi-sun' : 'pi pi-moon',
-								command: () => {
-									setColorTheme(useColorMode().preference == 'dark' ? 'light' : 'dark')
-								},
-							>
-								<span>Theme</span>
-							</a>
-						</li>
-					</ul>
-				</div>
-			</div> -->
 			<div
 				id="hero"
 				class="flex flex-col pt-6 px-6 lg:px-20 overflow-hidden"
@@ -189,11 +16,9 @@ const setColorTheme = (newTheme: Theme) => {
 			>
 				<div class="mx-6 md:mx-20 mt-0 md:mt-6">
 					<h1 class="text-6xl font-bold text-gray-900 leading-tight">
-						<span class="font-light block">Eu sem integer</span>eget magna fermentum
+						<span class="font-light block">...</span>Placeholders for images
 					</h1>
-					<p class="font-normal text-2xl leading-normal md:mt-4 text-gray-700">
-						Sed blandit libero volutpat sed cras. Fames ac turpis egestas integer. Placerat in egestas erat...
-					</p>
+					<p class="font-normal text-2xl leading-normal md:mt-4 text-gray-700">...</p>
 					<Button label="Get Started" as="router-link" to="/" rounded class="!text-xl mt-8 !px-4"></Button>
 				</div>
 				<div class="flex justify-center md:justify-end">
@@ -203,8 +28,8 @@ const setColorTheme = (newTheme: Theme) => {
 			<div id="features" class="py-6 px-6 lg:px-20 mt-8 mx-0 lg:mx-20">
 				<div class="grid grid-cols-12 gap-4 justify-center">
 					<div class="col-span-12 text-center mt-20 mb-6">
-						<div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Marvelous Features</div>
-						<span class="text-muted-color text-2xl">Placerat in egestas erat...</span>
+						<div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-5xl">Our Features</div>
+						<span class="text-muted-color text-2xl"></span>
 					</div>
 					<div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0">
 						<div
@@ -224,7 +49,9 @@ const setColorTheme = (newTheme: Theme) => {
 									<i class="pi pi-fw pi-users !text-2xl text-yellow-700"></i>
 								</div>
 								<h5 class="mb-2 text-surface-900 dark:text-surface-0">Easy to Use</h5>
-								<span class="text-surface-600 dark:text-surface-200">Posuere morbi leo urna molestie.</span>
+								<span class="text-surface-600 dark:text-surface-200"
+									>Our product is very user-friendly and also includes help menu's for extra information</span
+								>
 							</div>
 						</div>
 					</div>
