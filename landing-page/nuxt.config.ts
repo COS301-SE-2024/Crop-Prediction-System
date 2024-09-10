@@ -1,5 +1,5 @@
 import { defineNuxtConfig } from 'nuxt/config'
-import aura from '@primevue/themes/aura'
+import aura from '@primevue/themes/lara'
 
 export default defineNuxtConfig({
 	css: ['./assets/css/tailwind.css', 'primeicons/primeicons.css'],
