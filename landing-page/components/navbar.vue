@@ -10,7 +10,7 @@
 
 				<!-- Desktop Menu -->
 				<div class="hidden lg:flex lg:items-center">
-					<ul class="flex space-x-8">
+					<ul class="flex space-x-6">
 						<li v-for="item in menuItems" :key="item.name">
 							<a
 								@click="() => smoothScroll(item.href)"
@@ -91,7 +91,7 @@ const menuItems = [
 
 const items = computed(() => [
 	{
-		name: 'Toggle Theme',
+		name: 'TOGGLE THEME',
 		icon: useColorMode().preference === 'dark' ? 'pi pi-sun' : 'pi pi-moon',
 		command: () => {
 			setColorTheme(useColorMode().preference === 'dark' ? 'light' : 'dark')
