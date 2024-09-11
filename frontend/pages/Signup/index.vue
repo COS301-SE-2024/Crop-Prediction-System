@@ -98,7 +98,7 @@ definePageMeta({
 <template>
 	<div class="w-full h-screen flex flex-col justify-center items-center p-4 overflow-auto">
 		<div class="w-full max-w-[450px] px-4 overflow-auto">
-			<Card class="w-full border border-surface-border">
+			<Card class="w-full bg-surface-100 dark:bg-surface-800">
 				<template #header>
 					<div class="flex justify-center items-center p-4">
 						<img
