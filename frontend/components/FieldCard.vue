@@ -24,10 +24,10 @@
 				<Tag :value="healthStatus.value" :severity="healthStatus.severity" rounded></Tag>
 			</div>
 			<div class="mt-4 rounded-md bg-gradient-to-r from-[#7951B4] to-[#1C8EDB] p-[0.07rem]">
-				<div class="dark:bg-surface-800 bg-primary-inverse rounded-md p-4 space-y-2">
+				<div class="dark:bg-surface-800 bg-surface-100 rounded-md p-4 space-y-2">
 					<div class="flex gap-2 items-center">
 						<img src="../assets/google-gemini-icon.webp" alt="Field Image" class="rounded-lg h-6 w-6 spinner" />
-						<span class="text-sm text-gray-400">AI Weather Summary</span>
+						<span class="text-sm text-surface-600 dark:text-surface-0/60">AI Weather Summary</span>
 					</div>
 					<p>
 						{{ getCurrentSummary() }}
@@ -49,7 +49,12 @@
 							v-tooltip
 							@click="healthVisible = true"
 						/>
-						<Dialog v-model:visible="healthVisible" modal header="Predicted TPH" :style="{ width: '350px' }">
+						<Dialog
+							v-model:visible="healthVisible"
+							modal
+							header="Predicted TPH"
+							:style="{ width: '350px', 'font-family': 'Montserrat' }"
+						>
 							<!-- TODO: change description of chart to fit predicted yields -->
 							<p>
 								The Predicted TPH graph shows the estimated crop yield in tons per hectare. This helps you track

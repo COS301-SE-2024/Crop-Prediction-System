@@ -66,3 +66,9 @@ const cities = ref([
 ])
 const selectedCity = ref(cities.value[0])
 </script>
+
+<style scoped>
+div {
+	font-family: 'Montserrat', sans-serif;
+}
+</style>
