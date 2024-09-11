@@ -61,7 +61,7 @@ export default {
             'px-1 z-10',
 
             // Color
-            'bg-surface-0 dark:bg-surface-800'
+            'bg-surface-100 dark:bg-surface-800'
         ]
     }
 };
