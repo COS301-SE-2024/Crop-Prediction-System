@@ -78,6 +78,7 @@
 			header="View/Edit Field"
 			v-model:visible="editAndViewVisible"
 			class="w-[95%] md:w-[740px] lg:w-[950px]"
+			:style="{ 'font-family': 'Montserrat' }"
 		>
 			<div class="flex flex-col justify-between items-start gap-4">
 				<div class="flex flex-col gap-2 w-full">
@@ -152,7 +153,12 @@
 		</Dialog>
 
 		<!-- Delete field dialog -->
-		<Dialog header="Confirm Delete" v-model:visible="deleteDialogVisible" modal :style="{ width: '25rem' }">
+		<Dialog
+			header="Confirm Delete"
+			v-model:visible="deleteDialogVisible"
+			modal
+			:style="{ width: '25rem', 'font-family': 'Montserrat' }"
+		>
 			<p>
 				Are you sure you want to delete the field "<strong>{{ fieldToDelete?.field_name }}</strong
 				>"?
