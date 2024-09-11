@@ -19,6 +19,6 @@ import Navbar from '~/components/Navbar.vue'
 
 <style scoped>
 div {
-	font-family: 'Inter', sans-serif;
+	font-family: 'Montserrat', sans-serif;
 }
 </style>
