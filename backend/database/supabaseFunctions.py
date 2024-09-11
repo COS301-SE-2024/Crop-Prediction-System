@@ -367,7 +367,10 @@ class supabaseFunctions:
     @staticmethod
     def getTeamMessages(team_id: str):
         try:
-            response = supabaseFunctions.__sbClient.table("team_chat").select("*").eq("team_id", team_id).execute()
+            response = supabaseFunctions.__sbClient.table("team_chat").select("*").eq("team_id", team_id).order("created_at").execute()
+
+            response.data = response.data[::-1]
+
             if response.data == []:
                 return {"error": "No messages found for this team"}
             return response.data
