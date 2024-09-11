@@ -1,13 +1,88 @@
 <script setup lang="ts">
-import Tabs from 'primevue/tabs'
-import TabList from 'primevue/tablist'
-import Tab from 'primevue/tab'
-import TabPanels from 'primevue/tabpanels'
-import TabPanel from 'primevue/tabpanel'
+import Button from 'primevue/button'
+import Chart from 'primevue/chart'
+import { ref, onMounted } from 'vue'
+
+onMounted(() => {
+	chartData.value = setChartData()
+	chartOptions.value = setChartOptions()
+})
+
+const chartData = ref()
+const chartOptions = ref()
+
+const setChartData = () => {
+	const documentStyle = getComputedStyle(document.documentElement)
+
+	return {
+		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+		datasets: [
+			{
+				type: 'line',
+				label: 'Dataset 1',
+				borderColor: documentStyle.getPropertyValue('bg-orange-200'),
+				borderWidth: 2,
+				fill: false,
+				tension: 0.4,
+				data: [50, 25, 12, 48, 56, 76, 42],
+			},
+			{
+				type: 'bar',
+				label: 'Dataset 2',
+				backgroundColor: documentStyle.getPropertyValue('bg-purple-200'),
+				data: [21, 84, 24, 75, 37, 65, 34],
+				borderColor: 'white',
+				borderWidth: 2,
+			},
+			{
+				type: 'bar',
+				label: 'Dataset 3',
+				backgroundColor: documentStyle.getPropertyValue('bg-pink-200'),
+				data: [41, 52, 24, 74, 23, 21, 32],
+			},
+		],
+	}
+}
+const setChartOptions = () => {
+	const documentStyle = getComputedStyle(document.documentElement)
+	const textColor = documentStyle.getPropertyValue('bg-purple-200')
+	const textColorSecondary = documentStyle.getPropertyValue('bg-purple-200')
+	const surfaceBorder = documentStyle.getPropertyValue('bg-purple-200')
+
+	return {
+		maintainAspectRatio: false,
+		aspectRatio: 0.6,
+		plugins: {
+			legend: {
+				labels: {
+					color: textColor,
+				},
+			},
+		},
+		scales: {
+			x: {
+				ticks: {
+					color: textColorSecondary,
+				},
+				grid: {
+					color: surfaceBorder,
+				},
+			},
+			y: {
+				ticks: {
+					color: textColorSecondary,
+				},
+				grid: {
+					color: surfaceBorder,
+				},
+			},
+		},
+	}
+}
 </script>
 
 <template>
-	<div class="text-surface-900 dark:text-surface-0 bg-white dark:bg-gray-800 shadow-md">
+	<div class="bg-surface-0 dark:bg-surface-900 text-surface-900 dark:text-surface-0">
 		<div id="home" class="landing-wrapper overflow-hidden">
 			<div
 				id="hero"
@@ -18,7 +93,21 @@ import TabPanel from 'primevue/tabpanel'
 					clip-path: ellipse(150% 87% at 93% 13%);
 				"
 			>
-				<div class="mx-6 md:mx-20 mt-0 md:mt-6"></div>
+				<div class="mx-6 md:mx-20 mt-0 md:mt-6">
+					<h1 class="text-6xl font-bold text-gray-900 leading-tight">
+						<span class="font-light block">Eu sem integer</span>eget magna fermentum
+					</h1>
+					<p class="font-normal text-2xl leading-normal md:mt-4 text-gray-700">
+						Sed blandit libero volutpat sed cras. Fames ac turpis egestas integer. Placerat in egestas erat...
+					</p>
+					<Button
+						label="Get Started"
+						as="router-link"
+						to="/"
+						rounded
+						class="bg-surface-200 text-surface-900 !text-xl mt-8 !px-4"
+					></Button>
+				</div>
 				<div class="flex justify-center md:justify-end">
 					<img src="../assets/image-light.png" alt="Logo" class="object-cover dark:hidden block" />
 					<img src="../assets/image-dark.png" alt="Logo" class="object-cover hidden dark:block" />
@@ -156,31 +245,31 @@ import TabPanel from 'primevue/tabpanel'
 				</div>
 				<div class="grid grid-cols-12 gap-4 mt-20 pb-2 md:pb-20">
 					<div
-						class="flex justify-center col-span-12 lg:col-span-6 bg-purple-200 p-0 order-1 lg:order-none"
+						class="flex justify-center col-span-12 lg:col-span-6 bg-blue-200 p-0 order-1 lg:order-none"
 						style="border-radius: 8px"
 					>
 						<img
 							src="../assets/mockups/phone/Screenshot 2024-09-10 142053-portrait.png"
-							class="w-4/12"
+							class="w-6/12"
 							alt="mockup mobile"
 						/>
 						<img
 							src="../assets/mockups/phone/Screenshot 2024-09-10 142120-portrait.png"
-							class="w-4/12"
+							class="w-6/12"
 							alt="mockup mobile"
 						/>
 						<img
 							src="../assets/mockups/phone/Screenshot 2024-09-10 142143-portrait.png"
-							class="w-4/12"
+							class="w-6/12"
 							alt="mockup mobile"
 						/>
 					</div>
 					<div class="col-span-12 lg:col-span-6 my-auto flex flex-col lg:items-end text-center lg:text-right gap-4">
 						<div
-							class="flex items-center justify-center bg-purple-200 self-center lg:self-end"
+							class="flex items-center justify-center bg-blue-200 self-center lg:self-end"
 							style="width: 4.2rem; height: 4.2rem; border-radius: 10px"
 						>
-							<i class="pi pi-fw pi-mobile !text-4xl text-purple-700"></i>
+							<i class="pi pi-fw pi-mobile !text-4xl text-blue-700"></i>
 						</div>
 						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">Mobile Friendly</div>
 						<span
@@ -210,35 +299,11 @@ import TabPanel from 'primevue/tabpanel'
 							nisi.</span
 						>
 					</div>
-					<div class="flex justify-end order-1 sm:order-2 col-span-12 lg:col-span-6 bg-yellow-100 p-0">
-						<Tabs value="0">
-							<TabList>
-								<Tab value="0" as="div" class="flex items-center gap-2">
-									<span>1</span>
-								</Tab>
-								<Tab value="1" as="div" class="flex items-center gap-2">
-									<span class="font-bold whitespace-nowrap">2</span>
-								</Tab>
-							</TabList>
-							<TabPanels>
-								<TabPanel value="0" as="p" class="m-0">
-									HI
-									<img
-										src="../assets/mockups/laptop/Screenshot 2024-09-10 143225-front.png"
-										class="w-5/5"
-										alt="mockup mobile"
-									/>
-								</TabPanel>
-								<TabPanel value="1" as="p" class="m-0">
-									Hello
-									<img
-										src="../assets/mockups/laptop/Screenshot 2024-09-10 143334-front.png"
-										class="w-5/5"
-										alt="mockup mobile"
-									/>
-								</TabPanel>
-							</TabPanels>
-						</Tabs>
+					<div
+						class="flex justify-center order-1 sm:order-2 col-span-12 lg:col-span-6 bg-yellow-100 p-0"
+						style="border-radius: 8px"
+					>
+						<Chart type="bar" :data="chartData" :options="chartOptions" class="h-[30rem]" />
 					</div>
 				</div>
 			</div>
@@ -249,17 +314,17 @@ import TabPanel from 'primevue/tabpanel'
 				</div>
 				<div class="grid grid-cols-12 gap-4 mt-20 pb-2 md:pb-20">
 					<div
-						class="flex justify-center col-span-12 lg:col-span-6 bg-purple-100 p-0 order-1 lg:order-none"
+						class="flex justify-center col-span-12 lg:col-span-6 bg-blue-100 p-0 order-1 lg:order-none"
 						style="border-radius: 8px"
 					>
 						<img src="" class="w-11/12" alt="mockup mobile" />
 					</div>
 					<div class="col-span-12 lg:col-span-6 my-auto flex flex-col lg:items-end text-center lg:text-right gap-4">
 						<div
-							class="flex items-center justify-center bg-purple-200 self-center lg:self-end"
+							class="flex items-center justify-center bg-blue-200 self-center lg:self-end"
 							style="width: 4.2rem; height: 4.2rem; border-radius: 10px"
 						>
-							<i class="pi pi-fw pi-mobile !text-4xl text-purple-700"></i>
+							<i class="pi pi-fw pi-mobile !text-4xl text-blue-700"></i>
 						</div>
 						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">
 							Congue Quisque Egestas
