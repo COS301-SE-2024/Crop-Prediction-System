@@ -7,7 +7,7 @@
 		</OverlayPanel>
 		<div
 			class="w-full flex flex-row gap-3 items-center dark:hover:bg-surface-400/10 hover:bg-surface-100 cursor-pointer p-2 rounded-lg"
-			@click="toggle"
+			@click="toggle($event)"
 		>
 			<Avatar icon="pi pi-user" size="large" shape="circle" />
 			<h1>{{ props.email }}</h1>
