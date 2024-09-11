@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import Card from 'primevue/card'
+import Tabs from 'primevue/tabs'
+import TabList from 'primevue/tablist'
+import Tab from 'primevue/tab'
+import TabPanels from 'primevue/tabpanels'
+import TabPanel from 'primevue/tabpanel'
 </script>
 
 <template>
@@ -152,12 +156,22 @@ import Card from 'primevue/card'
 				</div>
 				<div class="grid grid-cols-12 gap-4 mt-20 pb-2 md:pb-20">
 					<div
-						class="flex justify-center col-span-12 lg:col-span-6 bg-purple-100 p-0 order-1 lg:order-none"
+						class="flex justify-center col-span-12 lg:col-span-6 bg-purple-200 p-0 order-1 lg:order-none"
 						style="border-radius: 8px"
 					>
 						<img
 							src="../assets/mockups/phone/Screenshot 2024-09-10 142053-portrait.png"
-							class="w-11/12"
+							class="w-4/12"
+							alt="mockup mobile"
+						/>
+						<img
+							src="../assets/mockups/phone/Screenshot 2024-09-10 142120-portrait.png"
+							class="w-4/12"
+							alt="mockup mobile"
+						/>
+						<img
+							src="../assets/mockups/phone/Screenshot 2024-09-10 142143-portrait.png"
+							class="w-4/12"
 							alt="mockup mobile"
 						/>
 					</div>
@@ -196,11 +210,35 @@ import Card from 'primevue/card'
 							nisi.</span
 						>
 					</div>
-					<div
-						class="flex justify-end order-1 sm:order-2 col-span-12 lg:col-span-6 bg-yellow-100 p-0"
-						style="border-radius: 8px"
-					>
-						<img src="" class="w-11/12" alt="mockup" />
+					<div class="flex justify-end order-1 sm:order-2 col-span-12 lg:col-span-6 bg-yellow-100 p-0">
+						<Tabs value="0">
+							<TabList>
+								<Tab value="0" as="div" class="flex items-center gap-2">
+									<span>1</span>
+								</Tab>
+								<Tab value="1" as="div" class="flex items-center gap-2">
+									<span class="font-bold whitespace-nowrap">2</span>
+								</Tab>
+							</TabList>
+							<TabPanels>
+								<TabPanel value="0" as="p" class="m-0">
+									HI
+									<img
+										src="../assets/mockups/laptop/Screenshot 2024-09-10 143225-front.png"
+										class="w-5/5"
+										alt="mockup mobile"
+									/>
+								</TabPanel>
+								<TabPanel value="1" as="p" class="m-0">
+									Hello
+									<img
+										src="../assets/mockups/laptop/Screenshot 2024-09-10 143334-front.png"
+										class="w-5/5"
+										alt="mockup mobile"
+									/>
+								</TabPanel>
+							</TabPanels>
+						</Tabs>
 					</div>
 				</div>
 			</div>
