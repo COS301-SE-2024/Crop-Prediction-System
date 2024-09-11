@@ -48,6 +48,10 @@ class API:
         self.app.add_api_route("/aggregate", self.aggregate, methods=["GET"]) # TODO: Test this route
         self.app.add_api_route("/predict", self.predict, methods=["GET"]) # TODO: Test this route
         self.app.add_api_route("/train", self.train, methods=["GET"]) # TODO: Test this route
+
+        # messaging routes
+        self.app.add_api_route("/sendMessage", self.sendMessage, methods=["POST"])
+        self.app.add_api_route("/getTeamMessages", self.getMessages, methods=["GET"])
                                
     def main(self, request: Request):
         return {
@@ -122,6 +126,13 @@ class API:
     def fetchSummary(self, background_tasks: BackgroundTasks, request: Request):
         background_tasks.add_task(self.sb.fetchSummary)
         return {"message": "Started fetching summary"}
+    
+    # messaging routes
+    def sendMessage(self, request: Request, content: dict):
+        return self.sb.sendMessage(content)
+    
+    def getMessages(self, request: Request, team_id: str):
+        return self.sb.getTeamMessages(team_id)
 
 api_instance = API()
 app = api_instance.app

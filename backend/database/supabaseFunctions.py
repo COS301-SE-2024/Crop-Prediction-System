@@ -353,31 +353,24 @@ class supabaseFunctions:
             print(e)
             return {"error": "Failed to get team details", "error_message": e}
         
-    # @staticmethod
-    # def createSensorData(sensor_data: dict):
-    #     try:
-    #         # Extract data from the provided dictionary
-    #         nitrogen = sensor_data.get('Nitrogen')
-    #         phosphor = sensor_data.get('Phosphor')
-    #         potassium = sensor_data.get('Potassium')
-    #         soil_moisture = sensor_data.get('Soil_Moisture')
-
-    #         # Validate data
-    #         if nitrogen is None or phosphor is None or potassium is None or soil_moisture is None:
-    #             return {"error": "Missing required sensor data"}
-
-    #         # Insert data into the 'field_data' table
-    #         response = supabaseFunctions.__sbClient.table("field_data").insert({
-    #             "Nitrogen": nitrogen,
-    #             "Phosphor": phosphor,
-    #             "Potassium": potassium,
-    #             "Soil_Moisture": soil_moisture
-    #         }).execute()
-
-    #         if response.error:
-    #             return {"error": "Failed to insert sensor data", "error_message": response.error}
-
-    #         return {"success": "Sensor data inserted successfully", "data": response.data}
-    #     except Exception as e:
-    #         print(e)
-    #         return {"error": "Failed to insert sensor data", "error_message": str(e)}
+    @staticmethod
+    def sendMessage(content: dict):
+        try:
+            response = supabaseFunctions.__sbClient.table("team_chat").insert([content]).execute()
+            if response.data == []:
+                raise Exception("Failed to send message")
+            return {"success": "Message sent"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to send message", "error_message": e}
+        
+    @staticmethod
+    def getTeamMessages(team_id: str):
+        try:
+            response = supabaseFunctions.__sbClient.table("team_chat").select("*").eq("team_id", team_id).execute()
+            if response.data == []:
+                return {"error": "No messages found for this team"}
+            return response.data
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get team messages", "error_message": e}
