@@ -33,7 +33,7 @@ class API:
         # entry routes)
         self.app.add_api_route("/updateEntry", self.updateEntry, methods=["PUT"])
 
-        # user routes
+        # team routes
         self.app.add_api_route("/getTeamFields", self.getTeamFields, methods=["GET"])
         self.app.add_api_route("/getTeamFieldData", self.getTeamFieldData, methods=["GET"])
         self.app.add_api_route("/addToTeam", self.addToTeam, methods=["POST"]) # TODO: Test this route
@@ -52,6 +52,10 @@ class API:
         # messaging routes
         self.app.add_api_route("/sendMessage", self.sendMessage, methods=["POST"])
         self.app.add_api_route("/getTeamMessages", self.getMessages, methods=["GET"])
+
+        # user routes
+        self.app.add_api_route("/updateUser", self.sb.updateUser, methods=["PUT"])
+        self.app.add_api_route("/getUser", self.sb.getUser, methods=["GET"])
                                
     def main(self, request: Request):
         return {
@@ -133,6 +137,13 @@ class API:
     
     def getMessages(self, request: Request, team_id: str):
         return self.sb.getTeamMessages(team_id)
+    
+    # user routes
+    def updateUser(self, request: Request, user: dict):
+        return self.sb.updateUser(user)
+    
+    def getUser(self, request: Request, user_id: str):
+        return self.sb.getUser(user_id)
 
 api_instance = API()
 app = api_instance.app

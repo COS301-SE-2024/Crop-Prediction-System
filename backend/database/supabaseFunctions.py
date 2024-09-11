@@ -375,3 +375,25 @@ class supabaseFunctions:
         except Exception as e:
             print(e)
             return {"error": "Failed to get team messages", "error_message": e}
+        
+    @staticmethod
+    def updateUser(user: dict):
+        try:
+            response = supabaseFunctions.__sbClient.table("profiles").update(user).eq("id", user.get("id")).execute()
+            if response.data == []:
+                raise Exception("Failed to update user")
+            return {"success": "User updated"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to update user", "error_message": e}
+        
+    @staticmethod
+    def getUser(user_id: str):
+        try:
+            response = supabaseFunctions.__sbClient.table("profiles").select("*").eq("id", user_id).execute()
+            if response.data == []:
+                raise Exception("User not found")
+            return response.data[0]
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get user", "error_message": e}
