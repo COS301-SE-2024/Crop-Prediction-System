@@ -8,9 +8,7 @@
 			:loading="isLoading"
 		>
 			<template #header>
-				<h1 class="text-lg font-bold dark:text-white">
-					{{ teamOwner.valueOf() === '' ? 'Fetching Team Details...' : `${teamOwner} Team` }}
-				</h1>
+				<h1 class="text-lg font-bold dark:text-white">My Team</h1>
 			</template>
 
 			<template #empty>
@@ -85,7 +83,7 @@
 		</DataTable>
 
 		<!-- Dialog for Adding New Member -->
-		<Dialog v-model:visible="visible" modal header="Add Member" :style="{ width: '25rem' }">
+		<Dialog v-model:visible="visible" modal header="Add Member" :style="{ width: '25rem', 'font-family': 'Montserrat' }">
 			<div class="flex flex-col items-start justify-between gap-4">
 				<div class="flex flex-col gap-2 w-full">
 					<label for="newUserEmail">User Email</label>
@@ -98,7 +96,7 @@
 		</Dialog>
 
 		<!-- Confirmation Dialog -->
-		<Dialog v-model:visible="confirmVisible" modal header="Confirm" :style="{ width: '25rem' }">
+		<Dialog v-model:visible="confirmVisible" modal header="Confirm" :style="{ width: '25rem', 'font-family': 'Montserrat' }">
 			<p>Are you sure you want to remove this user from the team?</p>
 			<div class="flex gap-3 justify-end">
 				<Button label="Cancel" severity="secondary" outlined @click="confirmVisible = false" />
@@ -140,13 +138,6 @@ async function getTeamDetails() {
 			params: { team_id: teamID.team_id },
 		})
 
-		// Check for current user in team and don't show them in the table
-		data.forEach((member: any) => {
-			if (member.id === currentUser?.value?.id) {
-				teamOwner.value = member.full_name
-				data.splice(data.indexOf(member), 1)
-			}
-		})
 		team.value = data
 	} catch (error) {
 		console.error('Error fetching team details:', error)
