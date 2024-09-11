@@ -7,7 +7,7 @@ import TabPanel from 'primevue/tabpanel'
 </script>
 
 <template>
-	<div class="bg-surface-0 dark:bg-surface-900 text-surface-900 dark:text-surface-0">
+	<div class="text-surface-900 dark:text-surface-0 bg-white dark:bg-gray-800 shadow-md">
 		<div id="home" class="landing-wrapper overflow-hidden">
 			<div
 				id="hero"
