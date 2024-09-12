@@ -18,36 +18,36 @@ const setChartData = () => {
 		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
 		datasets: [
 			{
-				type: 'line',
-				label: 'Dataset 1',
-				borderColor: documentStyle.getPropertyValue('bg-orange-200'),
-				borderWidth: 2,
+				label: 'First Dataset',
+				data: [65, 59, 80, 81, 56, 55, 40],
 				fill: false,
 				tension: 0.4,
-				data: [50, 25, 12, 48, 56, 76, 42],
+				borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
 			},
 			{
-				type: 'bar',
-				label: 'Dataset 2',
-				backgroundColor: documentStyle.getPropertyValue('bg-purple-200'),
-				data: [21, 84, 24, 75, 37, 65, 34],
-				borderColor: 'white',
-				borderWidth: 2,
+				label: 'Second Dataset',
+				data: [28, 48, 40, 19, 86, 27, 90],
+				fill: false,
+				borderDash: [5, 5],
+				tension: 0.4,
+				borderColor: documentStyle.getPropertyValue('--p-orange-500'),
 			},
 			{
-				type: 'bar',
-				label: 'Dataset 3',
-				backgroundColor: documentStyle.getPropertyValue('bg-pink-200'),
-				data: [41, 52, 24, 74, 23, 21, 32],
+				label: 'Third Dataset',
+				data: [12, 51, 62, 33, 21, 62, 45],
+				fill: true,
+				borderColor: documentStyle.getPropertyValue('--p-gray-500'),
+				tension: 0.4,
+				backgroundColor: 'rgba(107, 114, 128, 0.2)',
 			},
 		],
 	}
 }
 const setChartOptions = () => {
 	const documentStyle = getComputedStyle(document.documentElement)
-	const textColor = documentStyle.getPropertyValue('bg-purple-200')
-	const textColorSecondary = documentStyle.getPropertyValue('bg-purple-200')
-	const surfaceBorder = documentStyle.getPropertyValue('bg-purple-200')
+	const textColor = documentStyle.getPropertyValue('--p-text-color')
+	const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color')
+	const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color')
 
 	return {
 		maintainAspectRatio: false,
@@ -250,17 +250,17 @@ const setChartOptions = () => {
 					>
 						<img
 							src="../assets/mockups/phone/Screenshot 2024-09-10 142053-portrait.png"
-							class="w-6/12"
+							class="w-1/3"
 							alt="mockup mobile"
 						/>
 						<img
 							src="../assets/mockups/phone/Screenshot 2024-09-10 142120-portrait.png"
-							class="w-6/12"
+							class="w-1/3"
 							alt="mockup mobile"
 						/>
 						<img
 							src="../assets/mockups/phone/Screenshot 2024-09-10 142143-portrait.png"
-							class="w-6/12"
+							class="w-1/3"
 							alt="mockup mobile"
 						/>
 					</div>
@@ -274,7 +274,7 @@ const setChartOptions = () => {
 						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">Mobile Friendly</div>
 						<span
 							class="text-surface-700 dark:text-surface-100 text-xl leading-normal ml-0 md:ml-2"
-							style="max-width: 650px"
+							style="max-width: 500px"
 							>Our product is mobile friendly to ensure anyone anywhere can use our product. Our product is built
 							for farmers, therefore mobile friendliness is necessary.</span
 						>
@@ -286,24 +286,33 @@ const setChartOptions = () => {
 							class="flex items-center justify-center bg-yellow-200 self-center lg:self-start"
 							style="width: 4.2rem; height: 4.2rem; border-radius: 10px"
 						>
-							<i class="pi pi-fw pi-desktop !text-3xl text-yellow-700"></i>
+							<i class="pi pi-chart-line !text-3xl text-yellow-700"></i>
 						</div>
 						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">
-							Celerisque Eu Ultrices
+							Charts and Graphs
 						</div>
 						<span
-							class="text-surface-700 dark:text-surface-100 text-2xl leading-normal mr-0 md:mr-2"
-							style="max-width: 650px"
-							>Adipiscing commodo elit at imperdiet dui. Viverra nibh cras pulvinar mattis nunc sed blandit libero.
-							Suspendisse in est ante in. Mauris pharetra et ultrices neque ornare aenean euismod elementum
-							nisi.</span
-						>
+							class="text-surface-700 dark:text-surface-100 text-xl leading-normal mr-0 md:mr-2"
+							style="max-width: 500px"
+							>Our product features a wide range of graphs and charts, each displaying crucial data received from
+							the AI model in order to help our users better their Crop's health and potential yield.
+						</span>
 					</div>
 					<div
 						class="flex justify-center order-1 sm:order-2 col-span-12 lg:col-span-6 bg-yellow-100 p-0"
 						style="border-radius: 8px"
 					>
-						<Chart type="bar" :data="chartData" :options="chartOptions" class="h-[30rem]" />
+						<div class="grid grid-cols-1 place-content-center text-surface-700">
+							<div>
+								<Chart
+									type="line"
+									:data="chartData"
+									:options="chartOptions"
+									class="flex sm:h-[20rem] w-[20rem] lg:h-[20rem] w-[0rem]"
+								/>
+							</div>
+							<div class="justify-self-center ml-2">text</div>
+						</div>
 					</div>
 				</div>
 			</div>
