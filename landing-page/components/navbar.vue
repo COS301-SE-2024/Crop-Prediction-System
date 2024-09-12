@@ -1,5 +1,5 @@
 <template>
-	<nav class="bg-surface-0 dark:bg-surface-900 text-surface-900 dark:text-surface-0 shadow-md">
+	<nav id="nav" class="bg-surface-0 dark:bg-surface-900 text-surface-900 dark:text-surface-0 shadow-md">
 		<div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
 			<div class="flex items-center justify-between h-16">
 				<!-- Logo -->
@@ -101,7 +101,7 @@ const items = computed(() => [
 		name: 'REGISTER',
 		icon: 'pi pi-user-plus',
 		command: () => {
-			window.location.href = '/help'
+			window.location.href = 'https://terrabyte.software/login'
 		},
 	},
 ])

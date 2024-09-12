@@ -4,6 +4,9 @@ import Chart from 'primevue/chart'
 import { ref, onMounted } from 'vue'
 import Fieldset from 'primevue/fieldset'
 import StatsCard from '../components/StatsCard.vue'
+import Card from '../components/card.vue'
+
+import Card from 'primevue/card'
 
 const generateMockData = (label, color) => ({
 	labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
@@ -65,19 +68,17 @@ const mockStats = ref([
 				"
 			>
 				<div class="mx-6 md:mx-20 mt-0 md:mt-6">
-					<h1 class="text-6xl font-bold text-gray-900 leading-tight">
-						<span class="font-light block">Eu sem integer</span>eget magna fermentum
+					<h1 class="font-bold text-gray-900 leading-tight">
+						<span class="text-5xl font-light block">Welcome to </span>
+						<span class="text-6xl block">TerraByte</span>
 					</h1>
-					<p class="font-normal text-2xl leading-normal md:mt-4 text-gray-700">
-						Sed blandit libero volutpat sed cras. Fames ac turpis egestas integer. Placerat in egestas erat...
+					<p class="font-normal text-xl leading-normal md:mt-4 text-gray-700">
+						Your one-stop solution for all your farming needs. We provide a wide range of features that will help you
+						manage your farms better.
 					</p>
-					<Button
-						label="Get Started"
-						as="router-link"
-						to="/"
-						rounded
-						class="bg-surface-200 text-surface-900 !text-xl mt-8 !px-4"
-					></Button>
+					<a href="https://terrabyte.software/login" target="_blank">
+						<Button label="Get Started" severity="primary" rounded class="!text-xl mt-8 !px-4"></Button>
+					</a>
 				</div>
 				<div class="flex justify-center md:justify-end">
 					<img src="../assets/image-light.png" alt="Logo" class="object-cover dark:hidden block" />
@@ -92,7 +93,6 @@ const mockStats = ref([
 						</h2>
 						<p class="text-xl text-surface-600 dark:text-surface-200 mb-12"></p>
 					</div>
-
 					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 						<!-- Feature 1 -->
 						<div
@@ -193,7 +193,6 @@ const mockStats = ref([
 							class="bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900 dark:to-orange-800 p-0.5 rounded-lg"
 						>
 							<div class="bg-surface-0 dark:bg-surface-900 h-full p-6 rounded-lg">
-								bg-orange-200 dark:bg-orange-700 text-orange-700 dark:text-orange-200
 								<div
 									class="flex items-center justify-center w-12 h-12 bg-orange-200 dark:bg-orange-700 rounded-lg mb-4"
 								>
@@ -349,59 +348,35 @@ const mockStats = ref([
 			</div>
 			<div id="about" class="py-6 px-6 lg:px-20 mx-0 my-12 lg:mx-20">
 				<div class="text-center">
-					<div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Powerful Everywhere</div>
-					<span class="text-muted-color text-2xl">Amet consectetur adipiscing elit...</span>
+					<div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-5xl">About Us</div>
+					<span class="text-muted-color text-2xl"></span>
 				</div>
-				<div class="grid grid-cols-12 gap-4 mt-20 pb-2 md:pb-20">
-					<div
-						class="flex justify-center col-span-12 lg:col-span-6 bg-blue-100 p-0 order-1 lg:order-none"
-						style="border-radius: 8px"
-					>
-						<img src="" class="w-11/12" alt="mockup mobile" />
-					</div>
-					<div class="col-span-12 lg:col-span-6 my-auto flex flex-col lg:items-end text-center lg:text-right gap-4">
-						<div
-							class="flex items-center justify-center bg-blue-200 self-center lg:self-end"
-							style="width: 4.2rem; height: 4.2rem; border-radius: 10px"
+				<div>
+					<Fieldset>
+						<StatsCard
+							>At [App Name], we revolutionize the way farmers manage their crops by combining advanced AI
+							technology with real-time data from IoT sensors and trusted weather forecasts. Our app integrates
+							seamlessly with Google Maps and Gemini, allowing you to track and predict crop performance based on
+							your precise location. By leveraging the OpenWeather API, we provide up-to-date weather predictions,
+							while our custom-built AI model analyzes environmental data to offer accurate insights on crop growth
+							and yield. With [App Name], farmers can make data-driven decisions to optimize their harvests and
+							maximize efficiency.</StatsCard
 						>
-							<i class="pi pi-fw pi-mobile !text-4xl text-blue-700"></i>
-						</div>
-						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">
-							Congue Quisque Egestas
-						</div>
-						<span
-							class="text-surface-700 dark:text-surface-100 text-2xl leading-normal ml-0 md:ml-2"
-							style="max-width: 650px"
-							>Lectus arcu bibendum at varius vel pharetra vel turpis nunc. Eget aliquet nibh praesent tristique
-							magna sit amet purus gravida. Sit amet mattis vulputate enim nulla aliquet.</span
-						>
-					</div>
-				</div>
-				<div class="grid grid-cols-12 gap-4 my-20 pt-2 md:pt-20">
-					<div class="col-span-12 lg:col-span-6 my-auto flex flex-col text-center lg:text-left lg:items-start gap-4">
-						<div
-							class="flex items-center justify-center bg-yellow-200 self-center lg:self-start"
-							style="width: 4.2rem; height: 4.2rem; border-radius: 10px"
-						>
-							<i class="pi pi-fw pi-desktop !text-3xl text-yellow-700"></i>
-						</div>
-						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">
-							Celerisque Eu Ultrices
-						</div>
-						<span
-							class="text-surface-700 dark:text-surface-100 text-2xl leading-normal mr-0 md:mr-2"
-							style="max-width: 650px"
-							>Adipiscing commodo elit at imperdiet dui. Viverra nibh cras pulvinar mattis nunc sed blandit libero.
-							Suspendisse in est ante in. Mauris pharetra et ultrices neque ornare aenean euismod elementum
-							nisi.</span
-						>
-					</div>
-					<div
-						class="flex justify-end order-1 sm:order-2 col-span-12 lg:col-span-6 bg-yellow-100 p-0"
-						style="border-radius: 8px"
-					>
-						<img src="" class="w-11/12" alt="mockup" />
-					</div>
+					</Fieldset>
+					<Card>
+						<template #title>Simple Card</template>
+						<template #content>
+							<p class="m-0">
+								At [App Name], we revolutionize the way farmers manage their crops by combining advanced AI
+								technology with real-time data from IoT sensors and trusted weather forecasts. Our app integrates
+								seamlessly with Google Maps and Gemini, allowing you to track and predict crop performance based
+								on your precise location. By leveraging the OpenWeather API, we provide up-to-date weather
+								predictions, while our custom-built AI model analyzes environmental data to offer accurate
+								insights on crop growth and yield. With [App Name], farmers can make data-driven decisions to
+								optimize their harvests and maximize efficiency.
+							</p>
+						</template>
+					</Card>
 				</div>
 			</div>
 		</div>
