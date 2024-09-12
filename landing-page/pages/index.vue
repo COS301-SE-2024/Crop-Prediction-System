@@ -2,83 +2,54 @@
 import Button from 'primevue/button'
 import Chart from 'primevue/chart'
 import { ref, onMounted } from 'vue'
+import Fieldset from 'primevue/fieldset'
+import StatsCard from '../components/StatsCard.vue'
 
-onMounted(() => {
-	chartData.value = setChartData()
-	chartOptions.value = setChartOptions()
+const generateMockData = (label, color) => ({
+	labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+	datasets: [
+		{
+			label,
+			data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 100)),
+			fill: false,
+			borderColor: color,
+			tension: 0.4,
+			borderWidth: 3,
+		},
+	],
 })
 
-const chartData = ref()
-const chartOptions = ref()
-
-const setChartData = () => {
-	const documentStyle = getComputedStyle(document.documentElement)
-
-	return {
-		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-		datasets: [
-			{
-				label: 'First Dataset',
-				data: [65, 59, 80, 81, 56, 55, 40],
-				fill: false,
-				tension: 0.4,
-				borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
-			},
-			{
-				label: 'Second Dataset',
-				data: [28, 48, 40, 19, 86, 27, 90],
-				fill: false,
-				borderDash: [5, 5],
-				tension: 0.4,
-				borderColor: documentStyle.getPropertyValue('--p-orange-500'),
-			},
-			{
-				label: 'Third Dataset',
-				data: [12, 51, 62, 33, 21, 62, 45],
-				fill: true,
-				borderColor: documentStyle.getPropertyValue('--p-gray-500'),
-				tension: 0.4,
-				backgroundColor: 'rgba(107, 114, 128, 0.2)',
-			},
-		],
-	}
-}
-const setChartOptions = () => {
-	const documentStyle = getComputedStyle(document.documentElement)
-	const textColor = documentStyle.getPropertyValue('--p-text-color')
-	const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color')
-	const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color')
-
-	return {
-		maintainAspectRatio: false,
-		aspectRatio: 0.6,
-		plugins: {
-			legend: {
-				labels: {
-					color: textColor,
+const mockStats = ref([
+	{ title: 'Soil Moisture', chartData: generateMockData('Soil Moisture', 'rgba(6, 182, 212, 1)') },
+	{ title: 'Soil Temperature', chartData: generateMockData('Soil Temperature', 'rgba(248, 114, 22, 1)') },
+	{
+		title: 'Temperature',
+		chartData: {
+			...generateMockData('Temperature', 'rgba(76, 175, 80, 1)'),
+			datasets: [
+				{
+					label: 'Max',
+					data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 30 + 20)),
+					borderColor: 'rgba(76, 175, 80, 1)',
 				},
-			},
+				{
+					label: 'Mean',
+					data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 20 + 15)),
+					borderColor: 'rgba(255, 205, 86, 1)',
+				},
+				{
+					label: 'Min',
+					data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 15 + 10)),
+					borderColor: 'rgba(255, 99, 132, 1)',
+				},
+			],
 		},
-		scales: {
-			x: {
-				ticks: {
-					color: textColorSecondary,
-				},
-				grid: {
-					color: surfaceBorder,
-				},
-			},
-			y: {
-				ticks: {
-					color: textColorSecondary,
-				},
-				grid: {
-					color: surfaceBorder,
-				},
-			},
-		},
-	}
-}
+	},
+	{ title: 'Dew Point', chartData: generateMockData('Dew Point', 'rgba(226, 226, 226, 1)') },
+	{ title: 'Humidity', chartData: generateMockData('Humidity', 'rgba(168,84,246, 1)') },
+	{ title: 'Pressure', chartData: generateMockData('Pressure', 'rgba(255, 99, 132, 1)') },
+	{ title: 'UV Index', chartData: generateMockData('UV Index', 'rgba(255, 205, 86, 1)') },
+])
 </script>
 
 <template>
@@ -222,6 +193,7 @@ const setChartOptions = () => {
 							class="bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900 dark:to-orange-800 p-0.5 rounded-lg"
 						>
 							<div class="bg-surface-0 dark:bg-surface-900 h-full p-6 rounded-lg">
+								bg-orange-200 dark:bg-orange-700 text-orange-700 dark:text-orange-200
 								<div
 									class="flex items-center justify-center w-12 h-12 bg-orange-200 dark:bg-orange-700 rounded-lg mb-4"
 								>
@@ -299,31 +271,17 @@ const setChartOptions = () => {
 				</div>
 				<div class="grid grid-cols-12 gap-4 mt-20 pb-2 md:pb-20">
 					<div
-						class="flex justify-center col-span-12 lg:col-span-6 bg-blue-200 p-0 order-1 lg:order-none"
+						class="flex justify-center col-span-12 lg:col-span-6 bg-orange-200 p-0 order-1 lg:order-none"
 						style="border-radius: 8px"
 					>
-						<img
-							src="../assets/mockups/phone/Screenshot 2024-09-10 142053-portrait.png"
-							class="w-1/3"
-							alt="mockup mobile"
-						/>
-						<img
-							src="../assets/mockups/phone/Screenshot 2024-09-10 142120-portrait.png"
-							class="w-1/3"
-							alt="mockup mobile"
-						/>
-						<img
-							src="../assets/mockups/phone/Screenshot 2024-09-10 142143-portrait.png"
-							class="w-1/3"
-							alt="mockup mobile"
-						/>
+						<img src="../assets/images/Screenshot 2024-09-12 162707.png" alt="mockup mobile" />
 					</div>
 					<div class="col-span-12 lg:col-span-6 my-auto flex flex-col lg:items-end text-center lg:text-right gap-4">
 						<div
-							class="flex items-center justify-center bg-blue-200 self-center lg:self-end"
+							class="flex items-center justify-center bg-orange-200 dark:bg-orange-700 self-center lg:self-end"
 							style="width: 4.2rem; height: 4.2rem; border-radius: 10px"
 						>
-							<i class="pi pi-map-marker !text-4xl text-blue-700"></i>
+							<i class="pi pi-map-marker !text-4xl text-orange-700 dark:text-orange-200"></i>
 						</div>
 						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">
 							Map Functionality
@@ -332,7 +290,7 @@ const setChartOptions = () => {
 							class="text-surface-700 dark:text-surface-100 text-xl leading-normal ml-0 md:ml-2"
 							style="max-width: 550px"
 							>When a user is ready to add a field to the app, they simply search for the field's location in the
-							search bar, and then just enter the coordinates manually on the map. We implemented it this way to
+							search bar, and then just pinpoint the coordinates manually on the map. We implemented it this way to
 							ensure accurate locations and make the whole system easier to use for our clients.
 						</span>
 					</div>
@@ -340,30 +298,51 @@ const setChartOptions = () => {
 				<div class="grid grid-cols-12 gap-4 my-20 pt-2 md:pt-20">
 					<div class="col-span-12 lg:col-span-6 my-auto flex flex-col text-center lg:text-left lg:items-start gap-4">
 						<div
-							class="flex items-center justify-center bg-yellow-200 self-center lg:self-start"
+							class="flex items-center justify-center bg-purple-200 dark:bg-purple-700 self-center lg:self-start"
 							style="width: 4.2rem; height: 4.2rem; border-radius: 10px"
 						>
-							<i class="pi pi-chart-line !text-3xl text-yellow-700"></i>
+							<i class="pi pi-microchip-ai !text-3xl text-purple-700 dark:text-purple-200"></i>
 						</div>
-						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">
-							Charts and Graphs
-						</div>
+						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">AI Model</div>
 						<span
 							class="text-surface-700 dark:text-surface-100 text-xl leading-normal mr-0 md:mr-2"
 							style="max-width: 550px"
-							>Our product features a wide range of graphs and charts, each displaying crucial data received from
-							the AI model in order to help our users better their Crop's health and potential yield.
+							>Our product offers a state of the art AI model that predicts crop yields. This model is trained on a
+							wide range of crops and can be used to predict the yield of any crop. This model is also constantly
+							updated to ensure the best predictions possible.
 						</span>
 					</div>
 					<div
 						class="flex justify-center order-1 sm:order-2 col-span-12 lg:col-span-6 bg-yellow-100 p-0"
 						style="border-radius: 8px"
 					>
-						<div class="grid grid-cols-1 place-content-center text-surface-700">
-							<div>
-								<Chart type="line" :data="chartData" :options="chartOptions" class="h-[20rem] w-[30rem]" />
-							</div>
-							<div class="justify-self-center ml-2">text</div>
+						<img src="../assets/images/Screenshot 2024-09-12 162800.png" alt="mockup mobile" />
+					</div>
+				</div>
+			</div>
+			<div id="features" class="py-12 px-4 sm:px-6 lg:px-8">
+				<div class="max-w-7xl mx-auto">
+					<div class="flex justify-center text-center gap-6">
+						<div
+							class="flex items-center justify-center w-14 h-14 bg-emerald-200 dark:bg-emerald-700 rounded-lg mb-4"
+						>
+							<i class="pi pi-chart-bar text-2xl text-emerald-700 dark:text-emerald-200"></i>
+						</div>
+						<h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">
+							Charts and Graphs
+						</h2>
+					</div>
+					<p class="text-xl text-surface-600 dark:text-surface-200 mb-12"></p>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+						<div
+							v-for="stat in mockStats"
+							:key="stat.title"
+							class="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900 dark:to-emerald-800 p-0.5 rounded-lg"
+						>
+							<Fieldset>
+								<StatsCard :title="stat.title" :chartData="stat.chartData" />
+							</Fieldset>
 						</div>
 					</div>
 				</div>
