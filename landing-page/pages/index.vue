@@ -131,7 +131,7 @@ const setChartOptions = () => {
 								<div
 									class="flex items-center justify-center w-12 h-12 bg-yellow-200 dark:bg-yellow-700 rounded-lg mb-4"
 								>
-									<i class="pi pi-users text-2xl text-yellow-700 dark:text-yellow-200"></i>
+									<i class="pi pi-thumbs-up text-2xl text-yellow-700 dark:text-yellow-200"></i>
 								</div>
 								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Easy to Use</h2>
 								<p class="text-surface-600 dark:text-surface-200">
@@ -167,12 +167,13 @@ const setChartOptions = () => {
 								<div
 									class="flex items-center justify-center w-12 h-12 bg-indigo-200 dark:bg-indigo-700 rounded-lg mb-4"
 								>
-									<i class="pi pi-file text-2xl text-indigo-700 dark:text-indigo-200"></i>
+									<i class="pi pi-lock text-2xl text-indigo-700 dark:text-indigo-200"></i>
 								</div>
-								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Well Documented</h2>
+								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Fast and Secure</h2>
 								<p class="text-surface-600 dark:text-surface-200">
-									Our product has comprehensive documentation for easy reference and understanding. We
-									implemented an in-app help menu for extra information.
+									One of our main priorities is to ensure that our product is fast and secure. We have
+									implemented a wide range of security features to ensure that your data is safe, and that speed
+									will not be a concern.
 								</p>
 							</div>
 						</div>
@@ -184,7 +185,7 @@ const setChartOptions = () => {
 								<div
 									class="flex items-center justify-center w-12 h-12 bg-green-200 dark:bg-green-700 rounded-lg mb-4"
 								>
-									<i class="pi pi-cloud text-2xl text-yellow-700 dark:text-yellow-200"></i>
+									<i class="pi pi-cloud text-2xl text-green-700 dark:text-green-200"></i>
 								</div>
 								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">
 									IOT Sensor Integration
@@ -204,7 +205,7 @@ const setChartOptions = () => {
 								<div
 									class="flex items-center justify-center w-12 h-12 bg-purple-200 dark:bg-purple-700 rounded-lg mb-4"
 								>
-									<i class="pi pi-microchip-ai text-2xl text-cyan-700 dark:text-cyan-200"></i>
+									<i class="pi pi-microchip-ai text-2xl text-purple-700 dark:text-purple-200"></i>
 								</div>
 								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">
 									AI Crop Predictions
@@ -224,14 +225,67 @@ const setChartOptions = () => {
 								<div
 									class="flex items-center justify-center w-12 h-12 bg-orange-200 dark:bg-orange-700 rounded-lg mb-4"
 								>
-									<i class="pi pi-map-marker text-2xl text-indigo-700 dark:text-indigo-200"></i>
+									<i class="pi pi-map-marker text-2xl text-orange-700 dark:text-orange-200"></i>
 								</div>
 								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">
 									Google Maps Integration
 								</h2>
 								<p class="text-surface-600 dark:text-surface-200">
-									Our product allows for easy integration with Google Maps for easy navigation and location
-									access. This improves the user experience, but also the predictions our AI model will make.
+									Our product integrates with Google Maps for easy navigation and location access. This improves
+									the user experience, but also the predictions our AI model will make.
+								</p>
+							</div>
+						</div>
+						<!-- Feature 7 -->
+						<div
+							class="bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-900 dark:to-emerald-800 p-0.5 rounded-lg"
+						>
+							<div class="bg-surface-0 dark:bg-surface-900 h-full p-6 rounded-lg">
+								<div
+									class="flex items-center justify-center w-12 h-12 bg-emerald-200 dark:bg-emerald-700 rounded-lg mb-4"
+								>
+									<i class="pi pi-chart-bar text-2xl text-emerald-700 dark:text-emerald-200"></i>
+								</div>
+								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">
+									Data Visualisation
+								</h2>
+								<p class="text-surface-600 dark:text-surface-200">
+									Our product features a wide range of graphs and charts, each displaying crucial data received
+									from the AI model in order to help our users better their Crop's health and potential yield.
+								</p>
+							</div>
+						</div>
+						<!-- Feature 8 -->
+						<div
+							class="bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-800 dark:to-slate-700 p-0.5 rounded-lg"
+						>
+							<div class="bg-surface-0 dark:bg-surface-900 h-full p-6 rounded-lg">
+								<div
+									class="flex items-center justify-center w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded-lg mb-4"
+								>
+									<i class="pi pi-mobile text-2xl text-slate-700 dark:text-slate-200"></i>
+								</div>
+								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Mobile Friendly</h2>
+								<p class="text-surface-600 dark:text-surface-200">
+									Our product is mobile friendly to ensure anyone anywhere can use our product. Our product is
+									built for farmers, therefore mobile friendliness is key.
+								</p>
+							</div>
+						</div>
+						<!-- Feature 9 -->
+						<div
+							class="bg-gradient-to-br from-rose-100 to-rose-200 dark:from-rose-900 dark:to-rose-800 p-0.5 rounded-lg"
+						>
+							<div class="bg-surface-0 dark:bg-surface-900 h-full p-6 rounded-lg">
+								<div
+									class="flex items-center justify-center w-12 h-12 bg-rose-200 dark:bg-rose-700 rounded-lg mb-4"
+								>
+									<i class="pi pi-users text-2xl text-rose-700 dark:text-rose-200"></i>
+								</div>
+								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Team Availability</h2>
+								<p class="text-surface-600 dark:text-surface-200">
+									We added teams to our product to allow farmers and their helpers to have access to the same
+									set of fields and crops. This allows for better collaboration and communication.
 								</p>
 							</div>
 						</div>
@@ -269,15 +323,18 @@ const setChartOptions = () => {
 							class="flex items-center justify-center bg-blue-200 self-center lg:self-end"
 							style="width: 4.2rem; height: 4.2rem; border-radius: 10px"
 						>
-							<i class="pi pi-fw pi-mobile !text-4xl text-blue-700"></i>
+							<i class="pi pi-map-marker !text-4xl text-blue-700"></i>
 						</div>
-						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">Mobile Friendly</div>
+						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">
+							Map Functionality
+						</div>
 						<span
 							class="text-surface-700 dark:text-surface-100 text-xl leading-normal ml-0 md:ml-2"
-							style="max-width: 500px"
-							>Our product is mobile friendly to ensure anyone anywhere can use our product. Our product is built
-							for farmers, therefore mobile friendliness is necessary.</span
-						>
+							style="max-width: 550px"
+							>When a user is ready to add a field to the app, they simply search for the field's location in the
+							search bar, and then just enter the coordinates manually on the map. We implemented it this way to
+							ensure accurate locations and make the whole system easier to use for our clients.
+						</span>
 					</div>
 				</div>
 				<div class="grid grid-cols-12 gap-4 my-20 pt-2 md:pt-20">
@@ -293,7 +350,7 @@ const setChartOptions = () => {
 						</div>
 						<span
 							class="text-surface-700 dark:text-surface-100 text-xl leading-normal mr-0 md:mr-2"
-							style="max-width: 500px"
+							style="max-width: 550px"
 							>Our product features a wide range of graphs and charts, each displaying crucial data received from
 							the AI model in order to help our users better their Crop's health and potential yield.
 						</span>
@@ -304,12 +361,7 @@ const setChartOptions = () => {
 					>
 						<div class="grid grid-cols-1 place-content-center text-surface-700">
 							<div>
-								<Chart
-									type="line"
-									:data="chartData"
-									:options="chartOptions"
-									class="flex sm:h-[20rem] w-[20rem] lg:h-[20rem] w-[0rem]"
-								/>
+								<Chart type="line" :data="chartData" :options="chartOptions" class="h-[20rem] w-[30rem]" />
 							</div>
 							<div class="justify-self-center ml-2">text</div>
 						</div>
