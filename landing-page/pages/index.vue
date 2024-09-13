@@ -6,8 +6,6 @@ import Fieldset from 'primevue/fieldset'
 import StatsCard from '../components/StatsCard.vue'
 import Card from '../components/card.vue'
 
-import Card from 'primevue/card'
-
 const generateMockData = (label, color) => ({
 	labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
 	datasets: [
@@ -348,31 +346,18 @@ const mockStats = ref([
 			</div>
 			<div id="about" class="py-6 px-6 lg:px-20 mx-0 my-12 lg:mx-20">
 				<div class="text-center">
-					<div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-5xl">About Us</div>
-					<span class="text-muted-color text-2xl"></span>
+					<div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-5xl py-6">About Us</div>
 				</div>
 				<div>
-					<Fieldset>
-						<StatsCard
-							>At [App Name], we revolutionize the way farmers manage their crops by combining advanced AI
-							technology with real-time data from IoT sensors and trusted weather forecasts. Our app integrates
-							seamlessly with Google Maps and Gemini, allowing you to track and predict crop performance based on
-							your precise location. By leveraging the OpenWeather API, we provide up-to-date weather predictions,
-							while our custom-built AI model analyzes environmental data to offer accurate insights on crop growth
-							and yield. With [App Name], farmers can make data-driven decisions to optimize their harvests and
-							maximize efficiency.</StatsCard
-						>
-					</Fieldset>
 					<Card>
-						<template #title>Simple Card</template>
-						<template #content>
-							<p class="m-0">
-								At [App Name], we revolutionize the way farmers manage their crops by combining advanced AI
+						<template #text>
+							<p>
+								At TerraByte, we revolutionize the way farmers manage their crops by combining advanced AI
 								technology with real-time data from IoT sensors and trusted weather forecasts. Our app integrates
 								seamlessly with Google Maps and Gemini, allowing you to track and predict crop performance based
 								on your precise location. By leveraging the OpenWeather API, we provide up-to-date weather
 								predictions, while our custom-built AI model analyzes environmental data to offer accurate
-								insights on crop growth and yield. With [App Name], farmers can make data-driven decisions to
+								insights on crop growth and yield. With TerraByte, farmers can make data-driven decisions to
 								optimize their harvests and maximize efficiency.
 							</p>
 						</template>
