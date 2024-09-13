@@ -1,12 +1,5 @@
 <template>
-	<div class="w-full border border-surface-border dark:border-surface-600 p-6 rounded-lg">
-		<!-- Title Slot -->
-		<div class="w-full flex flex-col gap-2 justify-between items-center">
-			<h2 class="font-semibold text-lg self-start">
-				<slot name="title">{{ title }}</slot>
-			</h2>
-		</div>
-		<!-- Text Slot -->
+	<div class="w-full border border-surface-border dark:border-surface-600 py-2 px-6 rounded-lg text-xl">
 		<div class="w-full mt-4">
 			<slot name="text"></slot>
 		</div>
@@ -14,7 +7,6 @@
 </template>
 
 <script setup>
-import Chart from 'primevue/chart'
 import { ref, onMounted } from 'vue'
 
 onMounted(() => {
