@@ -14,7 +14,7 @@
 					class="slider"
 				/>
 				<span>{{ chartLabels[sliderValue] }}</span>
-				<!-- Displaying current time period -->
+				<!-- Displaying current month -->
 			</div>
 		</div>
 	</div>
@@ -25,7 +25,7 @@ import Chart from 'primevue/chart'
 import { ref, computed, onMounted } from 'vue'
 
 // Slider parameters
-const sliderValue = ref(0) // Default slider position (starts at first data point)
+const sliderValue = ref(0) // Default slider position (starts at the first data point)
 const min = 0
 const max = 6 // Assuming 7 data points (Jan to Jul)
 const step = 1
@@ -49,19 +49,44 @@ const props = defineProps({
 // Labels for each data point (e.g., months)
 const chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
 
+// Array to store the locked data points
+const lockedData = ref(props.chartData.datasets.map((dataset) => dataset.data.map(() => null)))
+
 // Chart options initialization
 const chartOptions = ref()
 onMounted(() => {
 	chartOptions.value = setChartOptions()
 })
 
-// Computed property to update the displayed data for the current slider position
+// Generate random data for future months
+const getRandomData = () => Math.floor(Math.random() * 100)
+
+// Function to lock data for current and previous months
+const lockData = () => {
+	props.chartData.datasets.forEach((dataset, datasetIndex) => {
+		// Lock data up to the current slider value
+		for (let i = 0; i <= sliderValue.value; i++) {
+			lockedData.value[datasetIndex][i] = dataset.data[i]
+		}
+	})
+}
+
+// Computed property to display locked data up to the current slider value, and predicted data after that
 const currentChartData = computed(() => {
 	return {
-		labels: [chartLabels[sliderValue.value]], // Display the label for the selected slider position
-		datasets: props.chartData.datasets.map((dataset) => ({
+		labels: chartLabels, // Always show all the months
+		datasets: props.chartData.datasets.map((dataset, datasetIndex) => ({
 			...dataset,
-			data: [dataset.data[sliderValue.value]], // Show only the data for the selected time period
+			data: dataset.data.map((value, index) => {
+				// Use locked data up to the slider value, randomize data for future months
+				if (index <= sliderValue.value) {
+					// Return locked data (real data from the past)
+					return lockedData.value[datasetIndex][index]
+				} else {
+					// Return predicted data (randomized data for the future)
+					return getRandomData()
+				}
+			}),
 		})),
 	}
 })
@@ -100,37 +125,10 @@ const setChartOptions = () => {
 	}
 }
 
-// Update the chart data when the slider changes (optional: add custom behavior)
+// Update the chart data when the slider changes
 const updateChartData = () => {
+	// Lock data for months up to the current slider value
+	lockData()
 	console.log('Slider Value:', sliderValue.value)
 }
 </script>
-
-<style scoped>
-.custom-slider {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-}
-
-.slider {
-	width: 200px;
-	accent-color: #007bff;
-}
-
-.slider::-webkit-slider-thumb {
-	width: 20px;
-	height: 20px;
-	background: #007bff;
-	border-radius: 50%;
-	cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
-	width: 20px;
-	height: 20px;
-	background: #007bff;
-	border-radius: 50%;
-	cursor: pointer;
-}
-</style>
