@@ -62,12 +62,17 @@ const items = ref([
 		],
 	},
 	{
-		label: 'TEAM MANAGEMENT',
+		label: 'TEAM',
 		items: [
 			{
 				label: 'Manage Team',
 				url: '/team/manage',
 				icon: 'pi pi-users',
+			},
+			{
+				label: 'Team Chat',
+				url: '/team/chat',
+				icon: 'pi pi-comment',
 			},
 		],
 	},
