@@ -1,5 +1,13 @@
 <template>
-	<div ref="scrollableContainer" class="w-full flex flex-col gap-4 items-center justify-between rounded-md overflow-y-auto">
+	<div v-show="isLoading" class="w-full h-full flex flex-col justify-center items-center gap-2">
+		<ProgressSpinner />
+		<h2 class="font-bold text-surface-700 dark:text-surface-0 text-xl">Fetching Team Messages</h2>
+	</div>
+	<div
+		v-show="!isLoading"
+		ref="scrollableContainer"
+		class="w-full flex flex-col gap-4 items-center justify-between rounded-md overflow-y-auto"
+	>
 		<div v-for="(message, index) in messages" :key="message.id" class="w-full">
 			<!-- Show Tag only if this is the first message of the day -->
 			<div v-if="shouldShowDateTag(index)" class="w-full gap-2 items-center justify-between flex flex-col">
@@ -37,6 +45,7 @@ const messages = ref([])
 const supabase = useSupabaseClient()
 const currentUser = ref(null)
 const team_id = ref('')
+const isLoading = ref(true)
 
 // You need to declare a DOM ref to access the last message directly
 const lastMessage = ref(null) // Ref to track the last message's DOM element
@@ -63,6 +72,7 @@ async function getTeamMessages() {
 		console.error('Error fetching team details:', error)
 	} finally {
 		await fetchMessages()
+		isLoading.value = false
 		// Scroll to the last message after messages are loaded
 		nextTick(() => {
 			scrollToLastMessage()
