@@ -195,6 +195,30 @@ class supabaseFunctions:
             return response.data
         except Exception as e:
             return {"error": "Failed to get user field data", "error_message": e}
+        
+    @staticmethod
+    def getPastYieldAvg(crop: str):
+        # get past yield from crop_production
+        try:
+            crop += "_ton_per_hectare"
+            response = supabaseFunctions.__sbClient.table("crop_production").select(crop).execute()
+            if response.data == []:
+                return {"error": "Data not found. Crop type may be invalid or may not have any data."}
+            
+            # transpose
+            data = list(response.data)
+
+            # read value of each "crop" key
+            data = [i[crop] for i in data]
+
+            # select last 5 values
+            data = data[-5:]
+
+            # calculate average
+            avg = sum(data) / len(data)
+            return avg
+        except Exception as e:
+            return {"error": "Failed to get past yield average", "error_message": e}
 
     @staticmethod
     def createField(fieldInfo: Field):

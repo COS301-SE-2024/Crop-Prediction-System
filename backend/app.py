@@ -32,6 +32,7 @@ class API:
 
         # entry routes)
         self.app.add_api_route("/updateEntry", self.updateEntry, methods=["PUT"])
+        self.app.add_api_route("/getPastYieldAvg", self.getPastYieldAvg, methods=["GET"])
 
         # team routes
         self.app.add_api_route("/getTeamFields", self.getTeamFields, methods=["GET"])
@@ -81,6 +82,9 @@ class API:
     # entry routes
     def updateEntry(self, request: Request, entryInfo: Entry):
         return self.sb.updateEntry(entryInfo)
+    
+    def getPastYieldAvg(self, request: Request, crop: str):
+        return self.sb.getPastYieldAvg(crop)
 
     def getTeamFields(self, request: Request, team_id: str):
         return self.sb.getTeamFields(team_id)
