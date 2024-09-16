@@ -17,6 +17,12 @@ class ML:
     def predict(self, data):
         pass
 
+    def prepare(self):
+        pass
+
+    def evaluate(self):
+        pass
+
     def feature_engineering(self):
         # CSMI: Calculated Soil Moisture Index calculated as CSMI = (Rain + Humidity) / Temperature
         self.historical_data['csmi'] = (self.historical_data['rain'] + self.historical_data['humidity']) / self.historical_data['tempmean']
