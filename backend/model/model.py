@@ -107,6 +107,8 @@ class Model:
         
         data = self.load_data(c, field_id)
 
+        print(data, flush=True)
+
         # Get the current stage
         current_stage = self.sf.getCurrentStage(c)
 
@@ -122,62 +124,68 @@ class Model:
         X = stage_data.drop(['year', 'stage', 'yield', 'field_id', 'id'], axis=1)
         y = stage_data['yield']
 
+        print(X, flush=True)
+        print(y, flush=True)
+
+        # Print X's columns
+        print(X.columns, flush=True)
+
         # Define the XGBoost model
-        xgb_model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators = 10, seed = 123, booster = 'gbtree')
+        # xgb_model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators = 10, seed = 123, booster = 'gbtree')
 
-        # Define the parameter grid
-        param_dist = {
-            'n_estimators': [100, 200, 300, 400, 500],
-            'learning_rate': [0.01, 0.05, 0.1, 0.2],
-            'max_depth': [3, 4, 5, 6, 7, 8],
-            'min_child_weight': [1, 3, 5, 7],
-            'gamma': [0, 0.1, 0.2, 0.3],
-            'subsample': [0.7, 0.8, 0.9, 1.0],
-            'colsample_bytree': [0.7, 0.8, 0.9, 1.0],
-        }
+        # # Define the parameter grid
+        # param_dist = {
+        #     'n_estimators': [100, 200, 300, 400, 500],
+        #     'learning_rate': [0.01, 0.05, 0.1, 0.2],
+        #     'max_depth': [3, 4, 5, 6, 7, 8],
+        #     'min_child_weight': [1, 3, 5, 7],
+        #     'gamma': [0, 0.1, 0.2, 0.3],
+        #     'subsample': [0.7, 0.8, 0.9, 1.0],
+        #     'colsample_bytree': [0.7, 0.8, 0.9, 1.0],
+        # }
 
-        # Setup the random search with 3-fold cross-validation
-        random_search = RandomizedSearchCV(
-            xgb_model,
-            param_distributions=param_dist,
-            n_iter=50,  # Number of parameter settings that are sampled
-            scoring='neg_mean_squared_error',
-            cv=3,  # 3-fold cross-validation
-            verbose=1,
-            n_jobs=-1,
-            random_state=42,
-        )
+        # # Setup the random search with 3-fold cross-validation
+        # random_search = RandomizedSearchCV(
+        #     xgb_model,
+        #     param_distributions=param_dist,
+        #     n_iter=50,  # Number of parameter settings that are sampled
+        #     scoring='neg_mean_squared_error',
+        #     cv=3,  # 3-fold cross-validation
+        #     verbose=1,
+        #     n_jobs=-1,
+        #     random_state=42,
+        # )
 
-        # Fit the random search model
-        random_search.fit(X, y)
+        # # Fit the random search model
+        # random_search.fit(X, y)
 
-        # Best model based on the best parameters
-        best_model = random_search.best_estimator_
+        # # Best model based on the best parameters
+        # best_model = random_search.best_estimator_
 
-        # Make predictions with the best model
-        y_pred = best_model.predict(X)
-        mse = mean_squared_error(y, y_pred)
-        rmse = np.sqrt(mse)
+        # # Make predictions with the best model
+        # y_pred = best_model.predict(X)
+        # mse = mean_squared_error(y, y_pred)
+        # rmse = np.sqrt(mse)
 
-        # Save the model
-        # First delete the existing model
-        try:
-            os.remove(f"{field_id}.json")
-        except:
-            pass
+        # # Save the model
+        # # First delete the existing model
+        # try:
+        #     os.remove(f"{field_id}.json")
+        # except:
+        #     pass
         
-        best_model.save_model(f"{field_id}.json")
-        # self.save(field_id)
+        # best_model.save_model(f"{field_id}.json")
+        # # self.save(field_id)
 
-        prediction = self.predict(field_id)
+        # prediction = self.predict(field_id)
 
         # print(f"Mean Squared Error: {mse}", flush=True)
         # print(f"Predictions: {prediction}", flush=True)
         return {
             "status" : "Model trained successfully",
-            "mse" : mse,
-            "rmse" : rmse,
-            "predictions" : prediction
+            # "mse" : mse,
+            # "rmse" : rmse,
+            # "predictions" : prediction
         }
 
     # Predict
