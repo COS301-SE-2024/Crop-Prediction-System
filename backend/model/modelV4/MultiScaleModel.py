@@ -36,6 +36,10 @@ class MultiScaleModel(ML):
         self.modelRMSE = []
         self.modelPredictions = []
         self.actual = None
+
+        self.models = []
+
+        self.prepare(self.X)
     
     def train(self):
         # Traverse through each frequency, pick ones where a certain variable is the same (i.e. year)
@@ -121,57 +125,86 @@ class MultiScaleModel(ML):
             self.modelPredictions.append(y_pred)
             self.actual = y
 
-        # Plot the prediction
-        print(self.modelRMSE)
+            # Append the model
+            self.models.append(best_model)
 
         # Plot the prediction
-        plt.plot(self.modelPredictions[0], label='Pentadal')
-        plt.plot(self.modelPredictions[1], label='Weekly')
-        plt.plot(self.modelPredictions[2], label='Biweekly')
-        plt.plot(self.modelPredictions[3], label='Monthly')
-        plt.plot(self.modelPredictions[4], label='Quarterly')
-        plt.plot(self.modelPredictions[5], label='Yearly')
-        plt.plot(self.actual, label='Actual')
-        plt.legend()
-        plt.show()
+        # print(self.modelRMSE)
+
+        # Plot the prediction
+        # plt.plot(self.modelPredictions[0], label='Pentadal')
+        # plt.plot(self.modelPredictions[1], label='Weekly')
+        # plt.plot(self.modelPredictions[2], label='Biweekly')
+        # plt.plot(self.modelPredictions[3], label='Monthly')
+        # plt.plot(self.modelPredictions[4], label='Quarterly')
+        # plt.plot(self.modelPredictions[5], label='Yearly')
+        # plt.plot(self.actual, label='Actual')
+        # plt.legend()
+        # plt.show()
+
+        return self.modelRMSE
 
     def predict(self, data):
-        pass
+        if len(self.models) == 0:
+            return None
 
-    def prepare(self):
+        X = {
+            'pentadal': data,
+            'weekly': data,
+            'biweekly': data,
+            'monthly': data,
+            'quarterly': data,
+            'yearly': data
+        }
+
+        X = self.prepare(X)
+
+        predictions = []
+
+        for i in range(len(self.models)):
+            X_test = X[list(X.keys())[i]]
+            y_pred = self.models[i].predict(X_test)
+            predictions.append(y_pred)
+
+        return predictions
+
+
+    def prepare(self, data):
         # Convert all to date
-        for freq in self.X.keys():
-            self.X[freq]["date"] = pd.to_datetime(self.X[freq]["date"])
+        for freq in data.keys():
+            data[freq]["date"] = pd.to_datetime(data[freq]["date"])
 
             # Add year by default (lowest frequency)
-            self.X[freq]["yearly"] = self.X[freq]["date"].apply(lambda x: x.year)
+            data[freq]["yearly"] = data[freq]["date"].apply(lambda x: x.year)
 
             # Add day of year
-            self.X[freq]["day"] = self.X[freq]["date"].apply(lambda x: x.timetuple().tm_yday)
+            data[freq]["day"] = data[freq]["date"].apply(lambda x: x.timetuple().tm_yday)
 
         # Add pentadal counter
-        for freq in self.X.keys():
+        for freq in data.keys():
             if freq == 'pentadal':
-                self.X[freq]["pentadal"] = self.X[freq]["day"].apply(lambda x: x // 5)
+                data[freq]["pentadal"] = data[freq]["day"].apply(lambda x: x // 5)
             elif freq == 'weekly':
-                self.X[freq]["weekly"] = self.X[freq]["date"].apply(lambda x: x.week)
+                data[freq]["weekly"] = data[freq]["date"].apply(lambda x: x.week)
             elif freq == 'biweekly':
-                self.X[freq]["biweekly"] = self.X[freq]["day"].apply(lambda x: x // 14)
+                data[freq]["biweekly"] = data[freq]["day"].apply(lambda x: x // 14)
             elif freq == 'monthly':
-                self.X[freq]["monthly"] = self.X[freq]["date"].apply(lambda x: x.month)
+                data[freq]["monthly"] = data[freq]["date"].apply(lambda x: x.month)
             elif freq == 'quarterly':
-                self.X[freq]["quarterly"] = self.X[freq]["date"].apply(lambda x: x.quarter)
+                data[freq]["quarterly"] = data[freq]["date"].apply(lambda x: x.quarter)
             elif freq == 'yearly':
                 pass
 
         # Prepare data for each frequency
-        for freq in self.X.keys():
-            self.aggregate(freq)
+        for freq in data.keys():
+            data[freq] = self.aggregate(freq, data)
+
+        return data
     
-    def aggregate(self, freq):
+    def aggregate(self, freq, data):
         # Cumulative or mean for each stage per year
         if (freq == 'yearly'):
-            self.X[freq] = self.X[freq].groupby([freq]).agg({
+            data[freq] = data[freq].groupby([freq]).agg({
                 'tempmax': 'mean',
                 'tempmin': 'mean',
                 'dew_point': 'mean',
@@ -186,7 +219,7 @@ class MultiScaleModel(ML):
                 'tempdiurnal': 'mean'
             }).reset_index()
         else:
-            self.X[freq] = self.X[freq].groupby(["yearly", freq]).agg({
+            data[freq] = data[freq].groupby(["yearly", freq]).agg({
                 'tempmax': 'mean',
                 'tempmin': 'mean',
                 'dew_point': 'mean',
@@ -201,12 +234,14 @@ class MultiScaleModel(ML):
                 'tempdiurnal': 'mean'
             }).reset_index()
 
+        return data[freq]
+
 
     def evaluate(self):
         pass
 
-if __name__ == '__main__':
-    msm = MultiScaleModel()
+# if __name__ == '__main__':
+#     msm = MultiScaleModel()
 
-    msm.prepare()
-    msm.train()
+#     msm.prepare()
+#     msm.train()

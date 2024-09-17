@@ -2,11 +2,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.impute import KNNImputer
+from abc import ABC, abstractmethod
 
-# This class defines a base ML model that handles cleaning, feature engineering and training of the model without storing the data in the database. This ensures that the data can be easily changed (for example when improving the calculation of a feature).
+# This class defines a base (abstract) ML model that handles cleaning, feature engineering and training of the model without storing the data in the database. This ensures that the data can be easily changed (for example when improving the calculation of a feature).
 # This class serves as a base class for ML models that will be tested against each other, and possible be ensembled to create a final model.
 # The base class caters for feature engineering, handling missing values and training the model, but does not implement the training or prediction methods.
-class ML:
+class ML(ABC):
     def __init__(self):
         self.historical_data = pd.read_csv('historical_data_cleaned.csv')
         self.yield_data = pd.read_csv('target.csv')
@@ -15,16 +16,16 @@ class ML:
         self.handle_missing_target_values()
         # self.feature_engineering()
 
+    @abstractmethod
     def train(self):
         pass
-
+    
+    @abstractmethod
     def predict(self, data):
         pass
 
+    @abstractmethod
     def prepare(self):
-        pass
-
-    def evaluate(self):
         pass
 
     def feature_engineering(self):
@@ -84,20 +85,8 @@ class ML:
         # plt.xticks(range(0, missing_per_row.max() + 1))  # Ensure x-ticks match bin edges
         # # plt.show()
 
-        # Save as CSV
-        self.historical_data.to_csv('historical_data_cleaned.csv', index=False)
-
     def getMissingRowDistribution(self):
         missing_per_row = self.historical_data.isnull().sum(axis=1)
         print(missing_per_row.value_counts().sort_index())
 
         return missing_per_row
-
-if __name__ == '__main__':
-    ml = ML()
-    
-    print(ml.historical_data.head())
-    print(ml.yield_data.head())
-
-    # save as csv
-    # ml.historical_data.to_csv('historical_data_cleaned_model.csv', index=False)

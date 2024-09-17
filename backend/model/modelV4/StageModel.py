@@ -33,6 +33,10 @@ class StageModel(ML):
         self.crop = crop
         self.current_stage = None
 
+        self.model = None
+
+        self.prepare()
+
     def train(self):
         self.X = self.X.drop(['stage'], axis=1)
 
@@ -76,21 +80,25 @@ class StageModel(ML):
         mse = mean_squared_error(y_test, y_pred)
         rmse = np.sqrt(mse)
 
-        print("RMSE: ", rmse)
-        print(y_pred)
+        # print("RMSE: ", rmse)
+        # print(y_pred)
 
         # Make predictions on the entire dataset
         y_pred = best_model.predict(self.X)
 
+        self.model = best_model
+
         # Plot the prediction
-        plt.figure(figsize=(10, 6))
-        plt.plot(y_pred, label='Prediction', color='red', linestyle='dashed')
-        plt.plot(self.y.values, label='Actual', color='blue')
-        plt.xlabel('Index')
-        plt.ylabel('Value')
-        plt.title('Model Predictions vs Actual Values')
-        plt.legend()
-        plt.show()
+        # plt.figure(figsize=(10, 6))
+        # plt.plot(y_pred, label='Prediction', color='red', linestyle='dashed')
+        # plt.plot(self.y.values, label='Actual', color='blue')
+        # plt.xlabel('Index')
+        # plt.ylabel('Value')
+        # plt.title('Model Predictions vs Actual Values')
+        # plt.legend()
+        # plt.show()
+
+        return rmse
 
 
     def predict(self, data):
@@ -154,33 +162,33 @@ class StageModel(ML):
         # Merge with yield data
         self.X = pd.merge(self.X, self.y, on='year', how='inner')
 
-        print(self.y.tail())
+        # print(self.y.tail())
 
         self.y = self.X["yield"]
     
         # Drop yield column
         self.X.drop('yield', axis=1, inplace=True)
 
-        print(self.X.tail(25))
+        # print(self.X.tail(25))
 
     def evaluate(self):
         pass
 
-if __name__ == '__main__':
-    # Define some crop
-    c = Crop(
-        name="wheat",
-        t_base=5.0, 
-        stages={
-            "sowing": {"day": 111},
-            "germination": {"day": 151},
-            "tillering": {"day": 182},
-            "heading": {"day": 243},
-            "maturity": {"day": 304}
-        }
-    )
+# if __name__ == '__main__':
+#     # Define some crop
+#     c = Crop(
+#         name="wheat",
+#         t_base=5.0, 
+#         stages={
+#             "sowing": {"day": 111},
+#             "germination": {"day": 151},
+#             "tillering": {"day": 182},
+#             "heading": {"day": 243},
+#             "maturity": {"day": 304}
+#         }
+#     )
 
-    sm = StageModel(c)
+#     sm = StageModel(c)
 
-    sm.prepare()
-    sm.train()
+#     sm.prepare()
+#     sm.train()

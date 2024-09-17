@@ -21,26 +21,28 @@ class YieldOnlyModel(ML):
     def __init__(self):
         ML.__init__(self)
         self.X = self.yield_data
+        self.model = None
+        self.prepare()
 
     def train(self):
         # Split data
         X_train = self.X
         X_test = self.X
 
-        # ====================
-        # ARIMA MODEL
-        # ====================
-        # Train ARIMA on the 'yield' column (univariate)
-        arima_model = ARIMA(X_train['yield'], order=(5,1,0))
+        # # ====================
+        # # ARIMA MODEL
+        # # ====================
+        # # Train ARIMA on the 'yield' column (univariate)
+        # arima_model = ARIMA(X_train['yield'], order=(5,1,0))
         
-        # Fit model
-        arima_model_fit = arima_model.fit()
+        # # Fit model
+        # arima_model_fit = arima_model.fit()
         
-        # Forecast using ARIMA
-        arima_predictions = arima_model_fit.forecast(steps=len(X_test))
+        # # Forecast using ARIMA
+        # arima_predictions = arima_model_fit.forecast(steps=len(X_test))
         
-        # Calculate ARIMA RMSE
-        arima_rmse = np.sqrt(mean_squared_error(X_test['yield'], arima_predictions))
+        # # Calculate ARIMA RMSE
+        # arima_rmse = np.sqrt(mean_squared_error(X_test['yield'], arima_predictions))
 
         # ====================
         # XGBOOST MODEL
@@ -66,42 +68,26 @@ class YieldOnlyModel(ML):
         # ENSEMBLE MODEL
         # ====================
         # Pick the best model based on RMSE
-        if arima_rmse < xgb_rmse:
-            best_model = arima_model_fit
-            best_predictions = arima_predictions
-        else:
-            best_model = xgb_model
-            best_predictions = xgb_predictions
+        # if arima_rmse < xgb_rmse:
+        #     best_model = arima_model_fit
+        #     best_predictions = arima_predictions
+        # else:
+        best_model = xgb_model
+        best_predictions = xgb_predictions
         
         # Calculate Ensemble RMSE
-        best_rmse = np.sqrt(mean_squared_error(X_test['yield'], best_predictions))
+        rmse = np.sqrt(mean_squared_error(X_test['yield'], best_predictions))
 
         # ====================
         # PRINT RESULTS
         # ====================
-        print(f"ARIMA RMSE: {arima_rmse}")
-        print(f"XGBoost RMSE: {xgb_rmse}")
-        print(f"Ensemble RMSE: {best_rmse}")
+        # print(f"ARIMA RMSE: {arima_rmse}")
+        # print(f"XGBoost RMSE: {xgb_rmse}")
+        # print(f"Ensemble RMSE: {best_rmse}")
 
-        # Make predictions for the next entry
-        # Get the last entry
-        last_entry = self.X.iloc[-1]
+        self.model = best_model
 
-        # Predict using the best model
-        next_yield = None
-        if best_model == arima_model_fit:
-            next_yield = best_model.forecast(steps=1)
-        else:
-            next_yield = best_model.predict(last_entry.drop('yield').values.reshape(1, -1))[0]
-
-        # Print the next yield
-        print(f"Next yield: {next_yield}")
-
-        # Plot the predictions and the actual values
-        # plt.plot(self.X['yield'], label='Actual')
-        # plt.plot(best_predictions, label='Predicted')
-        # plt.legend()
-        # plt.show()
+        return rmse
 
 
     def predict(self, data):
@@ -120,7 +106,7 @@ class YieldOnlyModel(ML):
     def evaluate(self):
         pass
 
-if __name__ == '__main__':
-    yom = YieldOnlyModel()
-    yom.prepare()
-    yom.train()
+# if __name__ == '__main__':
+#     yom = YieldOnlyModel()
+#     yom.prepare()
+#     yom.train()
