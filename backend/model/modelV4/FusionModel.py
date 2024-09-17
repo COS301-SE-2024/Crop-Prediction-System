@@ -11,10 +11,10 @@ import numpy as np
 
 class FusionModel(ML):
     def __init__(self, crop):
-        ML.__init__(self)
+        super().__init__()
 
         self.msm = MultiScaleModel()
-        self.sm = StageModel(c)
+        self.sm = StageModel(crop)
         self.yom = YieldOnlyModel()
 
     def train(self):
@@ -22,8 +22,6 @@ class FusionModel(ML):
         print(self.msm.train())
         print(self.sm.train())
         print(self.yom.train())
-
-
 
     def predict(self, data):
         # Perform ensemble prediction by averaging the predictions of the models

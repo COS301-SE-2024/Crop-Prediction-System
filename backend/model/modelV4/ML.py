@@ -82,6 +82,12 @@ class ML(ABC):
         # plt.xticks(range(0, missing_per_row.max() + 1))  # Ensure x-ticks match bin edges
         # # plt.show()
 
+        # Drop precipprob
+        # self.historical_data = self.historical_data.drop(columns=['precipprob'])
+
+        # Save as csv
+        # self.historical_data.to_csv('historical_data_cleaned.csv', index=False)
+
     def getMissingRowDistribution(self):
         missing_per_row = self.historical_data.isnull().sum(axis=1)
         print(missing_per_row.value_counts().sort_index())
