@@ -8,8 +8,12 @@ from sklearn.impute import KNNImputer
 # The base class caters for feature engineering, handling missing values and training the model, but does not implement the training or prediction methods.
 class ML:
     def __init__(self):
-        self.historical_data = pd.read_csv('historical_data_cleaned_model.csv')
+        self.historical_data = pd.read_csv('historical_data_cleaned.csv')
         self.yield_data = pd.read_csv('target.csv')
+
+        # self.handle_missing_values()
+        self.handle_missing_target_values()
+        # self.feature_engineering()
 
     def train(self):
         pass
@@ -80,6 +84,9 @@ class ML:
         # plt.xticks(range(0, missing_per_row.max() + 1))  # Ensure x-ticks match bin edges
         # # plt.show()
 
+        # Save as CSV
+        self.historical_data.to_csv('historical_data_cleaned.csv', index=False)
+
     def getMissingRowDistribution(self):
         missing_per_row = self.historical_data.isnull().sum(axis=1)
         print(missing_per_row.value_counts().sort_index())
@@ -88,9 +95,6 @@ class ML:
 
 if __name__ == '__main__':
     ml = ML()
-    # ml.feature_engineering()
-    ml.handle_missing_target_values()
-    # ml.handle_missing_values()
     
     print(ml.historical_data.head())
     print(ml.yield_data.head())
