@@ -14,7 +14,7 @@ class ML(ABC):
 
         # self.handle_missing_values()
         self.handle_missing_target_values()
-        # self.feature_engineering()
+        self.feature_engineering()
 
     @abstractmethod
     def train(self):
@@ -29,11 +29,8 @@ class ML(ABC):
         pass
 
     def feature_engineering(self):
-        # CSMI: Calculated Soil Moisture Index calculated as CSMI = (Rain + Humidity) / Temperature
-        self.historical_data['csmi'] = (self.historical_data['rain'] + self.historical_data['humidity']) / self.historical_data['tempmean']
-
-        # Drop outliers by 3 standard deviations
-        self.historical_data = self.historical_data[(self.historical_data['csmi'] < (self.historical_data['csmi'].mean() + 3 * self.historical_data['csmi'].std())) & (self.historical_data['csmi'] > (self.historical_data['csmi'].mean() - 3 * self.historical_data['csmi'].std()))]
+        # self.historical_data['rain_days'] = self.historical_data['rain'] > 0
+        pass
 
     def handle_missing_target_values(self):
         # remove rows where yield is NaN

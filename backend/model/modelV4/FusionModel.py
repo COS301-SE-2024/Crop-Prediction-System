@@ -2,6 +2,7 @@ from ML import ML
 from MultiScaleModel import MultiScaleModel
 from StageModel import StageModel, Crop
 from YieldOnlyModel import YieldOnlyModel
+import numpy as np
 
 # * Fusion Model Information
 # This model aims to fuse a few models together by bringing in different models and ensembling them together. This is the "final model" in the range of models that aims to take the best of each model and merge it into one consistent model that can evaluate, train, and predict on demand. Some features of this evaluation include rejecting values that are outside a confidence level to ensure consistency in the data.
@@ -41,7 +42,13 @@ class FusionModel(ML):
 
         avg_pred = sum(predictions) / len(predictions)
 
-        if avg_pred < yom_pred - 0.5 or avg_pred > yom_pred + 0.5:
+        # Compute confidence interval
+        # confidence_level = 0.95
+        confidence_interval = 1.96 * (self.yield_data['yield'].std() / np.sqrt(len(self.yield_data)))
+        ci_upper = avg_pred + confidence_interval
+        ci_lower = avg_pred - confidence_interval
+
+        if yom_pred < ci_lower or yom_pred > ci_upper:
             avg_pred = yom_pred # pick the YieldOnlyModel prediction if the ensemble prediction is outside the confidence level
         
         return avg_pred
