@@ -28,6 +28,10 @@ class StageModel():
         self.prepare()
 
     def train(self):
+        # If not in stage, do not train
+        if self.X["stage"].isnull().all():
+            return None
+
         self.X = self.X.drop(['stage'], axis=1)
 
         # Split into training and testing data

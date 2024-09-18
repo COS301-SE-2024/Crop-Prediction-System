@@ -26,6 +26,8 @@ class FusionModel(ML):
 
         self.bestModel = None
 
+        self.inStage = True
+
     def train(self):
         # Train each model in the ensemble
         start = time.time()
@@ -35,6 +37,9 @@ class FusionModel(ML):
         yom_rmse = self.yom.train()
 
         end = time.time()
+
+        if sm_rmse is None:
+            self.inStage = False
 
         duration = end - start
 
@@ -52,7 +57,6 @@ class FusionModel(ML):
         # Perform ensemble prediction by averaging the predictions of the models
         # Reject if the prediction is outside a confidence level of the YieldOnlyModel
         msm_pred = self.msm.predict()
-        sm_pred = self.sm.predict()
         yom_pred = self.yom.predict()
 
         # Average the predictions
@@ -60,7 +64,9 @@ class FusionModel(ML):
         for p in msm_pred:
             predictions.append(p)
         
-        predictions.append(sm_pred)
+        if self.inStage:
+            sm_pred = self.sm.predict()
+            predictions.append(sm_pred)
 
         # This year prediction
         latestPredictions = []
