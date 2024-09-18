@@ -45,7 +45,6 @@
 					<p class="text-xl text-900 font-bold">Data Entry Logs</p>
 					<div class="flex text-xs gap-2">
 						<Button icon="pi pi-external-link" severity="secondary" label="Export" @click="exportSelectedCSV" />
-						<!-- <Button icon="pi pi-print" severity="secondary" label="Print" @click="triggerPrint" /> -->
 						<Button icon="pi pi-print" severity="secondary" label="Print" @click="visible = true" />
 					</div>
 				</div>
@@ -57,17 +56,25 @@
 					<div class="flex items-center gap-4 mb-8">
 						<div class="card flex justify-content-center">
 							<Dropdown
-								v-model="selectedCity"
-								:options="cities"
-								optionLabel="name"
-								placeholder="Select a City"
+								v-model="selectedField"
+								:options="uniqueFieldNames"
+								placeholder="Select a Field"
 								class="w-full md:w-14rem"
 							/>
 						</div>
 					</div>
 					<div class="flex justify-end gap-2">
 						<Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
-						<Button type="button" label="Save" @click="visible = false"></Button>
+						<Button
+							type="button"
+							label="Save"
+							@click="
+								() => {
+									visible = false
+									triggerPrint()
+								}
+							"
+						></Button>
 					</div>
 				</Dialog>
 				<div class="flex justify-content-center text-xs gap-2">
@@ -265,6 +272,12 @@ const convertToCSV = (objArray: any[], headers: string[]) => {
 const exportSelectedCSV = () => {
 	const rawSelectedData = selectedDataEntries.value.map((item) => toRaw(item))
 	if (rawSelectedData.length === 0) {
+		toast.add({
+			severity: 'error',
+			summary: 'No fields selected',
+			detail: 'Please select atleast one field to export',
+			life: 3000,
+		})
 		return
 	}
 	const headerLabels = columns.map((column) => column.header)
@@ -292,12 +305,9 @@ const onCellEditComplete = (event) => {
 	toast.add({ severity: 'success', summary: 'Data changed successfully', life: 3000 })
 }
 
-const selectedCity = ref()
-const cities = ref([
-	{ name: 'New York', code: 'NY' },
-	{ name: 'Rome', code: 'RM' },
-	{ name: 'London', code: 'LDN' },
-	{ name: 'Istanbul', code: 'IST' },
-	{ name: 'Paris', code: 'PRS' },
-])
+const selectedField = ref()
+const uniqueFieldNames = computed(() => {
+	const fieldNames = entries.value.map((entry) => entry.field_name)
+	return [...new Set(fieldNames)]
+})
 </script>
