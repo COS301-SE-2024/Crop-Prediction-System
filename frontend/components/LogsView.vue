@@ -45,9 +45,31 @@
 					<p class="text-xl text-900 font-bold">Data Entry Logs</p>
 					<div class="flex text-xs gap-2">
 						<Button icon="pi pi-external-link" severity="secondary" label="Export" @click="exportSelectedCSV" />
-						<Button icon="pi pi-print" severity="secondary" label="Print" @click="triggerPrint" />
+						<!-- <Button icon="pi pi-print" severity="secondary" label="Print" @click="triggerPrint" /> -->
+						<Button icon="pi pi-print" severity="secondary" label="Print" @click="visible = true" />
 					</div>
 				</div>
+				<Dialog v-model:visible="visible" modal header="Print" :style="{ width: '25rem' }">
+					<span class="text-surface-500 dark:text-surface-400 block mb-8"
+						>Which farms data would you like to Print?</span
+					>
+
+					<div class="flex items-center gap-4 mb-8">
+						<div class="card flex justify-content-center">
+							<Dropdown
+								v-model="selectedCity"
+								:options="cities"
+								optionLabel="name"
+								placeholder="Select a City"
+								class="w-full md:w-14rem"
+							/>
+						</div>
+					</div>
+					<div class="flex justify-end gap-2">
+						<Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
+						<Button type="button" label="Save" @click="visible = false"></Button>
+					</div>
+				</Dialog>
 				<div class="flex justify-content-center text-xs gap-2">
 					<IconField iconPosition="left">
 						<InputIcon>
@@ -72,7 +94,7 @@
 		<Column
 			v-for="col of columns"
 			:key="col.field"
-			style="min-width: 10rem; font-size: 0.8rem"
+			style="min-width: 9rem; font-size: 0.8rem"
 			:field="col.field"
 			:header="col.header"
 			sortable
@@ -107,6 +129,7 @@ import { ref, toRaw, onMounted } from 'vue'
 import { FilterMatchMode } from 'primevue/api'
 import { useToast } from 'primevue/usetoast'
 
+const visible = ref(false)
 const selectedDataEntries = ref([])
 const dialogVisible = ref(false)
 const printableContent = ref('')
@@ -268,4 +291,13 @@ const onCellEditComplete = (event) => {
 	data[field] = newValue
 	toast.add({ severity: 'success', summary: 'Data changed successfully', life: 3000 })
 }
+
+const selectedCity = ref()
+const cities = ref([
+	{ name: 'New York', code: 'NY' },
+	{ name: 'Rome', code: 'RM' },
+	{ name: 'London', code: 'LDN' },
+	{ name: 'Istanbul', code: 'IST' },
+	{ name: 'Paris', code: 'PRS' },
+])
 </script>
