@@ -5,7 +5,6 @@ import Slider from 'primevue/slider'
 import { ref, onMounted } from 'vue'
 import Fieldset from 'primevue/fieldset'
 import StatsCard from '../components/StatsCard.vue'
-import Card from '../components/card.vue'
 
 const generateMockData = (label, color) => ({
 	labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
@@ -55,7 +54,7 @@ const mockStats = ref([
 </script>
 
 <template>
-	<div class="bg-surface-0 dark:bg-surface-900 text-surface-900 dark:text-surface-0">
+	<div class="bg-surface-300/60 dark:bg-surface-900 text-surface-700 dark:text-surface-0">
 		<div id="home" class="landing-wrapper overflow-hidden">
 			<div
 				id="hero"
@@ -80,8 +79,8 @@ const mockStats = ref([
 					</a>
 				</div>
 				<div class="flex justify-center md:justify-end">
-					<img src="../assets/image-light.png" alt="Logo" class="object-cover dark:hidden block" />
-					<img src="../assets/image-dark.png" alt="Logo" class="object-cover hidden dark:block" />
+					<img src="../assets/image-light.png" alt="Logo" class="object-cover dark:hidden block w-9/12 _md:w-auto" />
+					<img src="../assets/image-dark.png" alt="Logo" class="object-cover hidden dark:block w-9/12 _md:w-auto" />
 				</div>
 			</div>
 			<div id="features" class="py-12 px-4 sm:px-6 lg:px-8">
@@ -95,7 +94,7 @@ const mockStats = ref([
 					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 						<!-- Feature 1 -->
 						<div
-							class="bg-gradient-to-br from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800 p-0.5 rounded-lg"
+							class="bg-gradient-to-br from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800 p-0.5 rounded-lg shadow-md"
 						>
 							<div class="bg-surface-0 dark:bg-surface-900 h-full p-6 rounded-lg">
 								<div
@@ -104,7 +103,7 @@ const mockStats = ref([
 									<i class="pi pi-thumbs-up text-2xl text-yellow-700 dark:text-yellow-200"></i>
 								</div>
 								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Easy to Use</h2>
-								<p class="text-surface-600 dark:text-surface-200">
+								<p class="text-surface-600 dark:text-surface-0/60">
 									We have ensured that our product is very user-friendly by designing it such that it is easily
 									understandably and easy to navigate. We also provide a help menus for extra information.
 								</p>
@@ -113,7 +112,7 @@ const mockStats = ref([
 
 						<!-- Feature 2 -->
 						<div
-							class="bg-gradient-to-br from-cyan-100 to-cyan-200 dark:from-cyan-900 dark:to-cyan-800 p-0.5 rounded-lg"
+							class="bg-gradient-to-br from-cyan-100 to-cyan-200 dark:from-cyan-900 dark:to-cyan-800 p-0.5 rounded-lg shadow-md"
 						>
 							<div class="bg-surface-0 dark:bg-surface-900 h-full p-6 rounded-lg">
 								<div
@@ -122,7 +121,7 @@ const mockStats = ref([
 									<i class="pi pi-palette text-2xl text-cyan-700 dark:text-cyan-200"></i>
 								</div>
 								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Fresh Design</h2>
-								<p class="text-surface-600 dark:text-surface-200">
+								<p class="text-surface-600 dark:text-surface-0/60">
 									Our product has a modern and sleek design that catches the eye. It implements a bunch of
 									interesting and unique features that makes it stand out.
 								</p>
@@ -131,7 +130,7 @@ const mockStats = ref([
 
 						<!-- Feature 3 -->
 						<div
-							class="bg-gradient-to-br from-indigo-100 to-indigo-200 dark:from-indigo-900 dark:to-indigo-800 p-0.5 rounded-lg"
+							class="bg-gradient-to-br from-indigo-100 to-indigo-200 dark:from-indigo-900 dark:to-indigo-800 p-0.5 rounded-lg shadow-md"
 						>
 							<div class="bg-surface-0 dark:bg-surface-900 h-full p-6 rounded-lg">
 								<div
@@ -140,7 +139,7 @@ const mockStats = ref([
 									<i class="pi pi-lock text-2xl text-indigo-700 dark:text-indigo-200"></i>
 								</div>
 								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Fast and Secure</h2>
-								<p class="text-surface-600 dark:text-surface-200">
+								<p class="text-surface-600 dark:text-surface-0/60">
 									One of our main priorities is to ensure that our product is fast and secure. We have
 									implemented a wide range of security features to ensure that your data is safe, and that speed
 									will not be a concern.
@@ -149,7 +148,7 @@ const mockStats = ref([
 						</div>
 						<!-- Feature 4 -->
 						<div
-							class="bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 p-0.5 rounded-lg"
+							class="bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 p-0.5 rounded-lg shadow-md"
 						>
 							<div class="bg-surface-0 dark:bg-surface-900 h-full p-6 rounded-lg">
 								<div
@@ -160,7 +159,7 @@ const mockStats = ref([
 								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">
 									IOT Sensor Integration
 								</h2>
-								<p class="text-surface-600 dark:text-surface-200">
+								<p class="text-surface-600 dark:text-surface-0/60">
 									Our product provides thew functionality to integrate with IOT sensors for real-time data. We
 									have a wide range of sensors that can be integrated.
 								</p>
@@ -169,7 +168,7 @@ const mockStats = ref([
 
 						<!-- Feature 5 -->
 						<div
-							class="bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 p-0.5 rounded-lg"
+							class="bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 p-0.5 rounded-lg shadow-md"
 						>
 							<div class="bg-surface-0 dark:bg-surface-900 h-full p-6 rounded-lg">
 								<div
@@ -180,7 +179,7 @@ const mockStats = ref([
 								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">
 									AI Crop Predictions
 								</h2>
-								<p class="text-surface-600 dark:text-surface-200">
+								<p class="text-surface-600 dark:text-surface-0/60">
 									Our product makes use of our in-house state of the art AI model to predict crop yields. This
 									model is is trained and can be used to predict various types of crops.
 								</p>
@@ -189,7 +188,7 @@ const mockStats = ref([
 
 						<!-- Feature 6 -->
 						<div
-							class="bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900 dark:to-orange-800 p-0.5 rounded-lg"
+							class="bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900 dark:to-orange-800 p-0.5 rounded-lg shadow-md"
 						>
 							<div class="bg-surface-0 dark:bg-surface-900 h-full p-6 rounded-lg">
 								<div
@@ -200,7 +199,7 @@ const mockStats = ref([
 								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">
 									Google Maps Integration
 								</h2>
-								<p class="text-surface-600 dark:text-surface-200">
+								<p class="text-surface-600 dark:text-surface-0/60">
 									Our product integrates with Google Maps for easy navigation and location access. This improves
 									the user experience, but also the predictions our AI model will make.
 								</p>
@@ -208,7 +207,7 @@ const mockStats = ref([
 						</div>
 						<!-- Feature 7 -->
 						<div
-							class="bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-900 dark:to-emerald-800 p-0.5 rounded-lg"
+							class="bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-900 dark:to-emerald-800 p-0.5 rounded-lg shadow-md"
 						>
 							<div class="bg-surface-0 dark:bg-surface-900 h-full p-6 rounded-lg">
 								<div
@@ -216,10 +215,10 @@ const mockStats = ref([
 								>
 									<i class="pi pi-chart-bar text-2xl text-emerald-700 dark:text-emerald-200"></i>
 								</div>
-								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">
+								<h2 class="text-xl font-semibold text-surface-700 dark:text-surface-0 mb-2">
 									Data Visualisation
 								</h2>
-								<p class="text-surface-600 dark:text-surface-200">
+								<p class="text-surface-600 dark:text-surface-0/60">
 									Our product features a wide range of graphs and charts, each displaying crucial data received
 									from the AI model in order to help our users better their Crop's health and potential yield.
 								</p>
@@ -227,7 +226,7 @@ const mockStats = ref([
 						</div>
 						<!-- Feature 8 -->
 						<div
-							class="bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-800 dark:to-slate-700 p-0.5 rounded-lg"
+							class="bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-800 dark:to-slate-700 p-0.5 rounded-lg shadow-md"
 						>
 							<div class="bg-surface-0 dark:bg-surface-900 h-full p-6 rounded-lg">
 								<div
@@ -236,7 +235,7 @@ const mockStats = ref([
 									<i class="pi pi-mobile text-2xl text-slate-700 dark:text-slate-200"></i>
 								</div>
 								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Mobile Friendly</h2>
-								<p class="text-surface-600 dark:text-surface-200">
+								<p class="text-surface-600 dark:text-surface-0/60">
 									Our product is mobile friendly to ensure anyone anywhere can use our product. Our product is
 									built for farmers, therefore mobile friendliness is key.
 								</p>
@@ -244,7 +243,7 @@ const mockStats = ref([
 						</div>
 						<!-- Feature 9 -->
 						<div
-							class="bg-gradient-to-br from-rose-100 to-rose-200 dark:from-rose-900 dark:to-rose-800 p-0.5 rounded-lg"
+							class="bg-gradient-to-br from-rose-100 to-rose-200 dark:from-rose-900 dark:to-rose-800 p-0.5 rounded-lg shadow-md"
 						>
 							<div class="bg-surface-0 dark:bg-surface-900 h-full p-6 rounded-lg">
 								<div
@@ -253,7 +252,7 @@ const mockStats = ref([
 									<i class="pi pi-users text-2xl text-rose-700 dark:text-rose-200"></i>
 								</div>
 								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Team Availability</h2>
-								<p class="text-surface-600 dark:text-surface-200">
+								<p class="text-surface-600 dark:text-surface-0/60">
 									We added teams to our product to allow farmers and their helpers to have access to the same
 									set of fields and crops. This allows for better collaboration and communication.
 								</p>
@@ -352,7 +351,7 @@ const mockStats = ref([
 				</div>
 				<div>
 					<Card>
-						<template #text>
+						<template #content>
 							<p>
 								At TerraByte, we revolutionize the way farmers manage their crops by combining advanced AI
 								technology with real-time data from IoT sensors and trusted weather forecasts. Our app integrates
