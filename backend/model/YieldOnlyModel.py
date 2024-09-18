@@ -1,5 +1,3 @@
-from ML import ML
-
 # XGBoost
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
@@ -17,11 +15,13 @@ import matplotlib.pyplot as plt
 
 # Also, the Yield Only Model will perform ensemble predictions within itself to determine the confidence level of its predictions.
 
-class YieldOnlyModel(ML):
-    def __init__(self):
-        ML.__init__(self)
-        self.X = self.yield_data
+class YieldOnlyModel():
+    def __init__(self, X):
+        # super().__init__(X, y)
+        self.X = X
+
         self.model = None
+
         self.prepare()
 
     def train(self):

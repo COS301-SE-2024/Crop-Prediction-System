@@ -1,8 +1,12 @@
-from ML import ML
-from MultiScaleModel import MultiScaleModel
-from StageModel import StageModel, Crop
-from YieldOnlyModel import YieldOnlyModel
+from backend.model.ML import ML
+from backend.model.MultiScaleModel import MultiScaleModel
+from backend.model.StageModel import StageModel
+from backend.model.YieldOnlyModel import YieldOnlyModel
+from backend.definitions.crop import Crop
 import numpy as np
+
+# import timer
+import time
 
 # * Fusion Model Information
 # This model aims to fuse a few models together by bringing in different models and ensembling them together. This is the "final model" in the range of models that aims to take the best of each model and merge it into one consistent model that can evaluate, train, and predict on demand. Some features of this evaluation include rejecting values that are outside a confidence level to ensure consistency in the data.
@@ -10,23 +14,38 @@ import numpy as np
 # Later on with the sensor, additional models can be "fused" onto this model to make sensor-specific predictions.
 
 class FusionModel(ML):
-    def __init__(self, crop):
-        super().__init__()
+    def __init__(self, X, y, c):
+        super().__init__(X, y)
+        self.X = self.historical_data
+        self.y = self.yield_data
+        self.crop = c
 
-        self.msm = MultiScaleModel()
-        self.sm = StageModel(crop)
-        self.yom = YieldOnlyModel()
+        self.msm = MultiScaleModel(self.X, self.y)
+        self.sm = StageModel(self.X, self.y, self.crop)
+        self.yom = YieldOnlyModel(self.y)
 
     def train(self):
         # Train each model in the ensemble
-        print(self.msm.train())
-        print(self.sm.train())
-        print(self.yom.train())
+        start = time.time()
+
+        msm_rmse = self.msm.train()
+        sm_rmse = self.sm.train()
+        yom_rmse = self.yom.train()
+
+        end = time.time()
+
+        duration = end - start
+
+        return {
+            "MultiScaleModel": msm_rmse,
+            "StageModel": sm_rmse,
+            "YieldOnlyModel": yom_rmse,
+            "duration": str(duration) + " seconds"
+        }
 
     def predict(self, data):
         # Perform ensemble prediction by averaging the predictions of the models
         # Reject if the prediction is outside a confidence level of the YieldOnlyModel
-
         msm_pred = self.msm.predict(data)
         sm_pred = self.sm.predict(data)
         yom_pred = self.yom.predict(data)
@@ -57,20 +76,20 @@ class FusionModel(ML):
     def evaluate(self):
         pass
 
-if __name__ == '__main__':
-    # Define some crop
-    c = Crop(
-        name="wheat",
-        t_base=5.0, 
-        stages={
-            "sowing": {"day": 111},
-            "germination": {"day": 151},
-            "tillering": {"day": 182},
-            "heading": {"day": 243},
-            "maturity": {"day": 304}
-        }
-    )
+# if __name__ == '__main__':
+#     # Define some crop
+#     c = Crop(
+#         name="wheat",
+#         t_base=5.0, 
+#         stages={
+#             "sowing": {"day": 111},
+#             "germination": {"day": 151},
+#             "tillering": {"day": 182},
+#             "heading": {"day": 243},
+#             "maturity": {"day": 304}
+#         }
+#     )
 
-    fm = FusionModel(c)
-    fm.train()
+#     fm = FusionModel(c)
+#     fm.train()
     

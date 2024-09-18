@@ -1,4 +1,3 @@
-from ML import ML
 import numpy as np
 import pandas as pd
 import datetime
@@ -12,25 +11,27 @@ import xgboost as xgb
 # * Multi-Scale Model Information
 # This model aims to experiment with the same data on different frequencies (i.e. daily, monthly, yearly) and then let the models act as an ensemble model by taking the average output between n models.
 
-class MultiScaleModel(ML):
-    def __init__(self):
-        ML.__init__(self)
+class MultiScaleModel():
+    def __init__(self, X, y):
+        # super().__init__(X, y)
+        self.X = X
+        self.y = y
 
         self.X = {
-            'pentadal': self.historical_data,
-            'weekly': self.historical_data,
-            'biweekly': self.historical_data,
-            'monthly': self.historical_data,
-            'quarterly': self.historical_data,
-            'yearly': self.historical_data
+            'pentadal': self.X,
+            'weekly': self.X,
+            'biweekly': self.X,
+            'monthly': self.X,
+            'quarterly': self.X,
+            'yearly': self.X
         }
         self.y = {
-            'pentadal': self.yield_data,
-            'weekly': self.yield_data,
-            'biweekly': self.yield_data,
-            'monthly': self.yield_data,
-            'quarterly': self.yield_data,
-            'yearly': self.yield_data
+            'pentadal': self.y,
+            'weekly': self.y,
+            'biweekly': self.y,
+            'monthly': self.y,
+            'quarterly': self.y,
+            'yearly': self.y
         }
 
         self.modelRMSE = []
@@ -39,7 +40,7 @@ class MultiScaleModel(ML):
 
         self.models = []
 
-        self.prepare(self.X)
+        self.prepare()
     
     def train(self):
         # Traverse through each frequency, pick ones where a certain variable is the same (i.e. year)
@@ -169,37 +170,39 @@ class MultiScaleModel(ML):
         return predictions
 
 
-    def prepare(self, data):
+    def prepare(self):
+        # TODO: Drop rows where date is the same, but keep the row where field_id is not NULL
+
         # Convert all to date
-        for freq in data.keys():
-            data[freq]["date"] = pd.to_datetime(data[freq]["date"])
+        for freq in self.X.keys():
+            self.X[freq]["date"] = pd.to_datetime(self.X[freq]["date"])
 
             # Add year by default (lowest frequency)
-            data[freq]["yearly"] = data[freq]["date"].apply(lambda x: x.year)
+            self.X[freq]["yearly"] = self.X[freq]["date"].apply(lambda x: x.year)
 
             # Add day of year
-            data[freq]["day"] = data[freq]["date"].apply(lambda x: x.timetuple().tm_yday)
+            self.X[freq]["day"] = self.X[freq]["date"].apply(lambda x: x.timetuple().tm_yday)
 
         # Add pentadal counter
-        for freq in data.keys():
+        for freq in self.X.keys():
             if freq == 'pentadal':
-                data[freq]["pentadal"] = data[freq]["day"].apply(lambda x: x // 5)
+                self.X[freq]["pentadal"] = self.X[freq]["day"].apply(lambda x: x // 5)
             elif freq == 'weekly':
-                data[freq]["weekly"] = data[freq]["date"].apply(lambda x: x.week)
+                self.X[freq]["weekly"] = self.X[freq]["date"].apply(lambda x: x.week)
             elif freq == 'biweekly':
-                data[freq]["biweekly"] = data[freq]["day"].apply(lambda x: x // 14)
+                self.X[freq]["biweekly"] = self.X[freq]["day"].apply(lambda x: x // 14)
             elif freq == 'monthly':
-                data[freq]["monthly"] = data[freq]["date"].apply(lambda x: x.month)
+                self.X[freq]["monthly"] = self.X[freq]["date"].apply(lambda x: x.month)
             elif freq == 'quarterly':
-                data[freq]["quarterly"] = data[freq]["date"].apply(lambda x: x.quarter)
+                self.X[freq]["quarterly"] = self.X[freq]["date"].apply(lambda x: x.quarter)
             elif freq == 'yearly':
                 pass
 
-        # Prepare data for each frequency
-        for freq in data.keys():
-            data[freq] = self.aggregate(freq, data)
+        # Prepare self.X for each frequency
+        for freq in self.X.keys():
+            self.X[freq] = self.aggregate(freq, self.X)
 
-        return data
+        return self.X
     
     def aggregate(self, freq, data):
         # Cumulative or mean for each stage per year
@@ -212,8 +215,6 @@ class MultiScaleModel(ML):
                 'rain': 'sum',
                 'pressure': 'mean',
                 'clouds': 'mean',
-                'solarradiation': 'mean',
-                'solarenergy': 'sum',
                 'uvi': 'mean',
                 'tempmean': 'mean',
                 'tempdiurnal': 'mean'
@@ -227,8 +228,6 @@ class MultiScaleModel(ML):
                 'rain': 'sum',
                 'pressure': 'mean',
                 'clouds': 'mean',
-                'solarradiation': 'mean',
-                'solarenergy': 'sum',
                 'uvi': 'mean',
                 'tempmean': 'mean',
                 'tempdiurnal': 'mean'

@@ -1,7 +1,7 @@
-from ML import ML
 import pandas as pd
 from datetime import date
 import matplotlib.pyplot as plt
+from backend.definitions.crop import Crop
 
 # XGBoost
 import xgboost as xgb
@@ -12,24 +12,14 @@ import numpy as np
 # * Stage Model Information
 # This model builds on the previously deployed model by grouping data into crop growing stages (sowing, tillering, heading, etc.) and then predicts the sequence in the given timeframe.
 
-# Known disadvantages: cumulative variables are low at the start of a stage, causing concerningly low predictions from a farmer's perspective. Will look into fixing this by adding a day to date for the current stage.
+# Known disadvantages: cumulative variables are low at the start of a stage, causing concerningly low predictions from a farmer's perspective. 
+    # * (Fixed this by adding a day to date for the current stage)
 
-# Crop class definition
-from pydantic import BaseModel, Field
-from typing import Dict, List
+class StageModel():
+    def __init__(self, X, y, crop : Crop):
+        self.X = X
+        self.y = y
 
-class Crop(BaseModel):
-    name: str = Field(..., description="Name of the crop.")
-    t_base: float = Field(..., description="Base temperature for the crop.")
-    stages: Dict[str, Dict[str, float]] = Field(
-        ..., description="Associative 3D array for crop growth stages."
-    )
-
-class StageModel(ML):
-    def __init__(self, crop):
-        ML.__init__(self)
-        self.X = self.historical_data
-        self.y = self.yield_data
         self.crop = crop
         self.current_stage = None
 
@@ -42,7 +32,6 @@ class StageModel(ML):
 
         # Split into training and testing data
         X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=123)
-
 
         xgb_model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators = 10, seed = 123, booster = 'gbtree')
 
@@ -105,6 +94,9 @@ class StageModel(ML):
         pass
 
     def prepare(self):
+        # Sort crop stages by day
+        self.crop.stages = dict(sorted(self.crop.stages.items(), key=lambda item: item[1]["day"]))
+
         # get current stage of the crop
         today = date.today()
         day_of_year = today.timetuple().tm_yday
@@ -144,8 +136,6 @@ class StageModel(ML):
             'rain': 'sum',
             'pressure': 'mean',
             'clouds': 'mean',
-            'solarradiation': 'mean',
-            'solarenergy': 'sum',
             'uvi': 'mean',
             'tempmean': 'mean',
             'tempdiurnal': 'mean'
@@ -162,14 +152,10 @@ class StageModel(ML):
         # Merge with yield data
         self.X = pd.merge(self.X, self.y, on='year', how='inner')
 
-        # print(self.y.tail())
-
         self.y = self.X["yield"]
     
         # Drop yield column
         self.X.drop('yield', axis=1, inplace=True)
-
-        # print(self.X.tail(25))
 
     def evaluate(self):
         pass
