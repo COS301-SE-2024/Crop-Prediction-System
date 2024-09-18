@@ -46,10 +46,6 @@
 					<div class="flex text-xs gap-2">
 						<Button icon="pi pi-external-link" severity="secondary" label="Export" @click="exportSelectedCSV" />
 						<Button icon="pi pi-print" severity="secondary" label="Print" @click="triggerPrint" />
-						<NuxtLink to="/inputs/add-field-data">
-							<Button icon="pi pi-upload" severity="secondary" label="Upload" />
-						</NuxtLink>
-						<Button icon="pi pi-refresh" rounded raised @click="fetchEntryData" />
 					</div>
 				</div>
 				<div class="flex justify-content-center text-xs gap-2">
