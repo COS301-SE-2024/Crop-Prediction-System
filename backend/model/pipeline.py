@@ -1,5 +1,4 @@
 # Defines the base model for crop prediction that predicts yield
-from pydantic import BaseModel
 from backend.definitions.crop import Crop
 from backend.database.supabaseInstance import supabaseInstance
 from backend.database.supabaseFunctions import supabaseFunctions
@@ -7,10 +6,6 @@ from backend.model.FusionModel import FusionModel
 
 # Model specific imports
 import pandas as pd
-import numpy as np
-import xgboost as xgb
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
-from sklearn.metrics import mean_squared_error
 import datetime
 import os
 
@@ -19,6 +14,12 @@ class Pipeline:
         self.sb = supabaseInstance().get_client()
         self.sf = supabaseFunctions()
         self.model = None
+
+    def train_all(self):
+        fields = self.sb.table('field_info').select('id').execute().data
+        for field in fields:
+            self.train(field['id'])
+        return {"status": "All models trained successfully"}
 
     # Load data
     def load_data(self, crop : Crop, field_id = None) -> pd.DataFrame:
@@ -112,10 +113,6 @@ class Pipeline:
             # "rmse" : rmse,
             # "predictions" : prediction
         }
-
-    # Predict
-    def predict(self, field_id, test=False):
-        return {"error": "Not implemented"}
 
 if __name__ == '__main__':
     p = Pipeline()

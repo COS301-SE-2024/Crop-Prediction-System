@@ -145,30 +145,49 @@ class MultiScaleModel():
 
         return self.modelRMSE
 
-    def predict(self, data):
+    def predict(self):
         if len(self.models) == 0:
             return None
-
-        X = {
-            'pentadal': data,
-            'weekly': data,
-            'biweekly': data,
-            'monthly': data,
-            'quarterly': data,
-            'yearly': data
-        }
-
-        X = self.prepare(X)
 
         predictions = []
 
         for i in range(len(self.models)):
-            X_test = X[list(X.keys())[i]]
-            y_pred = self.models[i].predict(X_test)
+            freq = list(self.X.keys())[i]
+            X = self.X[freq]
+            y = self.y[freq]
+
+            # Rename y's yearly column to match X's yearly column
+            y = y.rename(columns={'year': 'yearly'})
+            
+            # Get current date
+            current_date = datetime.datetime.now()
+
+            # Get current pentadal
+            if freq != 'yearly':
+                if freq == 'pentadal':
+                    current_date = current_date.timetuple().tm_yday // 5
+                elif freq == 'weekly':
+                    current_date = current_date.isocalendar().week
+                elif freq == 'biweekly':
+                    current_date = current_date.timetuple().tm_yday // 14
+                elif freq == 'monthly':
+                    current_date = current_date.month
+                elif freq == 'quarterly':
+                    current_date = pd.to_datetime(current_date).quarter
+                
+                X = X[X[freq] == current_date]
+            else:
+                pass
+
+            # Merge X and y on year (X yearly and y year)
+            X = pd.merge(X, y, on='yearly', how='inner')
+            y = X["yield"]
+
+            # Predict
+            y_pred = self.models[i].predict(X)
             predictions.append(y_pred)
 
         return predictions
-
 
     def prepare(self):
         # TODO: Drop rows where date is the same, but keep the row where field_id is not NULL

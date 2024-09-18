@@ -24,6 +24,8 @@ class FusionModel(ML):
         self.sm = StageModel(self.X, self.y, self.crop)
         self.yom = YieldOnlyModel(self.y)
 
+        self.bestModel = None
+
     def train(self):
         # Train each model in the ensemble
         start = time.time()
@@ -36,6 +38,8 @@ class FusionModel(ML):
 
         duration = end - start
 
+        self.predict()
+
         return {
             "MultiScaleModel": msm_rmse,
             "StageModel": sm_rmse,
@@ -43,12 +47,12 @@ class FusionModel(ML):
             "duration": str(duration) + " seconds"
         }
 
-    def predict(self, data):
+    def predict(self):
         # Perform ensemble prediction by averaging the predictions of the models
         # Reject if the prediction is outside a confidence level of the YieldOnlyModel
-        msm_pred = self.msm.predict(data)
-        sm_pred = self.sm.predict(data)
-        yom_pred = self.yom.predict(data)
+        msm_pred = self.msm.predict()
+        sm_pred = self.sm.predict()
+        yom_pred = self.yom.predict()
 
         # Average the predictions
         predictions = []
@@ -57,15 +61,23 @@ class FusionModel(ML):
         
         predictions.append(sm_pred)
 
-        avg_pred = sum(predictions) / len(predictions)
+        # This year prediction
+        latestPredictions = []
+        for p in predictions:
+            latestPredictions.append(p[-1])
+
+        avg_pred = np.mean(latestPredictions)
+
+        # Get the average of the last 5 years
+        yom_last_5_years = yom_pred[-5:]
 
         # Compute confidence interval
-        # confidence_level = 0.95
-        confidence_interval = 1.96 * (self.yield_data['yield'].std() / np.sqrt(len(self.yield_data)))
+        confidence_level = 0.95
+        confidence_interval = 1.96 * np.std(yom_last_5_years) / np.sqrt(5)
         ci_upper = avg_pred + confidence_interval
         ci_lower = avg_pred - confidence_interval
 
-        if yom_pred < ci_lower or yom_pred > ci_upper:
+        if avg_pred < ci_lower or avg_pred > ci_upper:
             avg_pred = yom_pred # pick the YieldOnlyModel prediction if the ensemble prediction is outside the confidence level
         
         return avg_pred

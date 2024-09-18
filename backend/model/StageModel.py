@@ -90,8 +90,8 @@ class StageModel():
         return rmse
 
 
-    def predict(self, data):
-        pass
+    def predict(self):
+        return self.model.predict(self.X)
 
     def prepare(self):
         # Sort crop stages by day

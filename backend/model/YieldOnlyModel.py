@@ -90,8 +90,11 @@ class YieldOnlyModel():
         return rmse
 
 
-    def predict(self, data):
-        pass
+    def predict(self):
+        # Predict using the model
+        predictions = self.model.predict(self.X.drop(columns=['yield']))
+
+        return predictions
 
     def prepare(self):
         # Drop na
