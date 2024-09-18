@@ -105,7 +105,7 @@ class MultiScaleModel():
                 cv=3,  # 3-fold cross-validation
                 verbose=1,
                 n_jobs=-1,
-                random_state=42,
+                # random_state=42,
             )
 
             # Fit the model
@@ -128,20 +128,6 @@ class MultiScaleModel():
 
             # Append the model
             self.models.append(best_model)
-
-        # Plot the prediction
-        # print(self.modelRMSE)
-
-        # Plot the prediction
-        # plt.plot(self.modelPredictions[0], label='Pentadal')
-        # plt.plot(self.modelPredictions[1], label='Weekly')
-        # plt.plot(self.modelPredictions[2], label='Biweekly')
-        # plt.plot(self.modelPredictions[3], label='Monthly')
-        # plt.plot(self.modelPredictions[4], label='Quarterly')
-        # plt.plot(self.modelPredictions[5], label='Yearly')
-        # plt.plot(self.actual, label='Actual')
-        # plt.legend()
-        # plt.show()
 
         return self.modelRMSE
 
@@ -186,6 +172,16 @@ class MultiScaleModel():
             # Predict
             y_pred = self.models[i].predict(X)
             predictions.append(y_pred)
+
+            # Show predictions next to actual
+            # plt.figure(figsize=(10, 6))
+            # plt.plot(y_pred, label='Prediction', color='red', linestyle='dashed')
+            # plt.plot(y, label='Actual', color='blue')
+            # plt.xlabel('Index')
+            # plt.ylabel('Value')
+            # plt.title('Model Predictions vs Actual Values')
+            # plt.legend()
+            # plt.show()
 
         return predictions
 

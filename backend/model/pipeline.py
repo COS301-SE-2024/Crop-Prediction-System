@@ -55,10 +55,6 @@ class Pipeline:
         
         model_data = pd.DataFrame(response.data)
 
-        # Drop yield column if it exists
-        if 'pred_yield' in model_data.columns:
-            model_data.drop('pred_yield', axis=1, inplace=True)
-
         return model_data
         
     def load_yields(self, c : Crop) -> pd.DataFrame:
@@ -104,6 +100,8 @@ class Pipeline:
 
         X, y = self.load_data(c, field_id)
 
+        print(X.shape)
+
         self.model = FusionModel(X, y, c)
         print(self.model.train())
 
@@ -116,4 +114,5 @@ class Pipeline:
 
 if __name__ == '__main__':
     p = Pipeline()
-    p.train(None, "wheat")
+    # p.train(None, "wheat")
+    p.train("14420bc8-48e3-47bc-ab83-1a6498380588")

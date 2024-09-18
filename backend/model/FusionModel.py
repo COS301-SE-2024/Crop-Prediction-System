@@ -38,13 +38,14 @@ class FusionModel(ML):
 
         duration = end - start
 
-        self.predict()
+        prediction = self.predict()
 
         return {
             "MultiScaleModel": msm_rmse,
             "StageModel": sm_rmse,
             "YieldOnlyModel": yom_rmse,
-            "duration": str(duration) + " seconds"
+            "duration": str(duration) + " seconds",
+            "prediction": prediction
         }
 
     def predict(self):

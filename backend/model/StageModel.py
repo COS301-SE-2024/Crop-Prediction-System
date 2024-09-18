@@ -55,7 +55,7 @@ class StageModel():
             cv=3,  # 3-fold cross-validation
             verbose=1,
             n_jobs=-1,
-            random_state=42,
+            # random_state=42,
         )
 
         # Fit the model

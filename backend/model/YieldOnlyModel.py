@@ -10,6 +10,9 @@ from sklearn.metrics import mean_squared_error
 # Plotting
 import matplotlib.pyplot as plt
 
+# Datetime
+from datetime import datetime
+
 # * Yield Only Model Information
 # This model aims to predict yield purely by means of historic yield data, and doesn't take into account any weather or crop-specific data. The aim of this model is for pure evaluation and prevention of inaccurate predictions. The fusion model will use the confidence level of the Yield Only Model to determine if other model predictions in the ensemble were sound or not.
 
@@ -52,7 +55,7 @@ class YieldOnlyModel():
             max_depth=3,
             learning_rate=0.1,
             n_jobs=-1,
-            random_state=42,
+            # random_state=42,
         )
         
         # Fit XGBoost on all features except 'yield'
@@ -60,9 +63,6 @@ class YieldOnlyModel():
         
         # Predict using XGBoost
         xgb_predictions = xgb_model.predict(X_test.drop(columns=['yield']))
-        
-        # Calculate XGBoost RMSE
-        xgb_rmse = np.sqrt(mean_squared_error(X_test['yield'], xgb_predictions))
 
         # ====================
         # ENSEMBLE MODEL
@@ -91,8 +91,22 @@ class YieldOnlyModel():
 
 
     def predict(self):
-        # Predict using the model
-        predictions = self.model.predict(self.X.drop(columns=['yield']))
+        # Predict into the future
+        future_X = self.X.copy()
+        future_X['year'] = future_X['year'] + 1
+        future_X = future_X.drop(columns=['yield'])
+
+        # Predict using the best model
+        predictions = self.model.predict(future_X)
+
+        # # plot the predictions
+        # plt.plot(self.X['year'], self.X['yield'], label='Historical Yield')
+        # plt.plot(future_X['year'], predictions, label='Future Yield', color='red', linestyle='dashed')
+        # plt.xlabel('Year')
+        # plt.ylabel('Yield')
+        # plt.title('Yield Prediction')
+        # plt.legend()
+        # plt.show()
 
         return predictions
 
