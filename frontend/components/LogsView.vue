@@ -67,7 +67,7 @@
 						<Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
 						<Button
 							type="button"
-							label="Save"
+							label="Print"
 							@click="
 								() => {
 									visible = false
@@ -226,19 +226,62 @@ const onRowUnselect = () => {
 	selectAll.value = false
 }
 
+// const triggerPrint = () => {
+// 	const rawSelectedData = selectedDataEntries.value.map((item) => toRaw(item))
+// 	if (rawSelectedData.length === 0) {
+// 		return
+// 	}
+// 	const printContents = JSON.stringify(rawSelectedData, null, 2)
+// 	const printWindow = window.open('', '', 'height=600,width=800')
+// 	if (!printWindow) {
+// 		return
+// 	}
+// 	printWindow.document.write('<html><head><title>Print</title></head><body>')
+// 	printWindow.document.write('<pre>' + printContents + '</pre>')
+// 	printWindow.document.write('</body></html>')
+// 	printWindow.onbeforeunload = function () {
+// 		printWindow.close()
+// 	}
+// 	printWindow.document.close()
+// 	printWindow.print()
+// 	printWindow.close()
+// }
+
 const triggerPrint = () => {
-	const rawSelectedData = selectedDataEntries.value.map((item) => toRaw(item))
-	if (rawSelectedData.length === 0) {
+	// Ensure a field is selected
+	if (!selectedField.value) {
+		toast.add({
+			severity: 'error',
+			summary: 'No field selected',
+			detail: 'Please select a field to print',
+			life: 3000,
+		})
 		return
 	}
-	const printContents = JSON.stringify(rawSelectedData, null, 2)
+
+	// Filter entries based on selected field
+	const fieldEntries = entries.value.filter((entry) => entry.field_name === selectedField.value)
+
+	if (fieldEntries.length === 0) {
+		toast.add({
+			severity: 'warn',
+			summary: 'No Data',
+			detail: 'No data available for the selected field',
+			life: 3000,
+		})
+		return
+	}
+
+	const printContents = JSON.stringify(fieldEntries, null, 2)
 	const printWindow = window.open('', '', 'height=600,width=800')
 	if (!printWindow) {
 		return
 	}
+
 	printWindow.document.write('<html><head><title>Print</title></head><body>')
 	printWindow.document.write('<pre>' + printContents + '</pre>')
 	printWindow.document.write('</body></html>')
+
 	printWindow.onbeforeunload = function () {
 		printWindow.close()
 	}
