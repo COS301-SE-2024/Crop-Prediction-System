@@ -226,29 +226,7 @@ const onRowUnselect = () => {
 	selectAll.value = false
 }
 
-// const triggerPrint = () => {
-// 	const rawSelectedData = selectedDataEntries.value.map((item) => toRaw(item))
-// 	if (rawSelectedData.length === 0) {
-// 		return
-// 	}
-// 	const printContents = JSON.stringify(rawSelectedData, null, 2)
-// 	const printWindow = window.open('', '', 'height=600,width=800')
-// 	if (!printWindow) {
-// 		return
-// 	}
-// 	printWindow.document.write('<html><head><title>Print</title></head><body>')
-// 	printWindow.document.write('<pre>' + printContents + '</pre>')
-// 	printWindow.document.write('</body></html>')
-// 	printWindow.onbeforeunload = function () {
-// 		printWindow.close()
-// 	}
-// 	printWindow.document.close()
-// 	printWindow.print()
-// 	printWindow.close()
-// }
-
 const triggerPrint = () => {
-	// Ensure a field is selected
 	if (!selectedField.value) {
 		toast.add({
 			severity: 'error',
@@ -259,8 +237,23 @@ const triggerPrint = () => {
 		return
 	}
 
-	// Filter entries based on selected field
 	const fieldEntries = entries.value.filter((entry) => entry.field_name === selectedField.value)
+	const field_name = []
+	const date = []
+	const tempmax = []
+	const tempmin = []
+	const tempmean = []
+	const pressure = []
+	const humidity = []
+	const dew_point = []
+	const rain = []
+	const uvi = []
+	const soil_moisture = []
+	const soil_temperature = []
+	const health = []
+	const yield_num = []
+	const sprayability = []
+	const crop_type = []
 
 	if (fieldEntries.length === 0) {
 		toast.add({
@@ -272,16 +265,33 @@ const triggerPrint = () => {
 		return
 	}
 
+	for (const entry of fieldEntries) {
+		field_name.push(entry.field_name)
+		date.push(entry.date)
+		tempmax.push(entry.tempmax)
+		tempmin.push(entry.tempmin)
+		tempmean.push(entry.tempmean)
+		pressure.push(entry.pressure)
+		humidity.push(entry.humidity)
+		dew_point.push(entry.dew_point)
+		rain.push(entry.rain)
+		uvi.push(entry.uvi)
+		soil_moisture.push(entry.soil_moisture)
+		soil_temperature.push(entry.soil_temperature)
+		health.push(entry.health)
+		yield_num.push(entry.yield)
+		sprayability.push(entry.sprayability)
+		crop_type.push(entry.crop_type)
+	}
+
 	const printContents = JSON.stringify(fieldEntries, null, 2)
 	const printWindow = window.open('', '', 'height=600,width=800')
 	if (!printWindow) {
 		return
 	}
-
 	printWindow.document.write('<html><head><title>Print</title></head><body>')
 	printWindow.document.write('<pre>' + printContents + '</pre>')
 	printWindow.document.write('</body></html>')
-
 	printWindow.onbeforeunload = function () {
 		printWindow.close()
 	}
