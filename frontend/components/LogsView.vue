@@ -9,7 +9,7 @@
 		paginator
 		@cell-edit-complete="onCellEditComplete"
 		editMode="cell"
-		:rows="5"
+		:rows="10"
 		:rowsPerPageOptions="[5, 10, 20, 50, 100]"
 		tableStyle="min-width: 70rem"
 		paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
