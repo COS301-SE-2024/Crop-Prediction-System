@@ -80,7 +80,7 @@ class API:
         return self.sb.deleteField(field_id.get("field_id"))
 
     # entry routes
-    def updateEntry(self, request: Request, entryInfo: Entry):
+    def updateEntry(self, request: Request, entryInfo: dict):
         return self.sb.updateEntry(entryInfo)
     
     def getPastYieldAvg(self, request: Request, crop: str):
