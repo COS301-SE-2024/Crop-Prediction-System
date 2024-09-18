@@ -1,4 +1,5 @@
 <template>
+	<Toast />
 	<DataTable
 		v-model:value="entries"
 		ref="dataEntries"
@@ -6,6 +7,8 @@
 		scrollHeight="450px"
 		size="small"
 		paginator
+		@cell-edit-complete="onCellEditComplete"
+		editMode="cell"
 		:rows="5"
 		:rowsPerPageOptions="[5, 10, 20, 50, 100]"
 		tableStyle="min-width: 70rem"
@@ -62,9 +65,35 @@
 		<template #empty>
 			<Skeleton height="20px"></Skeleton>
 		</template>
+
 		<template #loading> Loading data entries. Please wait.</template>
-		<Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
-		<Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header" sortable></Column>
+		<Column selectionMode="multiple" headerStyle="width: 3rem" :rowEditor="true"></Column>
+		<Column
+			v-for="col of columns"
+			:key="col.field"
+			style="min-width: 10rem; font-size: 0.8rem"
+			:field="col.field"
+			:header="col.header"
+			sortable
+		>
+			<template #editor="{ data, field }">
+				<template
+					v-if="
+						field !== 'date' &&
+						field !== 'field_name' &&
+						field !== 'crop_type' &&
+						field !== 'health' &&
+						field !== 'yield' &&
+						field !== 'sprayability'
+					"
+				>
+					<InputNumber v-model="data[field]" autofocus size="small" :minFractionDigits="0" :maxFractionDigits="10" />
+				</template>
+				<template v-else>
+					<p>{{ data[field] }}</p>
+				</template>
+			</template>
+		</Column>
 	</DataTable>
 	<Dialog header="Selected Rows" v-model:visible="dialogVisible" :modal="true" :closable="true">
 		<Button label="Print" icon="pi pi-print" @click="triggerPrint" />
@@ -75,28 +104,30 @@
 <script setup lang="ts">
 import { ref, toRaw, onMounted } from 'vue'
 import { FilterMatchMode } from 'primevue/api'
+import { useToast } from 'primevue/usetoast'
 
 const selectedDataEntries = ref([])
 const dialogVisible = ref(false)
 const printableContent = ref('')
 const dataEntries = ref()
 const selectAll = ref<boolean>()
+const toast = useToast()
 
 // Define your columns
 const columns = [
 	{ field: 'date', header: 'Date' },
 	{ field: 'field_name', header: 'Field Name' },
 	{ field: 'crop_type', header: 'Crop Type' },
-	{ field: 'tempmax', header: 'Max Temperature (°C)' },
-	{ field: 'tempmin', header: 'Min Temperature (°C)' },
-	{ field: 'tempmean', header: 'Mean Temperature (°C)' },
+	{ field: 'tempmax', header: 'Max Temp (°C)' },
+	{ field: 'tempmin', header: 'Min Temp (°C)' },
+	{ field: 'tempmean', header: 'Mean Temp (°C)' },
 	{ field: 'pressure', header: 'Pressure (hPa)' },
 	{ field: 'humidity', header: 'Humidity (%)' },
 	{ field: 'dew_point', header: 'Dew Point (°C)' },
 	{ field: 'rain', header: 'Rainfall (mm)' },
 	{ field: 'uvi', header: 'UV Index' },
 	{ field: 'soil_moisture', header: 'Soil Moisture' },
-	{ field: 'soil_temperature', header: 'Soil Temperature (°C)' },
+	{ field: 'soil_temperature', header: 'Soil Temp (°C)' },
 	{ field: 'health', header: 'Health Index' },
 	{ field: 'yield', header: 'Yield' },
 	{ field: 'sprayability', header: 'Sprayability' },
@@ -228,5 +259,12 @@ const exportSelectedCSV = () => {
 	downloadLink.click()
 	document.body.removeChild(downloadLink)
 	URL.revokeObjectURL(url)
+}
+
+const onCellEditComplete = (event) => {
+	let { data, newValue, field } = event
+
+	data[field] = newValue
+	toast.add({ severity: 'success', summary: 'Data changed successfully', life: 3000 })
 }
 </script>
