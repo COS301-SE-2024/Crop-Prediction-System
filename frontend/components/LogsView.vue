@@ -56,6 +56,11 @@
 						<InputText v-model="filters['global'].value" placeholder="Keyword Search" />
 					</IconField>
 				</div>
+				<p class="text-xs text-surface-600 dark:text-surface-0/60">
+					(To change table values, select the value you wish to change, then enter the correct value and hit 'Enter'.
+					You will receive a prompt if the new value was saved successfully. (Note: You cannot change the Date, Field
+					Name, Crop Type, Health, Yield or Sprayability values))
+				</p>
 			</div>
 		</template>
 		<template #empty>
