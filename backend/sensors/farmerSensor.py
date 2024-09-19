@@ -94,13 +94,16 @@ class Sensor:
 
     def close(self):
         if self.ser:
-            self.ser.close()
-            self.ser = None
-            time.sleep(1)  # Give the OS some time to release the port
-        print("Port closed")
+            if self.ser.is_open:
+                self.ser.close()
+                print("Port closed")
+            self.ser = None  # Set to None after closing
+        else:
+            print("Port was not open")
 
     def __del__(self):
-        self.close()
+        if hasattr(self, 'ser') and self.ser:
+            self.close()
 
 # Usage example:
 if __name__ == "__main__":
