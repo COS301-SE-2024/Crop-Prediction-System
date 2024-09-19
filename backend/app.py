@@ -50,6 +50,7 @@ class API:
                                
         #sensor routes
         self.app.add_api_route("/storeUPSensorData", self.storeUPSensorData, methods=["GET"])
+        self.app.add_api_route("/addFieldToSensor", self.addFieldToSensor, methods=["POST"])
 
     def main(self, request: Request):
         return {
@@ -112,6 +113,9 @@ class API:
     # sensor routes
     def storeUPSensorData(self, request: Request, sensorID: str):
         return self.sb.createUpSensorData(sensorID)
+    
+    def addFieldToSensor(self, request: Request, fieldID: str, sensorID: str):
+        return self.sb.addFieldToSensor(sensorID, fieldID)
 
 api_instance = API()
 app = api_instance.app

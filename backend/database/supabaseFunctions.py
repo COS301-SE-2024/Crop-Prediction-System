@@ -399,3 +399,16 @@ class supabaseFunctions:
         except Exception as e:
             print(e)
             return {"error": "Failed to insert sensor data", "error_message": str(e)}
+        
+
+    # add a field to a sensor
+    @staticmethod
+    def addFieldToSensor(sensorID: str, fieldID: str):
+        try:
+            response = supabaseFunctions.__sbClient.table("up_sensor_data").update({"field_id": fieldID}).eq("device_eui", sensorID).execute()
+            if response.error:
+                return {"error": "Failed to add field to sensor", "error_message": response.error}
+            return {"success": "Field added to sensor", "data": response.data}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to add field to sensor", "error_message": str(e)}
