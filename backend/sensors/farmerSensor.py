@@ -51,7 +51,7 @@ class Sensor:
             response = self.read_response()
             result = self.process_data(response)
 
-            if len(result) != 4:
+            if len(result) != 7:
                 raise ValueError(f"Expected 4 values, got {len(result)}")
 
             return {
