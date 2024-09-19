@@ -157,12 +157,12 @@ const columns = [
 	{ field: 'humidity', header: 'Humidity (%)' },
 	{ field: 'dew_point', header: 'Dew Point (°C)' },
 	{ field: 'rain', header: 'Rainfall (mm)' },
-	{ field: 'uvi', header: 'UV Index' },
-	{ field: 'soil_moisture', header: 'Soil Moisture' },
+	{ field: 'uvi', header: 'UV Index ' },
+	{ field: 'soil_moisture', header: 'Soil Moisture (wfv)' },
 	{ field: 'soil_temperature', header: 'Soil Temp (°C)' },
-	{ field: 'health', header: 'Health Index' },
-	{ field: 'yield', header: 'Yield' },
-	{ field: 'sprayability', header: 'Sprayability' },
+	{ field: 'health', header: 'Health Index (%)' },
+	{ field: 'yield', header: 'Yield (t/ha)' },
+	{ field: 'sprayability', header: 'Sprayability (%)' },
 ]
 
 const filters = ref({
@@ -256,6 +256,16 @@ const preparePrintContent = async () => {
 	const tempMaxData = fieldEntries.map((entry) => entry.tempmax)
 	const tempMinData = fieldEntries.map((entry) => entry.tempmin)
 	const tempMeanData = fieldEntries.map((entry) => entry.tempmean)
+	const pressureData = fieldEntries.map((entry) => entry.pressure)
+	const humidityData = fieldEntries.map((entry) => entry.humidity)
+	const dewPointData = fieldEntries.map((entry) => entry.dew_point)
+	const rainfallData = fieldEntries.map((entry) => entry.rain)
+	const uviData = fieldEntries.map((entry) => entry.uvi)
+	const soilMoistureData = fieldEntries.map((entry) => entry.soil_moisture)
+	const soilTemperatureData = fieldEntries.map((entry) => entry.soil_temperature)
+	const healthData = fieldEntries.map((entry) => entry.health)
+	const yieldData = fieldEntries.map((entry) => entry.yield)
+	const sprayabilityData = fieldEntries.map((entry) => entry.sprayability)
 
 	// Create a canvas element
 	const canvas = document.createElement('canvas')
@@ -331,9 +341,13 @@ const preparePrintContent = async () => {
 		options: {
 			responsive: false,
 			animation: false,
-			title: {
-				display: true,
-				text: `Temperature Data for ${selectedField.value}`,
+			scales: {
+				y: {
+					title: {
+						display: true,
+						text: 'Temperature (°C)',
+					},
+				},
 			},
 		},
 	})
@@ -344,20 +358,8 @@ const preparePrintContent = async () => {
 			datasets: [
 				{
 					label: 'Max Temperature',
-					data: tempMaxData,
+					data: pressureData,
 					borderColor: 'red',
-					fill: false,
-				},
-				{
-					label: 'Mean Temperature',
-					data: tempMeanData,
-					borderColor: 'orange',
-					fill: false,
-				},
-				{
-					label: 'Min Temperature',
-					data: tempMinData,
-					borderColor: 'blue',
 					fill: false,
 				},
 			],
@@ -365,9 +367,13 @@ const preparePrintContent = async () => {
 		options: {
 			responsive: false,
 			animation: false,
-			title: {
-				display: true,
-				text: `Temperature Data for ${selectedField.value}`,
+			scales: {
+				y: {
+					title: {
+						display: true,
+						text: 'Pressure (hPa)',
+					},
+				},
 			},
 		},
 	})
@@ -377,21 +383,9 @@ const preparePrintContent = async () => {
 			labels: labels,
 			datasets: [
 				{
-					label: 'Max Temperature',
-					data: tempMaxData,
+					label: 'Humidity',
+					data: humidityData,
 					borderColor: 'red',
-					fill: false,
-				},
-				{
-					label: 'Mean Temperature',
-					data: tempMeanData,
-					borderColor: 'orange',
-					fill: false,
-				},
-				{
-					label: 'Min Temperature',
-					data: tempMinData,
-					borderColor: 'blue',
 					fill: false,
 				},
 			],
@@ -399,9 +393,13 @@ const preparePrintContent = async () => {
 		options: {
 			responsive: false,
 			animation: false,
-			title: {
-				display: true,
-				text: `Temperature Data for ${selectedField.value}`,
+			scales: {
+				y: {
+					title: {
+						display: true,
+						text: 'Humidity (%)',
+					},
+				},
 			},
 		},
 	})
@@ -411,21 +409,9 @@ const preparePrintContent = async () => {
 			labels: labels,
 			datasets: [
 				{
-					label: 'Max Temperature',
-					data: tempMaxData,
+					label: 'Dew Point',
+					data: dewPointData,
 					borderColor: 'red',
-					fill: false,
-				},
-				{
-					label: 'Mean Temperature',
-					data: tempMeanData,
-					borderColor: 'orange',
-					fill: false,
-				},
-				{
-					label: 'Min Temperature',
-					data: tempMinData,
-					borderColor: 'blue',
 					fill: false,
 				},
 			],
@@ -433,9 +419,13 @@ const preparePrintContent = async () => {
 		options: {
 			responsive: false,
 			animation: false,
-			title: {
-				display: true,
-				text: `Temperature Data for ${selectedField.value}`,
+			scales: {
+				y: {
+					title: {
+						display: true,
+						text: 'Dew Point (°C)',
+					},
+				},
 			},
 		},
 	})
@@ -445,21 +435,9 @@ const preparePrintContent = async () => {
 			labels: labels,
 			datasets: [
 				{
-					label: 'Max Temperature',
-					data: tempMaxData,
+					label: 'Rainfall',
+					data: rainfallData,
 					borderColor: 'red',
-					fill: false,
-				},
-				{
-					label: 'Mean Temperature',
-					data: tempMeanData,
-					borderColor: 'orange',
-					fill: false,
-				},
-				{
-					label: 'Min Temperature',
-					data: tempMinData,
-					borderColor: 'blue',
 					fill: false,
 				},
 			],
@@ -467,9 +445,13 @@ const preparePrintContent = async () => {
 		options: {
 			responsive: false,
 			animation: false,
-			title: {
-				display: true,
-				text: `Temperature Data for ${selectedField.value}`,
+			scales: {
+				y: {
+					title: {
+						display: true,
+						text: 'Rainfall (mm)',
+					},
+				},
 			},
 		},
 	})
@@ -480,20 +462,8 @@ const preparePrintContent = async () => {
 			datasets: [
 				{
 					label: 'Max Temperature',
-					data: tempMaxData,
+					data: uviData,
 					borderColor: 'red',
-					fill: false,
-				},
-				{
-					label: 'Mean Temperature',
-					data: tempMeanData,
-					borderColor: 'orange',
-					fill: false,
-				},
-				{
-					label: 'Min Temperature',
-					data: tempMinData,
-					borderColor: 'blue',
 					fill: false,
 				},
 			],
@@ -501,9 +471,13 @@ const preparePrintContent = async () => {
 		options: {
 			responsive: false,
 			animation: false,
-			title: {
-				display: true,
-				text: `Temperature Data for ${selectedField.value}`,
+			scales: {
+				y: {
+					title: {
+						display: true,
+						text: 'UV Index',
+					},
+				},
 			},
 		},
 	})
@@ -513,21 +487,9 @@ const preparePrintContent = async () => {
 			labels: labels,
 			datasets: [
 				{
-					label: 'Max Temperature',
-					data: tempMaxData,
+					label: 'Soil Moisture',
+					data: soilMoistureData,
 					borderColor: 'red',
-					fill: false,
-				},
-				{
-					label: 'Mean Temperature',
-					data: tempMeanData,
-					borderColor: 'orange',
-					fill: false,
-				},
-				{
-					label: 'Min Temperature',
-					data: tempMinData,
-					borderColor: 'blue',
 					fill: false,
 				},
 			],
@@ -535,9 +497,13 @@ const preparePrintContent = async () => {
 		options: {
 			responsive: false,
 			animation: false,
-			title: {
-				display: true,
-				text: `Temperature Data for ${selectedField.value}`,
+			scales: {
+				y: {
+					title: {
+						display: true,
+						text: 'Soil Moisture',
+					},
+				},
 			},
 		},
 	})
@@ -547,21 +513,9 @@ const preparePrintContent = async () => {
 			labels: labels,
 			datasets: [
 				{
-					label: 'Max Temperature',
-					data: tempMaxData,
+					label: 'Soil Temperature',
+					data: soilTemperatureData,
 					borderColor: 'red',
-					fill: false,
-				},
-				{
-					label: 'Mean Temperature',
-					data: tempMeanData,
-					borderColor: 'orange',
-					fill: false,
-				},
-				{
-					label: 'Min Temperature',
-					data: tempMinData,
-					borderColor: 'blue',
 					fill: false,
 				},
 			],
@@ -569,9 +523,13 @@ const preparePrintContent = async () => {
 		options: {
 			responsive: false,
 			animation: false,
-			title: {
-				display: true,
-				text: `Temperature Data for ${selectedField.value}`,
+			scales: {
+				y: {
+					title: {
+						display: true,
+						text: 'Soil Temperature (°C)',
+					},
+				},
 			},
 		},
 	})
@@ -581,21 +539,9 @@ const preparePrintContent = async () => {
 			labels: labels,
 			datasets: [
 				{
-					label: 'Max Temperature',
-					data: tempMaxData,
+					label: 'Health Index',
+					data: healthData,
 					borderColor: 'red',
-					fill: false,
-				},
-				{
-					label: 'Mean Temperature',
-					data: tempMeanData,
-					borderColor: 'orange',
-					fill: false,
-				},
-				{
-					label: 'Min Temperature',
-					data: tempMinData,
-					borderColor: 'blue',
 					fill: false,
 				},
 			],
@@ -603,9 +549,13 @@ const preparePrintContent = async () => {
 		options: {
 			responsive: false,
 			animation: false,
-			title: {
-				display: true,
-				text: `Temperature Data for ${selectedField.value}`,
+			scales: {
+				y: {
+					title: {
+						display: true,
+						text: 'Health Index (%)',
+					},
+				},
 			},
 		},
 	})
@@ -615,21 +565,9 @@ const preparePrintContent = async () => {
 			labels: labels,
 			datasets: [
 				{
-					label: 'Max Temperature',
-					data: tempMaxData,
+					label: 'Yield',
+					data: yieldData,
 					borderColor: 'red',
-					fill: false,
-				},
-				{
-					label: 'Mean Temperature',
-					data: tempMeanData,
-					borderColor: 'orange',
-					fill: false,
-				},
-				{
-					label: 'Min Temperature',
-					data: tempMinData,
-					borderColor: 'blue',
 					fill: false,
 				},
 			],
@@ -637,9 +575,13 @@ const preparePrintContent = async () => {
 		options: {
 			responsive: false,
 			animation: false,
-			title: {
-				display: true,
-				text: `Temperature Data for ${selectedField.value}`,
+			scales: {
+				y: {
+					title: {
+						display: true,
+						text: 'Yield (t/ha)',
+					},
+				},
 			},
 		},
 	})
@@ -649,21 +591,9 @@ const preparePrintContent = async () => {
 			labels: labels,
 			datasets: [
 				{
-					label: 'Max Temperature',
-					data: tempMaxData,
+					label: 'Sprayability',
+					data: sprayabilityData,
 					borderColor: 'red',
-					fill: false,
-				},
-				{
-					label: 'Mean Temperature',
-					data: tempMeanData,
-					borderColor: 'orange',
-					fill: false,
-				},
-				{
-					label: 'Min Temperature',
-					data: tempMinData,
-					borderColor: 'blue',
 					fill: false,
 				},
 			],
@@ -671,9 +601,13 @@ const preparePrintContent = async () => {
 		options: {
 			responsive: false,
 			animation: false,
-			title: {
-				display: true,
-				text: `Temperature Data for ${selectedField.value}`,
+			scales: {
+				y: {
+					title: {
+						display: true,
+						text: 'Sprayability (%)',
+					},
+				},
 			},
 		},
 	})
@@ -683,19 +617,29 @@ const preparePrintContent = async () => {
 
 	// Convert the chart to an image
 	const chartImage = canvas.toDataURL('image/png')
-	const chartImage1 = canvas.toDataURL('image1/png')
-	const chartImage2 = canvas.toDataURL('image2/png')
-	const chartImage3 = canvas.toDataURL('image3/png')
-	const chartImage4 = canvas.toDataURL('image4/png')
-	const chartImage5 = canvas.toDataURL('image5/png')
-	const chartImage6 = canvas.toDataURL('image6/png')
-	const chartImage7 = canvas.toDataURL('image7/png')
-	const chartImage8 = canvas.toDataURL('image8/png')
-	const chartImage9 = canvas.toDataURL('image9/png')
-	const chartImage10 = canvas.toDataURL('image10/png')
+	const chartImage1 = canvas1.toDataURL('image1/png')
+	const chartImage2 = canvas2.toDataURL('image2/png')
+	const chartImage3 = canvas3.toDataURL('image3/png')
+	const chartImage4 = canvas4.toDataURL('image4/png')
+	const chartImage5 = canvas5.toDataURL('image5/png')
+	const chartImage6 = canvas6.toDataURL('image6/png')
+	const chartImage7 = canvas7.toDataURL('image7/png')
+	const chartImage8 = canvas8.toDataURL('image8/png')
+	const chartImage9 = canvas9.toDataURL('image9/png')
+	const chartImage10 = canvas10.toDataURL('image10/png')
 
 	// Remove the canvas from the DOM
 	document.body.removeChild(canvas)
+	document.body.removeChild(canvas1)
+	document.body.removeChild(canvas2)
+	document.body.removeChild(canvas3)
+	document.body.removeChild(canvas4)
+	document.body.removeChild(canvas5)
+	document.body.removeChild(canvas6)
+	document.body.removeChild(canvas7)
+	document.body.removeChild(canvas8)
+	document.body.removeChild(canvas9)
+	document.body.removeChild(canvas10)
 
 	// Prepare the print content
 	printContent.value = `
