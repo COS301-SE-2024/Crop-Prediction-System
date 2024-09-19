@@ -48,7 +48,11 @@ class Pipeline:
             return {"error": f"An error occurred while loading data: {str(e)}"}
         
     def load_model_data(self, field_id = None) -> pd.DataFrame:
-        dict = {"fieldid": field_id} if field_id else {}
+        if field_id == None:
+            return {
+                "error": "Field ID cannot be empty."
+            }
+        dict = {"fieldid": field_id}
         response = self.sb.rpc('get_data', dict).execute()
         if response.data == []:
             return {"error": "Data not found. Field ID may be invalid or may not have any data."}
@@ -85,23 +89,21 @@ class Pipeline:
         return historical_data
 
     # Train
-    def train(self, field_id = None, crop = None):
+    def train(self, field_id = None):
         # Load the data
         if field_id == None and crop == None:
             return {"error": "Both Field ID and crop name cannot be empty."}
         
-        c : Crop = None
-        if crop == None:
-            f = self.sf.getFieldInfo(field_id)
-            crop = f.crop_type
-            c = self.sf.getCrop(crop)
-        else:
-            c = self.sf.getCrop(crop)
+        f = self.sf.getFieldInfo(field_id)
+        crop = f.crop_type
+        c : Crop = self.sf.getCrop(crop)
 
         X, y = self.load_data(c, field_id)
 
         print(X.shape)
+        print(X.tail(25))
 
+        self.model = None # Reset the model
         self.model = FusionModel(X, y, c)
         print(self.model.train())
 
@@ -114,5 +116,5 @@ class Pipeline:
 
 if __name__ == '__main__':
     p = Pipeline()
-    # p.train(None, "wheat")
     p.train("14420bc8-48e3-47bc-ab83-1a6498380588")
+    p.train("975f9c3b-ed7c-49cd-b0e1-99b9c2bd7b9f")

@@ -70,7 +70,7 @@ class YieldOnlyModel():
         # Pick the best model based on RMSE
         # if arima_rmse < xgb_rmse:
         #     best_model = arima_model_fit
-        #     best_predictions = arima_predictions
+        #     best_predictions = arima_predictions  
         # else:
         best_model = xgb_model
         best_predictions = xgb_predictions
