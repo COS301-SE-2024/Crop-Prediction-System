@@ -15,7 +15,7 @@ try:
         # count = 0
         # while count < 10:
         print("Writing data")
-        data_to_send = b'\x01\x04\x00\x00\x00\x04\x44\x09' # 01 04 00 00 00 04 44 09
+        data_to_send = b'\x01\x03\x00\x00\x00\x04\x44\x09' # 01 03 00 00 00 04 44 09
         bytesWritten = ser.write(data_to_send)
         print(f"Bytes written: {bytesWritten}")
         print(f"Data sent (hex): {data_to_send.hex()}")
