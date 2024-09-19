@@ -63,6 +63,12 @@ class Weather:
                 'date': datetime.datetime.now().strftime('%Y-%m-%d'),
                 'summary': message,
             }).execute()
+
+            response = Weather.__sbClient.table('data').upsert({
+                'field_id': str(field_id),
+                'date': datetime.datetime.now().strftime('%Y-%m-%d'),
+                'summary': message,
+            }).execute()
         except Exception as e:
             return {
                 'error': e
@@ -100,6 +106,24 @@ class Weather:
                 'hdd': entry.hdd,
                 'soil_temperature': entry.soil_temperature,
                 'pet': entry.pet
+            }, returning='representation'
+            ).execute()
+
+            # Let it upload to data as well
+            response = Weather.__sbClient.table('data').upsert({
+                'field_id': str(entry.field_id),
+                'date': datetime.datetime.fromtimestamp(entry.timestamp).strftime('%Y-%m-%d'),
+                'summary': entry.summary,
+                'tempmax': entry.tempMax,
+                'tempmin': entry.tempMin,
+                'humidity': entry.humidity,
+                'tempdiurnal': entry.tempDiurnal,
+                'pressure': entry.pressure,
+                'tempmean': entry.tempMean,
+                'dew_point': entry.dew_point,
+                'clouds': entry.clouds,
+                'rain': entry.rain,
+                'uvi': entry.uvi
             }, returning='representation'
             ).execute()
         return

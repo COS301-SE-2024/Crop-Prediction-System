@@ -297,11 +297,15 @@ class supabaseFunctions:
             return {"error_message": e, "id": field_id, "type": "deleteField"}
         
     @staticmethod
-    def updateEntry(fieldData: Entry):
+    def updateEntry(fieldData: dict):
         try:
-            response = supabaseFunctions.__sbClient.table("field_data").update(fieldData).eq("entry_id", fieldData.id).execute()
-            if response.error:
-                raise Exception(response.error)
+            print(fieldData, flush=True)
+            # response = supabaseFunctions.__sbClient.table("field_data").update(fieldData).match({ "field_id": fieldData.field_id, "date": fieldData.date }).execute()
+
+            response = supabaseFunctions.__sbClient.table("field_data").update(fieldData).eq("field_id", fieldData["field_id"]).eq("date", fieldData["date"]).execute()
+            
+            print(response, flush=True)
+            
             return {
                 "status": "success",
                 "data": response.data[0]
