@@ -93,8 +93,11 @@ class Sensor:
 
 
     def close(self):
-        if self.ser.is_open:
+        if self.ser:
             self.ser.close()
+            self.ser = None
+            time.sleep(1)  # Give the OS some time to release the port
+        print("Port closed")
 
     def __del__(self):
         self.close()
@@ -107,7 +110,7 @@ if __name__ == "__main__":
         while True:
             data = sensor.get_all_data()
             if data:
-                print("Sensor readings not npk:", data)
+                print("Sensor readings of all:", data)
             time.sleep(1) # can change to 3 hours for easy value reading
             if input("0 to exit, any other key to continue: ") == "0":
                 break
