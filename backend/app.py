@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, BackgroundTasks
 from backend.database.supabaseFunctions import supabaseFunctions
 
-from backend.model.model import Model
+from backend.model.pipeline import Pipeline
 from backend.definitions.field import Field
 from backend.definitions.entry import Entry
 from backend.definitions.crop import Crop
@@ -11,7 +11,7 @@ class API:
     def __init__(self):
         self.app = FastAPI()
         self.sb = supabaseFunctions()
-        self.ml = Model()
+        self.pipeline = Pipeline()
         self.setup_routes()
 
     def setup_routes(self):
@@ -46,9 +46,8 @@ class API:
         self.app.add_api_route("/getTeamId", self.getTeamId, methods=["GET"]) # TODO: Test this route
 
         # model routes
-        self.app.add_api_route("/aggregate", self.aggregate, methods=["GET"]) # TODO: Test this route
-        self.app.add_api_route("/predict", self.predict, methods=["GET"]) # TODO: Test this route
-        self.app.add_api_route("/train", self.train, methods=["GET"]) # TODO: Test this route
+        # Aggregation, preparing, training and predicting the model all happens in the pipeline
+        self.app.add_api_route("/train", self.train, methods=["POST"]) # TODO: Test this route
 
         # messaging routes
         self.app.add_api_route("/sendMessage", self.sendMessage, methods=["POST"])
@@ -57,7 +56,7 @@ class API:
         # user routes
         self.app.add_api_route("/updateUser", self.sb.updateUser, methods=["PUT"])
         self.app.add_api_route("/getUser", self.sb.getUser, methods=["GET"])
-                               
+
     def main(self, request: Request):
         return {
             "Welcome": "Welcome to the TerraByte API",
@@ -67,7 +66,7 @@ class API:
     def getFieldInfo(self, request: Request, field_id: str):
         return self.sb.getFieldInfo(str(field_id))
 
-    def getFieldData(self, request: Request, field_id: str, input_date: str):
+    def getFieldData(self, request: Request, field_id: str, input_date: str = None):
         return self.sb.getFieldData(field_id, input_date)
 
     def createField(self, request: Request, fieldInfo: Field):
@@ -108,23 +107,22 @@ class API:
     def getTeamDetails(self, request: Request, team_id: str):
         return self.sb.getTeamDetails(team_id)
     
-    # model routes
-    def aggregate(self, background_tasks: BackgroundTasks, request: Request):
-        background_tasks.add_task(self.sb.aggregate)
-        return {"message": "Started aggregation"}
-    
-    def predict(self, background_tasks: BackgroundTasks, request: Request, field_id: str = None, batch: bool = False):
-        if batch:
-            background_tasks.add_task(self.ml.predict_all)
-            return {"message": "Started prediction for all fields"}
-        background_tasks.add_task(self.ml.predict, field_id)
-        return {"message": "Started prediction for field ID: " + field_id}
-    
-    def train(self, background_tasks: BackgroundTasks, request: Request, field_id: str = None, crop: str = None, batch: bool = False):
-        if batch:
-            background_tasks.add_task(self.ml.train_all)
+    # model routes [POST]
+    def train(self, background_tasks: BackgroundTasks, request: Request, body: dict):
+        print(body, flush=True)
+        field_id = body.get("field_id") or None # field_id is optional
+        batch = body.get("batch") or False
+        waitForCompletion = body.get("waitForCompletion") or False
+        if batch and field_id is None:
+            if waitForCompletion:
+                return self.pipeline.train_all()
+            background_tasks.add_task(self.pipeline.train_all)
             return {"message": "Started training for all fields"}
-        background_tasks.add_task(self.ml.train, field_id, crop)
+        if field_id is None:
+            return {"error": "Field ID is required or `batch` must be set to `true`"}
+        if waitForCompletion:
+            return self.pipeline.train(field_id)
+        background_tasks.add_task(self.pipeline.train, field_id)
         return {"message": "Started training for field ID: " + field_id}
     
     def fetchWeatherForAllFields(self, background_tasks: BackgroundTasks, request: Request):
