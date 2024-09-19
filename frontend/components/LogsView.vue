@@ -135,6 +135,7 @@
 import { ref, toRaw, onMounted } from 'vue'
 import { FilterMatchMode } from 'primevue/api'
 import { useToast } from 'primevue/usetoast'
+import { Chart } from 'chart.js/auto'
 
 const visible = ref(false)
 const selectedDataEntries = ref([])
@@ -226,84 +227,10 @@ const onRowUnselect = () => {
 	selectAll.value = false
 }
 
-// const triggerPrint = () => {
-// 	if (!selectedField.value) {
-// 		toast.add({
-// 			severity: 'error',
-// 			summary: 'No field selected',
-// 			detail: 'Please select a field to print',
-// 			life: 3000,
-// 		})
-// 		return
-// 	}
-
-// 	const fieldEntries = entries.value.filter((entry) => entry.field_name === selectedField.value)
-// 	const field_name = []
-// 	const date = []
-// 	const tempmax = []
-// 	const tempmin = []
-// 	const tempmean = []
-// 	const pressure = []
-// 	const humidity = []
-// 	const dew_point = []
-// 	const rain = []
-// 	const uvi = []
-// 	const soil_moisture = []
-// 	const soil_temperature = []
-// 	const health = []
-// 	const yield_num = []
-// 	const sprayability = []
-// 	const crop_type = []
-
-// 	if (fieldEntries.length === 0) {
-// 		toast.add({
-// 			severity: 'warn',
-// 			summary: 'No Data',
-// 			detail: 'No data available for the selected field',
-// 			life: 3000,
-// 		})
-// 		return
-// 	}
-
-// 	for (const entry of fieldEntries) {
-// 		field_name.push(entry.field_name)
-// 		date.push(entry.date)
-// 		tempmax.push(entry.tempmax)
-// 		tempmin.push(entry.tempmin)
-// 		tempmean.push(entry.tempmean)
-// 		pressure.push(entry.pressure)
-// 		humidity.push(entry.humidity)
-// 		dew_point.push(entry.dew_point)
-// 		rain.push(entry.rain)
-// 		uvi.push(entry.uvi)
-// 		soil_moisture.push(entry.soil_moisture)
-// 		soil_temperature.push(entry.soil_temperature)
-// 		health.push(entry.health)
-// 		yield_num.push(entry.yield)
-// 		sprayability.push(entry.sprayability)
-// 		crop_type.push(entry.crop_type)
-// 	}
-
-// 	const printContents = JSON.stringify(fieldEntries, null, 2)
-// 	const printWindow = window.open('', '', 'height=600,width=800')
-// 	if (!printWindow) {
-// 		return
-// 	}
-// 	printWindow.document.write('<html><head><title>Print</title></head><body>')
-// 	printWindow.document.write('<pre>' + printContents + '</pre>')
-// 	printWindow.document.write('</body></html>')
-// 	printWindow.onbeforeunload = function () {
-// 		printWindow.close()
-// 	}
-// 	printWindow.document.close()
-// 	printWindow.print()
-// 	printWindow.close()
-// }
-
 const printContent = ref('')
 
 // Function to prepare print content
-const preparePrintContent = () => {
+const preparePrintContent = async () => {
 	if (!selectedField.value) {
 		toast.add({
 			severity: 'error',
@@ -313,9 +240,7 @@ const preparePrintContent = () => {
 		})
 		return false
 	}
-
 	const fieldEntries = entries.value.filter((entry) => entry.field_name === selectedField.value)
-
 	if (fieldEntries.length === 0) {
 		toast.add({
 			severity: 'warn',
@@ -326,50 +251,491 @@ const preparePrintContent = () => {
 		return false
 	}
 
-	// Prepare a simple text representation of the data
+	// Prepare data for the chart
+	const labels = fieldEntries.map((entry) => entry.date)
+	const tempMaxData = fieldEntries.map((entry) => entry.tempmax)
+	const tempMinData = fieldEntries.map((entry) => entry.tempmin)
+	const tempMeanData = fieldEntries.map((entry) => entry.tempmean)
+
+	// Create a canvas element
+	const canvas = document.createElement('canvas')
+	canvas.width = 800
+	canvas.height = 400
+	document.body.appendChild(canvas)
+	const canvas1 = document.createElement('canvas')
+	canvas1.width = 800
+	canvas1.height = 400
+	document.body.appendChild(canvas1)
+	const canvas2 = document.createElement('canvas')
+	canvas2.width = 800
+	canvas2.height = 400
+	document.body.appendChild(canvas2)
+	const canvas3 = document.createElement('canvas')
+	canvas3.width = 800
+	canvas3.height = 400
+	document.body.appendChild(canvas3)
+	const canvas4 = document.createElement('canvas')
+	canvas4.width = 800
+	canvas4.height = 400
+	document.body.appendChild(canvas4)
+	const canvas5 = document.createElement('canvas')
+	canvas5.width = 800
+	canvas5.height = 400
+	document.body.appendChild(canvas5)
+	const canvas6 = document.createElement('canvas')
+	canvas6.width = 800
+	canvas6.height = 400
+	document.body.appendChild(canvas6)
+	const canvas7 = document.createElement('canvas')
+	canvas7.width = 800
+	canvas7.height = 400
+	document.body.appendChild(canvas7)
+	const canvas8 = document.createElement('canvas')
+	canvas8.width = 800
+	canvas8.height = 400
+	document.body.appendChild(canvas8)
+	const canvas9 = document.createElement('canvas')
+	canvas9.width = 800
+	canvas9.height = 400
+	document.body.appendChild(canvas9)
+	const canvas10 = document.createElement('canvas')
+	canvas10.width = 800
+	canvas10.height = 400
+	document.body.appendChild(canvas10)
+
+	const chart = new Chart(canvas, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [
+				{
+					label: 'Max Temperature',
+					data: tempMaxData,
+					borderColor: 'red',
+					fill: false,
+				},
+				{
+					label: 'Mean Temperature',
+					data: tempMeanData,
+					borderColor: 'orange',
+					fill: false,
+				},
+				{
+					label: 'Min Temperature',
+					data: tempMinData,
+					borderColor: 'blue',
+					fill: false,
+				},
+			],
+		},
+		options: {
+			responsive: false,
+			animation: false,
+			title: {
+				display: true,
+				text: `Temperature Data for ${selectedField.value}`,
+			},
+		},
+	})
+	const chart1 = new Chart(canvas1, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [
+				{
+					label: 'Max Temperature',
+					data: tempMaxData,
+					borderColor: 'red',
+					fill: false,
+				},
+				{
+					label: 'Mean Temperature',
+					data: tempMeanData,
+					borderColor: 'orange',
+					fill: false,
+				},
+				{
+					label: 'Min Temperature',
+					data: tempMinData,
+					borderColor: 'blue',
+					fill: false,
+				},
+			],
+		},
+		options: {
+			responsive: false,
+			animation: false,
+			title: {
+				display: true,
+				text: `Temperature Data for ${selectedField.value}`,
+			},
+		},
+	})
+	const chart2 = new Chart(canvas2, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [
+				{
+					label: 'Max Temperature',
+					data: tempMaxData,
+					borderColor: 'red',
+					fill: false,
+				},
+				{
+					label: 'Mean Temperature',
+					data: tempMeanData,
+					borderColor: 'orange',
+					fill: false,
+				},
+				{
+					label: 'Min Temperature',
+					data: tempMinData,
+					borderColor: 'blue',
+					fill: false,
+				},
+			],
+		},
+		options: {
+			responsive: false,
+			animation: false,
+			title: {
+				display: true,
+				text: `Temperature Data for ${selectedField.value}`,
+			},
+		},
+	})
+	const chart3 = new Chart(canvas3, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [
+				{
+					label: 'Max Temperature',
+					data: tempMaxData,
+					borderColor: 'red',
+					fill: false,
+				},
+				{
+					label: 'Mean Temperature',
+					data: tempMeanData,
+					borderColor: 'orange',
+					fill: false,
+				},
+				{
+					label: 'Min Temperature',
+					data: tempMinData,
+					borderColor: 'blue',
+					fill: false,
+				},
+			],
+		},
+		options: {
+			responsive: false,
+			animation: false,
+			title: {
+				display: true,
+				text: `Temperature Data for ${selectedField.value}`,
+			},
+		},
+	})
+	const chart4 = new Chart(canvas4, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [
+				{
+					label: 'Max Temperature',
+					data: tempMaxData,
+					borderColor: 'red',
+					fill: false,
+				},
+				{
+					label: 'Mean Temperature',
+					data: tempMeanData,
+					borderColor: 'orange',
+					fill: false,
+				},
+				{
+					label: 'Min Temperature',
+					data: tempMinData,
+					borderColor: 'blue',
+					fill: false,
+				},
+			],
+		},
+		options: {
+			responsive: false,
+			animation: false,
+			title: {
+				display: true,
+				text: `Temperature Data for ${selectedField.value}`,
+			},
+		},
+	})
+	const chart5 = new Chart(canvas5, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [
+				{
+					label: 'Max Temperature',
+					data: tempMaxData,
+					borderColor: 'red',
+					fill: false,
+				},
+				{
+					label: 'Mean Temperature',
+					data: tempMeanData,
+					borderColor: 'orange',
+					fill: false,
+				},
+				{
+					label: 'Min Temperature',
+					data: tempMinData,
+					borderColor: 'blue',
+					fill: false,
+				},
+			],
+		},
+		options: {
+			responsive: false,
+			animation: false,
+			title: {
+				display: true,
+				text: `Temperature Data for ${selectedField.value}`,
+			},
+		},
+	})
+	const chart6 = new Chart(canvas6, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [
+				{
+					label: 'Max Temperature',
+					data: tempMaxData,
+					borderColor: 'red',
+					fill: false,
+				},
+				{
+					label: 'Mean Temperature',
+					data: tempMeanData,
+					borderColor: 'orange',
+					fill: false,
+				},
+				{
+					label: 'Min Temperature',
+					data: tempMinData,
+					borderColor: 'blue',
+					fill: false,
+				},
+			],
+		},
+		options: {
+			responsive: false,
+			animation: false,
+			title: {
+				display: true,
+				text: `Temperature Data for ${selectedField.value}`,
+			},
+		},
+	})
+	const chart7 = new Chart(canvas7, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [
+				{
+					label: 'Max Temperature',
+					data: tempMaxData,
+					borderColor: 'red',
+					fill: false,
+				},
+				{
+					label: 'Mean Temperature',
+					data: tempMeanData,
+					borderColor: 'orange',
+					fill: false,
+				},
+				{
+					label: 'Min Temperature',
+					data: tempMinData,
+					borderColor: 'blue',
+					fill: false,
+				},
+			],
+		},
+		options: {
+			responsive: false,
+			animation: false,
+			title: {
+				display: true,
+				text: `Temperature Data for ${selectedField.value}`,
+			},
+		},
+	})
+	const chart8 = new Chart(canvas8, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [
+				{
+					label: 'Max Temperature',
+					data: tempMaxData,
+					borderColor: 'red',
+					fill: false,
+				},
+				{
+					label: 'Mean Temperature',
+					data: tempMeanData,
+					borderColor: 'orange',
+					fill: false,
+				},
+				{
+					label: 'Min Temperature',
+					data: tempMinData,
+					borderColor: 'blue',
+					fill: false,
+				},
+			],
+		},
+		options: {
+			responsive: false,
+			animation: false,
+			title: {
+				display: true,
+				text: `Temperature Data for ${selectedField.value}`,
+			},
+		},
+	})
+	const chart9 = new Chart(canvas9, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [
+				{
+					label: 'Max Temperature',
+					data: tempMaxData,
+					borderColor: 'red',
+					fill: false,
+				},
+				{
+					label: 'Mean Temperature',
+					data: tempMeanData,
+					borderColor: 'orange',
+					fill: false,
+				},
+				{
+					label: 'Min Temperature',
+					data: tempMinData,
+					borderColor: 'blue',
+					fill: false,
+				},
+			],
+		},
+		options: {
+			responsive: false,
+			animation: false,
+			title: {
+				display: true,
+				text: `Temperature Data for ${selectedField.value}`,
+			},
+		},
+	})
+	const chart10 = new Chart(canvas10, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [
+				{
+					label: 'Max Temperature',
+					data: tempMaxData,
+					borderColor: 'red',
+					fill: false,
+				},
+				{
+					label: 'Mean Temperature',
+					data: tempMeanData,
+					borderColor: 'orange',
+					fill: false,
+				},
+				{
+					label: 'Min Temperature',
+					data: tempMinData,
+					borderColor: 'blue',
+					fill: false,
+				},
+			],
+		},
+		options: {
+			responsive: false,
+			animation: false,
+			title: {
+				display: true,
+				text: `Temperature Data for ${selectedField.value}`,
+			},
+		},
+	})
+
+	// Wait for the chart to render
+	await new Promise((resolve) => setTimeout(resolve, 100))
+
+	// Convert the chart to an image
+	const chartImage = canvas.toDataURL('image/png')
+	const chartImage1 = canvas.toDataURL('image1/png')
+	const chartImage2 = canvas.toDataURL('image2/png')
+	const chartImage3 = canvas.toDataURL('image3/png')
+	const chartImage4 = canvas.toDataURL('image4/png')
+	const chartImage5 = canvas.toDataURL('image5/png')
+	const chartImage6 = canvas.toDataURL('image6/png')
+	const chartImage7 = canvas.toDataURL('image7/png')
+	const chartImage8 = canvas.toDataURL('image8/png')
+	const chartImage9 = canvas.toDataURL('image9/png')
+	const chartImage10 = canvas.toDataURL('image10/png')
+
+	// Remove the canvas from the DOM
+	document.body.removeChild(canvas)
+
+	// Prepare the print content
 	printContent.value = `
     <h1>Field: ${selectedField.value}</h1>
     <h2>Crop Type: ${fieldEntries[0].crop_type}</h2>
-    <table border="1">
-      <tr>
-        <th>Date</th>
-        <th>Temp Max</th>
-        <th>Temp Min</th>
-        <th>Temp Mean</th>
-        <th>Pressure</th>
-        <th>Humidity</th>
-        <th>Rain</th>
-      </tr>
-      ${fieldEntries
-			.map(
-				(entry) => `
-        <tr>
-          <td>${entry.date}</td>
-          <td>${entry.tempmax}</td>
-          <td>${entry.tempmin}</td>
-          <td>${entry.tempmean}</td>
-          <td>${entry.pressure}</td>
-          <td>${entry.humidity}</td>
-          <td>${entry.rain}</td>
-        </tr>
-      `,
-			)
-			.join('')}
-    </table>
+	<div>
+		<h3>Temperature Chart</h3>
+		<img src="${chartImage}" alt="Temperature Chart" style="width: 100%; max-width: 800px;"></div>
+		<div>
+		<h3>Pressure Chart</h3>
+		<img src="${chartImage1}" alt="Pressure Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<h3>Humidity Chart</h3>
+		<img src="${chartImage2}" alt="Humidity Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<h3>Dew Point Chart</h3>
+		<img src="${chartImage3}" alt="Dew Point Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<h3>Rainfall Chart</h3>
+		<img src="${chartImage4}" alt="Rainfall Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<h3>UV Index Chart</h3>
+		<img src="${chartImage5}" alt="UV Index Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<h3>Soil Moisture Chart</h3>
+		<img src="${chartImage6}" alt="Soil Moisture Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<h3>Soil Temperature Chart</h3>
+		<img src="${chartImage7}" alt="Soil Temperature Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<h3>Health Index Chart</h3>
+		<img src="${chartImage8}" alt="Health Index Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<h3>Yield Chart</h3>
+		<img src="${chartImage9}" alt="Yield Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<h3>Sprayability Chart</h3>
+		<img src="${chartImage10}" alt="Sprayability Chart" style="width: 100%; max-width: 800px;"></div>
   `
 	return true
 }
 
-// Function to trigger print
-const triggerPrint = () => {
-	if (!preparePrintContent()) return
-
+const triggerPrint = async () => {
+	if (!(await preparePrintContent())) return
 	const printWindow = window.open('', '_blank')
 	if (!printWindow) {
 		alert('Please allow pop-ups for this website to enable printing.')
 		return
 	}
-
 	printWindow.document.write(`
     <html>
       <head>
@@ -380,15 +746,12 @@ const triggerPrint = () => {
       </body>
     </html>
   `)
-
 	printWindow.document.close()
 	printWindow.focus()
-
-	// Attempt to print after a short delay
 	setTimeout(() => {
 		printWindow.print()
 		printWindow.close()
-	}, 250)
+	}, 500)
 }
 
 const convertToCSV = (objArray: any[], headers: string[]) => {
