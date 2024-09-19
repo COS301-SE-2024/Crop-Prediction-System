@@ -62,7 +62,6 @@ class Sensor:
                 "nitrogen": result[4],
                 "phosphorus": result[5],
                 "potassium": result[6]
-                # "salinity": result[7]
             }
 
         except Exception as e:
@@ -81,8 +80,13 @@ class Sensor:
 if __name__ == "__main__":
     sensor = Sensor()  # Create sensor object
     try:
-        data = sensor.get_all_data()
-        if data:
-            print("Sensor readings not npk:", data)
+        # while no key is pressed
+        while True:
+            data = sensor.get_all_data()
+            if data:
+                print("Sensor readings not npk:", data)
+            time.sleep(1) # can change to 3 hours for easy value reading
+            if input("0 to exit, any other key to continue: ") == "0":
+                break
     finally:
         sensor.close() 
