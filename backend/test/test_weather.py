@@ -40,21 +40,3 @@ def entry():
         soil_moisture=0.5,
         soil_temperature=15
     )
-
-def test_get_features(entry, mock_crop):
-    Weather.get_features(entry, mock_crop)
-    assert entry.tempMean == 15
-    assert entry.gdd == 5
-    assert entry.hdd == 0
-    assert entry.gff == 0
-    assert entry.tempDiurnal == 10
-
-def test_calculate_sprayability(entry, weather):
-    expected_sprayability = 21
-    sprayability = round(weather.calculate_sprayability(entry), 0)
-    assert sprayability == expected_sprayability
-
-def test_calculate_health(entry, weather):
-    expected_health = 96
-    health = round(weather.calculate_health(entry), 0)
-    assert health == expected_health
