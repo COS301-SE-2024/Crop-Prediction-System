@@ -6,14 +6,12 @@ from backend.definitions.entry import Entry
 from backend.definitions.crop import Crop
 from backend.logic.weather import Weather
 from backend.logic.calculateHectare import calculate_hectares_from_coordinates
-from backend.logic.aggregate import Aggregate
 import datetime
 from collections import defaultdict
 
 class supabaseFunctions:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
     weather = Weather()
-    agg = Aggregate()
     
     def __init__(self):
         pass
@@ -80,72 +78,6 @@ class supabaseFunctions:
                 break
         
         return stage
-        
-    @staticmethod
-    def aggregate():
-        try:
-            # Fetch fields
-            response = supabaseFunctions.__sbClient.table("field_info").select("*").execute()
-            if response.data == []:
-                return {"error": "Data not found. Please create a field first."}
-
-            # Dictionary to accumulate entries by field and stage
-            entries_by_field_stage = defaultdict(lambda: defaultdict(list))
-
-            for field in response.data:
-                # Get all entries for each field
-                response2 = supabaseFunctions.__sbClient.table("field_data").select("*").eq("field_id", field["id"]).execute()
-                if response2.data == []:
-                    return {"error": "Data not found. Please create an entry first."}
-                
-                for entry in response2.data:
-                    # Get crop info
-                    c = supabaseFunctions.getCrop(field["crop_type"])
-
-                    # Determine current stage
-                    stage = supabaseFunctions.getCurrentStage(c)
-
-                    # Build an Entry object
-                    e = Entry(
-                        field_id=field["id"],
-                        timestamp=datetime.datetime.strptime(entry["date"], "%Y-%m-%d").timestamp(),
-                        summary=entry["summary"],
-                        tempMax=entry["tempmax"],
-                        tempMin=entry["tempmin"],
-                        tempDiurnal=entry["tempdiurnal"],
-                        tempMean=entry["tempmean"],
-                        pressure=entry["pressure"],
-                        humidity=entry["humidity"],
-                        dew_point=entry["dew_point"],
-                        wind_speed=entry["wind_speed"],
-                        wind_deg=entry["wind_deg"],
-                        wind_gust=entry["wind_gust"],
-                        clouds=entry["clouds"],
-                        pop=entry["pop"],
-                        rain=entry["rain"],
-                        uvi=entry["uvi"],
-                        gff=entry["gff"],
-                        gdd=entry["gdd"],
-                        hdd=entry["hdd"],
-                        soil_moisture=entry["soil_moisture"],
-                        soil_temperature=entry["soil_temperature"],
-                        pet=entry["pet"]
-                    )
-
-                    # Accumulate entries by field and stage
-                    if stage:
-                        entries_by_field_stage[field["id"]][stage].append(e)
-
-            # Aggregate data for each field and stage
-            for field_id, stages in entries_by_field_stage.items():
-                for stage, entries in stages.items():
-                    supabaseFunctions.agg.aggregate(entries, stage, field_id)
-                    print(f"Aggregated data for field {field_id}, stage {stage}", flush=True)
-
-            return {"success": "Aggregated data for all fields"}
-        except Exception as e:
-            print(e)
-            return {"error": "Failed to aggregate data", "error_message": str(e)}
 
     @staticmethod
     def getFieldData(fieldid: str, input_date: str):

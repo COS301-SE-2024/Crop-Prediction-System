@@ -8,6 +8,7 @@ from backend.model.FusionModel import FusionModel
 import pandas as pd
 import datetime
 import os
+import json
 
 class Pipeline:
     def __init__(self):
@@ -100,21 +101,42 @@ class Pipeline:
 
         X, y = self.load_data(c, field_id)
 
-        print(X.shape)
-        print(X.tail(25))
+        # print(X.shape)
+        # print(X.tail(25))
 
         self.model = None # Reset the model
         self.model = FusionModel(X, y, c)
-        print(self.model.train())
+        modelResponse = self.model.train()
+
+        print(modelResponse, flush=True)
+
+        # Convert to double quotes
+        modelResponse = str(modelResponse).replace("'", "\"")
+
+        # Parse as JSON
+        modelResponse = json.loads(modelResponse)
+
+        # Extract predictions
+        predictions = modelResponse['prediction']
+
+        try:
+            for i in range(0,6):
+                result = self.sb.table('data').update({
+                    'pred_yield': predictions[i]
+                }).eq(
+                    'field_id', field_id
+                ).eq(
+                    'date', (datetime.datetime.now() + datetime.timedelta(days=i)).isoformat()
+                ).execute()
+        except Exception as e:
+            pass
 
         return {
             "status" : "Model trained successfully",
-            # "mse" : mse,
-            # "rmse" : rmse,
-            # "predictions" : prediction
+            "model" : modelResponse
         }
 
 if __name__ == '__main__':
     p = Pipeline()
     p.train("14420bc8-48e3-47bc-ab83-1a6498380588")
-    p.train("975f9c3b-ed7c-49cd-b0e1-99b9c2bd7b9f")
+    # p.train("975f9c3b-ed7c-49cd-b0e1-99b9c2bd7b9f")

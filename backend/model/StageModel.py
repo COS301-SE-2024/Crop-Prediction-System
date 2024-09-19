@@ -2,6 +2,7 @@ import pandas as pd
 from datetime import date
 import matplotlib.pyplot as plt
 from backend.definitions.crop import Crop
+import datetime
 
 # XGBoost
 import xgboost as xgb
@@ -24,6 +25,8 @@ class StageModel():
         self.current_stage = None
 
         self.model = None
+
+        # self.predX = None
 
         self.prepare()
 
@@ -77,7 +80,7 @@ class StageModel():
         # print(y_pred)
 
         # Make predictions on the entire dataset
-        y_pred = best_model.predict(self.X)
+        # y_pred = best_model.predict(self.X)
 
         self.model = best_model
 
@@ -95,7 +98,8 @@ class StageModel():
 
 
     def predict(self):
-        return self.model.predict(self.X)
+        # Predict on the current year
+        return self.model.predict(self.X.tail(1))
 
     def prepare(self):
         # Sort crop stages by day
@@ -128,6 +132,15 @@ class StageModel():
 
         self.X = self.X[self.X["stage"].notnull()]
 
+        # # Prediction date is current date + 5 days
+        # self.predX = self.X[self.X["day"] >= day_of_year]
+
+        # # Select only data from this year
+        # self.predX = self.predX[self.predX["year"] == today.year]
+
+        # # In predX, drop date, day, pentadal, weekly, biweekly, monthly, quarterly, stage, year
+        # self.predX.drop(['date', 'day', 'stage'], axis=1, inplace=True)
+
         # Remove data > day of year
         self.X = self.X[self.X["day"] <= day_of_year]
 
@@ -152,7 +165,7 @@ class StageModel():
         for col in self.X.columns:
             if self.X[col].dtype == 'float64':
                 self.X[col] = self.X[col].apply(lambda x: self.X[col].mean() if x < self.X[col].mean() - 3 * self.X[col].std() or x > self.X[col].mean() + 3 * self.X[col].std() else x)
-        
+
         # Merge with yield data
         self.X = pd.merge(self.X, self.y, on='year', how='inner')
 

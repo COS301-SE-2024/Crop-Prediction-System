@@ -40,6 +40,15 @@ class MultiScaleModel():
 
         self.models = []
 
+        self.predX = {
+            'pentadal': None,
+            'weekly': None,
+            'biweekly': None,
+            'monthly': None,
+            'quarterly': None,
+            'yearly': None
+        }
+
         self.prepare()
     
     def train(self):
@@ -74,6 +83,9 @@ class MultiScaleModel():
             # Merge X and y on year (X yearly and y year)
             X = pd.merge(X, y, on='yearly', how='inner')
             y = X["yield"]
+
+            # Drop X's yield column
+            X = X.drop(columns=['yield'])
 
             # Split the data
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
@@ -139,38 +151,9 @@ class MultiScaleModel():
 
         for i in range(len(self.models)):
             freq = list(self.X.keys())[i]
-            X = self.X[freq]
-            y = self.y[freq]
-
-            # Rename y's yearly column to match X's yearly column
-            y = y.rename(columns={'year': 'yearly'})
-            
-            # Get current date
-            current_date = datetime.datetime.now()
-
-            # Get current pentadal
-            if freq != 'yearly':
-                if freq == 'pentadal':
-                    current_date = current_date.timetuple().tm_yday // 5
-                elif freq == 'weekly':
-                    current_date = current_date.isocalendar().week
-                elif freq == 'biweekly':
-                    current_date = current_date.timetuple().tm_yday // 14
-                elif freq == 'monthly':
-                    current_date = current_date.month
-                elif freq == 'quarterly':
-                    current_date = pd.to_datetime(current_date).quarter
-                
-                X = X[X[freq] == current_date]
-            else:
-                pass
-
-            # Merge X and y on year (X yearly and y year)
-            X = pd.merge(X, y, on='yearly', how='inner')
-            y = X["yield"]
 
             # Predict
-            y_pred = self.models[i].predict(X)
+            y_pred = self.models[i].predict(self.predX[freq])
             predictions.append(y_pred)
 
             # Show predictions next to actual
@@ -186,8 +169,6 @@ class MultiScaleModel():
         return predictions
 
     def prepare(self):
-        # TODO: Drop rows where date is the same, but keep the row where field_id is not NULL
-
         # Convert all to date
         for freq in self.X.keys():
             self.X[freq]["date"] = pd.to_datetime(self.X[freq]["date"])
@@ -216,6 +197,39 @@ class MultiScaleModel():
         # Prepare self.X for each frequency
         for freq in self.X.keys():
             self.X[freq] = self.aggregate(freq, self.X)
+
+        # For self.predX, select current date and 5 days ahead. Select the datasets of those dates
+        for i in range(0,6):
+            curr = datetime.datetime.now()
+            curr += datetime.timedelta(days=i)
+            for freq in self.X.keys():
+                current_date = None
+
+                if freq != 'yearly':
+                    if freq == 'pentadal':
+                        current_date = curr.timetuple().tm_yday // 5
+                    elif freq == 'weekly':
+                        current_date = curr.isocalendar().week
+                    elif freq == 'biweekly':
+                        current_date = curr.timetuple().tm_yday // 14
+                    elif freq == 'monthly':
+                        current_date = curr.month
+                    elif freq == 'quarterly':
+                        current_date = pd.to_datetime(curr).quarter
+                    
+                    if self.predX[freq] is None:
+                        self.predX[freq] = self.X[freq][self.X[freq][freq] == current_date]
+                    else:
+                        self.predX[freq] = pd.concat([self.predX[freq], self.X[freq][self.X[freq][freq] == current_date]])
+                else:
+                    if self.predX[freq] is None:
+                        self.predX[freq] = self.X[freq][self.X[freq][freq] == curr.year]
+                    else:
+                        self.predX[freq] = pd.concat([self.predX[freq], self.X[freq][self.X[freq][freq] == curr.year]])
+
+        # Select only this year
+        for freq in self.predX.keys():
+            self.predX[freq] = self.predX[freq][self.predX[freq]["yearly"] == datetime.datetime.now().year]
 
         return self.X
     
