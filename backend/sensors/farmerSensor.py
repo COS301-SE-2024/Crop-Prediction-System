@@ -82,12 +82,7 @@ if __name__ == "__main__":
     sensor = Sensor()  # Create sensor object
     try:
         data = sensor.get_all_data()
-
-        # data2 = sensor.get_NPK_salinity()
         if data:
             print("Sensor readings not npk:", data)
-            # print("Sensor readings npk:", data2)
     finally:
         sensor.close() 
-
-
