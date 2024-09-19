@@ -69,29 +69,6 @@ class Sensor:
             print(f"An error occurred: {e}")
             return None
 
-    def get_NPK_salinity(self):
-        
-        try:
-            command = b'\x01\x03\x00\x00\x00\x04\x44\x09'
-            self.send_command(command)
-            response = self.read_response()
-            result = self.process_data(response)
-
-            if len(result) != 4:
-                raise ValueError(f"Expected 4 values, got {len(result)}")
-
-            return {
-                "nitrogen": result[0],
-                "phosphorus": result[1],
-                "potassium": result[2],
-                "salinity": result[3]
-            }
-
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return None
-
-
 
     def close(self):
         if self.ser.is_open:
@@ -112,4 +89,5 @@ if __name__ == "__main__":
             # print("Sensor readings npk:", data2)
     finally:
         sensor.close() 
+
 
