@@ -1,9 +1,32 @@
 import serial
 import time
+import serial.tools.list_ports
 
 class Sensor:
-    def __init__(self, port='COM12', baudrate=4800):
-        self.ser = serial.Serial(port=port, baudrate=baudrate, timeout=5)
+    def __init__(self, baudrate=4800):
+        self.ser = None
+        self.baudrate = baudrate
+        self.port = self.find_ch340_port()
+        if self.port:
+            self.connect()
+        else:
+            raise serial.SerialException("No USB-SERIAL CH340 device found")
+
+    @staticmethod
+    def find_ch340_port():
+        ports = list(serial.tools.list_ports.comports())
+        for port in ports:
+            if "USB-SERIAL CH340" in port.description:
+                return port.device
+        return None
+    
+    def connect(self):
+        try:
+            self.ser = serial.Serial(port=self.port, baudrate=self.baudrate)
+            print(f"Connected to {self.port}")
+        except serial.SerialException as e:
+            print(f"Failed to connect to {self.port}: {e}")
+            self.ser = None
 
     @staticmethod
     def twos_complement(hexstr, bits):
