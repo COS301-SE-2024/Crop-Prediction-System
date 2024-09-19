@@ -51,7 +51,8 @@ class API:
         #sensor routes
         self.app.add_api_route("/storeUPSensorData", self.storeUPSensorData, methods=["GET"])
         self.app.add_api_route("/addFieldToSensor", self.addFieldToSensor, methods=["POST"])
-
+        self.app.add_api_route("/addSensor", self.addSensor, methods=["GET"])
+    
     def main(self, request: Request):
         return {
             "Welcome": "Welcome to the TerraByte API",
@@ -116,6 +117,9 @@ class API:
     
     def addFieldToSensor(self, request: Request, fieldID: str, sensorID: str):
         return self.sb.addFieldToSensor(sensorID, fieldID)
+    
+    def addSensor(self, request: Request, sensorID: str):
+        return self.sb.createSensor(sensorID)
 
 api_instance = API()
 app = api_instance.app
