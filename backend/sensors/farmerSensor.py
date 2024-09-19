@@ -3,7 +3,7 @@ import time
 
 class Sensor:
     def __init__(self, port='COM12', baudrate=4800):
-        self.ser = serial.Serial(port=port, baudrate=baudrate)
+        self.ser = serial.Serial(port=port, baudrate=baudrate, timeout=5)
 
     @staticmethod
     def twos_complement(hexstr, bits):
@@ -44,7 +44,33 @@ class Sensor:
 
         return result
 
-    def get_moisture_temp_conductivity_ph(self):
+    def get_all_data(self):
+        try:
+            command = b'\x01\x03\x00\x00\x00\x07\x04\x08'
+            self.send_command(command)
+            response = self.read_response()
+            result = self.process_data(response)
+
+            if len(result) != 4:
+                raise ValueError(f"Expected 4 values, got {len(result)}")
+
+            return {
+                "humidity": result[0],
+                "temperature": result[1],
+                "conductivity": result[2],
+                "ph": result[3],
+                "nitrogen": result[4],
+                "phosphorus": result[5],
+                "potassium": result[6]
+                # "salinity": result[7]
+            }
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
+
+    def get_NPK_salinity(self):
+        
         try:
             command = b'\x01\x03\x00\x00\x00\x04\x44\x09'
             self.send_command(command)
@@ -55,15 +81,17 @@ class Sensor:
                 raise ValueError(f"Expected 4 values, got {len(result)}")
 
             return {
-                "moisture": result[0],
-                "temperature": result[1],
-                "conductivity": result[2],
-                "ph": result[3]
+                "nitrogen": result[0],
+                "phosphorus": result[1],
+                "potassium": result[2],
+                "salinity": result[3]
             }
 
         except Exception as e:
             print(f"An error occurred: {e}")
             return None
+
+
 
     def close(self):
         if self.ser.is_open:
@@ -76,8 +104,12 @@ class Sensor:
 if __name__ == "__main__":
     sensor = Sensor()  # Create sensor object
     try:
-        data = sensor.get_moisture_temp_conductivity_ph()
+        data = sensor.get_all_data()
+
+        # data2 = sensor.get_NPK_salinity()
         if data:
-            print("Sensor readings:", data)
+            print("Sensor readings not npk:", data)
+            # print("Sensor readings npk:", data2)
     finally:
         sensor.close() 
+
