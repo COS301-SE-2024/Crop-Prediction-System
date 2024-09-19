@@ -80,13 +80,20 @@ class supabaseFunctions:
         return stage
 
     @staticmethod
-    def getFieldData(fieldid: str, input_date: str):
+    def getFieldData(fieldid: str, input_date: str = None):
         try:
-            dict = {"fieldid": fieldid, "input_date": input_date}
-            response = supabaseFunctions.__sbClient.rpc("get_field_data_by_id", dict).execute()
-            if response.data == []:
-                return {"error": "Data not found. Field ID may be invalid or may not have any data."}
-            return response.data
+            if input_date is None:
+                dict = {"fieldid": fieldid}
+                response = supabaseFunctions.__sbClient.rpc("get_field_data_by_id", dict).execute()
+                if response.data == []:
+                    return {"error": "Data not found. Field ID may be invalid or may not have any data."}
+                return response.data
+            else:
+                dict = {"fieldid": fieldid, "input_date": input_date}
+                response = supabaseFunctions.__sbClient.rpc("get_field_data_by_id", dict).execute()
+                if response.data == []:
+                    return {"error": "Data not found. Field ID may be invalid or may not have any data."}
+                return response.data
         except Exception as e:
             print(e)
             return {"error": "Failed to get field data", "error_message": e}
@@ -232,9 +239,10 @@ class supabaseFunctions:
     def updateEntry(fieldData: dict):
         try:
             print(fieldData, flush=True)
-            # response = supabaseFunctions.__sbClient.table("field_data").update(fieldData).match({ "field_id": fieldData.field_id, "date": fieldData.date }).execute()
 
-            response = supabaseFunctions.__sbClient.table("field_data").update(fieldData).eq("field_id", fieldData["field_id"]).eq("date", fieldData["date"]).execute()
+            # response = supabaseFunctions.__sbClient.table("field_data").update(fieldData).eq("field_id", fieldData["field_id"]).eq("date", fieldData["date"]).execute()
+
+            response = supabaseFunctions.__sbClient.table("data").update(fieldData).eq("field_id", fieldData["field_id"]).eq("date", fieldData["date"]).execute()
             
             print(response, flush=True)
             

@@ -6,7 +6,6 @@ from backend.definitions.entry import Entry
 from backend.definitions.crop import Crop
 from backend.logic.calculateHectare import calculate_hectares_from_coordinates
 from backend.logic.weather import Weather
-from backend.logic.aggregate import Aggregate
 from backend.database import supabaseInstance
 
 # Import your supabaseFunctions class here

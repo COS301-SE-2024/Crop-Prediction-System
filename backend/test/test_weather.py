@@ -34,19 +34,11 @@ def entry():
         pressure=1000,
         humidity=50,
         dew_point=5,
-        wind_speed=10,
-        wind_deg=180,
-        wind_gust=15,
         clouds=50,
-        pop=0.5,
         rain=0.5,
         uvi=5,
-        gff=0,
-        gdd=5,
-        hdd=5,
         soil_moisture=0.5,
-        soil_temperature=15,
-        pet=5
+        soil_temperature=15
     )
 
 def test_get_features(entry, mock_crop):

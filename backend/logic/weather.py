@@ -56,11 +56,9 @@ class Weather:
         message = self.__gemini.send_message(summary_data['weather_overview'])
 
         try:
-            response = Weather.__sbClient.table('data').upsert({
-                'field_id': str(field_id),
-                'date': datetime.datetime.now().strftime('%Y-%m-%d'),
+            response = Weather.__sbClient.table('data').update({
                 'summary': message,
-            }).execute()
+            }).eq('field_id', field_id).eq('date', datetime.datetime.now().strftime('%Y-%m-%d')).execute()
         except Exception as e:
             return {
                 'error': e
