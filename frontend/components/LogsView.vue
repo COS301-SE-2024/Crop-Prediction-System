@@ -357,7 +357,7 @@ const preparePrintContent = async () => {
 			labels: labels,
 			datasets: [
 				{
-					label: 'Max Temperature',
+					label: 'Pressure',
 					data: pressureData,
 					borderColor: 'red',
 					fill: false,
@@ -461,7 +461,7 @@ const preparePrintContent = async () => {
 			labels: labels,
 			datasets: [
 				{
-					label: 'Max Temperature',
+					label: 'UV Index',
 					data: uviData,
 					borderColor: 'red',
 					fill: false,
@@ -643,30 +643,32 @@ const preparePrintContent = async () => {
 
 	// Prepare the print content
 	printContent.value = `
-    <h1>Field: ${selectedField.value}</h1>
-    <h2>Crop Type: ${fieldEntries[0].crop_type}</h2>
-	<div>
+	<div class="headings">
+    	<h2>Field: ${selectedField.value}</h2>
+		<h2>Crop Type: ${fieldEntries[0].crop_type}</h2>
+	</div>
+	<div class="chart-container">
 		<h3>Temperature Chart</h3>
 		<img src="${chartImage}" alt="Temperature Chart" style="width: 100%; max-width: 800px;"></div>
-		<div>
+		<div class="chart-container">
 		<h3>Pressure Chart</h3>
-		<img src="${chartImage1}" alt="Pressure Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<img src="${chartImage1}" alt="Pressure Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
 		<h3>Humidity Chart</h3>
-		<img src="${chartImage2}" alt="Humidity Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<img src="${chartImage2}" alt="Humidity Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
 		<h3>Dew Point Chart</h3>
-		<img src="${chartImage3}" alt="Dew Point Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<img src="${chartImage3}" alt="Dew Point Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
 		<h3>Rainfall Chart</h3>
-		<img src="${chartImage4}" alt="Rainfall Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<img src="${chartImage4}" alt="Rainfall Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
 		<h3>UV Index Chart</h3>
-		<img src="${chartImage5}" alt="UV Index Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<img src="${chartImage5}" alt="UV Index Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
 		<h3>Soil Moisture Chart</h3>
-		<img src="${chartImage6}" alt="Soil Moisture Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<img src="${chartImage6}" alt="Soil Moisture Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
 		<h3>Soil Temperature Chart</h3>
-		<img src="${chartImage7}" alt="Soil Temperature Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<img src="${chartImage7}" alt="Soil Temperature Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
 		<h3>Health Index Chart</h3>
-		<img src="${chartImage8}" alt="Health Index Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<img src="${chartImage8}" alt="Health Index Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
 		<h3>Yield Chart</h3>
-		<img src="${chartImage9}" alt="Yield Chart" style="width: 100%; max-width: 800px;"></div><div>
+		<img src="${chartImage9}" alt="Yield Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
 		<h3>Sprayability Chart</h3>
 		<img src="${chartImage10}" alt="Sprayability Chart" style="width: 100%; max-width: 800px;"></div>
   `
@@ -675,27 +677,62 @@ const preparePrintContent = async () => {
 
 const triggerPrint = async () => {
 	if (!(await preparePrintContent())) return
-	const printWindow = window.open('', '_blank')
-	if (!printWindow) {
-		alert('Please allow pop-ups for this website to enable printing.')
-		return
+
+	const printSection = document.createElement('div')
+	printSection.id = 'printSection'
+	printSection.innerHTML = printContent.value
+	document.body.appendChild(printSection)
+
+	const style = document.createElement('style')
+	style.textContent = `
+		@media print {
+			body * {
+				visibility: hidden;
+			}
+			#printSection, #printSection * {
+				visibility: visible;
+			}
+			#printSection {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+			}
+			.chart-container {
+				page-break-inside: avoid; /* Prevent splitting graphs */
+				break-inside: avoid;
+				margin-bottom: 20px;
+			}
+			.headings {
+				display: flex;	
+				flex-direction: row;
+				justify-content: space-between;
+				margin-bottom: 20px;
+			}
+			canvas {
+				width: 100% !important; /* Ensure charts fit within the page width */
+				height: auto !important;
+			}
+			@page {
+				size: auto;
+				margin: 20mm; /* Adjust margins to fit content */
+			}
+			h2 {
+				font-size: 18pt;
+				font-weight: bold;
+				padding-bottom: 10px;
+			}
+		}
+
+	`
+	document.head.appendChild(style)
+
+	window.print()
+
+	window.onafterprint = () => {
+		document.body.removeChild(printSection)
+		document.head.removeChild(style)
 	}
-	printWindow.document.write(`
-    <html>
-      <head>
-        <title>Print ${selectedField.value}</title>
-      </head>
-      <body>
-        ${printContent.value}
-      </body>
-    </html>
-  `)
-	printWindow.document.close()
-	printWindow.focus()
-	setTimeout(() => {
-		printWindow.print()
-		printWindow.close()
-	}, 500)
 }
 
 const convertToCSV = (objArray: any[], headers: string[]) => {
