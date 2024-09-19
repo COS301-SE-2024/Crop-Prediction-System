@@ -11,6 +11,8 @@ import datetime
 from collections import defaultdict
 from backend.sensors.getData import getNewSensorData
 
+from backend.sensors.farmerSensor import get_all_data
+
 class supabaseFunctions:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
     weather = Weather()
@@ -412,7 +414,8 @@ class supabaseFunctions:
         except Exception as e:
             print(e)
             return {"error": "Failed to add field to sensor", "error_message": str(e)}
-        
+    
+    @staticmethod    
     def createSensor(self, sensorID: str = None):
         try:
             response = supabaseFunctions.__sbClient.table("up_sensor_data").insert({"device_eui": sensorID}).execute()
@@ -422,3 +425,22 @@ class supabaseFunctions:
         except Exception as e:
             print(e)
             return {"error": "Failed to create sensor", "error_message": str(e)}
+
+    @staticmethod
+    def getFarmerSensorData():
+        try:
+            data = get_all_data()
+        # data =  {
+            #     "humidity": result[0],
+            #     "temperature": result[1],
+            #     "conductivity": result[2],
+            #     "ph": result[3],
+            #     "nitrogen": result[4],
+            #     "phosphorus": result[5],
+            #     "potassium": result[6]
+            # }
+            response = supabaseFunctions.__sbClient.table("iot_sensor_data").insert({"soil_moisture":data.humidity} )
+
+        except Exception as e:
+            #  fix this ofc
+            print("Oh no")

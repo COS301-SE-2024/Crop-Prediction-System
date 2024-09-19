@@ -123,7 +123,7 @@ class API:
         return self.sb.createSensor(sensorID)
     
     def getFarmerSensorData(self, request: Request, sensorID: str):
-        return self.sb.createFarmerSensorData(sensorID)
+        return self.sb.getFarmerSensorData(sensorID)
 
 api_instance = API()
 app = api_instance.app
