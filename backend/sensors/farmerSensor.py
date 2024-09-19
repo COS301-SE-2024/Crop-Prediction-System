@@ -16,7 +16,7 @@ try:
         # count = 0
         # while count < 10:
         print("Writing data")
-        bytesWritten = ser.write(b'\0x01\0x03\0x00\0x00\0x00\0x07\0x04\0x08')
+        bytesWritten = ser.write(b'\x01\x03\x00\x00\x00\x07\x04\x08')
         print(bytesWritten)
         print("Data written")
         print("Reading data")
@@ -43,4 +43,3 @@ try:
         print("Failed to open serial port.")
 finally:
     ser.close()  # Ensure the serial port is closed
-
