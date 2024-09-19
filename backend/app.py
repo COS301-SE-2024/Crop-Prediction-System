@@ -119,7 +119,7 @@ class API:
             background_tasks.add_task(self.pipeline.train_all)
             return {"message": "Started training for all fields"}
         if field_id is None:
-            return {"error": "Field ID is required"}
+            return {"error": "Field ID is required or `batch` must be set to `true`"}
         if waitForCompletion:
             return self.pipeline.train(field_id)
         background_tasks.add_task(self.pipeline.train, field_id)
