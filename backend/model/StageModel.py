@@ -155,7 +155,9 @@ class StageModel():
             'clouds': 'mean',
             'uvi': 'mean',
             'tempmean': 'mean',
-            'tempdiurnal': 'mean'
+            'tempdiurnal': 'mean',
+            'soil_moisture': 'mean',
+            'soil_temperature': 'mean'
         }).reset_index()
 
         # Select only current stage
