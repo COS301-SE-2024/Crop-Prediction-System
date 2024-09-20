@@ -8,6 +8,7 @@ from backend.logic.gemini import Gemini
 from backend.sensor.SensorModel import SensorModel
 from dotenv import load_dotenv
 import os
+import datetime
 
 class Weather:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
@@ -67,11 +68,11 @@ class Weather:
         return response.data
     
     # Feature Engineering
-    def featureEngineering(self, e : Entry, c : Crop):
+    def featureEngineering(self, e : Entry):
         tempmean = e.tempMean
         humidity = e.humidity
 
-        soil_temperature, soil_moisture = self.sm.predict(tempmean, humidity)
+        soil_moisture, soil_temperature = self.sm.predict(tempmean, humidity)
 
         e.soil_temperature = soil_temperature[0]
         e.soil_moisture = soil_moisture[0]
@@ -80,7 +81,26 @@ class Weather:
         e.soil_temperature = math.ceil(e.soil_temperature * 100) / 100
         e.soil_moisture = math.ceil(e.soil_moisture * 100) / 100
 
+        e.sprayability = Weather.calculate_sprayability(e)
+
         return e
+    
+    @staticmethod
+    def calculate_sprayability(entry: Entry) -> float:
+        humidity_factor = entry.humidity / 100.0 if entry.humidity else 0.5
+        temperature_factor = min(max((entry.tempMean - 10) / 20.0, 0.0), 1.0) if entry.tempMean else 0.5
+        soil_moisture_factor = min(entry.soil_moisture / 100.0, 1.0) if entry.soil_moisture else 0.5
+        
+        sprayability = (
+            0.25 * humidity_factor +
+            0.4 * temperature_factor +
+            0.05 * soil_moisture_factor
+        )
+
+        # Convert to avalue between 0 and 1
+        sprayability = 1 / (1 + math.exp(-sprayability)) * 100
+        
+        return round(sprayability, 2)
     
     # Uploads array of Entry objects to the database
     @staticmethod
@@ -108,7 +128,8 @@ class Weather:
                     'rain': entry.rain,
                     'uvi': entry.uvi,
                     'soil_moisture': entry.soil_moisture,
-                    'soil_temperature': entry.soil_temperature
+                    'soil_temperature': entry.soil_temperature,
+                    'pred_sprayability': entry.sprayability
                 }, returning='representation'
                 ).execute()
             else:
@@ -125,7 +146,52 @@ class Weather:
                     'rain': entry.rain,
                     'uvi': entry.uvi,
                     'soil_moisture': entry.soil_moisture,
-                    'soil_temperature': entry.soil_temperature
+                    'soil_temperature': entry.soil_temperature,
+                    'pred_sprayability': entry.sprayability
                 }, returning='representation'
                 ).eq('field_id', entry.field_id).eq('date', dt.datetime.fromtimestamp(entry.timestamp).strftime('%Y-%m-%d')).execute()
         return
+
+    @staticmethod
+    def update_allFeatures():
+        entries = Weather.__sbClient.table('data').select('*').execute()
+        for entry in entries.data:
+            # updating entry x of n
+            print("Updating entry " + str(entries.data.index(entry) + 1) + " of " + str(len(entries.data)), flush=True)
+            e = Entry(
+                field_id = entry['field_id'] if 'field_id' in entry else None,
+                timestamp = datetime.datetime.strptime(entry['date'], '%Y-%m-%d').timestamp(),
+                summary = entry['summary'],
+                tempMax = entry['tempmax'],
+                tempMin = entry['tempmin'],
+                tempDiurnal = entry['tempdiurnal'],
+                tempMean = entry['tempmean'],
+                pressure = entry['pressure'],
+                humidity = entry['humidity'],
+                dew_point = entry['dew_point'],
+                clouds = entry['clouds'],
+                rain = entry['rain'],
+                uvi = entry['uvi'],
+                soil_moisture = entry['soil_moisture'],
+                soil_temperature = entry['soil_temperature'],
+                sprayability = entry['pred_sprayability']
+            )
+            e = Weather().featureEngineering(e)
+            if e.field_id is None:
+                response = Weather.__sbClient.table('data').update({
+                    'soil_moisture': e.soil_moisture,
+                    'soil_temperature': e.soil_temperature,
+                    'pred_sprayability': e.sprayability
+                }).eq('date', dt.datetime.fromtimestamp(e.timestamp).strftime('%Y-%m-%d')).execute()
+            else:
+                response = Weather.__sbClient.table('data').update({
+                    'soil_moisture': e.soil_moisture,
+                    'soil_temperature': e.soil_temperature,
+                    'pred_sprayability': e.sprayability
+                }).eq('field_id', e.field_id).eq('date', dt.datetime.fromtimestamp(e.timestamp).strftime('%Y-%m-%d')).execute()
+        return
+    
+if __name__ == '__main__':
+    w = Weather()
+    w.update_allFeatures()
+    print('Updated all features', flush=True)

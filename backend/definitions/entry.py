@@ -19,3 +19,5 @@ class Entry(BaseModel):
     uvi: Optional[float] = None
     soil_moisture: Optional[float] = None
     soil_temperature: Optional[float] = None
+    sprayability: Optional[float] = None
+    health: Optional[float] = None
