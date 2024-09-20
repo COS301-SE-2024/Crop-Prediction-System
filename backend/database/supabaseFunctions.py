@@ -11,7 +11,7 @@ import datetime
 from collections import defaultdict
 from backend.sensors.getData import getNewSensorData
 
-from backend.sensors.farmerSensor import get_all_data
+from backend.sensors.farmerSensor import Sensor
 
 class supabaseFunctions:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
@@ -429,18 +429,14 @@ class supabaseFunctions:
     @staticmethod
     def getFarmerSensorData():
         try:
-            data = get_all_data()
-        # data =  {
-            #     "humidity": result[0],
-            #     "temperature": result[1],
-            #     "conductivity": result[2],
-            #     "ph": result[3],
-            #     "nitrogen": result[4],
-            #     "phosphorus": result[5],
-            #     "potassium": result[6]
-            # }
-            response = supabaseFunctions.__sbClient.table("iot_sensor_data").insert({"soil_moisture":data.humidity} )
-
+            data = Sensor().get_all_data()
+            now = datetime.datetime.now()
+            response = supabaseFunctions.__sbClient.table("iot_sensor_data").insert({"soil_moisture":data["humidity"],"received_at": now,"soil_temperature": data["temperature"],"conductivity": data["conductivity"],"ph_value": data["ph"],"nitrogen_content": data["nitrogen"],"phosphorus_content": data["phosphorus"],"potassium_content": data["potassium"]})
+            if response.error:
+                return {"error": "Failed to get sensor data", "error_message": response.error}
+            return {"success": "Sensor data fetched successfully", "data": response.data}
         except Exception as e:
-            #  fix this ofc
-            print("Oh no")
+            print(e)
+            return {"error": "Failed to get sensor data", "error_message": str(e)}
+        
+            
