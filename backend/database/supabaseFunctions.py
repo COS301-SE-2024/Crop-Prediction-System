@@ -140,11 +140,13 @@ class supabaseFunctions:
             # transpose
             data = list(response.data)
 
-            # read value of each "crop" key
-            data = [i[crop] for i in data]
+            # remove None values
+            data = [i for i in data if i[crop] is not None]
 
             # select last 5 values
             data = data[-5:]
+
+            data = [i[crop] for i in data]
 
             # calculate average
             avg = sum(data) / len(data)

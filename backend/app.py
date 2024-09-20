@@ -5,6 +5,7 @@ from backend.model.pipeline import Pipeline
 from backend.definitions.field import Field
 from backend.definitions.entry import Entry
 from backend.definitions.crop import Crop
+from backend.database.market import market
 from fastapi.middleware.cors import CORSMiddleware
 
 class API:
@@ -56,6 +57,9 @@ class API:
         # user routes
         self.app.add_api_route("/updateUser", self.sb.updateUser, methods=["PUT"])
         self.app.add_api_route("/getUser", self.sb.getUser, methods=["GET"])
+
+        # market API
+        self.app.add_api_route("/market", self.market, methods=["GET"])
 
     def main(self, request: Request):
         return {
@@ -146,6 +150,16 @@ class API:
     
     def getUser(self, request: Request, user_id: str):
         return self.sb.getUser(user_id)
+    
+    # market API
+    def market(self, crop: str):
+        # get the query parameters
+        function = crop
+
+        # convert function to uppercase
+        function = function.upper()
+        
+        return market(function)
 
 api_instance = API()
 app = api_instance.app
