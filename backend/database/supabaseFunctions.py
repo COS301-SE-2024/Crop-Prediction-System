@@ -80,20 +80,13 @@ class supabaseFunctions:
         return stage
 
     @staticmethod
-    def getFieldData(fieldid: str, input_date: str = None):
+    def getFieldData(fieldid: str):
         try:
-            if input_date is None:
-                dict = {"fieldid": fieldid}
-                response = supabaseFunctions.__sbClient.rpc("get_field_data_by_id", dict).execute()
-                if response.data == []:
-                    return {"error": "Data not found. Field ID may be invalid or may not have any data."}
-                return response.data
-            else:
-                dict = {"fieldid": fieldid, "input_date": input_date}
-                response = supabaseFunctions.__sbClient.rpc("get_field_data_by_id", dict).execute()
-                if response.data == []:
-                    return {"error": "Data not found. Field ID may be invalid or may not have any data."}
-                return response.data
+            dict = {"fieldid": fieldid}
+            response = supabaseFunctions.__sbClient.rpc("get_field_data_by_id", dict).execute()
+            if response.data == []:
+                return {"error": "Data not found. Field ID may be invalid or may not have any data."}
+            return response.data
         except Exception as e:
             print(e)
             return {"error": "Failed to get field data", "error_message": e}

@@ -124,7 +124,7 @@ class Pipeline:
         predictions = modelResponse['prediction']
 
         try:
-            for i in range(0,7):
+            for i in range(0,6):
                 result = self.sb.table('data').update({
                     'pred_yield': predictions[i]
                 }).eq(

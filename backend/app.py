@@ -66,8 +66,8 @@ class API:
     def getFieldInfo(self, request: Request, field_id: str):
         return self.sb.getFieldInfo(str(field_id))
 
-    def getFieldData(self, request: Request, field_id: str, input_date: str = None):
-        return self.sb.getFieldData(field_id, input_date)
+    def getFieldData(self, request: Request, field_id: str):
+        return self.sb.getFieldData(field_id)
 
     def createField(self, request: Request, fieldInfo: Field):
         return self.sb.createField(fieldInfo)
