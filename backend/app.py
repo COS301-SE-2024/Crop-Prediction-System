@@ -53,6 +53,7 @@ class API:
         self.app.add_api_route("/addFieldToSensor", self.addFieldToSensor, methods=["POST"])
         self.app.add_api_route("/addSensor", self.addSensor, methods=["GET"])
         self.app.add_api_route("/getFarmerSensorData", self.getFarmerSensorData, methods=["GET"])
+        self.app.add_api_route("/addFieldFarmerSensor", self.addFieldFarmerSensor, methods=["POST"])
 
     def main(self, request: Request):
         return {
@@ -122,8 +123,12 @@ class API:
     def addSensor(self, request: Request, sensorID: str):
         return self.sb.createSensor(sensorID)
     
-    def getFarmerSensorData(self, request: Request, sensorID: str):
-        return self.sb.getFarmerSensorData(sensorID)
+    def getFarmerSensorData(self, request: Request, sensorID: str, fieldID:str):
+        return self.sb.getFarmerSensorData(fieldID,sensorID)
+
+    def addFieldFarmerSensor(self, request: Request, fieldID: str, sensorID: str):
+        return self.sb.addFieldFarmerSensor(fieldID, sensorID)
+    
 
 api_instance = API()
 app = api_instance.app

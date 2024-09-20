@@ -427,11 +427,11 @@ class supabaseFunctions:
             return {"error": "Failed to create sensor", "error_message": str(e)}
 
     @staticmethod
-    def getFarmerSensorData():
+    def getFarmerSensorData(fieldID:str,sensorID: str):
         try:
             data = Sensor().get_all_data()
             now = datetime.datetime.now()
-            response = supabaseFunctions.__sbClient.table("iot_sensor_data").insert({"soil_moisture":data["humidity"],"received_at": now,"soil_temperature": data["temperature"],"conductivity": data["conductivity"],"ph_value": data["ph"],"nitrogen_content": data["nitrogen"],"phosphorus_content": data["phosphorus"],"potassium_content": data["potassium"]})
+            response = supabaseFunctions.__sbClient.table("iot_sensor_data").insert({"field_id": fieldID, "soil_moisture":data["humidity"],"received_at": now,"soil_temperature": data["temperature"],"conductivity": data["conductivity"],"ph_value": data["ph"],"nitrogen_content": data["nitrogen"],"phosphorus_content": data["phosphorus"],"potassium_content": data["potassium"],"sensor_id": sensorID}).execute()
             if response.error:
                 return {"error": "Failed to get sensor data", "error_message": response.error}
             return {"success": "Sensor data fetched successfully", "data": response.data}
@@ -439,4 +439,14 @@ class supabaseFunctions:
             print(e)
             return {"error": "Failed to get sensor data", "error_message": str(e)}
         
+    @staticmethod
+    def addFieldFarmerSensor(fieldID: str, sensorID: str):
+        try:
+            response = supabaseFunctions.__sbClient.table("iot_sensor_data").update({"field_id": fieldID}).eq("sensor_id", sensorID).execute()
+            if response.error:
+                return {"error": "Failed to add sensor to field", "error_message": response.error}
+            return {"success": "Sensor added to field", "data": response.data}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to add sensor to field", "error_message": str(e)}
             
