@@ -201,7 +201,7 @@ const fetchEntryData = async () => {
 
 	entries.value = entryData.map((entry: any) => ({
 		...entry,
-		yield: entry.yield === null ? 'N/A' : entry.yield.toFixed(2),
+		yield: entry.pred_yield === null ? 'N/A' : entry.pred_yield.toFixed(2),
 	}))
 }
 
@@ -263,9 +263,9 @@ const preparePrintContent = async () => {
 	const uviData = fieldEntries.map((entry) => entry.uvi)
 	const soilMoistureData = fieldEntries.map((entry) => entry.soil_moisture)
 	const soilTemperatureData = fieldEntries.map((entry) => entry.soil_temperature)
-	const healthData = fieldEntries.map((entry) => entry.health)
-	const yieldData = fieldEntries.map((entry) => entry.yield)
-	const sprayabilityData = fieldEntries.map((entry) => entry.sprayability)
+	const healthData = fieldEntries.map((entry) => entry.pred_health)
+	const yieldData = fieldEntries.map((entry) => entry.pred_yield)
+	const sprayabilityData = fieldEntries.map((entry) => entry.pred_sprayability)
 
 	// Create a canvas element
 	const canvas = document.createElement('canvas')
