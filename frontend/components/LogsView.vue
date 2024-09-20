@@ -804,16 +804,36 @@ const exportSelectedCSV = () => {
 	URL.revokeObjectURL(url)
 }
 
-const onCellEditComplete = (event) => {
-	let { data, newValue, field } = event
-
-	data[field] = newValue
-	toast.add({ severity: 'success', summary: 'Data changed successfully', life: 3000 })
-}
-
-const selectedField = ref()
+const selectedField = ref(null)
 const uniqueFieldNames = computed(() => {
 	const fieldNames = entries.value.map((entry) => entry.field_name)
 	return [...new Set(fieldNames)]
 })
+
+const onCellEditInit = (event) => {
+	event.data._originalValue = event.data[event.field]
+}
+
+const onCellEditComplete = (event) => {
+	let { data, newValue, field, originalEvent } = event
+
+	if (originalEvent.type === 'keydown' && originalEvent.key === 'Enter') {
+		// Confirm edit on Enter key
+		if (data[field] !== data._originalValue) {
+			data[field] = newValue
+			delete data._originalValue
+			toast.add({ severity: 'success', summary: 'Data changed successfully', life: 3000 })
+		}
+	} else if (originalEvent.type === 'focusout') {
+		// Revert changes on focus out (click away)
+		data[field] = data._originalValue
+		delete data._originalValue
+	}
+}
+
+const onCellEditCancel = (event) => {
+	let { data, field } = event
+	data[field] = data._originalValue
+	delete data._originalValue
+}
 </script>
