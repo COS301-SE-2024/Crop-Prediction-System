@@ -814,18 +814,39 @@ const onCellEditInit = (event) => {
 	event.data._originalValue = event.data[event.field]
 }
 
-const onCellEditComplete = (event) => {
+const updateDatabase = async (data, field, newValue) => {
+	try {
+		// Assume you have an API endpoint for updating entries
+		const response = await axios.patch(`/api/entries/${data.id}`, {
+			[field]: newValue,
+		})
+
+		if (response.status === 200) {
+			toast.add({ severity: 'success', summary: 'Data updated in database', life: 3000 })
+		} else {
+			throw new Error('Failed to update database')
+		}
+	} catch (error) {
+		console.error('Error updating database:', error)
+		toast.add({ severity: 'error', summary: 'Failed to update database', detail: error.message, life: 5000 })
+		// Revert the change in the local data
+		data[field] = data._originalValue
+	}
+}
+
+const onCellEditComplete = async (event) => {
 	let { data, newValue, field, originalEvent } = event
 
 	if (originalEvent.type === 'keydown' && originalEvent.key === 'Enter') {
-		// Confirm edit on Enter key
 		if (data[field] !== data._originalValue) {
+			// Update local data
 			data[field] = newValue
-			delete data._originalValue
+			// Update database
+			// await updateDatabase(data, field, newValue)
 			toast.add({ severity: 'success', summary: 'Data changed successfully', life: 3000 })
+			delete data._originalValue
 		}
 	} else if (originalEvent.type === 'focusout') {
-		// Revert changes on focus out (click away)
 		data[field] = data._originalValue
 		delete data._originalValue
 	}
