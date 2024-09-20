@@ -110,8 +110,12 @@ class Pipeline:
 
         print(modelResponse, flush=True)
 
+        # Replace None with null
+        modelResponse = str(modelResponse).replace("None", "0")
+
         # Convert to double quotes
         modelResponse = str(modelResponse).replace("'", "\"")
+
 
         # Parse as JSON
         modelResponse = json.loads(modelResponse)
@@ -120,7 +124,7 @@ class Pipeline:
         predictions = modelResponse['prediction']
 
         try:
-            for i in range(0,6):
+            for i in range(0,7):
                 result = self.sb.table('data').update({
                     'pred_yield': predictions[i]
                 }).eq(

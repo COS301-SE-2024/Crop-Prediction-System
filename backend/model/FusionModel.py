@@ -45,8 +45,8 @@ class FusionModel(ML):
 
         prediction = self.predict()
 
-        # Flatten the prediction
-        prediction = [item for sublist in prediction for item in sublist]
+        if sm_rmse is not None:
+            prediction = [item for sublist in prediction for item in sublist]
 
         return {
             "MultiScaleModel": msm_rmse,
@@ -96,7 +96,10 @@ class FusionModel(ML):
                 else:
                     final_predictions[i] = mean
             else:
-                final_predictions[i] = (final_predictions[i] + sm_pred) / 2
+                if sm_pred is not None:
+                    final_predictions[i] = (final_predictions[i] + sm_pred) / 2
+                else:
+                    final_predictions[i] = (final_predictions[i] + mean) / 2
 
         # Plot
         # plt.figure(figsize=(10, 6))

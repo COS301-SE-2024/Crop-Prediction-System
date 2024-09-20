@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import math
 import requests
 from backend.definitions.entry import Entry
@@ -30,19 +30,17 @@ class Weather:
                 summary = data['daily'][i]['summary'],
                 tempMax = data['daily'][i]['temp']['max'] if 'temp' in data['daily'][i] else 0,
                 tempMin = data['daily'][i]['temp']['min'] if 'temp' in data['daily'][i] else 0,
+                tempDiurnal = data['daily'][i]['temp']['max'] - data['daily'][i]['temp']['min'] if 'temp' in data['daily'][i] else 0,
+                tempMean = (data['daily'][i]['temp']['max'] + data['daily'][i]['temp']['min']) / 2 if 'temp' in data['daily'][i] else 0,
                 pressure = data['daily'][i]['pressure'] if 'pressure' in data['daily'][i] else 0,
                 humidity = data['daily'][i]['humidity'] if 'humidity' in data['daily'][i] else 0,
-                wind_speed = data['daily'][i]['wind_speed'] if 'wind_speed' in data['daily'][i] else 0,
-                wind_deg = data['daily'][i]['wind_deg'] if 'wind_deg' in data['daily'][i] else 0,
-                wind_gust = data['daily'][i]['wind_gust'] if 'wind_gust' in data['daily'][i] else 0,
                 clouds = data['daily'][i]['clouds'] if 'clouds' in data['daily'][i] else 0,
-                pop = data['daily'][i]['pop'] if 'pop' in data['daily'][i] else 0,
                 rain = data['daily'][i]['rain'] if 'rain' in data['daily'][i] else 0,
                 uvi = data['daily'][i]['uvi'] if 'uvi' in data['daily'][i] else 0,
                 dew_point = data['daily'][i]['dew_point'] if 'dew_point' in data['daily'][i] else 0,
             )
             # print(entry, flush=True)
-            entry = Weather.get_features(entry, c)
+            # entry = Weather.get_features(entry, c)
             entries.append(entry)
         Weather.upload(entries)
         return entries
@@ -58,7 +56,7 @@ class Weather:
         try:
             response = Weather.__sbClient.table('data').update({
                 'summary': message,
-            }).eq('field_id', field_id).eq('date', datetime.datetime.now().strftime('%Y-%m-%d')).execute()
+            }).eq('field_id', field_id).eq('date', dt.datetime.now().strftime('%Y-%m-%d')).execute()
         except Exception as e:
             return {
                 'error': e
@@ -70,21 +68,42 @@ class Weather:
     @staticmethod
     def upload(entries):
         for entry in entries:
+            entry_date = dt.datetime.fromtimestamp(entry.timestamp).date()
+            future_date = (dt.datetime.now() + dt.timedelta(days=6)).date()
+
+            print(entry_date, future_date, flush=True)
+
             # Let it upload to data as well
-            response = Weather.__sbClient.table('data').upsert({
-                'field_id': str(entry.field_id),
-                'date': datetime.datetime.fromtimestamp(entry.timestamp).strftime('%Y-%m-%d'),
-                'summary': entry.summary,
-                'tempmax': entry.tempMax,
-                'tempmin': entry.tempMin,
-                'humidity': entry.humidity,
-                'tempdiurnal': entry.tempDiurnal,
-                'pressure': entry.pressure,
-                'tempmean': entry.tempMean,
-                'dew_point': entry.dew_point,
-                'clouds': entry.clouds,
-                'rain': entry.rain,
-                'uvi': entry.uvi
-            }, returning='representation'
-            ).execute()
+            if (entry_date >= future_date):
+                response = Weather.__sbClient.table('data').insert({
+                    'field_id': str(entry.field_id),
+                    'date': dt.datetime.fromtimestamp(entry.timestamp).strftime('%Y-%m-%d'),
+                    'summary': entry.summary,
+                    'tempmax': entry.tempMax,
+                    'tempmin': entry.tempMin,
+                    'humidity': entry.humidity,
+                    'tempdiurnal': entry.tempDiurnal,
+                    'pressure': entry.pressure,
+                    'tempmean': entry.tempMean,
+                    'dew_point': entry.dew_point,
+                    'clouds': entry.clouds,
+                    'rain': entry.rain,
+                    'uvi': entry.uvi
+                }, returning='representation'
+                ).execute()
+            else:
+                response = Weather.__sbClient.table('data').update({
+                    'summary': entry.summary,
+                    'tempmax': entry.tempMax,
+                    'tempmin': entry.tempMin,
+                    'humidity': entry.humidity,
+                    'tempdiurnal': entry.tempDiurnal,
+                    'pressure': entry.pressure,
+                    'tempmean': entry.tempMean,
+                    'dew_point': entry.dew_point,
+                    'clouds': entry.clouds,
+                    'rain': entry.rain,
+                    'uvi': entry.uvi
+                }, returning='representation'
+                ).eq('field_id', entry.field_id).eq('date', dt.datetime.fromtimestamp(entry.timestamp).strftime('%Y-%m-%d')).execute()
         return
