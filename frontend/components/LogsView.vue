@@ -648,29 +648,48 @@ const preparePrintContent = async () => {
 		<h2>Crop Type: ${fieldEntries[0].crop_type}</h2>
 	</div>
 	<div class="chart-container">
-		<h3>Temperature Chart</h3>
-		<img src="${chartImage}" alt="Temperature Chart" style="width: 100%; max-width: 800px;"></div>
-		<div class="chart-container">
-		<h3>Pressure Chart</h3>
-		<img src="${chartImage1}" alt="Pressure Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
-		<h3>Humidity Chart</h3>
-		<img src="${chartImage2}" alt="Humidity Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
-		<h3>Dew Point Chart</h3>
-		<img src="${chartImage3}" alt="Dew Point Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
-		<h3>Rainfall Chart</h3>
-		<img src="${chartImage4}" alt="Rainfall Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
-		<h3>UV Index Chart</h3>
-		<img src="${chartImage5}" alt="UV Index Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
-		<h3>Soil Moisture Chart</h3>
-		<img src="${chartImage6}" alt="Soil Moisture Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
-		<h3>Soil Temperature Chart</h3>
-		<img src="${chartImage7}" alt="Soil Temperature Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
 		<h3>Health Index Chart</h3>
-		<img src="${chartImage8}" alt="Health Index Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
+		<img src="${chartImage8}" alt="Health Index Chart" style="width: 100%; max-width: 800px;">
+	</div>
+	<div class="chart-container">
 		<h3>Yield Chart</h3>
-		<img src="${chartImage9}" alt="Yield Chart" style="width: 100%; max-width: 800px;"></div><div class="chart-container">
+		<img src="${chartImage9}" alt="Yield Chart" style="width: 100%; max-width: 800px;">
+		</div><div class="chart-container">
 		<h3>Sprayability Chart</h3>
-		<img src="${chartImage10}" alt="Sprayability Chart" style="width: 100%; max-width: 800px;"></div>
+		<img src="${chartImage10}" alt="Sprayability Chart" style="width: 100%; max-width: 800px;">
+	</div>
+	<div class="chart-container">
+		<h3>Temperature Chart</h3>
+		<img src="${chartImage}" alt="Temperature Chart" style="width: 100%; max-width: 800px;">
+	</div>
+	<div class="chart-container">
+		<h3>Pressure Chart</h3>
+		<img src="${chartImage1}" alt="Pressure Chart" style="width: 100%; max-width: 800px;">
+	</div>
+	<div class="chart-container">
+		<h3>Humidity Chart</h3>
+		<img src="${chartImage2}" alt="Humidity Chart" style="width: 100%; max-width: 800px;">
+	</div>
+	<div class="chart-container">
+		<h3>Dew Point Chart</h3>
+		<img src="${chartImage3}" alt="Dew Point Chart" style="width: 100%; max-width: 800px;">
+	</div>
+	<div class="chart-container">
+		<h3>Rainfall Chart</h3>
+		<img src="${chartImage4}" alt="Rainfall Chart" style="width: 100%; max-width: 800px;">
+	</div>
+	<div class="chart-container">
+		<h3>UV Index Chart</h3>
+		<img src="${chartImage5}" alt="UV Index Chart" style="width: 100%; max-width: 800px;">
+	</div>
+	<div class="chart-container">
+		<h3>Soil Moisture Chart</h3>
+		<img src="${chartImage6}" alt="Soil Moisture Chart" style="width: 100%; max-width: 800px;">
+	</div>
+	<div class="chart-container">
+		<h3>Soil Temperature Chart</h3>
+		<img src="${chartImage7}" alt="Soil Temperature Chart" style="width: 100%; max-width: 800px;">
+	</div>
   `
 	return true
 }
