@@ -246,7 +246,9 @@ class MultiScaleModel():
                 'clouds': 'mean',
                 'uvi': 'mean',
                 'tempmean': 'mean',
-                'tempdiurnal': 'mean'
+                'tempdiurnal': 'mean',
+                'soil_moisture': 'mean',
+                'soil_temperature': 'mean'
             }).reset_index()
         else:
             data[freq] = data[freq].groupby(["yearly", freq]).agg({
@@ -259,7 +261,9 @@ class MultiScaleModel():
                 'clouds': 'mean',
                 'uvi': 'mean',
                 'tempmean': 'mean',
-                'tempdiurnal': 'mean'
+                'tempdiurnal': 'mean',
+                'soil_moisture': 'mean',
+                'soil_temperature': 'mean'
             }).reset_index()
 
         return data[freq]

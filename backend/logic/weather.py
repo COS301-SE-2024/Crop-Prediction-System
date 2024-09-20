@@ -5,6 +5,7 @@ from backend.definitions.entry import Entry
 from backend.definitions.crop import Crop
 from backend.database import supabaseInstance
 from backend.logic.gemini import Gemini
+from backend.sensor.SensorModel import SensorModel
 from dotenv import load_dotenv
 import os
 
@@ -16,6 +17,7 @@ class Weather:
         self.api_key = os.environ.get('OPENWEATHER_API_KEY')
         self.part = 'hourly,alerts'
         self.unit = 'metric'
+        self.sm = SensorModel()
 
     def getWeather(self, lat, lon, field_id, c : Crop) -> Entry:
         url = f'https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={self.part}&units={self.unit}&appid={self.api_key}'
@@ -40,7 +42,7 @@ class Weather:
                 dew_point = data['daily'][i]['dew_point'] if 'dew_point' in data['daily'][i] else 0,
             )
             # print(entry, flush=True)
-            # entry = Weather.get_features(entry, c)
+            entry = self.featureEngineering(entry, c)
             entries.append(entry)
         Weather.upload(entries)
         return entries
@@ -64,6 +66,22 @@ class Weather:
 
         return response.data
     
+    # Feature Engineering
+    def featureEngineering(self, e : Entry, c : Crop):
+        tempmean = e.tempMean
+        humidity = e.humidity
+
+        soil_temperature, soil_moisture = self.sm.predict(tempmean, humidity)
+
+        e.soil_temperature = soil_temperature[0]
+        e.soil_moisture = soil_moisture[0]
+
+        # Convert to float8
+        e.soil_temperature = math.ceil(e.soil_temperature * 100) / 100
+        e.soil_moisture = math.ceil(e.soil_moisture * 100) / 100
+
+        return e
+    
     # Uploads array of Entry objects to the database
     @staticmethod
     def upload(entries):
@@ -71,7 +89,7 @@ class Weather:
             entry_date = dt.datetime.fromtimestamp(entry.timestamp).date()
             future_date = (dt.datetime.now() + dt.timedelta(days=6)).date()
 
-            print(entry_date, future_date, flush=True)
+            print(entry, flush=True)
 
             # Let it upload to data as well
             if (entry_date >= future_date):
@@ -88,7 +106,9 @@ class Weather:
                     'dew_point': entry.dew_point,
                     'clouds': entry.clouds,
                     'rain': entry.rain,
-                    'uvi': entry.uvi
+                    'uvi': entry.uvi,
+                    'soil_moisture': entry.soil_moisture,
+                    'soil_temperature': entry.soil_temperature
                 }, returning='representation'
                 ).execute()
             else:
@@ -103,7 +123,9 @@ class Weather:
                     'dew_point': entry.dew_point,
                     'clouds': entry.clouds,
                     'rain': entry.rain,
-                    'uvi': entry.uvi
+                    'uvi': entry.uvi,
+                    'soil_moisture': entry.soil_moisture,
+                    'soil_temperature': entry.soil_temperature
                 }, returning='representation'
                 ).eq('field_id', entry.field_id).eq('date', dt.datetime.fromtimestamp(entry.timestamp).strftime('%Y-%m-%d')).execute()
         return
