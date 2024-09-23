@@ -11,10 +11,10 @@ export default {
         ]
     },
     body: {
-        class: 'p-5'
+        class: 'p-0'
     },
     title: {
-        class: 'text-2xl font-bold mb-2'
+        class: 'text-2xl font-bold'
     },
     subtitle: {
         class: [
@@ -22,7 +22,7 @@ export default {
             'font-normal',
 
             //Spacing
-            'mb-2',
+            'mb-0',
 
             //Color
             'text-surface-600 dark:text-surface-0/60'
