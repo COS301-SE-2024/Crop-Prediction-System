@@ -6,19 +6,21 @@
 	<div
 		v-show="!isLoading"
 		ref="scrollableContainer"
-		class="w-full flex flex-col gap-4 items-center justify-between rounded-md overflow-y-auto"
+		class="w-full flex flex-col gap-2 items-center justify-between rounded-md overflow-y-auto"
 	>
 		<div v-for="(message, index) in messages" :key="message.id" class="w-full">
 			<!-- Show Tag only if this is the first message of the day -->
 			<div v-if="shouldShowDateTag(index)" class="w-full gap-2 items-center justify-between flex flex-col">
-				<Tag severity="contrast" class="mb-2">{{ formatDate(message.created_at) }}</Tag>
+				<Tag severity="contrast" class="mb-4">{{ formatDate(message.created_at) }}</Tag>
 			</div>
 
-			<div class="w-full gap-2 items-center justify-between flex flex-col">
-				<Card :class="checkMessage(message)" style="box-shadow: none" :key="message">
+			<div class="w-full items-center justify-between flex flex-col">
+				<Card :class="checkMessage(message)" style="box-shadow: none; padding: 20px" :key="message" class="rounded-xl">
 					<template #title>
 						<div class="flex flex-row w-full justify-between items-center">
-							<div class="flex flex-col md:flex-row gap-1 md:gap-2 items-start md:items-center justify-between">
+							<div
+								class="flex flex-col md:flex-row gap-1 md:gap-2 items-start md:items-center justify-between mb-2"
+							>
 								<h2 class="text-lg">{{ message.user_name }}</h2>
 								<span class="text-sm text-surface-400 dark:text-surface-0/60 font-normal">
 									{{ message.user_email }}
@@ -39,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUpdated, nextTick } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
 
 const messages = ref([])
 const supabase = useSupabaseClient()
@@ -94,6 +96,18 @@ const fetchUser = async () => {
 	console.log(currentUser.value)
 }
 
+// Storing the count of unread messages
+const unreadMessages = useState('unreadMessages')
+
+// Getting the route to update unread messages if necessary
+const route = useRoute()
+
+watch(route, (newRoute) => {
+	if (newRoute.path === '/team/chat') {
+		unreadMessages.value = 0 // Reset unread messages
+	}
+})
+
 // Real-time subscription to new messages
 onMounted(() => {
 	fetchUser()
@@ -133,8 +147,8 @@ const formatTime = (dateString) => {
 // Helper function to style the message based on the user
 const checkMessage = (message) => {
 	return currentUser.value.email === message.user_email
-		? 'w-[90%] self-end border-2 border-primary-500'
-		: 'w-[90%] self-start border-2 border-surface-300 dark:border-surface-600'
+		? 'w-[90%] self-end border-2 border-primary-500 rounded-br-none mb-2'
+		: 'w-[90%] self-start border-2 border-surface-300 dark:border-surface-600 rounded-bl-none mb-2'
 }
 
 // Function to check if the date tag should be shown (only for the first message of each day)
