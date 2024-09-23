@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, defineExpose } from 'vue'
 
 const emit = defineEmits(['polygonDrawn', 'polygonUpdated'])
 const props = defineProps({
@@ -185,6 +185,30 @@ function updatePolygonCoords(polygon) {
 		.map((point) => [point.lat(), point.lng()])
 	emit('polygonUpdated', updatedPaths)
 }
+
+// INFO: Function to clear polygons
+function finalizePolygon() {
+	if (polygon) {
+		// Make the polygon non-editable and non-draggable
+		polygon.setEditable(false)
+		polygon.setDraggable(false)
+
+		// Add the finalized polygon to the list of existing polygons
+		polygons.value.push(polygon)
+
+		// Reset the polygon variable
+		polygon = null
+
+		// Re-enable drawing mode for new polygons
+		if (drawingManager) {
+			drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON)
+		}
+	}
+}
+
+defineExpose({
+	finalizePolygon,
+})
 
 // Cleanup listeners and map when the component is unmounted
 onBeforeUnmount(() => {
