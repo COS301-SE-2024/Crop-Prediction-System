@@ -31,9 +31,9 @@
 			<h2 class="dark:text-white font-bold text-xl col-span-12" v-if="!checkTeamFields">
 				Go to the add fields to start adding fields.
 			</h2>
-			<Card v-else v-for="field in filteredFields" :key="field.id">
+			<Card v-else v-for="field in filteredFields" :key="field.id" style="padding: 20px">
 				<template #title>
-					<div class="flex flex-row justify-between items-center">
+					<div class="flex flex-row justify-between items-center mb-2">
 						<h2 class="text-2xl font-bold">{{ field.field_name }}</h2>
 						<Button
 							:key="field.id"
@@ -78,7 +78,7 @@
 			header="View/Edit Field"
 			v-model:visible="editAndViewVisible"
 			class="w-[95%] md:w-[740px] lg:w-[950px]"
-			:style="{ 'font-family': 'Montserrat' }"
+			:style="{ 'font-family': 'Open Sans' }"
 		>
 			<div class="flex flex-col justify-between items-start gap-4">
 				<div class="flex flex-col gap-2 w-full">
@@ -157,7 +157,7 @@
 			header="Confirm Delete"
 			v-model:visible="deleteDialogVisible"
 			modal
-			:style="{ width: '25rem', 'font-family': 'Montserrat' }"
+			:style="{ width: '25rem', 'font-family': 'Open Sans' }"
 		>
 			<p>
 				Are you sure you want to delete the field "<strong>{{ fieldToDelete?.field_name }}</strong
@@ -586,8 +586,4 @@ const cancelDelete = () => {
 }
 </script>
 
-<style scoped>
-#dialog {
-	font-family: 'Roboto Slab', sans-serif;
-}
-</style>
+<style scoped></style>
