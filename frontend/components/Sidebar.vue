@@ -49,9 +49,7 @@
 import { ref } from 'vue'
 import Sidebar from 'primevue/sidebar'
 import Menu from '../components/NavigationMenu.vue'
-import Avatar from 'primevue/avatar'
 import Button from 'primevue/button'
-import Dropdown from 'primevue/dropdown'
 import AccountManage from '~/components/AccountManage.vue'
 
 const user = useSupabaseUser()
@@ -69,6 +67,6 @@ const selectedCity = ref(cities.value[0])
 
 <style scoped>
 div {
-	font-family: 'Montserrat', sans-serif;
+	font-family: 'Open Sans', sans-serif;
 }
 </style>
