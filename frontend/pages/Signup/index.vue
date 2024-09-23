@@ -98,7 +98,7 @@ definePageMeta({
 <template>
 	<div class="w-full h-screen flex flex-col justify-center items-center p-4 overflow-auto">
 		<div class="w-full max-w-[450px] px-4 overflow-auto">
-			<Card class="w-full bg-surface-100 dark:bg-surface-800">
+			<Card class="w-full bg-surface-100 dark:bg-surface-800 p-[20px]">
 				<template #header>
 					<div class="flex justify-center items-center p-4">
 						<img
@@ -114,7 +114,7 @@ definePageMeta({
 					</div>
 				</template>
 				<template #title>
-					<h1 class="font-medium">Sign up</h1>
+					<h1 class="font-medium my-4">Sign up</h1>
 				</template>
 				<template #content>
 					<div class="flex flex-col gap-3">
