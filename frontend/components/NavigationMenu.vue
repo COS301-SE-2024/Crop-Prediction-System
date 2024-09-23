@@ -35,11 +35,6 @@ const items = ref([
 		label: 'FIELDS',
 		items: [
 			{
-				label: 'Add Field Data',
-				icon: 'pi pi-plus-circle',
-				url: '/inputs/add-field-data',
-			},
-			{
 				label: 'Manage Fields',
 				url: '/inputs/manage-fields',
 				icon: 'pi pi-pen-to-square',
