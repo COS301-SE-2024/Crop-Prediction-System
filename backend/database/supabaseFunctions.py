@@ -303,7 +303,11 @@ class supabaseFunctions:
     @staticmethod
     def addToTeam(team: dict):
         try:
-            supabaseFunctions.__sbClient.table("profiles").update({"team_id": team.get("team_id")}).eq("id", team.get("user_id")).execute()
+            supabaseFunctions.__sbClient.table("profiles").update(
+                {
+                    "team_id": team.get("team_id"),
+                    "role": team.get("role")
+                }).eq("id", team.get("user_id")).execute()
             return {"success": "Added to team"}
         except Exception as e:
             print(e)
@@ -312,8 +316,7 @@ class supabaseFunctions:
     @staticmethod
     def removeFromTeam(user_id: str):
         try:
-            response = supabaseFunctions.__sbClient.table("profiles").update({"team_id": None}).eq("id", user_id).execute()
-            print(response)
+            response = supabaseFunctions.__sbClient.rpc("remove_from_team", {"user_id": user_id}).execute()
             return {"success": "Removed from team"}
         except Exception as e:
             print(e)
@@ -331,13 +334,24 @@ class supabaseFunctions:
     @staticmethod
     def getTeamId(user_id: str):
         try:
-            response = supabaseFunctions.__sbClient.table("profiles").select("team_id").eq("id", user_id).execute()
+            response = supabaseFunctions.__sbClient.table("profiles").select("team_id, role").eq("id", user_id).execute()
             if response.data == []:
                 raise Exception("User not found")
             return response.data[0]
         except Exception as e:
             print(e)
             return {"error": "Failed to get team ID", "error_message": e}
+        
+    @staticmethod
+    def getTeamDetails(team_id: str):
+        try:
+            response = supabaseFunctions.__sbClient.table("profiles").select("id, full_name, email, role").eq("team_id", team_id).execute()
+            if response.data == []:
+                raise Exception("Team not found")
+            return response.data
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get team details", "error_message": e}
         
     # @staticmethod
     # def createSensorData(sensor_data: dict):

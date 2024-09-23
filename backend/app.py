@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, BackgroundTasks
 from backend.database.supabaseFunctions import supabaseFunctions
 
 from backend.model.model import Model
@@ -21,8 +21,8 @@ class API:
         self.app.add_api_route("/getFieldInfo", self.getFieldInfo, methods=["GET"])
         self.app.add_api_route("/getFieldData", self.getFieldData, methods=["GET"])
         # self.app.add_api_route("/getFieldLogs", self.getFieldLogs, methods=["GET"])
-        self.app.add_api_route("/fetchWeather", self.sb.fetchWeatherForAllFields, methods=["GET"])
-        self.app.add_api_route("/fetchSummary", self.sb.fetchSummary, methods=["GET"])
+        self.app.add_api_route("/fetchWeather", self.fetchWeatherForAllFields, methods=["GET"])
+        self.app.add_api_route("/fetchSummary", self.fetchSummary, methods=["GET"])
         
 
         # field routes
@@ -37,8 +37,9 @@ class API:
         self.app.add_api_route("/getTeamFields", self.getTeamFields, methods=["GET"])
         self.app.add_api_route("/getTeamFieldData", self.getTeamFieldData, methods=["GET"])
         self.app.add_api_route("/addToTeam", self.addToTeam, methods=["POST"]) # TODO: Test this route
-        self.app.add_api_route("/removeFromTeam", self.removeFromTeam, methods=["GET"]) # TODO: Test this route
+        self.app.add_api_route("/removeFromTeam", self.removeFromTeam, methods=["PUT"]) # TODO: Test this route
         self.app.add_api_route("/updateRoles", self.updateRoles, methods=["POST"]) # TODO: Test this route
+        self.app.add_api_route("/getTeamDetails", self.getTeamDetails, methods=["GET"]) # TODO: Test this route
 
         # /getTeamId
         self.app.add_api_route("/getTeamId", self.getTeamId, methods=["GET"]) # TODO: Test this route
@@ -92,19 +93,35 @@ class API:
     def getTeamFieldData(self, request: Request, team_id: str, n : int = -1):
         return self.sb.getTeamFieldData(team_id, n)
     
+    def getTeamDetails(self, request: Request, team_id: str):
+        return self.sb.getTeamDetails(team_id)
+    
     # model routes
-    def aggregate(self, request: Request):
-        return self.sb.aggregate()
+    def aggregate(self, background_tasks: BackgroundTasks, request: Request):
+        background_tasks.add_task(self.sb.aggregate)
+        return {"message": "Started aggregation"}
     
-    def predict(self, request: Request, field_id: str = None, batch: bool = False):
+    def predict(self, background_tasks: BackgroundTasks, request: Request, field_id: str = None, batch: bool = False):
         if batch:
-            return self.ml.predict_all()
-        return self.ml.predict(field_id)
+            background_tasks.add_task(self.ml.predict_all)
+            return {"message": "Started prediction for all fields"}
+        background_tasks.add_task(self.ml.predict, field_id)
+        return {"message": "Started prediction for field ID: " + field_id}
     
-    def train(self, request: Request, field_id: str = None, crop: str = None, batch: bool = False):
+    def train(self, background_tasks: BackgroundTasks, request: Request, field_id: str = None, crop: str = None, batch: bool = False):
         if batch:
-            return self.ml.train_all()
-        return self.ml.train(field_id, crop)
+            background_tasks.add_task(self.ml.train_all)
+            return {"message": "Started training for all fields"}
+        background_tasks.add_task(self.ml.train, field_id, crop)
+        return {"message": "Started training for field ID: " + field_id}
+    
+    def fetchWeatherForAllFields(self, background_tasks: BackgroundTasks, request: Request):
+        background_tasks.add_task(self.sb.fetchWeatherForAllFields)
+        return {"message": "Started fetching weather for all fields"}
+    
+    def fetchSummary(self, background_tasks: BackgroundTasks, request: Request):
+        background_tasks.add_task(self.sb.fetchSummary)
+        return {"message": "Started fetching summary"}
 
 api_instance = API()
 app = api_instance.app
