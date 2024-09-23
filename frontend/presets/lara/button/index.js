@@ -36,7 +36,7 @@ export default {
             { 'bg-transparent border-transparent': props.text && !props.plain },
 
             // Outlined Button
-            { 'bg-transparent border': props.outlined && !props.plain },
+            { 'bg-surface-100 dark:bg-surface-800 border': props.outlined && !props.plain },
 
             // --- Severity Buttons ---
 

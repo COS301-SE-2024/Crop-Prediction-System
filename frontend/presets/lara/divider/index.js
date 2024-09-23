@@ -17,13 +17,13 @@ export default {
             // Spacing
             {
                 'my-5 mx-0 py-0 px-5': props.layout == 'horizontal',
-                'mx-4 md:mx-5 py-5': props.layout == 'vertical'
+                'mx-4 md:mx-5 _py-5': props.layout == 'vertical'
             },
 
             // Size
             {
                 'w-full': props.layout == 'horizontal',
-                'min-h-full': props.layout == 'vertical'
+                'h-full': props.layout == 'vertical'
             },
 
             // Before: Line
@@ -38,7 +38,7 @@ export default {
             // Size
             {
                 'before:w-full': props.layout == 'horizontal',
-                'before:min-h-full': props.layout == 'vertical'
+                'before:h-full': props.layout == 'vertical'
             },
 
             // Shape
@@ -61,7 +61,7 @@ export default {
             'px-1 z-10',
 
             // Color
-            'bg-surface-0 dark:bg-surface-800'
+            'bg-surface-100 dark:bg-surface-800'
         ]
     }
 };

@@ -35,7 +35,7 @@ export default {
     label: {
         class: [
             // Text Style
-            'text-center text-xl',
+            'text-center text-md',
 
             // Color
             'fill-surface-600 dark:fill-surface-200'

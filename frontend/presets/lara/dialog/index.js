@@ -12,8 +12,7 @@ export default {
             'm-0',
 
             // Color
-            'dark:border',
-            'dark:border-surface-700',
+            'bg-surface-100 dark:bg-surface-800',
 
             // Transitions
             'transform',

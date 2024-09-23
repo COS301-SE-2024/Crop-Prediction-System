@@ -5,6 +5,7 @@
 		scrollable
 		scrollHeight="450px"
 		size="small"
+		class="bg-surface-100 dark:bg-surface-800 rounded-md"
 		paginator
 		:rows="5"
 		:rowsPerPageOptions="[5, 10, 20, 50, 100]"
@@ -43,9 +44,7 @@
 					<div class="flex text-xs gap-2">
 						<Button icon="pi pi-external-link" severity="secondary" label="Export" @click="exportSelectedCSV" />
 						<Button icon="pi pi-print" severity="secondary" label="Print" @click="triggerPrint" />
-						<NuxtLink to="/inputs/add-field-data">
-							<Button icon="pi pi-upload" severity="secondary" label="Upload" />
-						</NuxtLink>
+						<Button icon="pi pi-upload" severity="secondary" label="Upload" />
 						<Button icon="pi pi-refresh" rounded raised @click="fetchEntryData" />
 					</div>
 				</div>
@@ -101,9 +100,9 @@ const columns = [
 	{ field: 'uvi', header: 'UV Index' },
 	{ field: 'soil_moisture', header: 'Soil Moisture' },
 	{ field: 'soil_temperature', header: 'Soil Temperature (°C)' },
-	{ field: 'health', header: 'Health Index' },
-	{ field: 'yield', header: 'Yield' },
-	{ field: 'sprayability', header: 'Sprayability' },
+	{ field: 'pred_health', header: 'Health Index' },
+	{ field: 'pred_yield', header: 'Yield' },
+	{ field: 'pred_sprayability', header: 'Sprayability' },
 ]
 
 const filters = ref({
@@ -140,9 +139,11 @@ const fetchEntryData = async () => {
 		params: { team_id: teamID.team_id },
 	})
 
+	console.log(entryData)
+
 	entries.value = entryData.map((entry: any) => ({
 		...entry,
-		yield: entry.yield === null ? 'N/A' : entry.yield.toFixed(2),
+		yield: entry.pred_yield === null ? 'N/A' : entry.pred_yield.toFixed(2),
 	}))
 }
 

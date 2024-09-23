@@ -11,6 +11,7 @@ export default defineNuxtConfig({
 		'@nuxtjs/supabase',
 		'@nuxt/test-utils/module',
 		'@vueuse/nuxt',
+		'@nuxt/fonts',
 	],
 	colorMode: {
 		classSuffix: '',
@@ -38,7 +39,7 @@ export default defineNuxtConfig({
 		redirectOptions: {
 			login: '/login',
 			callback: '/confirm',
-			exclude: ['/signup', '/join'],
+			exclude: ['/signup', '/join', '/login', '/reset'],
 		},
 	},
 })

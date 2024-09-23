@@ -1,6 +1,6 @@
 <template>
 	<div class="sm:px-32 sm:py-8 lg:px-52 flex justify-center">
-		<Stepper :orientation="isMobile ? 'vertical' : 'horizontal'">
+		<Stepper v-model:active-step="activeIndex" :orientation="isMobile ? 'vertical' : 'horizontal'" linear>
 			<!-- Step 1: Field Info -->
 			<StepperPanel header="Field Info">
 				<template #content="{ nextCallback }">
@@ -27,6 +27,7 @@
 					<div class="flex pt-4 justify-end">
 						<Button
 							label="Next"
+							size="small"
 							icon="pi pi-arrow-right"
 							iconPos="right"
 							@click="nextCallback"
@@ -40,11 +41,18 @@
 			<StepperPanel header="Field Map">
 				<template #content="{ prevCallback, nextCallback }">
 					<div class="flex-auto flex justify-center items-center">
-						<GoogleMap @polygonDrawn="handlePolygonDrawn" @polygonUpdated="handlePolygonUpdated" />
+						<GoogleMap ref="googleMapRef" @polygonDrawn="handlePolygonDrawn" @polygonUpdated="handlePolygonUpdated" />
 					</div>
 					<div class="flex pt-4 justify-between">
-						<Button label="Back" severity="secondary" class="mr-2" icon="pi pi-arrow-left" @click="prevCallback" />
-						<Button label="Next" icon="pi pi-arrow-right" iconPos="right" @click="nextCallback" />
+						<Button
+							label="Back"
+							size="small"
+							severity="secondary"
+							class="mr-2"
+							icon="pi pi-arrow-left"
+							@click="prevCallback"
+						/>
+						<Button label="Next" size="small" icon="pi pi-arrow-right" iconPos="right" @click="nextCallback" />
 					</div>
 				</template>
 			</StepperPanel>
@@ -69,8 +77,8 @@
 						</div>
 					</div>
 					<div class="flex pt-4 justify-between">
-						<Button label="Back" severity="secondary" icon="pi pi-arrow-left" @click="prevCallback" />
-						<Button label="Save Field" icon="pi pi-check" @click="saveField" :loading="isLoading" />
+						<Button label="Back" size="small" severity="secondary" icon="pi pi-arrow-left" @click="prevCallback" />
+						<Button label="Save Field" size="small" icon="pi pi-check" @click="saveField" :loading="isLoading" />
 					</div>
 				</template>
 			</StepperPanel>
@@ -95,6 +103,8 @@ const newField = ref({
 // INFO: Refs for state
 const isMobile = ref(false)
 const toast = useToast()
+const activeIndex = ref(0)
+const googleMapRef = ref(null)
 
 // INFO: Crop options
 const cropOptions = ref([
@@ -147,15 +157,20 @@ function handlePolygonUpdated(paths) {
 
 const severity = ref('warning')
 const isLoading = ref(false)
+
 // Save the field (submit to API)
 async function saveField() {
 	if (!newField.value.field_area.coordinates) {
-		toast.add({ severity: 'warn', summary: 'Incomplete Map', detail: 'Please draw the field on the map.', life: 3000 })
+		toast.add({
+			severity: 'warn',
+			summary: 'Incomplete Map',
+			detail: 'Please draw the field on the map.',
+			life: 3000,
+		})
 		return
 	}
 
 	severity.value = 'success'
-	console.log(newField.value)
 	try {
 		isLoading.value = true
 		await $fetch('/api/saveField', {
@@ -167,11 +182,34 @@ async function saveField() {
 				field_area: newField.value.field_area,
 			},
 		})
+
+		// Reset newField to initial state, keeping team_id
+		newField.value = {
+			field_name: '',
+			crop_type: '',
+			field_area: [],
+			team_id: newField.value.team_id,
+		}
+		severity.value = 'warning'
+
+		// Reset the stepper to the first step
+		activeIndex.value = 0
+
+		// Finalize the polygon on the map
+		if (googleMapRef.value && typeof googleMapRef.value.finalizePolygon === 'function') {
+			googleMapRef.value.finalizePolygon()
+		}
+
+		// Show success message
+		toast.add({ severity: 'success', summary: 'Success', detail: 'Field saved successfully!', life: 3000 })
 	} catch (error) {
-		toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to save field. Try again later.' })
+		toast.add({
+			severity: 'error',
+			summary: 'Error',
+			detail: 'Failed to save field. Try again later.',
+		})
 	} finally {
 		isLoading.value = false
-		toast.add({ severity: 'success', summary: 'Success', detail: 'Field saved successfully!' })
 	}
 }
 

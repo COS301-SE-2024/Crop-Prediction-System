@@ -1,5 +1,5 @@
 <template>
-	<Menu :model="items" class="border-none dark:bg-surface-800">
+	<Menu :model="items" class="border-none">
 		<template #submenuheader="{ item }">
 			<span class="text-black dark:text-white ml-[-12px] font-[500] p-0">{{ item.label }}</span>
 		</template>
@@ -35,11 +35,6 @@ const items = ref([
 		label: 'FIELDS',
 		items: [
 			{
-				label: 'Add Field Data',
-				icon: 'pi pi-plus-circle',
-				url: '/inputs/add-field-data',
-			},
-			{
 				label: 'Manage Fields',
 				url: '/inputs/manage-fields',
 				icon: 'pi pi-pen-to-square',
@@ -62,12 +57,17 @@ const items = ref([
 		],
 	},
 	{
-		label: 'TEAM MANAGEMENT',
+		label: 'TEAM',
 		items: [
 			{
 				label: 'Manage Team',
 				url: '/team/manage',
 				icon: 'pi pi-users',
+			},
+			{
+				label: 'Team Chat',
+				url: '/team/chat',
+				icon: 'pi pi-comment',
 			},
 		],
 	},

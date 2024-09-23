@@ -64,14 +64,14 @@ definePageMeta({
 	<div class="w-full h-screen flex flex-col justify-center items-center p-4 overflow-auto dark:">
 		<div class="w-full max-w-[450px] px-4 overflow-auto">
 			<!-- <div class="flex flex-col gap-5 items-center w-[400px] max-w-md"> -->
-			<Card class="w-full border border-surface-border bg-primary-inverse dark:bg-surface-800">
+			<Card class="w-full bg-surface-100 dark:bg-surface-800 p-[20px]">
 				<template #header>
 					<div class="flex justify-center items-center p-4">
 						<img src="../../assets/logo-alt.png" alt="Logo" class="w-[auto] h-[70px] self-center" />
 					</div>
 				</template>
 				<template #title>
-					<h1 class="font-medium">Log in</h1>
+					<h1 class="font-medium my-4">Log in</h1>
 				</template>
 				<template #content>
 					<div class="flex flex-col gap-3">
@@ -101,6 +101,10 @@ definePageMeta({
 									validation.password.$message
 								}}</small>
 							</div>
+							<small class="text-center w-full"
+								>Forgot your password?
+								<NuxtLink to="/reset" class="underline">Reset Password</NuxtLink>
+							</small>
 						</div>
 						<small v-if="errorMsg" class="text-red-500">{{ errorMsg }}</small>
 						<Button class="w-full" label="Login" @click="signIn" />
