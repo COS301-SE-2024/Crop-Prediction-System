@@ -4,10 +4,10 @@
 			<header class="sticky top-0">
 				<Navbar />
 			</header>
-			<div ref="scrollableContainer" class="p-4 overflow-scroll">
+			<div ref="scrollableContainer" class="px-4 py-4 md:px-32 overflow-y-scroll">
 				<slot />
 			</div>
-			<div class="h-[20%] p-4">
+			<div class="h-[20%] p-4 md:px-32">
 				<div class="w-full h-full">
 					<MessageToolbar />
 				</div>
@@ -26,6 +26,6 @@ const scrollableContainer = ref(null)
 
 <style scoped>
 div {
-	font-family: 'Montserrat', sans-serif;
+	font-family: 'Open Sans', sans-serif;
 }
 </style>
