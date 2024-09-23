@@ -83,7 +83,7 @@
 		</DataTable>
 
 		<!-- Dialog for Adding New Member -->
-		<Dialog v-model:visible="visible" modal header="Add Member" :style="{ width: '25rem', 'font-family': 'Montserrat' }">
+		<Dialog v-model:visible="visible" modal header="Add Member" :style="{ width: '25rem', 'font-family': 'Open Sans' }">
 			<div class="flex flex-col items-start justify-between gap-4">
 				<div class="flex flex-col gap-2 w-full">
 					<label for="newUserEmail">User Email</label>
@@ -96,7 +96,12 @@
 		</Dialog>
 
 		<!-- Confirmation Dialog -->
-		<Dialog v-model:visible="confirmVisible" modal header="Confirm" :style="{ width: '25rem', 'font-family': 'Montserrat' }">
+		<Dialog
+			v-model:visible="confirmVisible"
+			modal
+			header="Confirm"
+			:style="{ width: '25rem', 'font-family': 'Open Sans, sans-serif' }"
+		>
 			<p>Are you sure you want to remove this user from the team?</p>
 			<div class="flex gap-3 justify-end">
 				<Button label="Cancel" severity="secondary" outlined @click="confirmVisible = false" />
