@@ -101,6 +101,10 @@ definePageMeta({
 									validation.password.$message
 								}}</small>
 							</div>
+							<small class="text-center w-full"
+								>Forgot your password?
+								<NuxtLink to="/reset" class="underline">Reset Password</NuxtLink>
+							</small>
 						</div>
 						<small v-if="errorMsg" class="text-red-500">{{ errorMsg }}</small>
 						<Button class="w-full" label="Login" @click="signIn" />
