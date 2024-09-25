@@ -114,7 +114,6 @@ class API:
     
     # model routes [POST]
     def train(self, background_tasks: BackgroundTasks, request: Request, body: dict):
-        print(body, flush=True)
         field_id = body.get("field_id") or None # field_id is optional
         batch = body.get("batch") or False
         waitForCompletion = body.get("waitForCompletion") or False

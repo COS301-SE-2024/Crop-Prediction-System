@@ -108,7 +108,7 @@ class Pipeline:
         self.model = FusionModel(X, y, c)
         modelResponse = self.model.train()
 
-        print(modelResponse, flush=True)
+        # print(modelResponse, flush=True)
 
         # Replace None with null
         modelResponse = str(modelResponse).replace("None", "0")
@@ -140,7 +140,7 @@ class Pipeline:
             "model" : modelResponse
         }
 
-if __name__ == '__main__':
-    p = Pipeline()
-    p.train("14420bc8-48e3-47bc-ab83-1a6498380588")
+# if __name__ == '__main__':
+#     p = Pipeline()
+#     p.train("14420bc8-48e3-47bc-ab83-1a6498380588")
     # p.train("975f9c3b-ed7c-49cd-b0e1-99b9c2bd7b9f")
