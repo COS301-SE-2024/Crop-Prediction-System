@@ -61,6 +61,13 @@ class API:
         # market API
         self.app.add_api_route("/market", self.market, methods=["GET"])
         self.app.add_api_route("/getTeamYield", self.getTeamYield, methods=["GET"])
+                               
+        #sensor routes
+        self.app.add_api_route("/getUPSensorData", self.getUPSensorData, methods=["GET"])
+        self.app.add_api_route("/addFieldToSensor", self.addFieldToSensor, methods=["POST"])
+        self.app.add_api_route("/addSensor", self.addSensor, methods=["GET"])
+        self.app.add_api_route("/getFarmerSensorData", self.getFarmerSensorData, methods=["GET"])
+        self.app.add_api_route("/addFieldFarmerSensor", self.addFieldFarmerSensor, methods=["POST"])
 
     def main(self, request: Request):
         return {
@@ -163,6 +170,23 @@ class API:
     
     def getTeamYield(self, request: Request, team_id: str):
         return self.sb.getTeamYield(team_id)
+
+    # sensor routes
+    def getUPSensorData(self, request: Request, sensorID: str):
+        return self.sb.createUpSensorData(sensorID)
+    
+    def addFieldToSensor(self, request: Request, fieldID: str, sensorID: str):
+        return self.sb.addFieldToSensor(sensorID, fieldID)
+    
+    def addSensor(self, request: Request, sensorID: str):
+        return self.sb.createSensor(sensorID)
+    
+    def getFarmerSensorData(self, request: Request, sensorID: str, fieldID:str):
+        return self.sb.getFarmerSensorData(fieldID,sensorID)
+
+    def addFieldFarmerSensor(self, request: Request, fieldID: str, sensorID: str):
+        return self.sb.addFieldFarmerSensor(fieldID, sensorID)
+    
 
 api_instance = API()
 app = api_instance.app
