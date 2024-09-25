@@ -907,23 +907,33 @@ const onCellEditInit = (event) => {
 	event.data._originalValue = event.data[event.field]
 }
 
-const updateDatabase = async (data, field, newValue) => {
+const updateDatabase = async (data) => {
 	try {
-		// Assume you have an API endpoint for updating entries
-		const response = await axios.patch(`/api/entries/${data.id}`, {
-			[field]: newValue,
+		const updateData = await $fetch('/api/updateEntry', {
+			method: 'PUT',
+			body: {
+				field_id: data.field_id,
+				date: data.date,
+				soil_moisture: data.soil_moisture,
+				tempmax: data.tempmax,
+				tempmin: data.tempmin,
+				tempmean: data.tempmean,
+				pressure: data.pressure,
+				humidity: data.humidity,
+				dew_point: data.dew_point,
+				rain: data.rain,
+				uvi: data.uvi,
+				soil_temperature: data.soil_temperature,
+			},
 		})
-
-		if (response.status === 200) {
-			toast.add({ severity: 'success', summary: 'Data updated in database', life: 3000 })
+		if (updateData.status === 'success') {
+			toast.add({ severity: 'success', summary: 'Data updated succesfully', life: 3000 })
 		} else {
 			throw new Error('Failed to update database')
 		}
 	} catch (error) {
 		console.error('Error updating database:', error)
 		toast.add({ severity: 'error', summary: 'Failed to update database', detail: error.message, life: 5000 })
-		// Revert the change in the local data
-		data[field] = data._originalValue
 	}
 }
 
@@ -932,11 +942,9 @@ const onCellEditComplete = async (event) => {
 
 	if (originalEvent.type === 'keydown' && originalEvent.key === 'Enter') {
 		if (data[field] !== data._originalValue) {
-			// Update local data
 			data[field] = newValue
-			// Update database
-			// await updateDatabase(data, field, newValue)
-			toast.add({ severity: 'success', summary: 'Data changed successfully', life: 3000 })
+			console.log('Data updated:', data)
+			await updateDatabase(data)
 			delete data._originalValue
 		}
 	} else if (originalEvent.type === 'focusout') {
