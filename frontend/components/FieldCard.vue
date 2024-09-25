@@ -191,8 +191,8 @@ function calculatePercentageDifference(currentYield: number, pastYield: number) 
 		return currentYield > 0 ? 100 : currentYield < 0 ? -100 : 0 // Avoid division by zero
 	}
 	const difference = currentYield - pastYield
-	const percentageDifference = (difference / Math.abs(pastYield)) * 100
-	return Math.round(percentageDifference * 100) / 100
+	const percentageDifference = (difference / pastYield) * 100
+	return Number(percentageDifference.toFixed(2))
 }
 
 watch(internalSelectedField, (newField) => {
@@ -359,7 +359,7 @@ const yieldStatus = computed(() => {
 
 	if (index === -1) return { value: 'Unknown', severity: 'secondary' }
 
-	const currentYield = internalSelectedField.value.data.pred_yield[index].toFixed(2) || 0
+	const currentYield = internalSelectedField.value.data.pred_yield[index] || 0
 
 	const percentageDifference = calculatePercentageDifference(currentYield, internalSelectedField.value?.pastYieldAvg)
 
@@ -367,18 +367,23 @@ const yieldStatus = computed(() => {
 		return {
 			value: 'Healthy',
 			severity: 'primary',
-			yieldScore: currentYield,
+			yieldScore: currentYield.toFixed(2),
 			percentageDifference: `${percentageDifference}%`,
 		}
 	} else if (percentageDifference >= -9.99) {
 		return {
 			value: 'Moderate',
 			severity: 'warning',
-			yieldScore: currentYield,
+			yieldScore: currentYield.toFixed(2),
 			percentageDifference: `${percentageDifference}%`,
 		}
 	} else {
-		return { value: 'Severe', severity: 'danger', yieldScore: currentYield, percentageDifference: `${percentageDifference}%` }
+		return {
+			value: 'Severe',
+			severity: 'danger',
+			yieldScore: currentYield.toFixed(2),
+			percentageDifference: `${percentageDifference}%`,
+		}
 	}
 })
 
