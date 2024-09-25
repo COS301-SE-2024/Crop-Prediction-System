@@ -101,21 +101,15 @@ class Pipeline:
 
         X, y = self.load_data(c, field_id)
 
-        # print(X.shape)
-        # print(X.tail(25))
-
         self.model = None # Reset the model
         self.model = FusionModel(X, y, c)
         modelResponse = self.model.train()
-
-        # print(modelResponse, flush=True)
 
         # Replace None with null
         modelResponse = str(modelResponse).replace("None", "0")
 
         # Convert to double quotes
         modelResponse = str(modelResponse).replace("'", "\"")
-
 
         # Parse as JSON
         modelResponse = json.loads(modelResponse)
@@ -136,8 +130,7 @@ class Pipeline:
             pass
 
         return {
-            "status" : "Model trained successfully",
-            "model" : modelResponse
+            "status" : "Model trained successfully"
         }
 
 # if __name__ == '__main__':
