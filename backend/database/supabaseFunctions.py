@@ -8,9 +8,9 @@ from backend.logic.weather import Weather
 from backend.logic.calculateHectare import calculate_hectares_from_coordinates
 import datetime
 from collections import defaultdict
-from backend.sensors.getData import getNewSensorData
+from backend.IoT.getData import getNewSensorData
 
-from backend.sensors.farmerSensor import Sensor
+from backend.IoT.farmerSensor import Sensor
 
 class supabaseFunctions:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
@@ -376,11 +376,21 @@ class supabaseFunctions:
             return response.data
         except Exception as e:
             return {"error": "Failed to get team yield", "error_message": e}
+        
+    @staticmethod
+    def fetchSensorData():
+        sensors = ['2CF7F12025200009', '2CF7F1202520006A', '2CF7F1202520010D', '2CF7F120252000E7']
+        for sensor in sensors:
+            supabaseFunctions.createUpSensorData(sensor)
 
     @staticmethod
     def createUpSensorData(sensorID: str):
         try:
             sensor_data = getNewSensorData(sensorID, 1)
+
+            if len(sensor_data['data']['queryTable']['rows']) == 0:
+                return {"error": "No data found for sensor"}
+
             # Extract soil_temperature, soil_moisture, temperature, relative_humidity, received_at from the dictionary
             row = sensor_data['data']['queryTable']['rows'][0]
             values = {column['key']: column['value'] for column in row['columns']}
@@ -391,7 +401,7 @@ class supabaseFunctions:
             relative_humidity = values.get('relative_humidity')
             battery = values.get('battery')
             received_at = values.get('received_at')
-            print(device_eui, soil_temperature, soil_moisture, temperature, relative_humidity, battery, received_at)
+            print(device_eui, soil_temperature, soil_moisture, temperature, relative_humidity, battery, received_at, flush=True)
             response = supabaseFunctions.__sbClient.table("up_sensor_data").insert({
                 "device_eui": device_eui,
                 "soil_temperature": soil_temperature,
@@ -400,9 +410,7 @@ class supabaseFunctions:
                 "relative_humidity": relative_humidity,
                 "battery": battery,
                 "received_at": received_at
-            }).execute() 
-            if response.error:
-                return {"error": "Failed to insert sensor data", "error_message": response.error}
+            }).execute()
             return {"success": "Sensor data inserted successfully", "data": response.data}
         except Exception as e:
             print(e)
@@ -414,44 +422,42 @@ class supabaseFunctions:
     def addFieldToSensor(sensorID: str, fieldID: str):
         try:
             response = supabaseFunctions.__sbClient.table("up_sensor_data").update({"field_id": fieldID}).eq("device_eui", sensorID).execute()
-            if response.error:
-                return {"error": "Failed to add field to sensor", "error_message": response.error}
             return {"success": "Field added to sensor", "data": response.data}
         except Exception as e:
             print(e)
             return {"error": "Failed to add field to sensor", "error_message": str(e)}
 
-    @staticmethod    
-    def createSensor(self, sensorID: str = None):
-        try:
-            response = supabaseFunctions.__sbClient.table("up_sensor_data").insert({"device_eui": sensorID}).execute()
-            if response.error:
-                return {"error": "Failed to create sensor", "error_message": response.error}
-            return {"success": "Sensor created successfully", "data": response.data}
-        except Exception as e:
-            print(e)
-            return {"error": "Failed to create sensor", "error_message": str(e)}
+    # @staticmethod    
+    # def createSensor(self, sensorID: str = None):
+    #     try:
+    #         response = supabaseFunctions.__sbClient.table("up_sensor_data").insert({"device_eui": sensorID}).execute()
+    #         if response.error:
+    #             return {"error": "Failed to create sensor", "error_message": response.error}
+    #         return {"success": "Sensor created successfully", "data": response.data}
+    #     except Exception as e:
+    #         print(e)
+    #         return {"error": "Failed to create sensor", "error_message": str(e)}
 
-    @staticmethod
-    def getFarmerSensorData(fieldID:str,sensorID: str):
-        try:
-            data = Sensor().get_all_data()
-            now = datetime.datetime.now()
-            response = supabaseFunctions.__sbClient.table("iot_sensor_data").insert({"field_id": fieldID, "soil_moisture":data["humidity"],"received_at": now,"soil_temperature": data["temperature"],"conductivity": data["conductivity"],"ph_value": data["ph"],"nitrogen_content": data["nitrogen"],"phosphorus_content": data["phosphorus"],"potassium_content": data["potassium"],"sensor_id": sensorID}).execute()
-            if response.error:
-                return {"error": "Failed to get sensor data", "error_message": response.error}
-            return {"success": "Sensor data fetched successfully", "data": response.data}
-        except Exception as e:
-            print(e)
-            return {"error": "Failed to get sensor data", "error_message": str(e)}
+    # @staticmethod
+    # def getFarmerSensorData(fieldID:str,sensorID: str):
+    #     try:
+    #         data = Sensor().get_all_data()
+    #         now = datetime.datetime.now()
+    #         response = supabaseFunctions.__sbClient.table("iot_sensor_data").insert({"field_id": fieldID, "soil_moisture":data["humidity"],"received_at": now,"soil_temperature": data["temperature"],"conductivity": data["conductivity"],"ph_value": data["ph"],"nitrogen_content": data["nitrogen"],"phosphorus_content": data["phosphorus"],"potassium_content": data["potassium"],"sensor_id": sensorID}).execute()
+    #         if response.error:
+    #             return {"error": "Failed to get sensor data", "error_message": response.error}
+    #         return {"success": "Sensor data fetched successfully", "data": response.data}
+    #     except Exception as e:
+    #         print(e)
+    #         return {"error": "Failed to get sensor data", "error_message": str(e)}
 
-    @staticmethod
-    def addFieldFarmerSensor(fieldID: str, sensorID: str):
-        try:
-            response = supabaseFunctions.__sbClient.table("iot_sensor_data").update({"field_id": fieldID}).eq("sensor_id", sensorID).execute()
-            if response.error:
-                return {"error": "Failed to add sensor to field", "error_message": response.error}
-            return {"success": "Sensor added to field", "data": response.data}
-        except Exception as e:
-            print(e)
-            return {"error": "Failed to add sensor to field", "error_message": str(e)}
+    # @staticmethod
+    # def addFieldFarmerSensor(fieldID: str, sensorID: str):
+    #     try:
+    #         response = supabaseFunctions.__sbClient.table("iot_sensor_data").update({"field_id": fieldID}).eq("sensor_id", sensorID).execute()
+    #         if response.error:
+    #             return {"error": "Failed to add sensor to field", "error_message": response.error}
+    #         return {"success": "Sensor added to field", "data": response.data}
+    #     except Exception as e:
+    #         print(e)
+    #         return {"error": "Failed to add sensor to field", "error_message": str(e)}

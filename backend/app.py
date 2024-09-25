@@ -24,6 +24,7 @@ class API:
         # self.app.add_api_route("/getFieldLogs", self.getFieldLogs, methods=["GET"])
         self.app.add_api_route("/fetchWeather", self.fetchWeatherForAllFields, methods=["GET"])
         self.app.add_api_route("/fetchSummary", self.fetchSummary, methods=["GET"])
+        self.app.add_api_route("/fetchSensorData", self.sb.fetchSensorData, methods=["GET"])
         
 
         # field routes
@@ -172,21 +173,23 @@ class API:
         return self.sb.getTeamYield(team_id)
 
     # sensor routes
-    def getUPSensorData(self, request: Request, sensorID: str):
-        return self.sb.createUpSensorData(sensorID)
+    def getUPSensorData(self, request: Request, sensor_id: str):
+        return self.sb.createUpSensorData(sensor_id)
     
-    def addFieldToSensor(self, request: Request, fieldID: str, sensorID: str):
-        return self.sb.addFieldToSensor(sensorID, fieldID)
+    def addFieldToSensor(self, request: Request, body: dict):
+        sensor_id = body.get("sensor_id")
+        field_id = body.get("field_id")
+        print(sensor_id, field_id, flush=True)
+        return self.sb.addFieldToSensor(sensor_id, field_id)
     
-    def addSensor(self, request: Request, sensorID: str):
-        return self.sb.createSensor(sensorID)
+    # def addSensor(self, request: Request, sensor_id: str):
+    #     return self.sb.createSensor(sensor_id)
     
-    def getFarmerSensorData(self, request: Request, sensorID: str, fieldID:str):
-        return self.sb.getFarmerSensorData(fieldID,sensorID)
+    # def getFarmerSensorData(self, request: Request, sensor_id: str, field_id:str):
+    #     return self.sb.getFarmerSensorData(field_id, sensor_id)
 
-    def addFieldFarmerSensor(self, request: Request, fieldID: str, sensorID: str):
-        return self.sb.addFieldFarmerSensor(fieldID, sensorID)
-    
+    # def addFieldFarmerSensor(self, request: Request, field_id: str, sensor_id: str):
+    #     return self.sb.addFieldFarmerSensor(field_id, sensor_id)
 
 api_instance = API()
 app = api_instance.app

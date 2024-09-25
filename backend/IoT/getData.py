@@ -10,8 +10,6 @@ from dotenv import load_dotenv
 # information hub graphql playground
 # https://api.informationhub.io/graphql
 
-sensors = "'2CF7F12025200009', '2CF7F1202520006A', '2CF7F1202520010D', '2CF7F120252000E7'"
-
 def getNewSensorData(sensorID: str, number_of_rows: int = 1):
     load_dotenv()
     url = os.environ.get("SENSOR_API_URL")
