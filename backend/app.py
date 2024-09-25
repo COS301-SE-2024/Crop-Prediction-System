@@ -66,9 +66,9 @@ class API:
         #sensor routes
         self.app.add_api_route("/getUPSensorData", self.getUPSensorData, methods=["GET"])
         self.app.add_api_route("/addFieldToSensor", self.addFieldToSensor, methods=["POST"])
-        self.app.add_api_route("/addSensor", self.addSensor, methods=["GET"])
-        self.app.add_api_route("/getFarmerSensorData", self.getFarmerSensorData, methods=["GET"])
-        self.app.add_api_route("/addFieldFarmerSensor", self.addFieldFarmerSensor, methods=["POST"])
+        # self.app.add_api_route("/addSensor", self.addSensor, methods=["GET"])
+        # self.app.add_api_route("/getFarmerSensorData", self.getFarmerSensorData, methods=["GET"])
+        # self.app.add_api_route("/addFieldFarmerSensor", self.addFieldFarmerSensor, methods=["POST"])
 
     def main(self, request: Request):
         return {
