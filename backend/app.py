@@ -117,7 +117,7 @@ class API:
         field_id = body.get("field_id") or None # field_id is optional
         batch = body.get("batch") or False
         waitForCompletion = body.get("waitForCompletion") or False
-        if batch and field_id is None:
+        if batch:
             if waitForCompletion:
                 return self.pipeline.train_all()
             background_tasks.add_task(self.pipeline.train_all)

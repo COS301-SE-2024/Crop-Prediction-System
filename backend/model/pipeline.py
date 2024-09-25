@@ -7,8 +7,6 @@ from backend.model.FusionModel import FusionModel
 # Model specific imports
 import pandas as pd
 import datetime
-import os
-import json
 
 class Pipeline:
     def __init__(self):
@@ -111,7 +109,6 @@ class Pipeline:
         modelResponse = str(modelResponse).replace("None", "0")
 
         # Extract predictions
-        # {'MultiScaleModel': [0.3373473774405394, 0.3180518973650237, 0.2879309022470475, 0.41139470933926653, 0.4565206874498029, 0.2869048604909059], 'StageModel': 0.25562482485144905, 'YieldOnlyModel': 0.08906415374372288, 'training_time_s': '22.160459995269775', 'prediction': [3.706325, 3.681821, 3.681821, 3.681821, 3.681821, 3.6654103]}
         predictions = modelResponse.split("prediction")[1].split("}")[0].replace(":", "").replace("[", "").replace("]", "").replace(" ", "").replace("'", "").split(",")
 
         try:
