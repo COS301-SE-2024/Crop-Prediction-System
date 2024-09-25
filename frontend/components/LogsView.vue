@@ -321,19 +321,19 @@ const preparePrintContent = async () => {
 				{
 					label: 'Max Temperature',
 					data: tempMaxData,
-					borderColor: 'red',
+					borderColor: 'rgba(76, 175, 80, 1)',
 					fill: false,
 				},
 				{
 					label: 'Mean Temperature',
 					data: tempMeanData,
-					borderColor: 'orange',
+					borderColor: 'rgba(255, 205, 86, 1)',
 					fill: false,
 				},
 				{
 					label: 'Min Temperature',
 					data: tempMinData,
-					borderColor: 'blue',
+					borderColor: 'rgba(255, 99, 132, 1)',
 					fill: false,
 				},
 			],
@@ -359,7 +359,7 @@ const preparePrintContent = async () => {
 				{
 					label: 'Pressure',
 					data: pressureData,
-					borderColor: 'red',
+					borderColor: 'rgba(255, 99, 132, 1)',
 					fill: false,
 				},
 			],
@@ -385,7 +385,7 @@ const preparePrintContent = async () => {
 				{
 					label: 'Humidity',
 					data: humidityData,
-					borderColor: 'red',
+					borderColor: 'rgba(168,84,246, 1)',
 					fill: false,
 				},
 			],
@@ -411,7 +411,7 @@ const preparePrintContent = async () => {
 				{
 					label: 'Dew Point',
 					data: dewPointData,
-					borderColor: 'red',
+					borderColor: 'rgba(115, 155, 208, 1)',
 					fill: false,
 				},
 			],
@@ -437,7 +437,7 @@ const preparePrintContent = async () => {
 				{
 					label: 'Rainfall',
 					data: rainfallData,
-					borderColor: 'red',
+					borderColor: 'rgba(6, 182, 212, 1)',
 					fill: false,
 				},
 			],
@@ -463,7 +463,7 @@ const preparePrintContent = async () => {
 				{
 					label: 'UV Index',
 					data: uviData,
-					borderColor: 'red',
+					borderColor: 'rgba(255, 205, 86, 1)',
 					fill: false,
 				},
 			],
@@ -489,7 +489,7 @@ const preparePrintContent = async () => {
 				{
 					label: 'Soil Moisture',
 					data: soilMoistureData,
-					borderColor: 'red',
+					borderColor: 'rgba(6, 182, 212, 1)',
 					fill: false,
 				},
 			],
@@ -515,7 +515,7 @@ const preparePrintContent = async () => {
 				{
 					label: 'Soil Temperature',
 					data: soilTemperatureData,
-					borderColor: 'red',
+					borderColor: 'rgba(248, 114, 22, 1)',
 					fill: false,
 				},
 			],
@@ -541,7 +541,7 @@ const preparePrintContent = async () => {
 				{
 					label: 'Health Index',
 					data: healthData,
-					borderColor: 'red',
+					borderColor: 'green',
 					fill: false,
 				},
 			],
@@ -567,7 +567,7 @@ const preparePrintContent = async () => {
 				{
 					label: 'Yield',
 					data: yieldData,
-					borderColor: 'red',
+					borderColor: 'green',
 					fill: false,
 				},
 			],
@@ -593,7 +593,7 @@ const preparePrintContent = async () => {
 				{
 					label: 'Sprayability',
 					data: sprayabilityData,
-					borderColor: 'red',
+					borderColor: 'rgba(255, 205, 86, 1)',
 					fill: false,
 				},
 			],
