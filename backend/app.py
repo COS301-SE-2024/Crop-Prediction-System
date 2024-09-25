@@ -60,6 +60,7 @@ class API:
 
         # market API
         self.app.add_api_route("/market", self.market, methods=["GET"])
+        self.app.add_api_route("/getTeamYield", self.getTeamYield, methods=["GET"])
 
     def main(self, request: Request):
         return {
@@ -160,6 +161,9 @@ class API:
         function = function.upper()
         
         return market(function)
+    
+    def getTeamYield(self, request: Request, team_id: str):
+        return self.sb.getTeamYield(team_id)
 
 api_instance = API()
 app = api_instance.app

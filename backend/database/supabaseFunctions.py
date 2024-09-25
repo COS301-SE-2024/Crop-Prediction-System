@@ -362,3 +362,14 @@ class supabaseFunctions:
         except Exception as e:
             print(e)
             return {"error": "Failed to get user", "error_message": e}
+        
+    @staticmethod
+    def getTeamYield(team_id: str):
+        try:
+            dict = {"teamid": team_id}
+            response = supabaseFunctions.__sbClient.rpc("get_distinct_crop_yield_by_team", dict).execute()
+            if response.data == []:
+                return {"error": "Data not found. Team ID may be invalid or may not have any data."}
+            return response.data
+        except Exception as e:
+            return {"error": "Failed to get team yield", "error_message": e}
