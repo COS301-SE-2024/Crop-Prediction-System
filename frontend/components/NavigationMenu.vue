@@ -1,5 +1,5 @@
 <template>
-	<Menu :model="items" class="border-none dark:bg-surface-800">
+	<Menu :model="items" class="border-none">
 		<template #submenuheader="{ item }">
 			<span class="text-black dark:text-white ml-[-12px] font-[500] p-0">{{ item.label }}</span>
 		</template>
@@ -26,23 +26,23 @@ const items = ref([
 		items: [
 			{
 				label: 'Dashboard',
-				icon: 'pi pi-home',
+				icon: 'pi pi-chart-bar',
 				url: '/',
 			},
 		],
 	},
 	{
-		label: 'INPUTS',
+		label: 'FIELDS',
 		items: [
-			{
-				label: 'Add Field Data',
-				icon: 'pi pi-plus-circle',
-				url: '/inputs/add-field-data',
-			},
 			{
 				label: 'Manage Fields',
 				url: '/inputs/manage-fields',
-				icon: 'pi pi-map-marker',
+				icon: 'pi pi-pen-to-square',
+			},
+			{
+				label: 'Add New Field',
+				url: '/inputs/add-field',
+				icon: 'pi pi-map',
 			},
 		],
 	},
@@ -57,22 +57,17 @@ const items = ref([
 		],
 	},
 	{
-		label: 'TEAM MANAGEMENT',
+		label: 'TEAM',
 		items: [
 			{
 				label: 'Manage Team',
 				url: '/team/manage',
 				icon: 'pi pi-users',
 			},
-			// {
-			// 	label: 'Create a Team',
-			// 	url: '/team/create',
-			// 	icon: 'pi pi-plus-circle',
-			// },
 			{
-				label: 'Join a Team',
-				url: '/team/join',
-				icon: 'pi pi-sign-in',
+				label: 'Team Chat',
+				url: '/team/chat',
+				icon: 'pi pi-comment',
 			},
 		],
 	},

@@ -1,12 +1,21 @@
 <template>
-	<div class="flex w-full justify-center items-start">
-		<div class="flex flex-col justify-start items-start gap-4 w-full">
-			<!-- Ensure that FieldCard and GoogleMapsField are rendered even if userFieldsWithData is empty -->
+	<div class="flex w-full justify-center items-center">
+		<div v-if="loading" class="flex flex-col items-center justify-center gap-4 mt-20">
+			<ProgressSpinner />
+			<h2 class="dark:text-white font-bold">Fetching your data...</h2>
+		</div>
+		<div v-else class="flex flex-col justify-start items-start gap-4 w-full">
+			<div v-if="userFieldsWithData.length === 0">
+				<p class="text-surface-700 dark:text-surface-0">
+					You have no fields available. Start adding fields on the
+					<NuxtLink to="/inputs/add-field" class="underline">Add Field Page.</NuxtLink>
+				</p>
+			</div>
 			<div class="flex flex-col md:flex-row w-full gap-5">
-				<div class="w-full md:w-1/3">
+				<div class="w-full lg:w-1/3">
 					<FieldCard v-model="selectedField" :fields="userFieldsWithData" />
 				</div>
-				<div class="w-full md:w-2/3 h-96 md:h-auto rounded overflow-hidden border-surface-600 shadow-md">
+				<div class="w-full lg:w-2/3 h-96 md:h-auto rounded-md shadow-md overflow-hidden">
 					<GoogleMapsField
 						:selectedField="selectedField"
 						:fields="userFieldsWithData"
@@ -15,247 +24,98 @@
 				</div>
 			</div>
 			<div class="w-full">
-				<Panel header="View More Statistics" toggleable collapsed>
-					<div v-if="selectedField" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-						<StatsCard title="Soil Moisture" :chartData="soilMoistureChartData" />
-						<StatsCard title="Soil Temperature (°C)" :chartData="soilTemperatureChartData" />
-						<StatsCard title="Temperature (°C)" :chartData="temperatureChartData" />
-						<StatsCard title="Dew Point (°C)" :chartData="dewPointChartData" />
-						<StatsCard title="Humidity" :chartData="humidityChartData" />
-						<StatsCard title="Pressure" :chartData="pressureChartData" />
-						<StatsCard title="UV Index" :chartData="uvChartData" />
+				<Panel
+					:header="!selectedField ? 'Select a field to view stats' : 'More Field Stats'"
+					:toggleable="!selectedField ? false : true"
+					collapsed
+				>
+					<div class="w-full flex flex-col justify-center items-center gap-4 relative">
+						<div class="flex w-full gap-4 mol:flex-row mos:flex-col justify-between items-center">
+							<SelectButton
+								v-model="filter"
+								:options="filterOptions"
+								optionLabel="name"
+								optionDisabled="constant"
+							/>
+							<Button icon="pi pi-question-circle" outlined severity="secondary" size="small" class="h-full" />
+						</div>
+						<div v-if="selectedField" class="grid gap-4 w-full" :class="getGridClass(filter.value)">
+							<StatsCard
+								v-for="(chartData, key) in chartDataList"
+								:key="key"
+								:title="chartData.title"
+								:chartData="chartData.chartData"
+							/>
+						</div>
 					</div>
-					<Skeleton v-if="!selectedField" height="200px"></Skeleton>
 				</Panel>
-			</div>
-			<div v-if="userFieldsWithData.length === 0">
-				<p class="text-center text-gray-500">You have no fields available.</p>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import FieldCard from '~/components/FieldCard.vue'
 import GoogleMapsField from '~/components/GoogleMapsField.vue'
 import StatsCard from '~/components/StatsCard.vue'
+import { useFieldData } from '~/composables/useFieldData'
+import { updateChartData, getGridClass } from '~/utils/chartDataUtils'
+
+const { userFieldsWithData, filterOptions, chartDataList, loading } = useFieldData()
 
 const selectedField = ref(null)
+const filter = ref({ name: '8 Days', value: 8, constant: false })
+const screenWidth = ref(0)
 
-function transformData(data) {
-	const result = {}
+watch(filter, (newFilter) => {
+	if (selectedField.value) {
+		updateChartData(selectedField.value, newFilter.value, chartDataList)
+	}
+})
 
-	data.forEach((item) => {
-		Object.keys(item).forEach((key) => {
-			if (key === 'field_id') {
-				if (!result[key]) {
-					result[key] = item[key]
-				}
-			} else {
-				if (!result[key]) {
-					result[key] = []
-				}
-
-				if (key === 'date') {
-					const formattedDate = item[key].slice(5)
-					result[key].push(formattedDate)
-				} else {
-					result[key].push(item[key])
-				}
+watch(selectedField, async (newField) => {
+	if (newField && newField.data) {
+		updateChartData(newField, filter.value.value, chartDataList)
+		await nextTick()
+		updateFilterOptions()
+	} else {
+		Object.keys(chartDataList).forEach((key) => {
+			if (chartDataList[key]) {
+				chartDataList[key].chartData = {}
 			}
 		})
-	})
-
-	return result
-}
-
-const currentUser = useSupabaseUser()
-
-const teamId = await $fetch('/api/getTeamID', {
-	params: { userid: currentUser.value.id },
+	}
 })
-
-let userFields = []
-const userFieldsResponse = await $fetch('/api/getTeamFields', {
-	params: { team_id: teamId.team_id },
-})
-
-if (Array.isArray(userFieldsResponse)) {
-	userFields = userFieldsResponse
-} else {
-	console.error('Error fetching user fields:', userFieldsResponse.error || userFieldsResponse)
-}
-
-const userFieldsWithData = await Promise.all(
-	(userFields.length > 0 ? userFields : []).map(async (field) => {
-		const fieldData = await $fetch('/api/getFieldData', {
-			params: { fieldid: field.id, input_date: getCurrentDateApiRequestFormatted() },
-		})
-
-		const transformedFieldData = transformData(fieldData)
-
-		return {
-			...field,
-			data: transformedFieldData,
-		}
-	}),
-)
-
-function getCurrentDateApiRequestFormatted() {
-	const date = new Date()
-	const year = date.getFullYear()
-	const month = String(date.getMonth() + 1).padStart(2, '0')
-	const day = String(date.getDate()).padStart(2, '0')
-	return `${year}-${month}-${day}`
-}
-
-const soilMoistureChartData = ref({})
-const soilTemperatureChartData = ref({})
-const temperatureChartData = ref({})
-const dewPointChartData = ref({})
-const humidityChartData = ref({})
-const pressureChartData = ref({})
-const uvChartData = ref({})
 
 function updateSelectedField(newField) {
 	selectedField.value = newField
 }
 
-watch(selectedField, (newField) => {
-	if (newField && newField.data) {
-		soilMoistureChartData.value = {
-			labels: newField.data.date || [],
-			datasets: [
-				{
-					label: 'Soil Moisture',
-					data: newField.data.soil_moisture || [],
-					fill: false,
-					borderWidth: 3,
-					backgroundColor: 'rgba(6, 182, 212, 0.2)',
-					borderColor: 'rgba(6, 182, 212, 1)',
-					tension: 0.4,
-				},
-			],
-		}
+function checkLargeDateValues() {
+	return !(selectedField.value?.data?.['date']?.length >= 30 && screenWidth.value >= 650)
+}
 
-		soilTemperatureChartData.value = {
-			labels: newField.data.date || [],
-			datasets: [
-				{
-					label: 'Soil Temperature',
-					data: newField.data.soil_temperature || [],
-					fill: false,
-					backgroundColor: 'rgba(248, 114, 22, 0.2)',
-					borderWidth: 3,
-					borderColor: 'rgba(248, 114, 22, 1)',
-					tension: 0.4,
-				},
-			],
-		}
+function checkMediumDateValues() {
+	return !(selectedField.value?.data?.['date']?.length >= 14 && screenWidth.value >= 650)
+}
 
-		temperatureChartData.value = {
-			labels: newField.data.date || [],
-			datasets: [
-				{
-					label: 'Temp Max',
-					data: newField.data.tempmax || [],
-					fill: false,
-					backgroundColor: 'rgba(76, 175, 80, 0.2)',
-					borderColor: 'rgba(76, 175, 80, 1)',
-					borderWidth: 3,
-					tension: 0.4,
-				},
-				{
-					label: 'Temp Mean',
-					data: newField.data.tempmean || [],
-					fill: false,
-					backgroundColor: 'rgba(255, 205, 86, 0.2)',
-					borderWidth: 3,
-					borderColor: 'rgba(255, 205, 86, 1)',
-					tension: 0.4,
-				},
-				{
-					label: 'Temp Min',
-					data: newField.data.tempmin || [],
-					fill: false,
-					backgroundColor: 'rgba(255, 99, 132, 0.2)',
-					borderColor: 'rgba(255, 99, 132, 1)',
-					borderWidth: 3,
-					tension: 0.4,
-				},
-			],
-		}
+function updateFilterOptions() {
+	filterOptions.value = [
+		{ name: '8 Days', value: 8, constant: false },
+		{ name: '14 Days', value: 14, constant: checkMediumDateValues() },
+		{ name: '30 Days', value: 30, constant: checkLargeDateValues() },
+	]
+}
 
-		dewPointChartData.value = {
-			labels: newField.data.date || [],
-			datasets: [
-				{
-					label: 'Dew Point',
-					data: newField.data.dew_point || [],
-					fill: false,
-					backgroundColor: 'rgba(226, 226, 226, 0.2)',
-					borderWidth: 3,
-					borderColor: 'rgba(226, 226, 226, 1)',
-					tension: 0.4,
-				},
-			],
-		}
+onMounted(() => {
+	updateFilterOptions()
 
-		humidityChartData.value = {
-			labels: newField.data.date || [],
-			datasets: [
-				{
-					label: 'Humidity',
-					data: newField.data.humidity || [],
-					fill: false,
-					backgroundColor: 'rgba(168,84,246, 0.2)',
-					borderColor: 'rgba(168,84,246, 1)',
-					borderWidth: 3,
-					tension: 0.4,
-				},
-			],
-		}
-
-		pressureChartData.value = {
-			labels: newField.data.date || [],
-			datasets: [
-				{
-					label: 'Pressure',
-					data: newField.data.pressure || [],
-					fill: false,
-					backgroundColor: 'rgba(255, 99, 132, 0.2)',
-					borderWidth: 3,
-					borderColor: 'rgba(255, 99, 132, 1)',
-					tension: 0.4,
-				},
-			],
-		}
-
-		uvChartData.value = {
-			labels: newField.data.date || [],
-			datasets: [
-				{
-					label: 'UV Index',
-					data: newField.data.uvi || [],
-					fill: false,
-					backgroundColor: 'rgba(255, 205, 86, 0.2)',
-					borderWidth: 3,
-					borderColor: 'rgba(255, 205, 86, 1)',
-					tension: 0.4,
-				},
-			],
-		}
-	} else {
-		// Clear chart data if no field is selected
-		soilMoistureChartData.value = {}
-		soilTemperatureChartData.value = {}
-		temperatureChartData.value = {}
-		dewPointChartData.value = {}
-		humidityChartData.value = {}
-		pressureChartData.value = {}
-		uvChartData.value = {}
-	}
+	screenWidth.value = window.innerWidth
+	window.addEventListener('resize', () => {
+		screenWidth.value = window.innerWidth
+		filterOptions.value[2].constant = window.innerWidth < 650
+	})
 })
 
 definePageMeta({

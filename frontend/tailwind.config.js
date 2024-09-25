@@ -8,6 +8,10 @@ module.exports = {
 				'8xl': '96rem',
 				'9xl': '128rem',
 			},
+      screens: {
+        'mos': '320px',
+        'mol': '390px',
+      },
 			colors: {
 				primary: 'rgb(var(--primary))',
 				'primary-inverse': 'rgb(var(--primary-inverse))',

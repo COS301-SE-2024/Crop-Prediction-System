@@ -10,6 +10,7 @@ import { required, email, minLength, sameAs, helpers } from '@vuelidate/validato
 
 const client = useSupabaseClient()
 const userEmail = ref('')
+const userFullName = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const errorMsg = ref('')
@@ -27,19 +28,36 @@ const validation = useVuelidate(rules, { userEmail, password, confirmPassword })
 
 async function signUp() {
 	try {
-		const { error } = await client.auth.signUp({
+		const { data, error } = await client.auth.signUp({
 			email: userEmail.value,
 			password: password.value,
 			options: {
 				data: {
 					email: userEmail.value,
+					full_name: userFullName.value,
 				},
+				emailRedirectTo: `${useRuntimeConfig().public.appBaseUrl}`,
 			},
 		})
 		if (error) throw error
 		successMsg.value = 'Check your email to confirm your account.'
+		updateRole(data.user.id)
 	} catch (error) {
 		errorMsg.value = error.message
+	}
+}
+
+const updateRole = async (id: string) => {
+	try {
+		await $fetch('/api/updateRoles', {
+			method: 'POST',
+			body: {
+				user_id: id,
+				role: 'farm_manager', // Use the updated role from the dropdown
+			},
+		})
+	} catch (error) {
+		console.error('Error updating role:', error)
 	}
 }
 
@@ -80,7 +98,7 @@ definePageMeta({
 <template>
 	<div class="w-full h-screen flex flex-col justify-center items-center p-4 overflow-auto">
 		<div class="w-full max-w-[450px] px-4 overflow-auto">
-			<Card class="w-full border border-surface-border">
+			<Card class="w-full bg-surface-100 dark:bg-surface-800 p-[20px]">
 				<template #header>
 					<div class="flex justify-center items-center p-4">
 						<img
@@ -96,10 +114,14 @@ definePageMeta({
 					</div>
 				</template>
 				<template #title>
-					<h1 class="font-medium">Sign up</h1>
+					<h1 class="font-medium my-4">Sign up</h1>
 				</template>
 				<template #content>
 					<div class="flex flex-col gap-3">
+						<div class="flex flex-col gap-2 items-start">
+							<h3 class="font-semibold">Full Name</h3>
+							<InputText id="email" type="text" class="w-full" v-model="userFullName" placeholder="John Doe" />
+						</div>
 						<div class="flex flex-col gap-2 items-start">
 							<h3 class="font-semibold">Email Address</h3>
 							<InputText
@@ -164,7 +186,8 @@ definePageMeta({
 								userEmail === '' ||
 								!password ||
 								!confirmPassword ||
-								password !== confirmPassword
+								password !== confirmPassword ||
+								userFullName === ''
 							"
 						/>
 						<Divider align="center">

@@ -151,7 +151,7 @@ export default {
     panelcontainer: {
         class: [
             // Colors
-            'bg-surface-0 dark:bg-surface-800',
+            'bg-transparent',
             'text-surface-900 dark:text-surface-0',
 
             // Spacing

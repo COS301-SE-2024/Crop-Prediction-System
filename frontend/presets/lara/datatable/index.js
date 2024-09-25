@@ -38,7 +38,7 @@ export default {
             { relative: props.scrollable, 'flex flex-col grow': props.scrollable && props.scrollHeight === 'flex' },
 
             // Size
-            { 'h-full': props.scrollable && props.scrollHeight === 'flex' }
+            { 'h-full rounded': props.scrollable && props.scrollHeight === 'flex' }
         ]
     }),
     header: ({ props }) => ({
@@ -46,7 +46,7 @@ export default {
             'font-bold',
 
             // Shape
-            props.showGridlines ? 'border-x border-t border-b-0' : 'border-y border-x-0',
+            props.showGridlines ? 'border-x border-t border-b-0' : 'border-y border-t-0 border-x-0',
 
             // Spacing
             'p-4',

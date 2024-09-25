@@ -6,6 +6,7 @@
 		scrollable
 		scrollHeight="450px"
 		size="small"
+		class="bg-surface-100 dark:bg-surface-800 rounded-md"
 		paginator
 		@cell-edit-complete="onCellEditComplete"
 		editMode="cell"
@@ -96,7 +97,11 @@
 			</div>
 		</template>
 		<template #empty>
-			<Skeleton height="20px"></Skeleton>
+			<div class="flex flex-col gap-3">
+				<Skeleton height="20px"></Skeleton>
+				<Skeleton height="20px"></Skeleton>
+				<Skeleton height="20px"></Skeleton>
+			</div>
 		</template>
 
 		<template #loading> Loading data entries. Please wait.</template>
@@ -201,6 +206,8 @@ const fetchEntryData = async () => {
 	const entryData = await $fetch('/api/getTeamFieldData', {
 		params: { team_id: teamID.team_id },
 	})
+
+	console.log(entryData)
 
 	entries.value = entryData.map((entry: any) => ({
 		...entry,

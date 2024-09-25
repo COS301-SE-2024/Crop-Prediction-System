@@ -1,10 +1,8 @@
 export default defineEventHandler(async (event) => {
-	const proxyUrl = useRuntimeConfig().public.openweatherApiUrl
-	const apiKey = useRuntimeConfig().public.openweatherApiKey
-	const lat = getQuery(event).lat
-	const lon = getQuery(event).lon
+	const proxyUrl = useRuntimeConfig().public.apiBaseUrl
+	const team_id = getQuery(event).team_id
 
-	const apiUrl = `${proxyUrl}/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`
+	const apiUrl = `${proxyUrl}/getTeamDetails?team_id=${team_id}`
 
 	try {
 		const response = await fetch(apiUrl)

@@ -63,7 +63,7 @@ describe('StatsCard', () => {
 							autoSkip: false,
 						}),
 						grid: expect.objectContaining({
-							color: 'rgba(192, 192, 192, 0.3)',
+							color: 'rgba(192, 192, 192, 0.5)',
 							display: true,
 						}),
 					}),
@@ -73,7 +73,7 @@ describe('StatsCard', () => {
 							stepSize: 2,
 						}),
 						grid: expect.objectContaining({
-							color: 'rgba(192, 192, 192, 0.3)',
+							color: 'rgba(192, 192, 192, 0.5)',
 							display: true,
 						}),
 					}),
