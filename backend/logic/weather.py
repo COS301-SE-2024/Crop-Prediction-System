@@ -109,29 +109,29 @@ class Weather:
             entry_date = dt.datetime.fromtimestamp(entry.timestamp).date()
             future_date = (dt.datetime.now() + dt.timedelta(days=6)).date()
 
-            print(entry, flush=True)
-
-            # Let it upload to data as well
             if (entry_date <= future_date):
-                response = Weather.__sbClient.table('data').insert({
-                    'field_id': str(entry.field_id),
-                    'date': dt.datetime.fromtimestamp(entry.timestamp).strftime('%Y-%m-%d'),
-                    'summary': entry.summary,
-                    'tempmax': entry.tempMax,
-                    'tempmin': entry.tempMin,
-                    'humidity': entry.humidity,
-                    'tempdiurnal': entry.tempDiurnal,
-                    'pressure': entry.pressure,
-                    'tempmean': entry.tempMean,
-                    'dew_point': entry.dew_point,
-                    'clouds': entry.clouds,
-                    'rain': entry.rain,
-                    'uvi': entry.uvi,
-                    'soil_moisture': entry.soil_moisture,
-                    'soil_temperature': entry.soil_temperature,
-                    'pred_sprayability': entry.sprayability
-                }, returning='representation'
-                ).execute()
+                try:
+                    response = Weather.__sbClient.table('data').insert({
+                        'field_id': str(entry.field_id),
+                        'date': dt.datetime.fromtimestamp(entry.timestamp).strftime('%Y-%m-%d'),
+                        'summary': entry.summary,
+                        'tempmax': entry.tempMax,
+                        'tempmin': entry.tempMin,
+                        'humidity': entry.humidity,
+                        'tempdiurnal': entry.tempDiurnal,
+                        'pressure': entry.pressure,
+                        'tempmean': entry.tempMean,
+                        'dew_point': entry.dew_point,
+                        'clouds': entry.clouds,
+                        'rain': entry.rain,
+                        'uvi': entry.uvi,
+                        'soil_moisture': entry.soil_moisture,
+                        'soil_temperature': entry.soil_temperature,
+                        'pred_sprayability': entry.sprayability
+                    }, returning='representation'
+                    ).execute()
+                except Exception as e:
+                    pass
             else:
                 response = Weather.__sbClient.table('data').update({
                     'summary': entry.summary,
