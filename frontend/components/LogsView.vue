@@ -85,10 +85,13 @@
 						<InputText v-model="filters['global'].value" placeholder="Keyword Search" />
 					</IconField>
 				</div>
-				<p class="text-xs text-surface-600 dark:text-surface-0/60">
-					(To change table values, select the value you wish to change, then enter the correct value and hit 'Enter'.
-					You will receive a prompt if the new value was saved successfully. (Note: You cannot change the Date, Field
-					Name, Crop Type, Health, Yield or Sprayability values))
+				<p class="text-sm text-surface-700 dark:text-surface-0 font-normal">
+					To edit the table, select the value you'd like to modify, input the new value, and press 'Enter'. A
+					confirmation message will appear if the change is successfully saved.
+					<br />
+					<span class="font-bold">
+						Note: The following fields cannot be edited: Date, Field Name, Crop Type, Health, Yield, and Sprayability.
+					</span>
 				</p>
 			</div>
 		</template>
