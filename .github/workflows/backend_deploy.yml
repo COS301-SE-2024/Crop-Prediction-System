@@ -3,24 +3,24 @@ name: Deploy Backend
 on:
   push:
     branches:
-      - feature/APIv2
+      - feature/backend/API
 
 jobs:
-#   upgrade_pip:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout Code
-#         uses: actions/checkout@v4
+  #   upgrade_pip:
+  #     runs-on: ubuntu-latest
+  #     steps:
+  #       - name: Checkout Code
+  #         uses: actions/checkout@v4
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v2
-#         with:
-#           python-version: '3.x'
+  #       - name: Set up Python
+  #         uses: actions/setup-python@v2
+  #         with:
+  #           python-version: '3.x'
 
-#       - name: Install dependencies
-#         run: |
-#           python -m pip install --upgrade pip
-#           pip install -r requirements.txt
+  #       - name: Install dependencies
+  #         run: |
+  #           python -m pip install --upgrade pip
+  #           pip install -r requirements.txt
   build_and_deploy:
     name: "Deploy API"
     runs-on: ubuntu-latest
@@ -37,6 +37,7 @@ jobs:
           script: |
             cd /home/farm/server/Crop-Prediction-System
             ls -la
+            git checkout feature/backend/API
             git pull
             su - farm -c "pm2 restart sample_farm_api"
   test-curl-action:
@@ -65,7 +66,6 @@ jobs:
           # The number of attempts before giving up
           # Default: 1
           retries: 3
-
 # Server-side commands:
 # su - farm -c "pm2 delete sample_farm_api"
 # su - farm -c "pm2 save"

@@ -3,8 +3,10 @@ name: Backend Unit Tests
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main, dev]
-    
+    branches: [main, dev, feature/backend/**]
+  push:
+    branches: feature/backend/**
+
 jobs:
   automated-backend-unit-tests:
     runs-on: ubuntu-latest
@@ -20,13 +22,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-            pip install -r backend/requirements.txt
-            pip install --upgrade pydantic
-            pip install --upgrade langchain_core
-            pip install google.generativeai
-            pip install pytest pytest-cov codecov coverage
-            pip install uuid
-            pip install httpx
+          pip install -r backend/requirements.txt
+          pip install --upgrade pydantic
+          pip install --upgrade langchain_core
+          pip install google.generativeai
+          pip install pytest pytest-cov codecov coverage
+          pip install uuid
+          pip install httpx
 
       - name: Run tests with pytest
         env:
