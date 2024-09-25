@@ -160,9 +160,9 @@ const columns = [
 	{ field: 'uvi', header: 'UV Index ' },
 	{ field: 'soil_moisture', header: 'Soil Moisture (wfv)' },
 	{ field: 'soil_temperature', header: 'Soil Temp (°C)' },
-	{ field: 'health', header: 'Health Index (%)' },
-	{ field: 'yield', header: 'Yield (t/ha)' },
-	{ field: 'sprayability', header: 'Sprayability (%)' },
+	{ field: 'pred_health', header: 'Health Index (%)' },
+	{ field: 'pred_yield', header: 'Yield (t/ha)' },
+	{ field: 'pred_sprayability', header: 'Sprayability (%)' },
 ]
 
 const filters = ref({
@@ -694,63 +694,152 @@ const preparePrintContent = async () => {
 	return true
 }
 
+// const triggerPrint = async () => {
+// 	if (!(await preparePrintContent())) return
+
+// 	const printSection = document.createElement('div')
+// 	printSection.id = 'printSection'
+// 	printSection.innerHTML = printContent.value
+// 	document.body.appendChild(printSection)
+
+// 	const style = document.createElement('style')
+// 	style.textContent = `
+// 		@media print {
+// 			body * {
+// 				visibility: hidden;
+// 			}
+// 			#printSection, #printSection * {
+// 				visibility: visible;
+// 			}
+// 			#printSection {
+// 				position: absolute;
+// 				left: 0;
+// 				top: 0;
+// 				width: 100%;
+// 			}
+// 			.chart-container {
+// 				page-break-inside: avoid; /* Prevent splitting graphs */
+// 				break-inside: avoid;
+// 				margin-bottom: 20px;
+// 			}
+// 			.headings {
+// 				display: flex;
+// 				flex-direction: row;
+// 				justify-content: space-between;
+// 				margin-bottom: 20px;
+// 			}
+// 			canvas {
+// 				width: 100% !important; /* Ensure charts fit within the page width */
+// 				height: auto !important;
+// 			}
+// 			@page {
+// 				size: auto;
+// 				margin: 20mm; /* Adjust margins to fit content */
+// 			}
+// 			h2 {
+// 				font-size: 18pt;
+// 				font-weight: bold;
+// 				padding-bottom: 10px;
+// 			}
+// 		}
+
+// 	`
+// 	document.head.appendChild(style)
+
+// 	window.print()
+
+// 	window.onafterprint = () => {
+// 		document.body.removeChild(printSection)
+// 		document.head.removeChild(style)
+// 	}
+// }
+
 const triggerPrint = async () => {
 	if (!(await preparePrintContent())) return
-
-	const printSection = document.createElement('div')
-	printSection.id = 'printSection'
-	printSection.innerHTML = printContent.value
-	document.body.appendChild(printSection)
-
-	const style = document.createElement('style')
-	style.textContent = `
-		@media print {
-			body * {
-				visibility: hidden;
-			}
-			#printSection, #printSection * {
-				visibility: visible;
-			}
-			#printSection {
-				position: absolute;
-				left: 0;
-				top: 0;
-				width: 100%;
-			}
-			.chart-container {
-				page-break-inside: avoid; /* Prevent splitting graphs */
-				break-inside: avoid;
-				margin-bottom: 20px;
-			}
-			.headings {
-				display: flex;	
-				flex-direction: row;
-				justify-content: space-between;
-				margin-bottom: 20px;
-			}
-			canvas {
-				width: 100% !important; /* Ensure charts fit within the page width */
-				height: auto !important;
-			}
-			@page {
-				size: auto;
-				margin: 20mm; /* Adjust margins to fit content */
-			}
-			h2 {
-				font-size: 18pt;
-				font-weight: bold;
-				padding-bottom: 10px;
-			}
+	const printIframe = document.createElement('iframe')
+	printIframe.style.position = 'absolute'
+	printIframe.style.width = '0'
+	printIframe.style.height = '0'
+	printIframe.style.border = 'none'
+	document.body.appendChild(printIframe)
+	const printDoc = printIframe.contentWindow?.document
+	if (!printDoc) {
+		console.error('Failed to access print iframe document.')
+		return
+	}
+	printDoc.open()
+	printDoc.write(`
+        <html>
+        <head>
+            <title>Print ${selectedField.value}</title>
+            <style>
+                @media print {
+                    body * {
+                        visibility: hidden;
+                    }
+                    #printSection, #printSection * {
+                        visibility: visible;
+                    }
+                    #printSection {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                    }
+                    .chart-container {
+                        page-break-inside: avoid; /* Prevent splitting graphs */
+                        break-inside: avoid;
+                        margin-bottom: 20px;
+                    }
+                    .headings {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        margin-bottom: 20px;
+                    }
+                    canvas {
+                        width: 100% !important; /* Ensure charts fit within the page width */
+                        height: auto !important;
+                    }
+                    @page {
+                        size: auto;
+                        margin: 20mm; /* Adjust margins to fit content */
+                    }
+                    h1 {
+                        font-size: 24pt;
+                        font-weight: bold;
+                        margin-bottom: 10px;
+                    }
+                    h2 {
+                        font-size: 18pt;
+                        font-weight: bold;
+                        padding-bottom: 10px;
+                        margin-bottom: 8px;
+                    }
+                    h3 {
+                        font-size: 14pt;
+                        font-weight: normal;
+                        margin-bottom: 5px;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div id="printSection">
+                ${printContent.value}
+            </div>
+        </body>
+        </html>
+    `)
+	printDoc.close()
+	printIframe.onload = () => {
+		if (printIframe.contentWindow) {
+			printIframe.contentWindow.focus()
+			printIframe.contentWindow.print()
 		}
-
-	`
-	document.head.appendChild(style)
-
-	window.print()
-
-	window.onafterprint = () => {
-		document.body.removeChild(printSection)
-		document.head.removeChild(style)
+	}
+	printIframe.contentWindow.onafterprint = () => {
+		document.body.removeChild(printIframe)
 	}
 }
 
