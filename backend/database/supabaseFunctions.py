@@ -16,7 +16,6 @@ from backend.sensors.farmerSensor import Sensor
 class supabaseFunctions:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
     weather = Weather()
-    agg = Aggregate()
     
     def __init__(self):
         pass
@@ -83,77 +82,11 @@ class supabaseFunctions:
                 break
         
         return stage
-        
-    @staticmethod
-    def aggregate():
-        try:
-            # Fetch fields
-            response = supabaseFunctions.__sbClient.table("field_info").select("*").execute()
-            if response.data == []:
-                return {"error": "Data not found. Please create a field first."}
-
-            # Dictionary to accumulate entries by field and stage
-            entries_by_field_stage = defaultdict(lambda: defaultdict(list))
-
-            for field in response.data:
-                # Get all entries for each field
-                response2 = supabaseFunctions.__sbClient.table("field_data").select("*").eq("field_id", field["id"]).execute()
-                if response2.data == []:
-                    return {"error": "Data not found. Please create an entry first."}
-                
-                for entry in response2.data:
-                    # Get crop info
-                    c = supabaseFunctions.getCrop(field["crop_type"])
-
-                    # Determine current stage
-                    stage = supabaseFunctions.getCurrentStage(c)
-
-                    # Build an Entry object
-                    e = Entry(
-                        field_id=field["id"],
-                        timestamp=datetime.datetime.strptime(entry["date"], "%Y-%m-%d").timestamp(),
-                        summary=entry["summary"],
-                        tempMax=entry["tempmax"],
-                        tempMin=entry["tempmin"],
-                        tempDiurnal=entry["tempdiurnal"],
-                        tempMean=entry["tempmean"],
-                        pressure=entry["pressure"],
-                        humidity=entry["humidity"],
-                        dew_point=entry["dew_point"],
-                        wind_speed=entry["wind_speed"],
-                        wind_deg=entry["wind_deg"],
-                        wind_gust=entry["wind_gust"],
-                        clouds=entry["clouds"],
-                        pop=entry["pop"],
-                        rain=entry["rain"],
-                        uvi=entry["uvi"],
-                        gff=entry["gff"],
-                        gdd=entry["gdd"],
-                        hdd=entry["hdd"],
-                        soil_moisture=entry["soil_moisture"],
-                        soil_temperature=entry["soil_temperature"],
-                        pet=entry["pet"]
-                    )
-
-                    # Accumulate entries by field and stage
-                    if stage:
-                        entries_by_field_stage[field["id"]][stage].append(e)
-
-            # Aggregate data for each field and stage
-            for field_id, stages in entries_by_field_stage.items():
-                for stage, entries in stages.items():
-                    supabaseFunctions.agg.aggregate(entries, stage, field_id)
-                    print(f"Aggregated data for field {field_id}, stage {stage}", flush=True)
-
-            return {"success": "Aggregated data for all fields"}
-        except Exception as e:
-            print(e)
-            return {"error": "Failed to aggregate data", "error_message": str(e)}
 
     @staticmethod
-    def getFieldData(fieldid: str, input_date: str):
+    def getFieldData(fieldid: str):
         try:
-            dict = {"fieldid": fieldid, "input_date": input_date}
+            dict = {"fieldid": fieldid}
             response = supabaseFunctions.__sbClient.rpc("get_field_data_by_id", dict).execute()
             if response.data == []:
                 return {"error": "Data not found. Field ID may be invalid or may not have any data."}
@@ -198,6 +131,34 @@ class supabaseFunctions:
             return response.data
         except Exception as e:
             return {"error": "Failed to get user field data", "error_message": e}
+        
+    @staticmethod
+    def getPastYieldAvg(crop: str):
+        # get past yield from crop_production
+        try:
+            if crop == "sunflower":
+                crop += "seed"
+            crop += "_ton_per_hectare"
+            response = supabaseFunctions.__sbClient.table("crop_production").select(crop).execute()
+            if response.data == []:
+                return {"error": "Data not found. Crop type may be invalid or may not have any data."}
+            
+            # transpose
+            data = list(response.data)
+
+            # remove None values
+            data = [i for i in data if i[crop] is not None]
+
+            # select last 5 values
+            data = data[-5:]
+
+            data = [i[crop] for i in data]
+
+            # calculate average
+            avg = sum(data) / len(data)
+            return avg
+        except Exception as e:
+            return {"error": "Failed to get past yield average", "error_message": e}
 
     @staticmethod
     def createField(fieldInfo: Field):
@@ -276,11 +237,16 @@ class supabaseFunctions:
             return {"error_message": e, "id": field_id, "type": "deleteField"}
         
     @staticmethod
-    def updateEntry(fieldData: Entry):
+    def updateEntry(fieldData: dict):
         try:
-            response = supabaseFunctions.__sbClient.table("field_data").update(fieldData).eq("entry_id", fieldData.id).execute()
-            if response.error:
-                raise Exception(response.error)
+            print(fieldData, flush=True)
+
+            # response = supabaseFunctions.__sbClient.table("field_data").update(fieldData).eq("field_id", fieldData["field_id"]).eq("date", fieldData["date"]).execute()
+
+            response = supabaseFunctions.__sbClient.table("data").update(fieldData).eq("field_id", fieldData["field_id"]).eq("date", fieldData["date"]).execute()
+            
+            print(response, flush=True)
+            
             return {
                 "status": "success",
                 "data": response.data[0]
@@ -303,38 +269,41 @@ class supabaseFunctions:
             print(e)
             return {"error": "Failed to get team fields", "error_message": e}    
 
-    # @staticmethod
-    # def addToTeam(team: dict):
-    #     try:
-    #         supabaseFunctions.__sbClient.table("profiles").update({"team_id": team.get("team_id")}).eq("id", team.get("user_id")).execute()
-    #         return {"success": "Added to team"}
-    #     except Exception as e:
-    #         print(e)
-    #         return {"error": "Failed to add user to team", "error_message": e}
+    @staticmethod
+    def addToTeam(team: dict):
+        try:
+            supabaseFunctions.__sbClient.table("profiles").update(
+                {
+                    "team_id": team.get("team_id"),
+                    "role": team.get("role")
+                }).eq("id", team.get("user_id")).execute()
+            return {"success": "Added to team"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to add user to team", "error_message": e}
 
-    # @staticmethod
-    # def removeFromTeam(user_id: str):
-    #     try:
-    #         response = supabaseFunctions.__sbClient.table("profiles").update({"team_id": None}).eq("id", user_id).execute()
-    #         print(response)
-    #         return {"success": "Removed from team"}
-    #     except Exception as e:
-    #         print(e)
-    #         return {"error": "Failed to remove from team", "error_message": e}
+    @staticmethod
+    def removeFromTeam(user_id: str):
+        try:
+            response = supabaseFunctions.__sbClient.rpc("remove_from_team", {"user_id": user_id}).execute()
+            return {"success": "Removed from team"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to remove from team", "error_message": e}
         
-    # @staticmethod
-    # def updateRoles(user: dict):
-    #     try:
-    #         supabaseFunctions.__sbClient.table("profiles").update({"role": user.get("role")}).eq("id", user.get("user_id")).execute()
-    #         return {"success": "Updated roles"}
-    #     except Exception as e:
-    #         print(e)
-    #         return {"error": "Failed to update roles", "error_message": e}
+    @staticmethod
+    def updateRoles(user: dict):
+        try:
+            supabaseFunctions.__sbClient.table("profiles").update({"role": user.get("role")}).eq("id", user.get("user_id")).execute()
+            return {"success": "Updated roles"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to update roles", "error_message": e}
         
     @staticmethod
     def getTeamId(user_id: str):
         try:
-            response = supabaseFunctions.__sbClient.table("profiles").select("team_id").eq("id", user_id).execute()
+            response = supabaseFunctions.__sbClient.table("profiles").select("team_id, role").eq("id", user_id).execute()
             if response.data == []:
                 raise Exception("User not found")
             return response.data[0]
@@ -342,34 +311,72 @@ class supabaseFunctions:
             print(e)
             return {"error": "Failed to get team ID", "error_message": e}
         
-    # @staticmethod
-    # def createSensorData(sensor_data: dict):
-    #     try:
-    #         # Extract data from the provided dictionary
-    #         nitrogen = sensor_data.get('Nitrogen')
-    #         phosphor = sensor_data.get('Phosphor')
-    #         potassium = sensor_data.get('Potassium')
-    #         soil_moisture = sensor_data.get('Soil_Moisture')
+    @staticmethod
+    def getTeamDetails(team_id: str):
+        try:
+            response = supabaseFunctions.__sbClient.table("profiles").select("id, full_name, email, role").eq("team_id", team_id).execute()
+            if response.data == []:
+                raise Exception("Team not found")
+            return response.data
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get team details", "error_message": e}
+        
+    @staticmethod
+    def sendMessage(content: dict):
+        try:
+            response = supabaseFunctions.__sbClient.table("team_chat").insert([content]).execute()
+            if response.data == []:
+                raise Exception("Failed to send message")
+            return {"success": "Message sent"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to send message", "error_message": e}
+        
+    @staticmethod
+    def getTeamMessages(team_id: str):
+        try:
+            response = supabaseFunctions.__sbClient.table("team_chat").select("*").eq("team_id", team_id).order("created_at").execute()
 
-    #         # Validate data
-    #         if nitrogen is None or phosphor is None or potassium is None or soil_moisture is None:
-    #             return {"error": "Missing required sensor data"}
-
-    #         # Insert data into the 'field_data' table
-    #         response = supabaseFunctions.__sbClient.table("field_data").insert({
-    #             "Nitrogen": nitrogen,
-    #             "Phosphor": phosphor,
-    #             "Potassium": potassium,
-    #             "Soil_Moisture": soil_moisture
-    #         }).execute()
-
-    #         if response.error:
-    #             return {"error": "Failed to insert sensor data", "error_message": response.error}
-
-    #         return {"success": "Sensor data inserted successfully", "data": response.data}
-    #     except Exception as e:
-    #         print(e)
-    #         return {"error": "Failed to insert sensor data", "error_message": str(e)}
+            if response.data == []:
+                return {"error": "No messages found for this team"}
+            return response.data
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get team messages", "error_message": e}
+        
+    @staticmethod
+    def updateUser(user: dict):
+        try:
+            response = supabaseFunctions.__sbClient.table("profiles").update(user).eq("id", user.get("id")).execute()
+            if response.data == []:
+                raise Exception("Failed to update user")
+            return {"success": "User updated"}
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to update user", "error_message": e}
+        
+    @staticmethod
+    def getUser(user_id: str):
+        try:
+            response = supabaseFunctions.__sbClient.table("profiles").select("*").eq("id", user_id).execute()
+            if response.data == []:
+                raise Exception("User not found")
+            return response.data[0]
+        except Exception as e:
+            print(e)
+            return {"error": "Failed to get user", "error_message": e}
+        
+    @staticmethod
+    def getTeamYield(team_id: str):
+        try:
+            dict = {"teamid": team_id}
+            response = supabaseFunctions.__sbClient.rpc("get_distinct_crop_yield_by_team", dict).execute()
+            if response.data == []:
+                return {"error": "Data not found. Team ID may be invalid or may not have any data."}
+            return response.data
+        except Exception as e:
+            return {"error": "Failed to get team yield", "error_message": e}
 
     @staticmethod
     def createUpSensorData(sensorID: str):

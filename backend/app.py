@@ -44,9 +44,20 @@ class API:
         self.app.add_api_route("/getTeamId", self.getTeamId, methods=["GET"]) # TODO: Test this route
 
         # model routes
-        self.app.add_api_route("/aggregate", self.aggregate, methods=["GET"]) # TODO: Test this route
-        self.app.add_api_route("/predict", self.predict, methods=["GET"]) # TODO: Test this route
-        self.app.add_api_route("/train", self.train, methods=["GET"]) # TODO: Test this route
+        # Aggregation, preparing, training and predicting the model all happens in the pipeline
+        self.app.add_api_route("/train", self.train, methods=["POST"]) # TODO: Test this route
+
+        # messaging routes
+        self.app.add_api_route("/sendMessage", self.sendMessage, methods=["POST"])
+        self.app.add_api_route("/getTeamMessages", self.getMessages, methods=["GET"])
+
+        # user routes
+        self.app.add_api_route("/updateUser", self.sb.updateUser, methods=["PUT"])
+        self.app.add_api_route("/getUser", self.sb.getUser, methods=["GET"])
+
+        # market API
+        self.app.add_api_route("/market", self.market, methods=["GET"])
+        self.app.add_api_route("/getTeamYield", self.getTeamYield, methods=["GET"])
                                
         #sensor routes
         self.app.add_api_route("/getUPSensorData", self.getUPSensorData, methods=["GET"])
