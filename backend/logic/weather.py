@@ -43,7 +43,7 @@ class Weather:
                 dew_point = data['daily'][i]['dew_point'] if 'dew_point' in data['daily'][i] else 0,
             )
             # print(entry, flush=True)
-            entry = self.featureEngineering(entry, c)
+            entry = self.featureEngineering(entry)
             entries.append(entry)
         Weather.upload(entries)
         return entries
@@ -112,7 +112,7 @@ class Weather:
             print(entry, flush=True)
 
             # Let it upload to data as well
-            if (entry_date >= future_date):
+            if (entry_date <= future_date):
                 response = Weather.__sbClient.table('data').insert({
                     'field_id': str(entry.field_id),
                     'date': dt.datetime.fromtimestamp(entry.timestamp).strftime('%Y-%m-%d'),
