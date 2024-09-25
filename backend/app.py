@@ -179,7 +179,6 @@ class API:
     def addFieldToSensor(self, request: Request, body: dict):
         sensor_id = body.get("sensor_id")
         field_id = body.get("field_id")
-        print(sensor_id, field_id, flush=True)
         return self.sb.addFieldToSensor(sensor_id, field_id)
     
     # def addSensor(self, request: Request, sensor_id: str):
