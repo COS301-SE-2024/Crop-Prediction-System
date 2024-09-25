@@ -2,6 +2,7 @@
 from dotenv import load_dotenv
 import os
 import requests
+import json
 
 def market(function : str):
     load_dotenv()
@@ -13,7 +14,7 @@ def market(function : str):
 
     exchange_rate = requests.get(url)
 
-    exchange_rate = exchange_rate.json()
+    exchange_rate = json.loads(exchange_rate.text)
 
     exchange_rate = exchange_rate['Realtime Currency Exchange Rate']['5. Exchange Rate']
     
