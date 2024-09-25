@@ -114,7 +114,7 @@ class Pipeline:
         # {'MultiScaleModel': [0.3373473774405394, 0.3180518973650237, 0.2879309022470475, 0.41139470933926653, 0.4565206874498029, 0.2869048604909059], 'StageModel': 0.25562482485144905, 'YieldOnlyModel': 0.08906415374372288, 'training_time_s': '22.160459995269775', 'prediction': [3.706325, 3.681821, 3.681821, 3.681821, 3.681821, 3.6654103]}
         predictions = modelResponse.split("prediction")[1].split("}")[0].replace(":", "").replace("[", "").replace("]", "").replace(" ", "").replace("'", "").split(",")
 
-        predictions = [float(i) for i in predictions]
+        predictions = predictions.astype(float).tolist()
 
         try:
             for i in range(0,6):
