@@ -371,11 +371,26 @@ class supabaseFunctions:
         try:
             dict = {"teamid": team_id}
             response = supabaseFunctions.__sbClient.rpc("get_distinct_crop_yield_by_team", dict).execute()
+
             if response.data == []:
                 return {"error": "Data not found. Team ID may be invalid or may not have any data."}
             return response.data
         except Exception as e:
             return {"error": "Failed to get team yield", "error_message": e}
+        
+    @staticmethod
+    def getMarketData(crop: str):
+        try:
+            response = supabaseFunctions.__sbClient.rpc("get_market_value_by_crop", {"croptype": crop}).execute()
+
+            for i in response.data:
+                i["date"] = i["date"].split("-")[0] + "-" + i["date"].split("-")[1]
+
+            if response.data == []:
+                return {"error": "Data not found. Crop type may be invalid or may not have any data."}
+            return response.data
+        except Exception as e:
+            return {"error": "Failed to get market data", "error_message": e}
         
     @staticmethod
     def fetchSensorData():

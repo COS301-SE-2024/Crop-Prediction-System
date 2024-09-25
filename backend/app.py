@@ -5,7 +5,6 @@ from backend.model.pipeline import Pipeline
 from backend.definitions.field import Field
 from backend.definitions.entry import Entry
 from backend.definitions.crop import Crop
-from backend.database.market import market
 from fastapi.middleware.cors import CORSMiddleware
 
 class API:
@@ -161,13 +160,7 @@ class API:
     
     # market API
     def market(self, crop: str):
-        # get the query parameters
-        function = crop
-
-        # convert function to uppercase
-        function = function.upper()
-        
-        return market(function)
+        return self.sb.getMarketData(crop)
     
     def getTeamYield(self, request: Request, team_id: str):
         return self.sb.getTeamYield(team_id)
