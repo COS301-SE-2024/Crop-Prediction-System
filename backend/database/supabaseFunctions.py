@@ -6,7 +6,6 @@ from backend.definitions.entry import Entry
 from backend.definitions.crop import Crop
 from backend.logic.weather import Weather
 from backend.logic.calculateHectare import calculate_hectares_from_coordinates
-from backend.logic.aggregate import Aggregate
 import datetime
 from collections import defaultdict
 from backend.sensors.getData import getNewSensorData
