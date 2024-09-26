@@ -57,7 +57,7 @@ class StageModel():
         random_search = RandomizedSearchCV(
             xgb_model,
             param_distributions=param_dist,
-            n_iter=50,  # Number of parameter settings that are sampled
+            n_iter=1,  # Number of parameter settings that are sampled
             scoring='neg_mean_squared_error',
             cv=3,  # 3-fold cross-validation
             verbose=1,
