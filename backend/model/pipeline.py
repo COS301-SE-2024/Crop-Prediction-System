@@ -89,7 +89,7 @@ class Pipeline:
         return historical_data
 
     # Train
-    def train(self, field_id = None):
+    def train(self, field_id = None) -> dict:
         # Load the data
         if field_id == None and crop == None:
             return {"error": "Both Field ID and crop name cannot be empty."}

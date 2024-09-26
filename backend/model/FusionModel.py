@@ -28,7 +28,7 @@ class FusionModel(ML):
 
         self.inStage = True
 
-    def train(self):
+    def train(self) -> dict:
         # Train each model in the ensemble
         start = time.time()
 
