@@ -18,7 +18,9 @@ class Pipeline:
     def train_all(self):
         fields = self.sb.table('field_info').select('id').execute().data
         for field in fields:
+            print(f"Training model for field ID: {field['id']}", flush=True)
             self.train(field['id'])
+        print("All models trained successfully", flush=True)
         return {"status": "All models trained successfully"}
 
     # Load data

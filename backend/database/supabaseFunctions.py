@@ -135,8 +135,6 @@ class supabaseFunctions:
     def getPastYieldAvg(crop: str):
         # get past yield from crop_production
         try:
-            if crop == "sunflower":
-                crop += "seed"
             crop += "_ton_per_hectare"
             response = supabaseFunctions.__sbClient.table("crop_production").select(crop).execute()
             if response.data == []:
