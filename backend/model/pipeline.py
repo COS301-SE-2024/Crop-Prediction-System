@@ -1,5 +1,6 @@
 # Defines the base model for crop prediction that predicts yield
 from backend.definitions.crop import Crop
+from backend.definitions.field import Field
 from backend.database.supabaseInstance import supabaseInstance
 from backend.database.supabaseFunctions import supabaseFunctions
 from backend.model.FusionModel import FusionModel
@@ -93,7 +94,7 @@ class Pipeline:
         if field_id == None and crop == None:
             return {"error": "Both Field ID and crop name cannot be empty."}
         
-        f = self.sf.getFieldInfo(field_id)
+        f : Field  = self.sf.getFieldInfo(field_id)
         crop = f.crop_type
         c : Crop = self.sf.getCrop(crop)
 
@@ -110,6 +111,8 @@ class Pipeline:
 
         # Extract predictions
         predictions = modelResponse.split("prediction")[1].split("}")[0].replace(":", "").replace("[", "").replace("]", "").replace(" ", "").replace("'", "").split(",")
+
+        print(predictions, flush=True)
 
         try:
             for i in range(0,6):
