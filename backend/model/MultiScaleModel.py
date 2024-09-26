@@ -88,14 +88,14 @@ class MultiScaleModel():
             X = X.drop(columns=['yield'])
 
             # Split the data
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
             # Drop na values
             X_train = X_train.dropna()
             y_train = y_train.dropna()
 
             # XGBoost model
-            xgb_model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators = 10, seed = 123, booster = 'gbtree')
+            xgb_model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators = 10, booster = 'gbtree')
 
             # Define the parameter grid
             param_dist = {

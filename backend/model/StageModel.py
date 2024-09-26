@@ -38,9 +38,9 @@ class StageModel():
         self.X = self.X.drop(['stage'], axis=1)
 
         # Split into training and testing data
-        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=123)
+        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.2)
 
-        xgb_model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators = 10, seed = 123, booster = 'gbtree')
+        xgb_model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators = 10, booster = 'gbtree')
 
         # Define the parameter grid
         param_dist = {
