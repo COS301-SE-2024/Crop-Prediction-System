@@ -112,6 +112,9 @@ class Pipeline:
         # Extract predictions
         predictions = modelResponse.split("prediction")[1].split("}")[0].replace(":", "").replace("[", "").replace("]", "").replace(" ", "").replace("'", "").split(",")
 
+        # Convert to normal float
+        predictions = [float(i) for i in predictions]
+
         print(predictions, flush=True)
 
         try:
