@@ -28,7 +28,6 @@ class supabaseFunctions:
 
             c = Crop(
                 name = response.data[0]["name"],
-                t_base = response.data[0]["t_base"],
                 stages = response.data[0]["stages"]
             )
 

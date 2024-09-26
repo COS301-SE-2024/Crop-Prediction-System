@@ -43,7 +43,7 @@ class Weather:
                 dew_point = data['daily'][i]['dew_point'] if 'dew_point' in data['daily'][i] else 0,
             )
             # print(entry, flush=True)
-            entry = self.featureEngineering(entry)
+            entry = self.featureEngineering(entry, c)
             entries.append(entry)
         Weather.upload(entries)
         return entries
@@ -68,7 +68,7 @@ class Weather:
         return response.data
     
     # Feature Engineering
-    def featureEngineering(self, e : Entry):
+    def featureEngineering(self, e : Entry, c : Crop) -> Entry:
         tempmean = e.tempMean
         humidity = e.humidity
 
@@ -82,6 +82,8 @@ class Weather:
         e.soil_moisture = math.ceil(e.soil_moisture * 100) / 100
 
         e.sprayability = Weather.calculate_sprayability(e)
+
+        e.health = Weather.calculateHealth(e.tempMin, e.tempMax, c.name)
 
         return e
     
@@ -127,7 +129,8 @@ class Weather:
                         'uvi': entry.uvi,
                         'soil_moisture': entry.soil_moisture,
                         'soil_temperature': entry.soil_temperature,
-                        'pred_sprayability': entry.sprayability
+                        'pred_sprayability': entry.sprayability,
+                        'pred_health': entry.health
                     }, returning='representation'
                     ).execute()
                 except Exception as e:
@@ -147,7 +150,8 @@ class Weather:
                     'uvi': entry.uvi,
                     'soil_moisture': entry.soil_moisture,
                     'soil_temperature': entry.soil_temperature,
-                    'pred_sprayability': entry.sprayability
+                    'pred_sprayability': entry.sprayability,
+                    'pred_health': entry.health
                 }, returning='representation'
                 ).eq('field_id', entry.field_id).eq('date', dt.datetime.fromtimestamp(entry.timestamp).strftime('%Y-%m-%d')).execute()
         return
@@ -155,43 +159,49 @@ class Weather:
     @staticmethod
     def update_allFeatures():
         entries = Weather.__sbClient.table('data').select('*').execute()
+        field_ids = []
+
+        # Get all unique field_ids
         for entry in entries.data:
-            # updating entry x of n
-            print("Updating entry " + str(entries.data.index(entry) + 1) + " of " + str(len(entries.data)), flush=True)
-            e = Entry(
-                field_id = entry['field_id'] if 'field_id' in entry else None,
-                timestamp = datetime.datetime.strptime(entry['date'], '%Y-%m-%d').timestamp(),
-                summary = entry['summary'],
-                tempMax = entry['tempmax'],
-                tempMin = entry['tempmin'],
-                tempDiurnal = entry['tempdiurnal'],
-                tempMean = entry['tempmean'],
-                pressure = entry['pressure'],
-                humidity = entry['humidity'],
-                dew_point = entry['dew_point'],
-                clouds = entry['clouds'],
-                rain = entry['rain'],
-                uvi = entry['uvi'],
-                soil_moisture = entry['soil_moisture'],
-                soil_temperature = entry['soil_temperature'],
-                sprayability = entry['pred_sprayability']
-            )
-            e = Weather().featureEngineering(e)
-            if e.field_id is None:
+            if entry['field_id'] not in field_ids and entry['field_id'] is not None:
+                field_ids.append(entry['field_id'])
+            if entry['field_id'] is None:
+                entries.data.remove(entry)
+
+        crops_by_field = {}
+        for field_id in field_ids:
+            response = Weather.__sbClient.table('field_info').select('crop_type').eq('id', field_id).execute()
+            crops_by_field[field_id] = response.data[0]['crop_type']
+
+        print(crops_by_field, flush=True)
+            
+
+        for entry in entries.data:
+            if entry['field_id'] is not None:
+                print(entry, flush=True)
                 response = Weather.__sbClient.table('data').update({
-                    'soil_moisture': e.soil_moisture,
-                    'soil_temperature': e.soil_temperature,
-                    'pred_sprayability': e.sprayability
-                }).eq('date', dt.datetime.fromtimestamp(e.timestamp).strftime('%Y-%m-%d')).execute()
-            else:
-                response = Weather.__sbClient.table('data').update({
-                    'soil_moisture': e.soil_moisture,
-                    'soil_temperature': e.soil_temperature,
-                    'pred_sprayability': e.sprayability
-                }).eq('field_id', e.field_id).eq('date', dt.datetime.fromtimestamp(e.timestamp).strftime('%Y-%m-%d')).execute()
+                    'pred_health': Weather.calculateHealth(entry['tempmin'], entry['tempmax'], crops_by_field[entry['field_id']])
+                }).eq('field_id', entry['field_id']).eq('date', entry['date']).execute()
         return
     
-# if __name__ == '__main__':
-#     w = Weather()
-#     w.update_allFeatures()
-#     print('Updated all features', flush=True)
+    @staticmethod
+    def calculateHealth(min, max, crop):
+        response = Weather.__sbClient.table('crop_info').select("optimal_temp_max, optimal_temp_min").eq('name', crop).execute()
+
+        crop_info = response.data[0]['optimal_temp_min'], response.data[0]['optimal_temp_max']
+
+        # Calculate health as a percentage
+        health = ((max + min) / 2) - crop_info[0]
+        print(health, flush=True)
+
+        health = health / (crop_info[1] - crop_info[0])
+
+        print(health, flush=True)
+
+        return health
+
+if __name__ == '__main__':
+    w = Weather()
+    w.calculateHealth(27, 10, "maize")
+    w.update_allFeatures()
+    # print('Updated all features', flush=True)
