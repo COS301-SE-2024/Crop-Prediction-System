@@ -45,9 +45,6 @@ class FusionModel(ML):
 
         prediction = self.predict()
 
-        if sm_rmse is not None and prediction.isinstance(list) and self.inStage:
-            prediction = [item for sublist in prediction for item in sublist]
-
         return {
             "MultiScaleModel": msm_rmse,
             "StageModel": sm_rmse,
@@ -77,7 +74,7 @@ class FusionModel(ML):
         
         sm_pred = None
         if self.inStage:
-            sm_pred = self.sm.predict()
+            sm_pred = self.sm.predict()[0]
 
         # Get the average of the last 10 years
         yom_last_5_years = yom_pred[-10:]
