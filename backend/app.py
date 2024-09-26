@@ -116,20 +116,28 @@ class API:
     
     # model routes [POST]
     def train(self, background_tasks: BackgroundTasks, request: Request, body: dict):
-        field_id = body.get("field_id") or None # field_id is optional
+        field_id = body.get("field_id") or None
         batch = body.get("batch") or False
         waitForCompletion = body.get("waitForCompletion") or False
+        
         if batch:
             if waitForCompletion:
+                # Ensure synchronous execution here
                 return self.pipeline.train_all()
             background_tasks.add_task(self.pipeline.train_all)
             return {"message": "Started training for all fields"}
+
         if field_id is None:
             return {"error": "Field ID is required or `batch` must be set to `true`"}
+
         if waitForCompletion:
+            # Ensure synchronous execution here
             return self.pipeline.train(field_id)
+
+        # Background task for asynchronous training
         background_tasks.add_task(self.pipeline.train, field_id)
         return {"message": "Started training for field ID: " + field_id}
+
     
     def fetchWeatherForAllFields(self, background_tasks: BackgroundTasks, request: Request):
         background_tasks.add_task(self.sb.fetchWeatherForAllFields)

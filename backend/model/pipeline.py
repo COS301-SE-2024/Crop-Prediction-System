@@ -128,6 +128,8 @@ class Pipeline:
         except Exception as e:
             pass
 
+        self.model = None # Reset the model
+
         return {
             "status" : "Model trained successfully"
         }
