@@ -45,7 +45,7 @@ class FusionModel(ML):
 
         prediction = self.predict()
 
-        if sm_rmse is not None:
+        if sm_rmse is not None and prediction.isinstance(list) and self.inStage:
             prediction = [item for sublist in prediction for item in sublist]
 
         return {
