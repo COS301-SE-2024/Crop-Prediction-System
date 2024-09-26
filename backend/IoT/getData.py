@@ -46,7 +46,7 @@ def getNewSensorData(sensorID: str, number_of_rows: int = 1):
     r = requests.post(url, headers=headers, json={'query': query, 'variables': request})
     return r.json()
 
-if __name__ == "__main__":
-    sensor = "2CF7F12025200009"
-    data = getNewSensorData(sensor)
-    print(data)
+# if __name__ == "__main__":
+#     sensor = "2CF7F12025200009"
+#     data = getNewSensorData(sensor)
+#     print(data)

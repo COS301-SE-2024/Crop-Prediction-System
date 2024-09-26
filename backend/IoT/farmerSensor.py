@@ -106,16 +106,16 @@ class Sensor:
             self.close()
 
 # Usage example:
-if __name__ == "__main__":
-    sensor = Sensor()  # Create sensor object
-    try:
-        # while no key is pressed
-        while True:
-            data = sensor.get_all_data()
-            if data:
-                print("Sensor readings of all:", data)
-            time.sleep(1) # can change to 3 hours for easy value reading
-            if input("0 to exit, any other key to continue: ") == "0":
-                break
-    finally:
-        sensor.close() 
+# if __name__ == "__main__":
+#     sensor = Sensor()  # Create sensor object
+#     try:
+#         # while no key is pressed
+#         while True:
+#             data = sensor.get_all_data()
+#             if data:
+#                 print("Sensor readings of all:", data)
+#             time.sleep(1) # can change to 3 hours for easy value reading
+#             if input("0 to exit, any other key to continue: ") == "0":
+#                 break
+#     finally:
+#         sensor.close() 

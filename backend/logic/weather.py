@@ -191,7 +191,7 @@ class Weather:
                 }).eq('field_id', e.field_id).eq('date', dt.datetime.fromtimestamp(e.timestamp).strftime('%Y-%m-%d')).execute()
         return
     
-if __name__ == '__main__':
-    w = Weather()
-    w.update_allFeatures()
-    print('Updated all features', flush=True)
+# if __name__ == '__main__':
+#     w = Weather()
+#     w.update_allFeatures()
+#     print('Updated all features', flush=True)
