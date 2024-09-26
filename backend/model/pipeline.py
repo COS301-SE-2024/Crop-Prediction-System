@@ -117,6 +117,11 @@ class Pipeline:
 
         print(predictions, flush=True)
 
+        # Convert to float8
+        predictions = [round(i, 2) for i in predictions]
+        
+        print(predictions, flush=True)
+
         try:
             for i in range(0,6):
                 result = self.sb.table('data').update({

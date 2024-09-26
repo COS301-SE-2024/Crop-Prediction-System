@@ -397,6 +397,7 @@ class supabaseFunctions:
         sensors = ['2CF7F12025200009', '2CF7F1202520006A', '2CF7F1202520010D', '2CF7F120252000E7']
         for sensor in sensors:
             supabaseFunctions.createUpSensorData(sensor)
+        return {"success": "Sensor data fetched successfully"}
 
     @staticmethod
     def createUpSensorData(sensorID: str):

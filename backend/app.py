@@ -20,11 +20,9 @@ class API:
         # field routes
         self.app.add_api_route("/getFieldInfo", self.getFieldInfo, methods=["GET"])
         self.app.add_api_route("/getFieldData", self.getFieldData, methods=["GET"])
-        # self.app.add_api_route("/getFieldLogs", self.getFieldLogs, methods=["GET"])
         self.app.add_api_route("/fetchWeather", self.fetchWeatherForAllFields, methods=["GET"])
         self.app.add_api_route("/fetchSummary", self.fetchSummary, methods=["GET"])
         self.app.add_api_route("/fetchSensorData", self.sb.fetchSensorData, methods=["GET"])
-        
 
         # field routes
         self.app.add_api_route("/createField", self.createField, methods=["POST"])
@@ -61,13 +59,10 @@ class API:
         # market API
         self.app.add_api_route("/market", self.market, methods=["GET"])
         self.app.add_api_route("/getTeamYield", self.getTeamYield, methods=["GET"])
-                               
+
         #sensor routes
         self.app.add_api_route("/getUPSensorData", self.getUPSensorData, methods=["GET"])
         self.app.add_api_route("/addFieldToSensor", self.addFieldToSensor, methods=["POST"])
-        # self.app.add_api_route("/addSensor", self.addSensor, methods=["GET"])
-        # self.app.add_api_route("/getFarmerSensorData", self.getFarmerSensorData, methods=["GET"])
-        # self.app.add_api_route("/addFieldFarmerSensor", self.addFieldFarmerSensor, methods=["POST"])
 
     def main(self, request: Request):
         return {
@@ -173,15 +168,6 @@ class API:
         sensor_id = body.get("sensor_id")
         field_id = body.get("field_id")
         return self.sb.addFieldToSensor(sensor_id, field_id)
-    
-    # def addSensor(self, request: Request, sensor_id: str):
-    #     return self.sb.createSensor(sensor_id)
-    
-    # def getFarmerSensorData(self, request: Request, sensor_id: str, field_id:str):
-    #     return self.sb.getFarmerSensorData(field_id, sensor_id)
-
-    # def addFieldFarmerSensor(self, request: Request, field_id: str, sensor_id: str):
-    #     return self.sb.addFieldFarmerSensor(field_id, sensor_id)
 
 api_instance = API()
 app = api_instance.app
