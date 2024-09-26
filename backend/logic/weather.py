@@ -9,6 +9,7 @@ from backend.sensor.SensorModel import SensorModel
 from dotenv import load_dotenv
 import os
 import datetime
+from math import log
 
 class Weather:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
@@ -196,7 +197,8 @@ class Weather:
 
         health = health / (crop_info[1] - crop_info[0])
 
-        print(health, flush=True)
+        if health > 1 or health < 0:
+            health = 1 / (1 + math.exp(-health))
 
         return health
 
