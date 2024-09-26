@@ -10,7 +10,7 @@ import datetime
 from collections import defaultdict
 from backend.IoT.getData import getNewSensorData
 
-from backend.IoT.farmerSensor import Sensor
+# from backend.IoT.farmerSensor import Sensor
 
 class supabaseFunctions:
     __sbClient = supabaseInstance.supabaseInstance().get_client()
