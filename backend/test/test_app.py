@@ -12,6 +12,7 @@ team_id = "d8d64098-b290-4fd2-b810-cadb1fe213ea"
 field_id = str(uuid.uuid4())
 user_id = "02dffef4-7788-423c-869e-17db9c821542"
 today = datetime.datetime.now().strftime('%Y-%m-%d')
+crop="wheat"
 
 def test_main():
     response = client.get("/")
@@ -294,3 +295,10 @@ def test_updateEntry():
         response = client.put("/updateEntry", json={"field_id": field_id, "date": today})
         assert response.status_code == 200
         assert response.json() == {"success": "Entry updated"}
+
+def test_getPastYieldAvg():
+    with patch('backend.database.supabaseFunctions.supabaseFunctions.getPastYieldAvg') as mock_getPastYieldAvg:
+        mock_getPastYieldAvg.return_value = {"success": "Yield average fetched"}
+        response = client.get("/getPastYieldAvg?crop=sunflower")
+        assert response.status_code == 200
+        assert response.json() == {"success": "Yield average fetched"}
