@@ -962,7 +962,6 @@ const updateDatabase = async (data) => {
 		}
 	} catch (error) {
 		console.error('Error updating database:', error)
-		v
 	}
 }
 

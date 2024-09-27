@@ -6,21 +6,6 @@ on:
       - feature/backend/API
 
 jobs:
-  #   upgrade_pip:
-  #     runs-on: ubuntu-latest
-  #     steps:
-  #       - name: Checkout Code
-  #         uses: actions/checkout@v4
-
-  #       - name: Set up Python
-  #         uses: actions/setup-python@v2
-  #         with:
-  #           python-version: '3.x'
-
-  #       - name: Install dependencies
-  #         run: |
-  #           python -m pip install --upgrade pip
-  #           pip install -r requirements.txt
   build_and_deploy:
     name: "Deploy API"
     runs-on: ubuntu-latest
@@ -66,9 +51,3 @@ jobs:
           # The number of attempts before giving up
           # Default: 1
           retries: 3
-# Server-side commands:
-# su - farm -c "pm2 delete sample_farm_api"
-# su - farm -c "pm2 save"
-# su - farm -c "cd /home/farm/server/Crop-Prediction-System/backend && pm2 start \"gunicorn -k uvicorn.workers.UvicornWorker --config /etc/gunicorn.d/gunicorn.py app:app\"  --name \"sample_farm_api\""
-# sudo env "PATH=$PATH:/usr/bin" /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u farm --hp /home/farm
-# su - farm -c "pm2 save"
