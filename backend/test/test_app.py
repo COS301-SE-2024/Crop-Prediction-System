@@ -316,3 +316,10 @@ def test_removeFromTeam():
         response = client.put("/removeFromTeam?user_id=fcce6e0d-517d-4aa0-ba17-47938b9880fd")
         assert response.status_code == 200
         assert response.json() == {"success": "User removed from team"}
+
+def test_getTeamDetails():
+    with patch('backend.database.supabaseFunctions.supabaseFunctions.getTeamDetails') as mock_getTeamDetails:
+        mock_getTeamDetails.return_value = {"success": "Team details fetched"}
+        response = client.get("/getTeamDetails?team_id=17383e3d-f211-4724-8515-8c4cb836c812")
+        assert response.status_code == 200
+        assert response.json() == {"success": "Team details fetched"}
