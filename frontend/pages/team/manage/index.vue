@@ -120,7 +120,6 @@ import Skeleton from 'primevue/skeleton'
 
 // State for the team and editing
 const team = ref([])
-const teamOwner = ref('')
 const editingRoleId = ref(null) // State for row being edited
 const visible = ref(false) // State for invite member dialog
 const confirmVisible = ref(false) // State for confirmation dialog
@@ -139,6 +138,9 @@ async function getTeamDetails() {
 		const teamID = await $fetch('/api/getTeamID', {
 			params: { userid: currentUser?.value?.id },
 		})
+
+		userRole.value = teamID.role
+
 		const data = await $fetch('/api/getTeamDetails', {
 			params: { team_id: teamID.team_id },
 		})
@@ -161,6 +163,7 @@ const roles = ref([
 
 const newUserEmail = ref('')
 const loading = ref(false)
+const userRole = ref('')
 
 const send = async () => {
 	loading.value = true
@@ -183,7 +186,22 @@ const send = async () => {
 	}
 }
 
+function showWrongRoleError() {
+	if (userRole.value === 'data_analyst') {
+		toast.add({
+			severity: 'warn',
+			summary: 'Access Denied',
+			detail: `You don't have the required permissions to perform this action.`,
+			life: 3000,
+		})
+	}
+}
+
 const editRole = async (id: string) => {
+	if (userRole.value !== 'farm_manager') {
+		showWrongRoleError()
+		return
+	}
 	// If the row is being edited (check mark is clicked)
 	if (editingRoleId.value === id) {
 		const updatedRow = team.value.find((member: any) => member.id === id)
@@ -214,6 +232,10 @@ const editRole = async (id: string) => {
 }
 // Function to open the confirmation dialog
 const confirmRemove = (id: string) => {
+	if (userRole.value !== 'farm_manager') {
+		showWrongRoleError()
+		return
+	}
 	selectedUserId.value = id
 	confirmVisible.value = true
 }
