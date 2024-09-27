@@ -163,5 +163,6 @@ const shouldShowDateTag = (index) => {
 
 definePageMeta({
 	layout: 'chat',
+	middleware: 'auth',
 })
 </script>
