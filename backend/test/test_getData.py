@@ -16,3 +16,7 @@ def test_get_multiple_line_data():
     result = getNewSensorData(sensorID, 5)
     assert result is not None
 
+def test_get_no_data():
+    sensorID = '2CF7F12025200009'
+    result = getNewSensorData(sensorID, 0)
+    assert result is not None
