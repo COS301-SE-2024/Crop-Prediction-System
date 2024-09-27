@@ -1,173 +1,180 @@
 <template>
-	<Dropdown v-model="selectedCrop" :options="cropOptions" optionLabel="label" class="mb-4 w-full md:w-64" />
-	<h2
-		v-show="selectedCrop.value === 'Wheat' && noFieldsMessages.wheat !== ''"
-		class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
-	>
-		You have no registered Wheat fields.
-	</h2>
-	<h2
-		v-show="selectedCrop.value === 'Maize' && noFieldsMessages.wheat !== ''"
-		class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
-	>
-		You have no registered Maize fields.
-	</h2>
-	<h2
-		v-show="selectedCrop.value === 'Soybeans' && noFieldsMessages.soybeans !== ''"
-		class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
-	>
-		You have no registered Soybean fields.
-	</h2>
-	<h2
-		v-show="selectedCrop.value === 'Sunflower' && noFieldsMessages.sunflower !== ''"
-		class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
-	>
-		You have no registered Sunflower fields.
-	</h2>
-	<h2
-		v-show="selectedCrop.value === 'Oats' && noFieldsMessages.oats !== ''"
-		class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
-	>
-		You have no registered Oats fields.
-	</h2>
-	<h2
-		v-show="selectedCrop.value === 'Sorghum' && noFieldsMessages.sorghum !== ''"
-		class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
-	>
-		You have no registered Sorghum fields.
-	</h2>
-	<h2
-		v-show="selectedCrop.value === 'Barley' && noFieldsMessages.barley !== ''"
-		class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
-	>
-		You have no registered Barley fields.
-	</h2>
-	<h2
-		v-show="selectedCrop.value === 'Canola' && noFieldsMessages.canola !== ''"
-		class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
-	>
-		You have no registered Canola fields.
-	</h2>
-	<h2
-		v-show="selectedCrop.value === 'Groundnuts' && noFieldsMessages.groundnuts !== ''"
-		class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
-	>
-		You have no registered Groundnuts fields.
-	</h2>
-	<div class="grid gap-4 grid-cols-1 sm:grid-cols-2">
-		<MarketHectareCard
-			v-show="selectedCrop.value === 'Wheat'"
-			title="Wheat Hectare"
-			:hectare="teamWheatHectare"
-			footer="Total hectare of team wheat fields"
-		/>
-		<MarketDataCard
-			v-show="selectedCrop.value === 'Wheat'"
-			title="Wheat t/ha"
-			:tph="teamWheatYield"
-			footer="Combined t/ha of team wheat fields"
-		/>
-		<MarketHectareCard
-			v-show="selectedCrop.value === 'Maize'"
-			title="Maize Hectare"
-			:hectare="teamMaizeHectare"
-			footer="Total hectare of team maize fields"
-		/>
-		<MarketDataCard
-			v-show="selectedCrop.value === 'Maize'"
-			title="Maize t/ha"
-			:tph="teamMaizeYield"
-			footer="Combined t/ha of team maize fields"
-		/>
-		<MarketHectareCard
-			v-show="selectedCrop.value === 'Soybeans'"
-			title="Soybeans Hectare"
-			:hectare="teamSoyHectare"
-			footer="Total hectare of team soybean fields"
-		/>
-		<MarketDataCard
-			v-show="selectedCrop.value === 'Soybeans'"
-			title="Soybeans t/ha"
-			:tph="teamSoyYield"
-			footer="Combined t/ha of team soybean fields"
-		/>
-		<MarketHectareCard
-			v-show="selectedCrop.value === 'Sunflower'"
-			title="Sunflower Hectare"
-			:hectare="teamSunflowerHectare"
-			footer="Total hectare of team Sunflower fields"
-		/>
-		<MarketDataCard
-			v-show="selectedCrop.value === 'Sunflower'"
-			title="Sunflower t/ha"
-			:tph="teamSunflowerYield"
-			footer="Combined t/ha of team sunflower fields"
-		/>
-		<MarketDataCard
-			v-show="selectedCrop.value === 'Oats'"
-			title="Oats t/ha"
-			:tph="teamOatsYield"
-			footer="Combined t/ha of team oats fields"
-		/>
-		<MarketHectareCard
-			v-show="selectedCrop.value === 'Oats'"
-			title="Oats Hectare"
-			:hectare="teamOatsHectare"
-			footer="Total hectare of team oats fields"
-		/>
-		<MarketDataCard
-			v-show="selectedCrop.value === 'Sorghum'"
-			title="Sorghum t/ha"
-			:tph="teamSorghumYield"
-			footer="Combined t/ha of team sorghum fields"
-		/>
-		<MarketHectareCard
-			v-show="selectedCrop.value === 'Sorghum'"
-			title="Sorghum Hectare"
-			:hectare="teamSorghumHectare"
-			footer="Total hectare of team sorghum fields"
-		/>
-		<MarketDataCard
-			v-show="selectedCrop.value === 'Barley'"
-			title="Barley t/ha"
-			:tph="teamBarleyYield"
-			footer="Combined t/ha of team barley fields"
-		/>
-		<MarketHectareCard
-			v-show="selectedCrop.value === 'Barley'"
-			title="Barley Hectare"
-			:hectare="teamBarleyHectare"
-			footer="Total hectare of team barley fields"
-		/>
-		<MarketDataCard
-			v-show="selectedCrop.value === 'Canola'"
-			title="Canola t/ha"
-			:tph="teamCanolaYield"
-			footer="Combined t/ha of team canola fields"
-		/>
-		<MarketHectareCard
-			v-show="selectedCrop.value === 'Canola'"
-			title="Canola Hectare"
-			:hectare="teamCanolaHectare"
-			footer="Total hectare of team canola fields"
-		/>
-		<MarketDataCard
-			v-show="selectedCrop.value === 'Groundnuts'"
-			title="Groundnuts t/ha"
-			:tph="teamGroundnutsYield"
-			footer="Combined t/ha of team groundnuts fields"
-		/>
-		<MarketHectareCard
-			v-show="selectedCrop.value === 'Groundnuts'"
-			title="Groundnuts Hectare"
-			:hectare="teamGroundnutsHectare"
-			footer="Total hectare of team groundnuts fields"
-		/>
+	<div v-if="loading" class="w-full h-full mt-48 gap-5 flex flex-col items-center justify-center">
+		<ProgressSpinner />
+		<h2 class="dark:text-white font-bold">Fetching Market Data...</h2>
 	</div>
-	<div
-		class="gap-4 bg-surface-100 dark:bg-surface-800 p-5 rounded-md shadow-md w-full flex flex-col justify-between items-center mt-4"
-	>
-		<Chart type="bar" :data="chartData" :options="chartOptions" class="w-full h-[500px] lg:h-[650px]" />
+
+	<div v-else class="w-full">
+		<Dropdown v-model="selectedCrop" :options="cropOptions" optionLabel="label" class="mb-4 w-full md:w-64" />
+		<h2
+			v-show="selectedCrop.value === 'Wheat' && noFieldsMessages.wheat !== ''"
+			class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
+		>
+			You have no registered Wheat fields.
+		</h2>
+		<h2
+			v-show="selectedCrop.value === 'Maize' && noFieldsMessages.wheat !== ''"
+			class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
+		>
+			You have no registered Maize fields.
+		</h2>
+		<h2
+			v-show="selectedCrop.value === 'Soybeans' && noFieldsMessages.soybeans !== ''"
+			class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
+		>
+			You have no registered Soybean fields.
+		</h2>
+		<h2
+			v-show="selectedCrop.value === 'Sunflower' && noFieldsMessages.sunflower !== ''"
+			class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
+		>
+			You have no registered Sunflower fields.
+		</h2>
+		<h2
+			v-show="selectedCrop.value === 'Oats' && noFieldsMessages.oats !== ''"
+			class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
+		>
+			You have no registered Oats fields.
+		</h2>
+		<h2
+			v-show="selectedCrop.value === 'Sorghum' && noFieldsMessages.sorghum !== ''"
+			class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
+		>
+			You have no registered Sorghum fields.
+		</h2>
+		<h2
+			v-show="selectedCrop.value === 'Barley' && noFieldsMessages.barley !== ''"
+			class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
+		>
+			You have no registered Barley fields.
+		</h2>
+		<h2
+			v-show="selectedCrop.value === 'Canola' && noFieldsMessages.canola !== ''"
+			class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
+		>
+			You have no registered Canola fields.
+		</h2>
+		<h2
+			v-show="selectedCrop.value === 'Groundnuts' && noFieldsMessages.groundnuts !== ''"
+			class="mb-4 text-surface-900 dark:text-surface-0 font-bold text-lg"
+		>
+			You have no registered Groundnuts fields.
+		</h2>
+		<div class="grid gap-4 grid-cols-1 sm:grid-cols-2">
+			<MarketHectareCard
+				v-show="selectedCrop.value === 'Wheat'"
+				title="Wheat Hectare"
+				:hectare="teamWheatHectare"
+				footer="Total hectare of team wheat fields"
+			/>
+			<MarketDataCard
+				v-show="selectedCrop.value === 'Wheat'"
+				title="Wheat t/ha"
+				:tph="teamWheatYield"
+				footer="Combined t/ha of team wheat fields"
+			/>
+			<MarketHectareCard
+				v-show="selectedCrop.value === 'Maize'"
+				title="Maize Hectare"
+				:hectare="teamMaizeHectare"
+				footer="Total hectare of team maize fields"
+			/>
+			<MarketDataCard
+				v-show="selectedCrop.value === 'Maize'"
+				title="Maize t/ha"
+				:tph="teamMaizeYield"
+				footer="Combined t/ha of team maize fields"
+			/>
+			<MarketHectareCard
+				v-show="selectedCrop.value === 'Soybeans'"
+				title="Soybeans Hectare"
+				:hectare="teamSoyHectare"
+				footer="Total hectare of team soybean fields"
+			/>
+			<MarketDataCard
+				v-show="selectedCrop.value === 'Soybeans'"
+				title="Soybeans t/ha"
+				:tph="teamSoyYield"
+				footer="Combined t/ha of team soybean fields"
+			/>
+			<MarketHectareCard
+				v-show="selectedCrop.value === 'Sunflower'"
+				title="Sunflower Hectare"
+				:hectare="teamSunflowerHectare"
+				footer="Total hectare of team Sunflower fields"
+			/>
+			<MarketDataCard
+				v-show="selectedCrop.value === 'Sunflower'"
+				title="Sunflower t/ha"
+				:tph="teamSunflowerYield"
+				footer="Combined t/ha of team sunflower fields"
+			/>
+			<MarketDataCard
+				v-show="selectedCrop.value === 'Oats'"
+				title="Oats t/ha"
+				:tph="teamOatsYield"
+				footer="Combined t/ha of team oats fields"
+			/>
+			<MarketHectareCard
+				v-show="selectedCrop.value === 'Oats'"
+				title="Oats Hectare"
+				:hectare="teamOatsHectare"
+				footer="Total hectare of team oats fields"
+			/>
+			<MarketDataCard
+				v-show="selectedCrop.value === 'Sorghum'"
+				title="Sorghum t/ha"
+				:tph="teamSorghumYield"
+				footer="Combined t/ha of team sorghum fields"
+			/>
+			<MarketHectareCard
+				v-show="selectedCrop.value === 'Sorghum'"
+				title="Sorghum Hectare"
+				:hectare="teamSorghumHectare"
+				footer="Total hectare of team sorghum fields"
+			/>
+			<MarketDataCard
+				v-show="selectedCrop.value === 'Barley'"
+				title="Barley t/ha"
+				:tph="teamBarleyYield"
+				footer="Combined t/ha of team barley fields"
+			/>
+			<MarketHectareCard
+				v-show="selectedCrop.value === 'Barley'"
+				title="Barley Hectare"
+				:hectare="teamBarleyHectare"
+				footer="Total hectare of team barley fields"
+			/>
+			<MarketDataCard
+				v-show="selectedCrop.value === 'Canola'"
+				title="Canola t/ha"
+				:tph="teamCanolaYield"
+				footer="Combined t/ha of team canola fields"
+			/>
+			<MarketHectareCard
+				v-show="selectedCrop.value === 'Canola'"
+				title="Canola Hectare"
+				:hectare="teamCanolaHectare"
+				footer="Total hectare of team canola fields"
+			/>
+			<MarketDataCard
+				v-show="selectedCrop.value === 'Groundnuts'"
+				title="Groundnuts t/ha"
+				:tph="teamGroundnutsYield"
+				footer="Combined t/ha of team groundnuts fields"
+			/>
+			<MarketHectareCard
+				v-show="selectedCrop.value === 'Groundnuts'"
+				title="Groundnuts Hectare"
+				:hectare="teamGroundnutsHectare"
+				footer="Total hectare of team groundnuts fields"
+			/>
+		</div>
+		<div
+			class="gap-4 bg-surface-100 dark:bg-surface-800 p-5 rounded-md shadow-md w-full flex flex-col justify-between items-center mt-4"
+		>
+			<Chart type="bar" :data="chartData" :options="chartOptions" class="w-full h-[500px] lg:h-[650px]" />
+		</div>
 	</div>
 </template>
 
@@ -227,7 +234,7 @@ const groundnutsPastAverage = ref(0)
 const chartData = ref(0) // Initialize as 0
 const chartOptions = ref(0)
 const selectedCrop = ref({ label: 'Wheat', value: 'Wheat' }) // Default selected crop
-const loading = ref(false)
+const loading = ref(true)
 
 // Options for the SelectButton
 const cropOptions = [
