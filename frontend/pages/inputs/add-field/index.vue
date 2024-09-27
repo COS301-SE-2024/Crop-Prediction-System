@@ -210,6 +210,8 @@ async function saveField() {
 		})
 	} finally {
 		isLoading.value = false
+		await $fetch('/api/fetchNewData')
+		await $fetch('/api/fetchSummary')
 	}
 }
 
