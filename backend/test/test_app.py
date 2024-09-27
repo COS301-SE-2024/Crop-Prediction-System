@@ -391,3 +391,13 @@ def test_addFieldToSensor():
         response = client.post("/addFieldToSensor", json={"sensor_id": "2CF7F12025200009", "field_id": field_id})
         assert response.status_code == 200
         assert response.json() == {"success": "Field added to sensor"}
+
+def test_train_batch_wait_for_completion_empty():
+    response = client.post("/train", json={})
+    assert response.status_code == 200
+    assert response.json() == {'error': 'Field ID is required or `batch` must be set to `true`'}
+
+def test_train_batch_wait_for_completion():
+    response = client.post("/train", json={"batch": True})
+    assert response.status_code == 200
+    assert response.json() == {'status': 'All models trained successfully'}
