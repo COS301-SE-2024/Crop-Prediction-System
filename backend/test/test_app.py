@@ -324,13 +324,13 @@ def test_getTeamDetails():
         assert response.status_code == 200
         assert response.json() == {"success": "Team details fetched"}
 
-#!doesnt work for now
-# def test_train():
-#     with patch('backend.app.API.train') as mock_train:
-#         mock_train.return_value = {"success": "Training started"}
-#         response = client.post("/train", json={"field_id": field_id, "batch": False, "waitForCompletion": False})
-#         assert response.status_code == 200
-#         assert response.json() == {"success": "Training started"}
+# #!doesnt work for now
+# # def test_train():
+# #     with patch('backend.app.API.train') as mock_train:
+# #         mock_train.return_value = {"success": "Training started"}
+# #         response = client.post("/train", json={"field_id": field_id, "batch": False, "waitForCompletion": False})
+# #         assert response.status_code == 200
+# #         assert response.json() == {"success": "Training started"}
 
 def test_sendMessage():
     with patch('backend.database.supabaseFunctions.supabaseFunctions.sendMessage') as mock_sendMessage:
@@ -345,3 +345,26 @@ def test_getTeamMessages():
         response = client.get("/getTeamMessages?team_id=17383e3d-f211-4724-8515-8c4cb836c812")
         assert response.status_code == 200
         assert response.json() == {"success": "Messages fetched"}
+
+# ! doesnt work yet
+# def test_updateUser():
+#     with patch('backend.database.supabaseFunctions.supabaseFunctions.updateUser') as mock_updateUser:
+#         mock_updateUser.return_value = {"success": "User updated"}
+#         response = client.put("/updateUser", json={"id": "ac774d3a-921f-4154-b590-5e05831431a1", "full_name": "Xavier Test Reynolds"})
+#         assert response.status_code == 200
+#         assert response.json() == {"success": "User updated"}
+
+# ! doesnt work yet
+# def test_getUser():
+#     with patch('backend.database.supabaseFunctions.supabaseFunctions.getUser') as mock_getUser:
+#         mock_getUser.return_value = {"success": "User fetched"}
+#         response = client.get("/getUser?user_id=ac774d3a-921f-4154-b590-5e05831431a1")
+#         assert response.status_code == 200
+#         assert response.json() == {"success": "User fetched"}
+
+def test_market():
+    with patch('backend.database.supabaseFunctions.supabaseFunctions.getMarketData') as mock_market:
+        mock_market.return_value = {"success": "Market API called"}
+        response = client.get("/market?crop=sunflower")
+        assert response.status_code == 200
+        assert response.json() == {"success": "Market API called"}
