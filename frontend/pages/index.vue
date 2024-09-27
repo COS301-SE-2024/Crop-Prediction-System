@@ -32,10 +32,11 @@
 					<div class="w-full flex flex-col justify-center items-center gap-4 relative">
 						<div class="flex w-full gap-4 mol:flex-row mos:flex-col justify-between items-center">
 							<SelectButton
-								v-model="filter"
+								v-model="selectedFilterOption"
 								:options="filterOptions"
 								optionLabel="name"
 								optionDisabled="constant"
+								@change="handleFilterChange"
 							/>
 							<Button icon="pi pi-question-circle" outlined severity="secondary" size="small" class="h-full" />
 						</div>
@@ -66,13 +67,28 @@ const { userFieldsWithData, filterOptions, chartDataList, loading } = useFieldDa
 
 const selectedField = ref(null)
 const filter = ref({ name: '8 Days', value: 8, constant: false })
+const selectedFilterOption = ref(filter.value)
 const screenWidth = ref(0)
 
 watch(filter, (newFilter) => {
 	if (selectedField.value) {
+		if (filter.value === null) {
+			filter.value = {}
+		}
 		updateChartData(selectedField.value, newFilter.value, chartDataList)
 	}
 })
+
+const handleFilterChange = (e) => {
+	if (e.value !== null) {
+		filter.value = e.value
+		selectedFilterOption.value = e.value
+	} else {
+		// If e.value is null, it means the same option was selected again
+		// So we force the SelectButton to keep the current selection
+		selectedFilterOption.value = filter.value
+	}
+}
 
 watch(selectedField, async (newField) => {
 	if (newField && newField.data) {
