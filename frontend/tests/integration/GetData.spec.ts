@@ -4,42 +4,42 @@ import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { it, expect, describe, vi } from 'vitest'
 import { mount, shallowMount } from '@vue/test-utils'
 import AccountManage from '~/components/AccountManage.vue'
-import Menu from 'primevue/menu';
-import OverlayPanel from 'primevue/overlaypanel';
+import Menu from 'primevue/menu'
+import OverlayPanel from 'primevue/overlaypanel'
 
-describe("Getting data", async () => {
-    it('Overlay Panel opens on click', async () => {
-		const email = 'test@example.com';
-    
-    // Mount the component
-    const wrapper = mount(AccountManage, {
-      props: {
-        email,
-      },
-      global: {
-        stubs: {
-          OverlayPanel: true,
-          Avatar: true,
-          Menu: true
-        }
-      }
-    });
+describe('Getting data', async () => {
+	it('Overlay Panel opens on click', async () => {
+		const email = 'test@example.com'
 
-    // Assert email rendering
-    expect(wrapper.find('h1').text()).toBe(email);
+		// Mount the component
+		const wrapper = mount(AccountManage, {
+			props: {
+				email,
+			},
+			global: {
+				stubs: {
+					OverlayPanel: true,
+					Avatar: true,
+					Menu: true,
+				},
+			},
+		})
 
-    // Spy on the toggle method
-    const toggleSpy = vi.spyOn(wrapper.vm, 'toggle');
+		// Assert email rendering
+		expect(wrapper.find('h1').text()).toBe(email)
 
-    // Simulate click on the clickable div
-    const clickableDiv = wrapper.find('.w-full.flex.flex-row.gap-3.items-center.cursor-pointer');
-    expect(clickableDiv.exists()).toBe(true);
-    await clickableDiv.trigger('click');
+		// Spy on the toggle method
+		const toggleSpy = vi.spyOn(wrapper.vm, 'toggle')
 
-    // Wait for Vue's update cycle
-    await nextTick();
+		// Simulate click on the clickable div
+		const clickableDiv = wrapper.find('.w-full.flex.flex-row.gap-3.items-center.cursor-pointer')
+		expect(clickableDiv.exists()).toBe(true)
+		await clickableDiv.trigger('click')
 
-    // Check if the toggle function was called
-    expect(toggleSpy).toHaveBeenCalledTimes(1);
+		// Wait for Vue's update cycle
+		await nextTick()
+
+		// Check if the toggle function was called
+		expect(toggleSpy).toHaveBeenCalledTimes(1)
 	})
-  });
+})
