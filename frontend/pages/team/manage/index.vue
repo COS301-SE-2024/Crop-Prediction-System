@@ -77,7 +77,7 @@
 
 			<template #footer>
 				<div class="flex flex-row justify-end w-full">
-					<Button label="Invite Member" icon="pi pi-plus" size="small" @click="visible = true" />
+					<Button label="Invite Member" icon="pi pi-plus" size="small" @click="showVisible" />
 				</div>
 			</template>
 		</DataTable>
@@ -129,6 +129,10 @@ const isLoading = ref(false)
 
 onMounted(async () => {
 	await getTeamDetails()
+})
+
+definePageMeta({
+	middleware: 'auth',
 })
 
 async function getTeamDetails() {
@@ -195,6 +199,14 @@ function showWrongRoleError() {
 			life: 3000,
 		})
 	}
+}
+
+const showVisible = () => {
+	if (userRole.value !== 'farm_manager') {
+		showWrongRoleError()
+		return
+	}
+	visible.value = true
 }
 
 const editRole = async (id: string) => {
