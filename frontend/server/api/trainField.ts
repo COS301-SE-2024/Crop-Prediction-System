@@ -1,16 +1,20 @@
 export default defineEventHandler(async (event) => {
 	const proxyUrl = useRuntimeConfig().public.apiBaseUrl
-	const field_id = getQuery(event).field_id
+	const body = await readBody(event)
 
-	const callUrl = `${proxyUrl}/train?field_id=${field_id}`
+	console.log('This is body:', JSON.stringify(body))
+	const callUrl = `${proxyUrl}/train`
 
 	try {
-		const response = await fetch(callUrl)
+		const response = await $fetch(callUrl, {
+			method: 'POST',
+			body: JSON.stringify(body),
+		})
 		if (!response.ok) {
 			throw new Error(`Error: ${response.statusText}`)
 		}
 		const data = await response.json()
-		return data
+		return data.status
 	} catch (error: any) {
 		return {
 			statusCode: error.response?.status || 500,

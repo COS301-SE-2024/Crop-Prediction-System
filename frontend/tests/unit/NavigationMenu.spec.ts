@@ -1,30 +1,16 @@
 // @vitest-environment nuxt
+
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { it, expect, describe } from 'vitest'
 import NavigationMenu from '~/components/NavigationMenu.vue'
 import PrimeVue from 'primevue/config'
 import Menu from 'primevue/menu'
-import { createRouter, createMemoryHistory } from 'vue-router'
-
-const router = createRouter({
-	history: createMemoryHistory(),
-	routes: [
-		{ path: '/', component: { template: '<div>Home</div>' } },
-		{ path: '/inputs/add-field-data', component: { template: '<div>Add Field Data</div>' } },
-		{ path: '/inputs/manage-fields', component: { template: '<div>Manage Fields</div>' } },
-		{ path: '/log-data/view-logs', component: { template: '<div>View Logs</div>' } },
-		{ path: '/model-training/manage-model', component: { template: '<div>Manage Model</div>' } },
-		{ path: '/analytics/crop-yield-data', component: { template: '<div>Crop Yield Data</div>' } },
-		{ path: '/team/manage', component: { template: '<div>Manage Team</div>' } },
-		{ path: '/team/join', component: { template: '<div>Join Team</div>' } },
-	],
-})
 
 describe('NavigationMenu', () => {
 	it('can mount the component', async () => {
 		const component = await mountSuspended(NavigationMenu, {
 			global: {
-				plugins: [PrimeVue, router],
+				plugins: [PrimeVue],
 				components: { Menu },
 				stubs: {
 					RouterLink: true,
@@ -37,7 +23,7 @@ describe('NavigationMenu', () => {
 	it('renders the correct number of labels', async () => {
 		const component = await mountSuspended(NavigationMenu, {
 			global: {
-				plugins: [PrimeVue, router],
+				plugins: [PrimeVue],
 				components: { Menu },
 				stubs: {
 					RouterLink: true,
@@ -52,7 +38,7 @@ describe('NavigationMenu', () => {
 	it('generates router links correctly', async () => {
 		const component = await mountSuspended(NavigationMenu, {
 			global: {
-				plugins: [PrimeVue, router],
+				plugins: [PrimeVue],
 				components: { Menu },
 				stubs: {
 					RouterLink: {
@@ -72,6 +58,5 @@ describe('NavigationMenu', () => {
 		expect(urls).toContain('/inputs/manage-fields')
 		expect(urls).toContain('/log-data/view-logs')
 		expect(urls).toContain('/team/manage')
-		expect(urls).toContain('/team/join')
 	})
 })

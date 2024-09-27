@@ -1,7 +1,8 @@
 // @vitest-environment nuxt
+
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { shallowMount } from '@vue/test-utils'
-import GoogleMap from '~/components/GoogleMap.vue' // Adjust the import path accordingly
+import GoogleMap from '~/components/GoogleMap.vue'
 
 // Mock Google Maps
 globalThis.google = {
@@ -20,6 +21,9 @@ globalThis.google = {
 				setMap(map) {
 					this.map = map
 				}
+				setDrawingMode(mode) {
+					this.drawingMode = mode
+				}
 			},
 			OverlayType: {
 				POLYGON: 'polygon',
@@ -35,7 +39,7 @@ globalThis.google = {
 			getPath() {
 				return {
 					getArray() {
-						return []
+						return [{ lat: () => 1, lng: () => 1 }]
 					},
 				}
 			}
@@ -75,6 +79,7 @@ describe('GoogleMap', () => {
 		}
 		wrapper.vm.drawingManager = drawingManager
 
+		// Call setDrawingMode with `true`
 		wrapper.vm.setDrawingMode(true)
 
 		expect(drawingManager.setDrawingMode).toHaveBeenCalledWith('polygon')
@@ -85,7 +90,7 @@ describe('GoogleMap', () => {
 			getPath() {
 				return {
 					getArray() {
-						return [{ lat: 1, lng: 1 }]
+						return [{ lat: () => 1, lng: () => 1 }]
 					},
 				}
 			},
@@ -94,6 +99,6 @@ describe('GoogleMap', () => {
 
 		const paths = wrapper.vm.getPolygonPaths()
 
-		expect(paths).toEqual([[{ lat: 1, lng: 1 }]])
+		expect(paths).toEqual([[[1, 1]]])
 	})
 })

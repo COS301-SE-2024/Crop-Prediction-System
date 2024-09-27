@@ -1,5 +1,5 @@
 <template>
-	<Sidebar v-model:visible="visible">
+	<Sidebar v-model:visible="visible" class="bg-surface-100 dark:bg-surface-800">
 		<template #container="{ closeCallback }">
 			<div class="bg-none flex flex-col justify-between h-screen w-full items-center p-4 gap-2">
 				<div class="flex flex-row justify-between items-center w-full">
@@ -49,9 +49,7 @@
 import { ref } from 'vue'
 import Sidebar from 'primevue/sidebar'
 import Menu from '../components/NavigationMenu.vue'
-import Avatar from 'primevue/avatar'
 import Button from 'primevue/button'
-import Dropdown from 'primevue/dropdown'
 import AccountManage from '~/components/AccountManage.vue'
 
 const user = useSupabaseUser()
@@ -66,3 +64,9 @@ const cities = ref([
 ])
 const selectedCity = ref(cities.value[0])
 </script>
+
+<style scoped>
+div {
+	font-family: 'Open Sans', sans-serif;
+}
+</style>

@@ -16,6 +16,7 @@
 	"dependencies": {
 		"@googlemaps/js-api-loader": "^1.16.6",
 		"@nuxt/eslint": "^0.3.13",
+		"@nuxt/fonts": "^0.7.2",
 		"@vuelidate/core": "^2.0.3",
 		"@vuelidate/validators": "^2.0.4",
 		"@vueuse/nuxt": "^10.11.0",
@@ -27,7 +28,8 @@
 		"primevue": "^3.52.0",
 		"resend": "^4.0.0",
 		"vue": "^3.4.27",
-		"vue-router": "^4.3.2"
+		"vue-router": "^4.3.2",
+		"xlsx": "^0.18.5"
 	},
 	"devDependencies": {
 		"@jest/globals": "^29.7.0",

@@ -1,7 +1,7 @@
 // @vitest-environment nuxt
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { vi, it, expect, describe } from 'vitest'
-import fetchUserFields from '~/components/GoogleMap.vue'
+import GoogleMap from '~/components/GoogleMap.vue'
 
 // Mock the functions
 // vi.mock('@supabase/supabase-js',);
@@ -24,8 +24,20 @@ describe('GoogleMapsField Integration Test', () => {
 				id: '13f0c522-5b77-4110-ab95-c7da127d9d80',
 			},
 		]
-		// const result = new fetchUserFields();
-		// function is not callable?
-		expect(true).toBe(true)
+		const wrapper = await mountSuspended(GoogleMap, {
+			props: {
+				fields: mockFields,
+				user: mockUser,
+				teamID: mockTeamID,
+			},
+		})
+		expect(wrapper.exists()).toBe(true)
+		let spy = vi.spyOn(wrapper.vm, 'fetchUserFields')
+
+		await wrapper.vm.$nextTick()
+		await wrapper.vm.fetchUserFields()
+		// spy on the fetchUserFields function
+
+		expect(spy).toHaveBeenCalled()
 	})
 })

@@ -8,9 +8,7 @@
 			:loading="isLoading"
 		>
 			<template #header>
-				<h1 class="text-lg font-bold dark:text-white">
-					{{ teamOwner.valueOf() === '' ? 'Fetching Team Details...' : `${teamOwner} Team` }}
-				</h1>
+				<h1 class="text-lg font-bold dark:text-white">My Team</h1>
 			</template>
 
 			<template #empty>
@@ -85,7 +83,7 @@
 		</DataTable>
 
 		<!-- Dialog for Adding New Member -->
-		<Dialog v-model:visible="visible" modal header="Add Member" :style="{ width: '25rem' }">
+		<Dialog v-model:visible="visible" modal header="Add Member" :style="{ width: '25rem', 'font-family': 'Open Sans' }">
 			<div class="flex flex-col items-start justify-between gap-4">
 				<div class="flex flex-col gap-2 w-full">
 					<label for="newUserEmail">User Email</label>
@@ -98,7 +96,12 @@
 		</Dialog>
 
 		<!-- Confirmation Dialog -->
-		<Dialog v-model:visible="confirmVisible" modal header="Confirm" :style="{ width: '25rem' }">
+		<Dialog
+			v-model:visible="confirmVisible"
+			modal
+			header="Confirm"
+			:style="{ width: '25rem', 'font-family': 'Open Sans, sans-serif' }"
+		>
 			<p>Are you sure you want to remove this user from the team?</p>
 			<div class="flex gap-3 justify-end">
 				<Button label="Cancel" severity="secondary" outlined @click="confirmVisible = false" />
@@ -117,7 +120,6 @@ import Skeleton from 'primevue/skeleton'
 
 // State for the team and editing
 const team = ref([])
-const teamOwner = ref('')
 const editingRoleId = ref(null) // State for row being edited
 const visible = ref(false) // State for invite member dialog
 const confirmVisible = ref(false) // State for confirmation dialog
@@ -136,17 +138,13 @@ async function getTeamDetails() {
 		const teamID = await $fetch('/api/getTeamID', {
 			params: { userid: currentUser?.value?.id },
 		})
+
+		userRole.value = teamID.role
+
 		const data = await $fetch('/api/getTeamDetails', {
 			params: { team_id: teamID.team_id },
 		})
 
-		// Check for current user in team and don't show them in the table
-		data.forEach((member: any) => {
-			if (member.id === currentUser?.value?.id) {
-				teamOwner.value = member.full_name
-				data.splice(data.indexOf(member), 1)
-			}
-		})
 		team.value = data
 	} catch (error) {
 		console.error('Error fetching team details:', error)
@@ -165,6 +163,7 @@ const roles = ref([
 
 const newUserEmail = ref('')
 const loading = ref(false)
+const userRole = ref('')
 
 const send = async () => {
 	loading.value = true
@@ -187,7 +186,22 @@ const send = async () => {
 	}
 }
 
+function showWrongRoleError() {
+	if (userRole.value === 'data_analyst') {
+		toast.add({
+			severity: 'warn',
+			summary: 'Access Denied',
+			detail: `You don't have the required permissions to perform this action.`,
+			life: 3000,
+		})
+	}
+}
+
 const editRole = async (id: string) => {
+	if (userRole.value !== 'farm_manager') {
+		showWrongRoleError()
+		return
+	}
 	// If the row is being edited (check mark is clicked)
 	if (editingRoleId.value === id) {
 		const updatedRow = team.value.find((member: any) => member.id === id)
@@ -218,6 +232,10 @@ const editRole = async (id: string) => {
 }
 // Function to open the confirmation dialog
 const confirmRemove = (id: string) => {
+	if (userRole.value !== 'farm_manager') {
+		showWrongRoleError()
+		return
+	}
 	selectedUserId.value = id
 	confirmVisible.value = true
 }

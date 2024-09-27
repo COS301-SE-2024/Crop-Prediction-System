@@ -16,5 +16,6 @@ export default withNuxt({
 		'@typescript-eslint/no-explicit-any': 'off',
 		'prefer-const': 'off',
 		'@typescript-eslint/no-extraneous-class': 'off',
+		'vue/require-default-prop': 'off',
 	},
 })

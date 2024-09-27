@@ -6,7 +6,7 @@ export default {
         class: [
             'relative',
             // Font
-            'leading-none',
+            'leading-none text-sm',
 
             // Flex Alignment
             'inline-flex items-center align-bottom text-center',

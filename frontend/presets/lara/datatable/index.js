@@ -38,7 +38,7 @@ export default {
             { relative: props.scrollable, 'flex flex-col grow': props.scrollable && props.scrollHeight === 'flex' },
 
             // Size
-            { 'h-full': props.scrollable && props.scrollHeight === 'flex' }
+            { 'h-full rounded': props.scrollable && props.scrollHeight === 'flex' }
         ]
     }),
     header: ({ props }) => ({

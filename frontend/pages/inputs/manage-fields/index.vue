@@ -31,9 +31,9 @@
 			<h2 class="dark:text-white font-bold text-xl col-span-12" v-if="!checkTeamFields">
 				Go to the add fields to start adding fields.
 			</h2>
-			<Card v-else v-for="field in filteredFields" :key="field.id">
+			<Card v-else v-for="field in filteredFields" :key="field.id" style="padding: 20px">
 				<template #title>
-					<div class="flex flex-row justify-between items-center">
+					<div class="flex flex-row justify-between items-center mb-2">
 						<h2 class="text-2xl font-bold">{{ field.field_name }}</h2>
 						<Button
 							:key="field.id"
@@ -73,10 +73,12 @@
 
 		<Dialog
 			maximizable
+			id="dialog"
 			modal
 			header="View/Edit Field"
 			v-model:visible="editAndViewVisible"
 			class="w-[95%] md:w-[740px] lg:w-[950px]"
+			:style="{ 'font-family': 'Open Sans' }"
 		>
 			<div class="flex flex-col justify-between items-start gap-4">
 				<div class="flex flex-col gap-2 w-full">
@@ -151,7 +153,12 @@
 		</Dialog>
 
 		<!-- Delete field dialog -->
-		<Dialog header="Confirm Delete" v-model:visible="deleteDialogVisible" modal :style="{ width: '25rem' }">
+		<Dialog
+			header="Confirm Delete"
+			v-model:visible="deleteDialogVisible"
+			modal
+			:style="{ width: '25rem', 'font-family': 'Open Sans' }"
+		>
 			<p>
 				Are you sure you want to delete the field "<strong>{{ fieldToDelete?.field_name }}</strong
 				>"?
@@ -198,6 +205,7 @@ const currentUser = useSupabaseUser()
 
 const teamFields = ref([])
 const checkTeamFields = ref(true)
+const userRole = ref('')
 
 onMounted(async () => {
 	try {
@@ -206,7 +214,8 @@ onMounted(async () => {
 			params: { userid: currentUser?.value?.id },
 		})
 
-		console.log(teamID)
+		userRole.value = teamID.role
+		console.log(userRole.value)
 
 		const response = await $fetch('/api/getTeamFields', {
 			params: { team_id: teamID.team_id },
@@ -252,6 +261,17 @@ function updateSelectedField(newField) {
 	selectedField.value = newField
 }
 
+function showWrongRoleError() {
+	if (userRole.value === 'data_analyst') {
+		toast.add({
+			severity: 'warn',
+			summary: 'Access Denied',
+			detail: `You don't have the required permissions to perform this action.`,
+			life: 3000,
+		})
+	}
+}
+
 // PERF: Search by Field Name and filter by Crop Type functionality
 const filteredFields = ref([])
 const searchQuery = ref('')
@@ -260,7 +280,7 @@ const cropOptions = ref([
 	{ name: 'Maize', value: 'maize' },
 	{ name: 'Wheat', value: 'wheat' },
 	{ name: 'Groundnuts', value: 'groundnuts' },
-	{ name: 'Sunflower', value: 'sunflower' },
+	{ name: 'Sunflower', value: 'sunflowerseed' },
 	{ name: 'Sorghum', value: 'sorghum' },
 	{ name: 'Soybeans', value: 'soybeans' },
 	{ name: 'Barley', value: 'barley' },
@@ -300,15 +320,26 @@ const showIndividualTrainFailure = (field) => {
 }
 
 async function trainField(field, from: string) {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	loadingStates.value.set(field.id, true)
 	try {
 		await $fetch('/api/trainField', {
-			params: { field_id: field.id },
+			method: 'POST',
+			body: {
+				field_id: field.id,
+				batch: false,
+				waitForCompletion: false,
+			},
 		})
 	} catch (error) {
 		showIndividualTrainFailure(field)
 	} finally {
-		loadingStates.value.set(field.id, false)
+		setTimeout(() => {
+			loadingStates.value.set(field.id, false)
+		}, 3000)
 		if (from !== 'trainAll') {
 			showIndividualTrainSuccess(field)
 		}
@@ -317,7 +348,6 @@ async function trainField(field, from: string) {
 
 // PERF: Training of all fields
 const trainAllLoading = ref(false)
-
 const showAllTrainSuccess = () => {
 	toast.add({
 		severity: 'success',
@@ -337,6 +367,10 @@ const showAllTrainFailure = () => {
 }
 
 const trainAllFields = async () => {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	trainAllLoading.value = true
 
 	teamFields.value.forEach((field) => {
@@ -350,10 +384,12 @@ const trainAllFields = async () => {
 	} catch (error) {
 		showAllTrainFailure()
 	} finally {
-		teamFields.value.forEach((field) => {
-			loadingStates.value.set(field.id, false)
-		})
-		trainAllLoading.value = false
+		setTimeout(() => {
+			teamFields.value.forEach((field) => {
+				loadingStates.value.set(field.id, false)
+			})
+			trainAllLoading.value = false
+		}, 3000)
 		showAllTrainSuccess()
 	}
 }
@@ -367,11 +403,19 @@ function capitalizeFirstCharacter(str: string) {
 const isFieldEditMode = ref(false) // Tracks if the map is in edit mode
 
 const toggleFieldEditMode = () => {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	// Toggle edit mode
 	isFieldEditMode.value = !isFieldEditMode.value
 }
 
 async function handlePolygonUpdate(newCoords) {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	const transformedCoords = newCoords.map((coord) => [coord.lat, coord.lng])
 	try {
 		const response = await $fetch('/api/updateFieldArea', {
@@ -421,7 +465,7 @@ const editingCropOptions = ref([
 	{ name: 'Maize', value: 'maize' },
 	{ name: 'Wheat', value: 'wheat' },
 	{ name: 'Groundnuts', value: 'groundnuts' },
-	{ name: 'Sunflower', value: 'sunflower' },
+	{ name: 'Sunflower', value: 'sunflowerseed' },
 	{ name: 'Sorghum', value: 'sorghum' },
 	{ name: 'Soybeans', value: 'soybeans' },
 	{ name: 'Barley', value: 'barley' },
@@ -430,6 +474,10 @@ const editingCropOptions = ref([
 ])
 
 const toggleCropEditMode = async () => {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	if (isEditingCropType.value) {
 		try {
 			const response = await $fetch('/api/updateFieldCropType', {
@@ -479,6 +527,10 @@ const isEditingFieldName = ref(false)
 const newFieldName = ref('')
 
 const toggleNameEditMode = async () => {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	if (isEditingFieldName.value) {
 		try {
 			const response = await $fetch('/api/updateFieldName', {
@@ -534,6 +586,10 @@ const openDeleteDialog = (field) => {
 }
 
 const deleteField = async () => {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	try {
 		const response = await $fetch('/api/deleteField', {
 			method: 'POST',
@@ -578,3 +634,5 @@ const cancelDelete = () => {
 	fieldToDelete.value = null
 }
 </script>
+
+<style scoped></style>

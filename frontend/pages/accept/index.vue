@@ -53,9 +53,9 @@ definePageMeta({
 		<Toast />
 		<div class="w-full max-w-[450px] px-4 overflow-auto">
 			<!-- Step 2: Team Confirmation -->
-			<Card class="w-full border border-surface-border">
+			<Card class="w-full border border-surface-border p-5">
 				<template #title>
-					<h1 class="font-medium">Team Confirmation</h1>
+					<h1 class="font-medium mb-4">Team Confirmation</h1>
 				</template>
 				<template #subtitle>
 					<p>Double-check the code sent to your email and ensure it matches the one below.</p>

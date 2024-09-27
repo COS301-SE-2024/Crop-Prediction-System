@@ -1,147 +1,71 @@
 <template>
-	<div class="flex justify-center px-4 sm:px-6 lg:px-8 mt-3">
-		<TabView :activeIndex="activeTabIndex" @onTabChange="handleTabChange" class="w-full sm:w-10/12 lg:w-5/12">
-			<TabPanel v-for="(tab, index) in settings" :key="index">
-				<template #header>
-					<i :class="tab.icon" class="pr-2"></i>
-					{{ tab.label }}
-				</template>
-				<div class="p-4">
-					<div v-if="tab.label === 'Account'" class="space-y-6">
-						<div>
-							<h1 class="text-xl sm:text-2xl">Account</h1>
-							<p class="text-sm sm:text-base text-surface-400">
-								Manage your account settings and other preferences
-							</p>
-						</div>
-						<div class="w-full flex flex-col gap-4 sm:gap-6">
-							<div class="flex flex-col gap-2 sm:gap-4">
-								<label for="first_name" class="block text-sm sm:text-base">First Name</label>
-								<InputText id="first_name" v-model="first_name" class="w-full text-sm sm:text-base" />
-							</div>
-							<div class="flex flex-col gap-2 sm:gap-4">
-								<label for="last_name" class="block text-sm sm:text-base">Last Name</label>
-								<InputText id="last_name" v-model="last_name" class="w-full text-sm sm:text-base" />
-							</div>
-							<div class="flex flex-col gap-2 sm:gap-4">
-								<label for="email" class="block text-sm sm:text-base">Email</label>
-								<InputText id="email" v-model="email" class="w-full text-sm sm:text-base" />
-							</div>
-							<div class="flex flex-col gap-2 sm:gap-4">
-								<p class="text-sm sm:text-base">
-									Password: <a href="#" class="text-primary-500 underline">Email Reset Link</a>
-								</p>
-							</div>
-						</div>
-						<div>
-							<div class="field flex items-center gap-2 sm:gap-4">
-								<p class="text-sm sm:text-base">Dark Mode</p>
-								<InputSwitch v-model="checked" @change="setColorTheme(checked ? 'dark' : 'light')" />
-							</div>
-						</div>
-						<div>
-							<div class="flex flex-row justify-end gap-2 sm:gap-4">
-								<Button
-									label="Cancel"
-									@click="cancelEditProfileRequest"
-									severity="secondary"
-									class="text-sm sm:text-base"
-								/>
-								<Button label="Save" @click="updateUserProfile" class="text-sm sm:text-base" />
-							</div>
-						</div>
-					</div>
-					<div v-else-if="tab.label === 'Teams'" class="space-y-6">
-						<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-							<div>
-								<h1 class="text-xl sm:text-2xl">Teams</h1>
-								<p class="text-sm sm:text-base text-surface-400">Manage your teams and team members</p>
-							</div>
-							<Button
-								label="Add Team"
-								icon="pi pi-plus"
-								class="p-button-success text-sm sm:text-base mt-4 sm:mt-0"
-							/>
-						</div>
-						<div class="treetable-container text-xs sm:text-sm">
-							<TreeTable :value="teams">
-								<Column expander style="width: 3em"></Column>
-								<Column field="team" header="Team"></Column>
-								<Column field="id" header="User ID"></Column>
-								<Column field="name" header="Name"></Column>
-								<Column field="role" header="Role"></Column>
-								<Column field="actions" header="Actions">
-									<template #body="slotProps">
-										<div class="flex gap-2">
-											<Button
-												icon="pi pi-pencil"
-												class="p-button-rounded p-button-text"
-												@click="editProduct(slotProps.data)"
-												severity="info"
-											></Button>
-											<Button
-												icon="pi pi-trash"
-												class="p-button-rounded p-button-text"
-												@click="deleteProduct(slotProps.data)"
-												severity="danger"
-											></Button>
-										</div>
-									</template>
-								</Column>
-							</TreeTable>
-						</div>
-					</div>
-					<div v-else-if="tab.label === 'Devices'">
-						<h1 class="text-xl sm:text-2xl">Devices</h1>
-						<DataTable :value="devices">
-							<Column field="name" header="Device Name"></Column>
-							<Column field="status" header="Status"></Column>
-						</DataTable>
-					</div>
+	<div class="flex justify-center items-center px-4 sm:px-6 lg:px-8 mt-20">
+		<div class="space-y-6 bg-surface-100 dark:bg-surface-800 p-5 text-surface-700 dark:text-surface-0 rounded-md shadow-md">
+			<div>
+				<h1 class="text-xl sm:text-2xl">Account</h1>
+				<p class="text-sm sm:text-base text-surface-600 dark:text-surface-0/60">
+					Manage your account settings and other preferences
+				</p>
+			</div>
+			<div class="w-full flex flex-col gap-4 sm:gap-6">
+				<div class="flex flex-col gap-2 sm:gap-4">
+					<label for="first_name" class="block text-sm sm:text-base">Full Name</label>
+					<InputText
+						id="first_name"
+						v-model="first_name"
+						:placeholder="userData.full_name"
+						class="w-full text-sm sm:text-base"
+					/>
 				</div>
-			</TabPanel>
-		</TabView>
+				<div class="flex flex-col gap-2 sm:gap-4">
+					<label for="email" class="block text-sm sm:text-base">Email</label>
+					<InputText id="email" disabled v-model="userData.email" class="w-full text-sm sm:text-base" />
+				</div>
+			</div>
+			<div>
+				<div class="field flex items-center gap-2 sm:gap-4">
+					<p class="text-sm sm:text-base">Dark Mode</p>
+					<InputSwitch v-model="checked" @change="setColorTheme(checked ? 'dark' : 'light')" />
+				</div>
+			</div>
+			<div>
+				<div class="flex flex-row justify-end gap-2 sm:gap-4">
+					<Button label="Cancel" @click="cancelEditProfileRequest" severity="secondary" />
+					<Button label="Save" :loading="loading" @click="updateUserProfile" />
+				</div>
+			</div>
+		</div>
 	</div>
+	<Toast />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import TabView from 'primevue/tabview'
-import TabPanel from 'primevue/tabpanel'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
-import DataTable from 'primevue/datatable'
-import Column from 'primevue/column'
+import { useToast } from 'primevue/usetoast'
 
-const settings = ref([
-	{ label: 'Account', icon: 'pi pi-user' },
-	{ label: 'Teams', icon: 'pi pi-users' },
-	{ label: 'Devices', icon: 'pi pi-globe' },
-])
-
-const activeTabIndex = ref(0)
-
-// const account = ref({
-// 	name: '',
-// 	email: '',
-// 	password: '',
-// })
-
-// TODO: Select user from supabase
-
-const supabase = useSupabaseClient()
-
+const toast = useToast()
 const user = useSupabaseUser()
-const { data } = await supabase.from('profiles').select('full_name, email').eq('id', user.value.id)
+const userData = ref({
+	full_name: '',
+	email: '',
+})
+
+onMounted(async () => {
+	userData.value = await getUser()
+})
+
+async function getUser() {
+	return await $fetch('/api/getUser', {
+		params: { user_id: user?.value?.id },
+	})
+}
 
 const first_name = ref('')
-const last_name = ref('')
-const email = ref(user.value?.email)
 
 const cancelEditProfileRequest = () => {
-	first_name.value = user.value?.user_metadata.full_name.split(' ')[0]
-	last_name.value = user.value?.user_metadata.full_name.split(' ')[1]
-	email.value = user.value?.email
+	first_name.value = ''
 }
 
 const checked = ref(useColorMode().preference === 'dark')
@@ -152,101 +76,41 @@ function setColorTheme(theme: Theme) {
 	useColorMode().preference = theme
 }
 
-const teams = ref([
-	{
-		key: 0,
-		data: {
-			team: 'Team 1',
-			id: '1',
-		},
-		label: 'Team 1',
-		children: [
-			{
-				key: 1,
-				data: {
-					id: '1',
-					name: 'John Doe',
-					role: 'Admin',
-				},
-				label: 'John Doe',
-			},
-			{
-				key: 2,
-				data: {
-					id: '2',
-					name: 'Jane Doe',
-					role: 'User',
-				},
-				label: 'Jane Doe',
-			},
-		],
-	},
-])
-
-const newUser = ref('')
-
-const devices = ref([
-	{ name: 'Device 1', status: 'Online' },
-	{ name: 'Device 2', status: 'Offline' },
-])
-
-const themes = ref([
-	{ label: 'Light', value: 'light' },
-	{ label: 'Dark', value: 'dark' },
-])
-
-const items = ref([
-	{ label: 'Item 1', value: 'item1' },
-	{ label: 'Item 2', value: 'item2' },
-	{ label: 'Item 3', value: 'item3' },
-])
-
-const settingsData = ref({
-	theme: null,
-	preferredItems: [],
-})
-
-function handleTabChange(event) {
-	activeTabIndex.value = event.index
-}
-
-function addUser(teamIndex) {
-	if (newUser.value) {
-		teams.value[teamIndex].users.push(newUser.value)
-		newUser.value = ''
-	}
-}
-
-function removeUser(teamIndex, userIndex) {
-	teams.value[teamIndex].users.splice(userIndex, 1)
-}
-
+const loading = ref(false)
 async function updateUserProfile() {
 	try {
+		loading.value = true
 		const user = useSupabaseUser()
-
-		const updates = {
-			id: user.value?.id,
-			full_name: `${first_name.value} ${last_name.value}`,
-			email: email.value,
-		}
-
-		const { error } = await supabase.from('profiles').upsert(updates, { returning: 'minimal' })
-		if (error) throw error
+		await $fetch('/api/updateUser', {
+			method: 'PUT',
+			body: {
+				id: user?.value?.id,
+				full_name: first_name.value,
+			},
+		})
 	} catch (error) {
 		console.error('Error updating user profile:', error)
+		toast.add({
+			severity: 'error',
+			summary: 'Error',
+			detail: 'Error updating user profile. Please try again later.',
+			life: 3000,
+		})
+		loading.value = false
+	} finally {
+		loading.value = false
+		toast.add({
+			severity: 'success',
+			summary: 'Updated',
+			detail: 'Your profile has been successfully updated.',
+			life: 3000,
+		})
+		userData.value.full_name = first_name.value
+		first_name.value = ''
 	}
 }
+
+definePageMeta({
+	middleware: 'auth',
+})
 </script>
-
-<style>
-.card {
-	max-width: 800px;
-	margin: 0 auto;
-}
-
-.treetable-container {
-	width: 100%;
-	overflow-x: auto; /* Enable horizontal scrolling */
-}
-</style>
