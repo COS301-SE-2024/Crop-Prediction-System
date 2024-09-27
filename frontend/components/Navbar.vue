@@ -35,10 +35,6 @@
 				</div>
 			</OverlayPanel>
 			<div class="flex flex-row items-center h-full justify-end justify-self-end">
-				<!-- <div class="p-5 sm:p-0">
-					<i class="pi pi-bell" style="font-size: 1.5rem" />
-				</div> -->
-
 				<i
 					class="pi pi-comment"
 					style="
@@ -65,9 +61,6 @@
 					:class="'text-surface-500 dark:text-surface-300 rounded-md hover:bg-surface-300/20 hover:cursor-pointer'"
 					@click="toggleProfile"
 				/>
-				<!-- <div class="hidden sm:block">
-			<i class="pi pi-cog" @click="toggleSettings" style="font-size: 1.5rem" />
-		  </div> -->
 			</div>
 		</div>
 		<Toast />
@@ -83,8 +76,6 @@ import { useToast } from 'primevue/usetoast'
 const toast = useToast()
 const user = useSupabaseUser()
 const client = useSupabaseClient()
-
-const settingsSwitch = ref(false)
 
 const op = ref<OverlayPanel | null>(null)
 const settingsPanel = ref<OverlayPanel | null>(null)
@@ -183,7 +174,6 @@ const unreadMessages = useState('unreadMessages', () => 0)
 
 const supabase = useSupabaseClient()
 const route = useRoute()
-const router = useRouter()
 
 onMounted(() => {
 	fetchUser()
