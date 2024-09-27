@@ -338,3 +338,10 @@ def test_sendMessage():
         response = client.post("/sendMessage", json={"message": "Hello, how's the weather today?"})
         assert response.status_code == 200
         assert response.json() == {"success": "Message sent"}
+
+def test_getTeamMessages():
+    with patch('backend.database.supabaseFunctions.supabaseFunctions.getTeamMessages') as mock_getTeamMessages:
+        mock_getTeamMessages.return_value = {"success": "Messages fetched"}
+        response = client.get("/getTeamMessages?team_id=17383e3d-f211-4724-8515-8c4cb836c812")
+        assert response.status_code == 200
+        assert response.json() == {"success": "Messages fetched"}
