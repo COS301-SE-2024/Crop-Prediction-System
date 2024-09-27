@@ -13,4 +13,4 @@ scikit_learn==1.5.2
 Shapely==2.0.6
 statsmodels==0.14.2
 supabase==2.7.4
-xgboost==1.6.2
+xgboost==2.1.1

@@ -193,7 +193,6 @@ class Weather:
 
         # Calculate health as a percentage
         health = ((max + min) / 2) - crop_info[0]
-        print(health, flush=True)
 
         health = health / (crop_info[1] - crop_info[0])
 
@@ -202,8 +201,8 @@ class Weather:
 
         return health
 
-if __name__ == '__main__':
-    w = Weather()
-    w.calculateHealth(27, 10, "maize")
-    w.update_allFeatures()
+# if __name__ == '__main__':
+#     w = Weather()
+#     w.calculateHealth(27, 10, "maize")
+#     w.update_allFeatures()
     # print('Updated all features', flush=True)
