@@ -87,12 +87,12 @@ def test_get_team_fields():
         assert response.status_code == 200
         assert any(item['id'] == field_id for item in data)
 
-# def test_add_to_team():
-#     with patch('backend.database.supabaseFunctions.supabaseFunctions.addToTeam') as mock_addToTeam:
-#         mock_addToTeam.return_value = {"success": "User added to team"}
-#         response = client.post("/addToTeam", json={"team_id": team_id, "user_id": user_id})
-#         assert response.status_code == 200
-#         assert response.json() == {"success": "User added to team"}
+def test_add_to_team():
+    with patch('backend.database.supabaseFunctions.supabaseFunctions.addToTeam') as mock_addToTeam:
+        mock_addToTeam.return_value = {"success": "User added to team"}
+        response = client.post("/addToTeam", json={"team_id": team_id, "user_id": user_id})
+        assert response.status_code == 200
+        assert response.json() == {"success": "User added to team"}
 
 # def test_remove_from_team():
 #     with patch('backend.database.supabaseFunctions.supabaseFunctions.removeFromTeam') as mock_removeFromTeam:
