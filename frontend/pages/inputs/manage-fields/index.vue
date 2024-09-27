@@ -205,6 +205,7 @@ const currentUser = useSupabaseUser()
 
 const teamFields = ref([])
 const checkTeamFields = ref(true)
+const userRole = ref('')
 
 onMounted(async () => {
 	try {
@@ -213,7 +214,8 @@ onMounted(async () => {
 			params: { userid: currentUser?.value?.id },
 		})
 
-		console.log(teamID)
+		userRole.value = teamID.role
+		console.log(userRole.value)
 
 		const response = await $fetch('/api/getTeamFields', {
 			params: { team_id: teamID.team_id },
@@ -259,6 +261,17 @@ function updateSelectedField(newField) {
 	selectedField.value = newField
 }
 
+function showWrongRoleError() {
+	if (userRole.value === 'data_analyst') {
+		toast.add({
+			severity: 'warn',
+			summary: 'Access Denied',
+			detail: `You don't have the required permissions to perform this action.`,
+			life: 3000,
+		})
+	}
+}
+
 // PERF: Search by Field Name and filter by Crop Type functionality
 const filteredFields = ref([])
 const searchQuery = ref('')
@@ -267,7 +280,7 @@ const cropOptions = ref([
 	{ name: 'Maize', value: 'maize' },
 	{ name: 'Wheat', value: 'wheat' },
 	{ name: 'Groundnuts', value: 'groundnuts' },
-	{ name: 'Sunflower', value: 'sunflower' },
+	{ name: 'Sunflower', value: 'sunflowerseed' },
 	{ name: 'Sorghum', value: 'sorghum' },
 	{ name: 'Soybeans', value: 'soybeans' },
 	{ name: 'Barley', value: 'barley' },
@@ -307,15 +320,26 @@ const showIndividualTrainFailure = (field) => {
 }
 
 async function trainField(field, from: string) {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	loadingStates.value.set(field.id, true)
 	try {
 		await $fetch('/api/trainField', {
-			params: { field_id: field.id },
+			method: 'POST',
+			body: {
+				field_id: field.id,
+				batch: false,
+				waitForCompletion: false,
+			},
 		})
 	} catch (error) {
 		showIndividualTrainFailure(field)
 	} finally {
-		loadingStates.value.set(field.id, false)
+		setTimeout(() => {
+			loadingStates.value.set(field.id, false)
+		}, 3000)
 		if (from !== 'trainAll') {
 			showIndividualTrainSuccess(field)
 		}
@@ -324,7 +348,6 @@ async function trainField(field, from: string) {
 
 // PERF: Training of all fields
 const trainAllLoading = ref(false)
-
 const showAllTrainSuccess = () => {
 	toast.add({
 		severity: 'success',
@@ -344,6 +367,10 @@ const showAllTrainFailure = () => {
 }
 
 const trainAllFields = async () => {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	trainAllLoading.value = true
 
 	teamFields.value.forEach((field) => {
@@ -357,10 +384,12 @@ const trainAllFields = async () => {
 	} catch (error) {
 		showAllTrainFailure()
 	} finally {
-		teamFields.value.forEach((field) => {
-			loadingStates.value.set(field.id, false)
-		})
-		trainAllLoading.value = false
+		setTimeout(() => {
+			teamFields.value.forEach((field) => {
+				loadingStates.value.set(field.id, false)
+			})
+			trainAllLoading.value = false
+		}, 3000)
 		showAllTrainSuccess()
 	}
 }
@@ -374,11 +403,19 @@ function capitalizeFirstCharacter(str: string) {
 const isFieldEditMode = ref(false) // Tracks if the map is in edit mode
 
 const toggleFieldEditMode = () => {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	// Toggle edit mode
 	isFieldEditMode.value = !isFieldEditMode.value
 }
 
 async function handlePolygonUpdate(newCoords) {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	const transformedCoords = newCoords.map((coord) => [coord.lat, coord.lng])
 	try {
 		const response = await $fetch('/api/updateFieldArea', {
@@ -428,7 +465,7 @@ const editingCropOptions = ref([
 	{ name: 'Maize', value: 'maize' },
 	{ name: 'Wheat', value: 'wheat' },
 	{ name: 'Groundnuts', value: 'groundnuts' },
-	{ name: 'Sunflower', value: 'sunflower' },
+	{ name: 'Sunflower', value: 'sunflowerseed' },
 	{ name: 'Sorghum', value: 'sorghum' },
 	{ name: 'Soybeans', value: 'soybeans' },
 	{ name: 'Barley', value: 'barley' },
@@ -437,6 +474,10 @@ const editingCropOptions = ref([
 ])
 
 const toggleCropEditMode = async () => {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	if (isEditingCropType.value) {
 		try {
 			const response = await $fetch('/api/updateFieldCropType', {
@@ -486,6 +527,10 @@ const isEditingFieldName = ref(false)
 const newFieldName = ref('')
 
 const toggleNameEditMode = async () => {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	if (isEditingFieldName.value) {
 		try {
 			const response = await $fetch('/api/updateFieldName', {
@@ -541,6 +586,10 @@ const openDeleteDialog = (field) => {
 }
 
 const deleteField = async () => {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	try {
 		const response = await $fetch('/api/deleteField', {
 			method: 'POST',

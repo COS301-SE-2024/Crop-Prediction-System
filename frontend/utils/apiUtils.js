@@ -40,6 +40,13 @@ export function transformData(data) {
 				if (key === 'date') {
 					const formattedDate = item[key].slice(5)
 					result[key].push(formattedDate)
+				} else if (key === 'pred_yield' || key === 'pred_health') {
+					if (item[key] === null) {
+						console.log('This is true')
+						result[key].push(0)
+					} else {
+						result[key].push(item[key])
+					}
 				} else {
 					result[key].push(item[key])
 				}

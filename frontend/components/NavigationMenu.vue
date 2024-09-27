@@ -25,9 +25,14 @@ const items = ref([
 		label: 'HOME',
 		items: [
 			{
-				label: 'Dashboard',
+				label: 'Field Dashboard',
 				icon: 'pi pi-chart-bar',
 				url: '/',
+			},
+			{
+				label: 'Revenue Dashboard',
+				icon: 'pi pi-wallet',
+				url: '/market',
 			},
 		],
 	},
