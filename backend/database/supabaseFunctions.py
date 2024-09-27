@@ -380,9 +380,6 @@ class supabaseFunctions:
         try:
             response = supabaseFunctions.__sbClient.rpc("get_market_value_by_crop", {"croptype": crop}).execute()
 
-            for i in response.data:
-                i["date"] = i["date"].split("-")[0] + "-" + i["date"].split("-")[1]
-
             if response.data == []:
                 return {"error": "Data not found. Crop type may be invalid or may not have any data."}
             return response.data
