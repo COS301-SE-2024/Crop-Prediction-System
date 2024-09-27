@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   pull_request:
     branches: [main, dev, feature/backend/**]
+  push:
+    branches: feature/backend/**
 
 jobs:
   automated-backend-unit-tests:

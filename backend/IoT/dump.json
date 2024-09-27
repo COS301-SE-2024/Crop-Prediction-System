@@ -1,0 +1,52 @@
+{
+    "data": {
+        "queryTable": {
+            "rows": [
+                {
+                    "columns": [
+                        {
+                            "key": "id",
+                            "value": "3310930"
+                        },
+                        {
+                            "key": "device_eui",
+                            "value": "2CF7F12025200009"
+                        },
+                        {
+                            "key": "soil_temperature",
+                            "value": null
+                        },
+                        {
+                            "key": "soil_moisture",
+                            "value": null
+                        },
+                        {
+                            "key": "temperature",
+                            "value": "12.7"
+                        },
+                        {
+                            "key": "relative_humidity",
+                            "value": "72.5"
+                        },
+                        {
+                            "key": "light",
+                            "value": null
+                        },
+                        {
+                            "key": "co2",
+                            "value": null
+                        },
+                        {
+                            "key": "battery",
+                            "value": null
+                        },
+                        {
+                            "key": "received_at",
+                            "value": "2024-09-01T19:53:01.936967618Z"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, BackgroundTasks
 from backend.database.supabaseFunctions import supabaseFunctions
 
-from backend.model.model import Model
+from backend.model.pipeline import Pipeline
 from backend.definitions.field import Field
 from backend.definitions.entry import Entry
 from backend.definitions.crop import Crop
@@ -11,7 +11,7 @@ class API:
     def __init__(self):
         self.app = FastAPI()
         self.sb = supabaseFunctions()
-        self.ml = Model()
+        self.pipeline = Pipeline()
         self.setup_routes()
 
     def setup_routes(self):
@@ -20,10 +20,9 @@ class API:
         # field routes
         self.app.add_api_route("/getFieldInfo", self.getFieldInfo, methods=["GET"])
         self.app.add_api_route("/getFieldData", self.getFieldData, methods=["GET"])
-        # self.app.add_api_route("/getFieldLogs", self.getFieldLogs, methods=["GET"])
         self.app.add_api_route("/fetchWeather", self.fetchWeatherForAllFields, methods=["GET"])
         self.app.add_api_route("/fetchSummary", self.fetchSummary, methods=["GET"])
-        
+        self.app.add_api_route("/fetchSensorData", self.sb.fetchSensorData, methods=["GET"])
 
         # field routes
         self.app.add_api_route("/createField", self.createField, methods=["POST"])
@@ -32,8 +31,9 @@ class API:
 
         # entry routes)
         self.app.add_api_route("/updateEntry", self.updateEntry, methods=["PUT"])
+        self.app.add_api_route("/getPastYieldAvg", self.getPastYieldAvg, methods=["GET"])
 
-        # user routes
+        # team routes
         self.app.add_api_route("/getTeamFields", self.getTeamFields, methods=["GET"])
         self.app.add_api_route("/getTeamFieldData", self.getTeamFieldData, methods=["GET"])
         self.app.add_api_route("/addToTeam", self.addToTeam, methods=["POST"]) # TODO: Test this route
@@ -45,10 +45,25 @@ class API:
         self.app.add_api_route("/getTeamId", self.getTeamId, methods=["GET"]) # TODO: Test this route
 
         # model routes
-        self.app.add_api_route("/aggregate", self.aggregate, methods=["GET"]) # TODO: Test this route
-        self.app.add_api_route("/predict", self.predict, methods=["GET"]) # TODO: Test this route
-        self.app.add_api_route("/train", self.train, methods=["GET"]) # TODO: Test this route
-                               
+        # Aggregation, preparing, training and predicting the model all happens in the pipeline
+        self.app.add_api_route("/train", self.train, methods=["POST"]) # TODO: Test this route
+
+        # messaging routes
+        self.app.add_api_route("/sendMessage", self.sendMessage, methods=["POST"])
+        self.app.add_api_route("/getTeamMessages", self.getMessages, methods=["GET"])
+
+        # user routes
+        self.app.add_api_route("/updateUser", self.sb.updateUser, methods=["PUT"])
+        self.app.add_api_route("/getUser", self.sb.getUser, methods=["GET"])
+
+        # market API
+        self.app.add_api_route("/market", self.market, methods=["GET"])
+        self.app.add_api_route("/getTeamYield", self.getTeamYield, methods=["GET"])
+
+        #sensor routes
+        self.app.add_api_route("/getUPSensorData", self.getUPSensorData, methods=["GET"])
+        self.app.add_api_route("/addFieldToSensor", self.addFieldToSensor, methods=["POST"])
+
     def main(self, request: Request):
         return {
             "Welcome": "Welcome to the TerraByte API",
@@ -58,8 +73,8 @@ class API:
     def getFieldInfo(self, request: Request, field_id: str):
         return self.sb.getFieldInfo(str(field_id))
 
-    def getFieldData(self, request: Request, field_id: str, input_date: str):
-        return self.sb.getFieldData(field_id, input_date)
+    def getFieldData(self, request: Request, field_id: str):
+        return self.sb.getFieldData(field_id)
 
     def createField(self, request: Request, fieldInfo: Field):
         return self.sb.createField(fieldInfo)
@@ -71,8 +86,11 @@ class API:
         return self.sb.deleteField(field_id.get("field_id"))
 
     # entry routes
-    def updateEntry(self, request: Request, entryInfo: Entry):
+    def updateEntry(self, request: Request, entryInfo: dict):
         return self.sb.updateEntry(entryInfo)
+    
+    def getPastYieldAvg(self, request: Request, crop: str):
+        return self.sb.getPastYieldAvg(crop)
 
     def getTeamFields(self, request: Request, team_id: str):
         return self.sb.getTeamFields(team_id)
@@ -96,24 +114,30 @@ class API:
     def getTeamDetails(self, request: Request, team_id: str):
         return self.sb.getTeamDetails(team_id)
     
-    # model routes
-    def aggregate(self, background_tasks: BackgroundTasks, request: Request):
-        background_tasks.add_task(self.sb.aggregate)
-        return {"message": "Started aggregation"}
-    
-    def predict(self, background_tasks: BackgroundTasks, request: Request, field_id: str = None, batch: bool = False):
+    # model routes [POST]
+    def train(self, background_tasks: BackgroundTasks, request: Request, body: dict):
+        field_id = body.get("field_id") or None
+        batch = body.get("batch") or False
+        waitForCompletion = body.get("waitForCompletion") or False
+        
         if batch:
-            background_tasks.add_task(self.ml.predict_all)
-            return {"message": "Started prediction for all fields"}
-        background_tasks.add_task(self.ml.predict, field_id)
-        return {"message": "Started prediction for field ID: " + field_id}
-    
-    def train(self, background_tasks: BackgroundTasks, request: Request, field_id: str = None, crop: str = None, batch: bool = False):
-        if batch:
-            background_tasks.add_task(self.ml.train_all)
+            if waitForCompletion:
+                # Ensure synchronous execution here
+                return self.pipeline.train_all()
+            background_tasks.add_task(self.pipeline.train_all)
             return {"message": "Started training for all fields"}
-        background_tasks.add_task(self.ml.train, field_id, crop)
+
+        if field_id is None:
+            return {"error": "Field ID is required or `batch` must be set to `true`"}
+
+        if waitForCompletion:
+            # Ensure synchronous execution here
+            return self.pipeline.train(field_id)
+
+        # Background task for asynchronous training
+        background_tasks.add_task(self.pipeline.train, field_id)
         return {"message": "Started training for field ID: " + field_id}
+
     
     def fetchWeatherForAllFields(self, background_tasks: BackgroundTasks, request: Request):
         background_tasks.add_task(self.sb.fetchWeatherForAllFields)
@@ -122,6 +146,36 @@ class API:
     def fetchSummary(self, background_tasks: BackgroundTasks, request: Request):
         background_tasks.add_task(self.sb.fetchSummary)
         return {"message": "Started fetching summary"}
+    
+    # messaging routes
+    def sendMessage(self, request: Request, content: dict):
+        return self.sb.sendMessage(content)
+    
+    def getMessages(self, request: Request, team_id: str):
+        return self.sb.getTeamMessages(team_id)
+    
+    # user routes
+    def updateUser(self, request: Request, user: dict):
+        return self.sb.updateUser(user)
+    
+    def getUser(self, request: Request, user_id: str):
+        return self.sb.getUser(user_id)
+    
+    # market API
+    def market(self, crop: str):
+        return self.sb.getMarketData(crop)
+    
+    def getTeamYield(self, request: Request, team_id: str):
+        return self.sb.getTeamYield(team_id)
+
+    # sensor routes
+    def getUPSensorData(self, request: Request, sensor_id: str):
+        return self.sb.createUpSensorData(sensor_id)
+    
+    def addFieldToSensor(self, request: Request, body: dict):
+        sensor_id = body.get("sensor_id")
+        field_id = body.get("field_id")
+        return self.sb.addFieldToSensor(sensor_id, field_id)
 
 api_instance = API()
 app = api_instance.app
