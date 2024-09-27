@@ -323,3 +323,18 @@ def test_getTeamDetails():
         response = client.get("/getTeamDetails?team_id=17383e3d-f211-4724-8515-8c4cb836c812")
         assert response.status_code == 200
         assert response.json() == {"success": "Team details fetched"}
+
+#!doesnt work for now
+# def test_train():
+#     with patch('backend.app.API.train') as mock_train:
+#         mock_train.return_value = {"success": "Training started"}
+#         response = client.post("/train", json={"field_id": field_id, "batch": False, "waitForCompletion": False})
+#         assert response.status_code == 200
+#         assert response.json() == {"success": "Training started"}
+
+def test_sendMessage():
+    with patch('backend.database.supabaseFunctions.supabaseFunctions.sendMessage') as mock_sendMessage:
+        mock_sendMessage.return_value = {"success": "Message sent"}
+        response = client.post("/sendMessage", json={"message": "Hello, how's the weather today?"})
+        assert response.status_code == 200
+        assert response.json() == {"success": "Message sent"}
