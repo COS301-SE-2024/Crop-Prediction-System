@@ -384,3 +384,10 @@ def test_getUPSensorData():
         response = client.get("/getUPSensorData?sensor_id=2CF7F12025200009")
         assert response.status_code == 200
         assert response.json() == {"success": "Sensor data fetched"}
+
+def test_addFieldToSensor():
+    with patch('backend.database.supabaseFunctions.supabaseFunctions.addFieldToSensor') as mock_addFieldToSensor:
+        mock_addFieldToSensor.return_value = {"success": "Field added to sensor"}
+        response = client.post("/addFieldToSensor", json={"sensor_id": "2CF7F12025200009", "field_id": field_id})
+        assert response.status_code == 200
+        assert response.json() == {"success": "Field added to sensor"}
