@@ -256,7 +256,7 @@ function updateLineChartData() {
 const getHealthColor = (value: number, opacity: number) => {
 	if (value <= 40) {
 		return `rgba(255, 99, 132, ${opacity})` // Red
-	} else if (value <= 74) {
+	} else if (value < 70) {
 		return `rgba(248, 114, 22, ${opacity})` // Orange
 	} else {
 		return `rgba(17, 185, 29, ${opacity})` // Green
@@ -334,18 +334,17 @@ const healthStatus = computed(() => {
 
 	const currentDate = getCurrentDateFormatted()
 	const index = internalSelectedField.value.data.date.indexOf(currentDate)
-	const index_value = internalSelectedField.value.data.date[index]
 
 	if (index === -1) return { value: 'Unknown', severity: 'secondary' }
 
-	const currentHealth = internalSelectedField.value.data.pred_health[index].toFixed(0) || 0
+	const currentHealth = internalSelectedField.value.data.pred_health[index] * 100 || 0
 
 	if (currentHealth >= 70) {
-		return { value: 'Healthy', severity: 'primary', healthScore: currentHealth }
+		return { value: 'Healthy', severity: 'primary', healthScore: Number(currentHealth.toFixed(2)) }
 	} else if (currentHealth >= 40) {
-		return { value: 'Moderate', severity: 'warning', healthScore: currentHealth }
+		return { value: 'Moderate', severity: 'warning', healthScore: Number(currentHealth.toFixed(2)) }
 	} else {
-		return { value: 'Severe', severity: 'danger', healthScore: currentHealth }
+		return { value: 'Severe', severity: 'danger', healthScore: Number(currentHealth.toFixed(2)) }
 	}
 })
 
