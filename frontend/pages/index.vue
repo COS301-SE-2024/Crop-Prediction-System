@@ -92,6 +92,8 @@ const handleFilterChange = (e) => {
 
 watch(selectedField, async (newField) => {
 	if (newField && newField.data) {
+		filter.value = { name: '8 Days', value: 8, constant: false }
+		selectedFilterOption.value = filter.value
 		updateChartData(newField, filter.value.value, chartDataList)
 		await nextTick()
 		updateFilterOptions()
