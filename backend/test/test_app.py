@@ -287,3 +287,10 @@ def test_fetchSensorData():
         response = client.get("/fetchSensorData")
         assert response.status_code == 200
         assert response.json() == {'success': 'Sensor data fetched successfully'}
+
+def test_updateEntry():
+    with patch('backend.database.supabaseFunctions.supabaseFunctions.updateEntry') as mock_updateEntry:
+        mock_updateEntry.return_value = {"success": "Entry updated"}
+        response = client.put("/updateEntry", json={"field_id": field_id, "date": today})
+        assert response.status_code == 200
+        assert response.json() == {"success": "Entry updated"}
