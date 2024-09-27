@@ -465,7 +465,7 @@ const editingCropOptions = ref([
 	{ name: 'Maize', value: 'maize' },
 	{ name: 'Wheat', value: 'wheat' },
 	{ name: 'Groundnuts', value: 'groundnuts' },
-	{ name: 'Sunflower', value: 'sunflower' },
+	{ name: 'Sunflower', value: 'sunflowerseed' },
 	{ name: 'Sorghum', value: 'sorghum' },
 	{ name: 'Soybeans', value: 'soybeans' },
 	{ name: 'Barley', value: 'barley' },
