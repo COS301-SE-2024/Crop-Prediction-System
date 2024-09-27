@@ -101,12 +101,12 @@ def test_add_to_team():
 #         assert response.status_code == 200
 #         assert response.json() == {"success": "User removed from team"}
 
-# def test_update_roles():
-#     with patch('backend.database.supabaseFunctions.supabaseFunctions.updateRoles') as mock_updateRoles:
-#         mock_updateRoles.return_value = {"success": "Roles updated"}
-#         response = client.post("/updateRoles", json={"user_id": user_id, "roles": ["admin"]})
-#         assert response.status_code == 200
-#         assert response.json() == {"success": "Roles updated"}
+def test_update_roles():
+    with patch('backend.database.supabaseFunctions.supabaseFunctions.updateRoles') as mock_updateRoles:
+        mock_updateRoles.return_value = {"success": "Roles updated"}
+        response = client.post("/updateRoles", json={"user_id": user_id, "roles": ["admin"]})
+        assert response.status_code == 200
+        assert response.json() == {"success": "Roles updated"}
 
 def test_get_team_id():
     with patch('backend.database.supabaseFunctions.supabaseFunctions.getTeamId') as mock_getTeamId:
