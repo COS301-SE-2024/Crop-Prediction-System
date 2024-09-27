@@ -54,7 +54,7 @@
 				>
 					<div
 						v-show="unreadMessages > 0"
-						class="absolute -top-[5px] -right-[5px] text-xs leading-[1rem] text-center inline-block p-0 px-1 min-w-[1rem] h-[1rem] rounded-full bg-primary font-bold text-primary-inverse"
+						class="absolute -top-[-10px] -right-[-1px] text-xs leading-[1rem] text-center inline-block p-0 px-1 min-w-[1rem] h-[1rem] rounded-full bg-primary font-bold text-primary-inverse"
 					>
 						<p style="font-family: Open Sans">{{ unreadMessages }}</p>
 					</div>
