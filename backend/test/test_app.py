@@ -302,3 +302,10 @@ def test_getPastYieldAvg():
         response = client.get("/getPastYieldAvg?crop=sunflower")
         assert response.status_code == 200
         assert response.json() == {"success": "Yield average fetched"}
+
+def test_getTeamFieldsData():
+    with patch('backend.database.supabaseFunctions.supabaseFunctions.getTeamFieldData') as mock_getTeamFieldsData:
+        mock_getTeamFieldsData.return_value = {"success": "Team fields data fetched"}
+        response = client.get("/getTeamFieldData?team_id=17383e3d-f211-4724-8515-8c4cb836c812&n=200")
+        assert response.status_code == 200
+        assert response.json() == {"success": "Team fields data fetched"}
