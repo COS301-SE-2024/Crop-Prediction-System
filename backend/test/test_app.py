@@ -266,3 +266,24 @@ def test_delete_field():
         assert response.json()["data"]["field_name"] == "TEST (UPDATED)"
         assert response.json()["data"]["crop_type"] == "maize"
         assert response.json()["data"]["id"] == f"{field_id}"
+
+# def test_fetch_weather():
+#     with patch('backend.supabaseFunctions.supabaseFunctions.fetchWeatherForAllFields') as mock_fetchWeatherForAllFields:
+#         mock_fetchWeatherForAllFields.return_value = {"success": "Weather fetched for all fields"}
+#         response = client.get("/fetchWeatherForAllFields")
+#         assert response.status_code == 200
+#         assert response.json() == {"success": "Weather fetched for all fields"}
+
+# def test_fetchSummary():
+#     with patch('backend.supabaseFunctions.supabaseFunctions.fetchSummary') as mock_fetchSummary:
+#     mock_fetchSummary.return_value = {"success": "Summary fetched for all fields"}
+#     response = client.get("/fetchSummary")
+#     assert response.status_code == 200
+#     assert response.json() == {"success": "Summary fetched for all fields"}
+
+def test_fetchSensorData():
+    with patch('backend.database.supabaseFunctions.supabaseFunctions.fetchSensorData') as mock_fetchSensorData:
+        mock_fetchSensorData.return_value = {"success": "Sensor data fetched"}
+        response = client.get("/fetchSensorData")
+        assert response.status_code == 200
+        assert response.json() == {'success': 'Sensor data fetched successfully'}
