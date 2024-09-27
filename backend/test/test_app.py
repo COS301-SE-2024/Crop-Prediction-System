@@ -368,3 +368,10 @@ def test_market():
         response = client.get("/market?crop=sunflower")
         assert response.status_code == 200
         assert response.json() == {"success": "Market API called"}
+
+def test_getTeamYield():
+    with patch('backend.database.supabaseFunctions.supabaseFunctions.getTeamYield') as mock_getTeamYield:
+        mock_getTeamYield.return_value = {"success": "Team yield fetched"}
+        response = client.get("/getTeamYield?team_id=17383e3d-f211-4724-8515-8c4cb836c812")
+        assert response.status_code == 200
+        assert response.json() == {"success": "Team yield fetched"}
