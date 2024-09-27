@@ -9,6 +9,7 @@
 		class="bg-surface-100 dark:bg-surface-800 rounded-md"
 		paginator
 		@cell-edit-complete="onCellEditComplete"
+		@cell-edit-init="onCellEditInit"
 		editMode="cell"
 		:rows="10"
 		:rowsPerPageOptions="[5, 10, 20, 50, 100]"
@@ -46,7 +47,12 @@
 					<p class="text-xl text-900 font-bold">Data Entry Logs</p>
 					<div class="flex text-xs gap-2">
 						<Button icon="pi pi-external-link" severity="secondary" label="Export" @click="exportSelectedCSV" />
-						<Button icon="pi pi-print" severity="secondary" label="Print" @click="visible = true" />
+						<Button
+							icon="pi pi-chart-line"
+							severity="success"
+							label="Generate Field Report"
+							@click="visible = true"
+						/>
 					</div>
 				</div>
 				<Dialog v-model:visible="visible" modal header="Print" :style="{ width: '25rem' }">
@@ -54,13 +60,13 @@
 						>Which farms data would you like to Print?</span
 					>
 
-					<div class="flex items-center gap-4 mb-8">
-						<div class="card flex justify-content-center">
+					<div class="flex w-full items-center gap-4 mb-8">
+						<div class="card w-full flex justify-content-center">
 							<Dropdown
 								v-model="selectedField"
 								:options="uniqueFieldNames"
 								placeholder="Select a Field"
-								class="w-full md:w-14rem"
+								class="w-full"
 							/>
 						</div>
 					</div>
@@ -125,7 +131,14 @@
 						field !== 'sprayability'
 					"
 				>
-					<InputNumber v-model="data[field]" autofocus size="small" :minFractionDigits="0" :maxFractionDigits="10" />
+					<InputNumber
+						:disabled="userRole === 'data_analyst'"
+						v-model="data[field]"
+						autofocus
+						size="small"
+						:minFractionDigits="0"
+						:maxFractionDigits="10"
+					/>
 				</template>
 				<template v-else>
 					<p>{{ data[field] }}</p>
@@ -195,13 +208,14 @@ const filters = ref({
 
 // Fetch user data and entries from the API
 const entries = ref([])
-
+const userRole = ref('')
 const fetchEntryData = async () => {
 	const user = useSupabaseUser()
 
 	const teamID = await $fetch('/api/getTeamID', {
 		params: { userid: user?.value?.id },
 	})
+	userRole.value = teamID.role
 
 	const entryData = await $fetch('/api/getTeamFieldData', {
 		params: { team_id: teamID.team_id },
@@ -215,8 +229,9 @@ const fetchEntryData = async () => {
 	}))
 }
 
-onMounted(() => {
-	fetchEntryData()
+onMounted(async () => {
+	await fetchEntryData()
+	console.log('User Role: ', userRole.value)
 })
 
 const onSelectAllChange = (event: { checked: boolean }) => {
@@ -883,8 +898,8 @@ const exportSelectedCSV = () => {
 	if (rawSelectedData.length === 0) {
 		toast.add({
 			severity: 'error',
-			summary: 'No fields selected',
-			detail: 'Please select atleast one field to export',
+			summary: 'No Rows Selected',
+			detail: 'Please select at least one row to export.',
 			life: 3000,
 		})
 		return
@@ -914,6 +929,10 @@ const uniqueFieldNames = computed(() => {
 })
 
 const onCellEditInit = (event) => {
+	if (userRole.value === 'data_analyst') {
+		showWrongRoleError()
+		return
+	}
 	event.data._originalValue = event.data[event.field]
 }
 
@@ -943,7 +962,7 @@ const updateDatabase = async (data) => {
 		}
 	} catch (error) {
 		console.error('Error updating database:', error)
-		toast.add({ severity: 'error', summary: 'Failed to update database', detail: error.message, life: 5000 })
+		v
 	}
 }
 
@@ -963,6 +982,16 @@ const onCellEditComplete = async (event) => {
 	}
 }
 
+function showWrongRoleError() {
+	if (userRole.value === 'data_analyst') {
+		toast.add({
+			severity: 'warn',
+			summary: 'Access Denied',
+			detail: "You don't have the required permissions to perform this action.",
+			life: 3000,
+		})
+	}
+}
 const onCellEditCancel = (event) => {
 	let { data, field } = event
 	data[field] = data._originalValue
