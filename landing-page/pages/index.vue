@@ -305,7 +305,7 @@ useHead({
 							</h2>
 						</div>
 						<div>
-							<p class="font-normal text-l leading-normal md:mt-2 px-10">
+							<p class="font-normal text-xl leading-normal md:mt-2 px-2">
 								Our product provides a wide array of detailed graphs and charts, displaying key data gathered from
 								IoT sensors and the OpenWeather API. This real-time information empowers users to make informed
 								decisions, enhancing crop health and optimizing yield potential through precise monitoring and
