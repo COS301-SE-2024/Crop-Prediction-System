@@ -325,3 +325,12 @@ class TestSupabaseFunctions:
         result = supabaseFunctions.getMarketData("wheat")
         assert isinstance(result, list)
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_addFieldToSensor(self, mock_get_client):
+        field = {
+            "field_id": "14420bc8-48e3-47bc-ab83-1a6498380588",
+            "sensor_id": "2CF7F12025200009"
+        }
+        result = supabaseFunctions.addFieldToSensor("14420bc8-48e3-47bc-ab83-1a6498380588","2CF7F12025200009")
+        assert "success" in result
+
