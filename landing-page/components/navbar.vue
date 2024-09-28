@@ -98,8 +98,8 @@ const items = computed(() => [
 		},
 	},
 	{
-		name: 'REGISTER',
-		icon: 'pi pi-user-plus',
+		name: 'ACCESS APP',
+		icon: 'pi pi-external-link',
 		command: () => {
 			window.open('https://app.terrabyte.software/login')
 		},
