@@ -1,54 +1,15 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
-import { ref, onMounted } from 'vue'
-import Fieldset from 'primevue/fieldset'
 import StatsCard from '../components/StatsCard.vue'
 
-const generateMockData = (label, color) => ({
-	labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-	datasets: [
-		{
-			label,
-			data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 100)),
-			fill: false,
-			borderColor: color,
-			tension: 0.4,
-			borderWidth: 3,
-		},
-	],
-})
-
-const mockStats = ref([
-	{ title: 'Soil Moisture', chartData: generateMockData('Soil Moisture', 'rgba(6, 182, 212, 1)') },
-	{ title: 'Soil Temperature', chartData: generateMockData('Soil Temperature', 'rgba(248, 114, 22, 1)') },
-	{
-		title: 'Temperature',
-		chartData: {
-			...generateMockData('Temperature', 'rgba(76, 175, 80, 1)'),
-			datasets: [
-				{
-					label: 'Max',
-					data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 30 + 20)),
-					borderColor: 'rgba(76, 175, 80, 1)',
-				},
-				{
-					label: 'Mean',
-					data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 20 + 15)),
-					borderColor: 'rgba(255, 205, 86, 1)',
-				},
-				{
-					label: 'Min',
-					data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 15 + 10)),
-					borderColor: 'rgba(255, 99, 132, 1)',
-				},
-			],
-		},
-	},
-	{ title: 'Dew Point', chartData: generateMockData('Dew Point', 'rgba(226, 226, 226, 1)') },
-	{ title: 'Humidity', chartData: generateMockData('Humidity', 'rgba(168,84,246, 1)') },
-	{ title: 'Pressure', chartData: generateMockData('Pressure', 'rgba(255, 99, 132, 1)') },
-	{ title: 'UV Index', chartData: generateMockData('UV Index', 'rgba(255, 205, 86, 1)') },
-])
+const stats = [
+	{ title: 'Soil Moisture' },
+	{ title: 'Soil Temperature' },
+	{ title: 'Temperature' },
+	{ title: 'Dew Point' },
+	{ title: 'Humidity' },
+	{ title: 'Pressure' },
+]
 </script>
 
 <template>
@@ -56,7 +17,7 @@ const mockStats = ref([
 		<div id="home" class="overflow-hidden">
 			<div
 				id="hero"
-				class="flex flex-col pt-6 px-6 lg:px-20 overflow-hidden"
+				class="grid lg:grid-cols-2 pt-6 px-6 lg:px-20 overflow-hidden pb-24"
 				style="
 					background: linear-gradient(0deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
 						radial-gradient(77.36% 256.97% at 77.36% 57.52%, rgb(238, 239, 175) 0%, rgb(195, 227, 250) 100%);
@@ -64,7 +25,7 @@ const mockStats = ref([
 				"
 			>
 				<div class="mx-6 md:mx-20 mt-0 md:mt-6">
-					<h1 class="font-bold text-gray-900 leading-tight">
+					<h1 class="font-bold text-gray-900 leading-tight mb-4">
 						<span class="text-5xl font-light block">Welcome to </span>
 						<span class="text-6xl block">TerraByte</span>
 					</h1>
@@ -73,12 +34,22 @@ const mockStats = ref([
 						manage your farms better.
 					</p>
 					<a href="https://app.terrabyte.software/login" target="_blank">
-						<Button label="Get Started" class="mt-4" />
+						<Button label="Access App" class="my-4" icon="pi pi-external-link" iconPos="right" />
 					</a>
 				</div>
-				<div class="flex justify-center md:justify-end">
-					<img src="../assets/image-light.png" alt="Logo" class="object-cover dark:hidden block w-9/12 _md:w-auto" />
-					<img src="../assets/image-dark.png" alt="Logo" class="object-cover hidden dark:block w-9/12 _md:w-auto" />
+
+				<!-- Image container with min-height and max-height -->
+				<div class="flex justify-center md:justify-end min-h-[300px] max-h-[500px] hidden lg:block bg-red-500">
+					<img
+						src="../assets/images/Home-light.png"
+						alt="Logo"
+						class="object-top object-cover dark:hidden block w-full"
+					/>
+					<img
+						src="../assets/images/Home-dark.png"
+						alt="Logo"
+						class="object-top object-cover hidden dark:block w-full"
+					/>
 				</div>
 			</div>
 			<div id="features" class="py-12 px-4 sm:px-6 lg:px-8">
@@ -328,10 +299,9 @@ const mockStats = ref([
 						</h2>
 					</div>
 					<p class="text-xl text-surface-600 dark:text-surface-200 mb-12"></p>
-
 					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-						<div v-for="stat in mockStats" :key="stat.title">
-							<StatsCard :title="stat.title" :chartData="stat.chartData" />
+						<div v-for="stat in stats" :key="stat.title">
+							<StatsCard :title="stat.title" />
 						</div>
 					</div>
 				</div>
@@ -342,19 +312,14 @@ const mockStats = ref([
 					<div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-5xl py-6">About Us</div>
 				</div>
 				<div>
-					<Card>
-						<template #content>
-							<p>
-								At TerraByte, we revolutionize the way farmers manage their crops by combining advanced AI
-								technology with real-time data from IoT sensors and trusted weather forecasts. Our app integrates
-								seamlessly with Google Maps and Gemini, allowing you to track and predict crop performance based
-								on your precise location. By leveraging the OpenWeather API, we provide up-to-date weather
-								predictions, while our custom-built AI model analyzes environmental data to offer accurate
-								insights on crop growth and yield. With TerraByte, farmers can make data-driven decisions to
-								optimize their harvests and maximize efficiency.
-							</p>
-						</template>
-					</Card>
+					<p class="border border-surface-border dark:border-surface-600 p-6 rounded-lg">
+						At TerraByte, we revolutionize the way farmers manage their crops by combining advanced AI technology with
+						real-time data from IoT sensors and trusted weather forecasts. Our app integrates seamlessly with Google
+						Maps and Gemini, allowing you to track and predict crop performance based on your precise location. By
+						leveraging the OpenWeather API, we provide up-to-date weather predictions, while our custom-built AI model
+						analyzes environmental data to offer accurate insights on crop growth and yield. With TerraByte, farmers
+						can make data-driven decisions to optimize their harvests and maximize efficiency.
+					</p>
 				</div>
 			</div>
 		</div>
