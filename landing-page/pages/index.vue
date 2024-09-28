@@ -13,7 +13,6 @@ const stats = [
 
 useHead({
 	title: 'TerraByte',
-	link: [{ rel: 'icon', type: 'image/x-icon', href: '../assets/favicon.ico' }],
 })
 </script>
 
@@ -43,7 +42,6 @@ useHead({
 					</a>
 				</div>
 
-				<!-- Image container with min-height and max-height -->
 				<div class="flex justify-center md:justify-end min-h-[300px] max-h-[500px] hidden lg:block">
 					<img
 						src="../assets/images/Home-light.png"
