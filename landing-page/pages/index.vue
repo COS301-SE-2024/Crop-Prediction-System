@@ -3,13 +3,17 @@ import Button from 'primevue/button'
 import StatsCard from '../components/StatsCard.vue'
 
 const stats = [
+	{ title: 'Temperature' },
+	{ title: 'Rainfall' },
+	{ title: 'Humidity' },
 	{ title: 'Soil Moisture' },
 	{ title: 'Soil Temperature' },
-	{ title: 'Temperature' },
 	{ title: 'Dew Point' },
-	{ title: 'Humidity' },
-	{ title: 'Pressure' },
 ]
+
+useHead({
+	title: 'TerraByte',
+})
 </script>
 
 <template>
@@ -38,15 +42,14 @@ const stats = [
 					</a>
 				</div>
 
-				<!-- Image container with min-height and max-height -->
-				<div class="flex justify-center md:justify-end min-h-[300px] max-h-[500px] hidden lg:block bg-red-500">
+				<div class="flex justify-center md:justify-end min-h-[300px] max-h-[500px] hidden lg:block">
 					<img
-						src="../assets/images/Home-light.png"
+						src="../assets/images/Home-dark.png"
 						alt="Logo"
 						class="object-top object-cover dark:hidden block w-full"
 					/>
 					<img
-						src="../assets/images/Home-dark.png"
+						src="../assets/images/Home-light.png"
 						alt="Logo"
 						class="object-top object-cover hidden dark:block w-full"
 					/>
@@ -55,7 +58,7 @@ const stats = [
 			<div id="features" class="py-12 px-4 sm:px-6 lg:px-8">
 				<div class="max-w-7xl mx-auto">
 					<div class="text-center">
-						<h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">
+						<h2 class="text-3xl sm:text-4xl lg:text-5xl font-normal text-surface-900 dark:text-surface-0 mb-4">
 							Our Features
 						</h2>
 						<p class="text-xl text-surface-600 dark:text-surface-200 mb-12"></p>
@@ -125,12 +128,11 @@ const stats = [
 								>
 									<i class="pi pi-cloud text-2xl text-green-700 dark:text-green-200"></i>
 								</div>
-								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">
-									IOT Sensor Integration
-								</h2>
+								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Report Generation</h2>
 								<p class="text-surface-600 dark:text-surface-0/60">
-									Our product provides thew functionality to integrate with IOT sensors for real-time data. We
-									have a wide range of sensors that can be integrated.
+									Our product generates reports based on the data collected from the OpenWeather API and the
+									predictions our AI model make. These reports are detailed and can be used to make informed
+									decisions.
 								</p>
 							</div>
 						</div>
@@ -150,7 +152,7 @@ const stats = [
 								</h2>
 								<p class="text-surface-600 dark:text-surface-0/60">
 									Our product makes use of our in-house state of the art AI model to predict crop yields. This
-									model is is trained and can be used to predict various types of crops.
+									model is trained and can be used to predict various types of crops.
 								</p>
 							</div>
 						</div>
@@ -169,8 +171,8 @@ const stats = [
 									Google Maps Integration
 								</h2>
 								<p class="text-surface-600 dark:text-surface-0/60">
-									Our product integrates with Google Maps for easy navigation and location access. This improves
-									the user experience, but also the predictions our AI model will make.
+									Our product integrates with Google Maps for easy navigation and location access. This allows
+									for weather predictions to be more accurate and for the AI model to make better predictions.
 								</p>
 							</div>
 						</div>
@@ -189,7 +191,8 @@ const stats = [
 								</h2>
 								<p class="text-surface-600 dark:text-surface-0/60">
 									Our product features a wide range of graphs and charts, each displaying crucial data received
-									from the AI model in order to help our users better their Crop's health and potential yield.
+									from the AI model in order to help our users better understand their crop's health and
+									potential yield.
 								</p>
 							</div>
 						</div>
@@ -218,12 +221,12 @@ const stats = [
 								<div
 									class="flex items-center justify-center w-12 h-12 bg-rose-200 dark:bg-rose-700 rounded-lg mb-4"
 								>
-									<i class="pi pi-users text-2xl text-rose-700 dark:text-rose-200"></i>
+									<i class="pi pi-wallet text-2xl text-rose-700 dark:text-rose-200"></i>
 								</div>
-								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Team Availability</h2>
+								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Market Data</h2>
 								<p class="text-surface-600 dark:text-surface-0/60">
-									We added teams to our product to allow farmers and their helpers to have access to the same
-									set of fields and crops. This allows for better collaboration and communication.
+									Our product provides market data for various crops. This data can be used to get an expected
+									revenue for your crops.
 								</p>
 							</div>
 						</div>
@@ -240,63 +243,72 @@ const stats = [
 						class="flex justify-center col-span-12 lg:col-span-6 bg-orange-200 p-0 order-1 lg:order-none"
 						style="border-radius: 8px"
 					>
-						<img src="../assets/images/Screenshot 2024-09-12 162707.png" alt="mockup mobile" />
+						<img src="../assets/images/ai-dark.png" alt="mockup mobile" class="dark:hidden block" />
+						<img src="../assets/images/ai-light.png" alt="mockup mobile" class="hidden dark:block" />
 					</div>
 					<div class="col-span-12 lg:col-span-6 my-auto flex flex-col lg:items-end text-center lg:text-right gap-4">
 						<div
-							class="flex items-center justify-center bg-orange-200 dark:bg-orange-700 self-center lg:self-end"
+							class="flex items-center justify-center bg-blue-200 dark:bg-blue-700 self-center lg:self-end"
 							style="width: 4.2rem; height: 4.2rem; border-radius: 10px"
 						>
-							<i class="pi pi-map-marker !text-4xl text-orange-700 dark:text-orange-200"></i>
-						</div>
-						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">
-							Map Functionality
-						</div>
-						<span
-							class="text-surface-700 dark:text-surface-100 text-xl leading-normal ml-0 md:ml-2"
-							style="max-width: 550px"
-							>When a user is ready to add a field to the app, they simply search for the field's location in the
-							search bar, and then just pinpoint the coordinates manually on the map. We implemented it this way to
-							ensure accurate locations and make the whole system easier to use for our clients.
-						</span>
-					</div>
-				</div>
-				<div class="grid grid-cols-12 gap-4 my-20 pt-2 md:pt-20">
-					<div class="col-span-12 lg:col-span-6 my-auto flex flex-col text-center lg:text-left lg:items-start gap-4">
-						<div
-							class="flex items-center justify-center bg-purple-200 dark:bg-purple-700 self-center lg:self-start"
-							style="width: 4.2rem; height: 4.2rem; border-radius: 10px"
-						>
-							<i class="pi pi-microchip-ai !text-3xl text-purple-700 dark:text-purple-200"></i>
+							<i class="pi pi-microchip-ai !text-4xl text-blue-700 dark:text-blue-200"></i>
 						</div>
 						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">AI Model</div>
 						<span
+							class="text-surface-700 dark:text-surface-100 text-xl leading-normal ml-0 md:ml-2"
+							style="max-width: 540px"
+							>Our product offers a state of the art AI model that predicts crop yields. This model is trained on a
+							wide range of crops and can be used to predict the yield of any crop.
+						</span>
+					</div>
+				</div>
+				<div class="grid grid-cols-12 gap-4 my-10 pt-2 md:pt-20">
+					<div class="col-span-12 lg:col-span-6 my-auto flex flex-col text-center lg:text-left lg:items-start gap-4">
+						<div
+							class="flex items-center justify-center bg-yellow-200 dark:bg-yellow-700 self-center lg:self-start"
+							style="width: 4.2rem; height: 4.2rem; border-radius: 10px"
+						>
+							<i class="pi pi-user !text-3xl text-yellow-700 dark:text-yellow-200"></i>
+						</div>
+						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">Team Management</div>
+						<span
 							class="text-surface-700 dark:text-surface-100 text-xl leading-normal mr-0 md:mr-2"
 							style="max-width: 550px"
-							>Our product offers a state of the art AI model that predicts crop yields. This model is trained on a
-							wide range of crops and can be used to predict the yield of any crop. This model is also constantly
-							updated to ensure the best predictions possible.
+						>
+							We added teams to our product to allow farmers and their helpers to have access to the same set of
+							fields and crops. This allows for better collaboration and communication.
 						</span>
 					</div>
 					<div
 						class="flex justify-center order-1 sm:order-2 col-span-12 lg:col-span-6 bg-yellow-100 p-0"
 						style="border-radius: 8px"
 					>
-						<img src="../assets/images/Screenshot 2024-09-12 162800.png" alt="mockup mobile" />
+						<img src="../assets/images/team-dark.png" alt="mockup mobile" class="dark:hidden block" />
+						<img src="../assets/images/team-light.png" alt="mockup mobile" class="hidden dark:block" />
 					</div>
 				</div>
 			</div>
 			<div id="features" class="py-12 px-4 sm:px-6 lg:px-8">
 				<div class="max-w-7xl mx-auto">
-					<div class="flex justify-center text-center gap-6">
-						<div
-							class="flex items-center justify-center w-14 h-14 bg-emerald-200 dark:bg-emerald-700 rounded-lg mb-4"
-						>
-							<i class="pi pi-chart-bar text-2xl text-emerald-700 dark:text-emerald-200"></i>
+					<div class="flex flex-col items-center">
+						<div class="flex justify-center text-center gap-6">
+							<div
+								class="flex items-center justify-center w-14 h-14 bg-emerald-200 dark:bg-emerald-700 rounded-lg mb-4"
+							>
+								<i class="pi pi-chart-bar text-2xl text-emerald-700 dark:text-emerald-200"></i>
+							</div>
+							<h2 class="text-3xl sm:text-4xl lg:text-5xl font-normal text-surface-900 dark:text-surface-0 mb-4">
+								Data Visualisation
+							</h2>
 						</div>
-						<h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">
-							Charts and Graphs
-						</h2>
+						<div>
+							<p class="font-normal text-xl leading-normal md:mt-2 px-2">
+								Our product provides a wide array of detailed graphs and charts, displaying key data gathered from
+								the OpenWeather API and data predicted. This real-time information empowers users to make informed
+								decisions, enhancing crop health and optimizing yield potential through precise monitoring and
+								analysis.
+							</p>
+						</div>
 					</div>
 					<p class="text-xl text-surface-600 dark:text-surface-200 mb-12"></p>
 					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -312,13 +324,13 @@ const stats = [
 					<div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-5xl py-6">About Us</div>
 				</div>
 				<div>
-					<p class="border border-surface-border dark:border-surface-600 p-6 rounded-lg">
+					<p>
 						At TerraByte, we revolutionize the way farmers manage their crops by combining advanced AI technology with
-						real-time data from IoT sensors and trusted weather forecasts. Our app integrates seamlessly with Google
-						Maps and Gemini, allowing you to track and predict crop performance based on your precise location. By
-						leveraging the OpenWeather API, we provide up-to-date weather predictions, while our custom-built AI model
-						analyzes environmental data to offer accurate insights on crop growth and yield. With TerraByte, farmers
-						can make data-driven decisions to optimize their harvests and maximize efficiency.
+						real-time data from trusted weather forecasts. Our app integrates seamlessly with Google Maps and Gemini,
+						allowing you to track and predict crop performance based on your precise location. By leveraging the
+						OpenWeather API, we provide up-to-date weather predictions, while our custom-built AI model analyzes
+						environmental data to offer accurate insights on crop growth and yield. With TerraByte, farmers can make
+						data-driven decisions to optimize their harvests and maximize efficiency.
 					</p>
 				</div>
 			</div>
