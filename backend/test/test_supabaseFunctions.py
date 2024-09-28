@@ -173,3 +173,8 @@ class TestSupabaseFunctions:
         assert "error" in result
         assert result["error"] == "Failed to get field info"
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_getTeamFieldData(self, mock_get_client):
+        result = supabaseFunctions.getTeamFieldData(supabaseFunctions,"17383e3d-f211-4724-8515-8c4cb836c812",1)
+        assert isinstance(result, list)
+
