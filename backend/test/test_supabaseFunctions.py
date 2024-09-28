@@ -268,3 +268,8 @@ class TestSupabaseFunctions:
         result = supabaseFunctions.addToTeam(team)
         assert "success" in result
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_removeFromTeam(self, mock_get_client):
+        result = supabaseFunctions.removeFromTeam("ac774d3a-921f-4154-b590-5e05831431a1")
+        assert "success" in result
+
