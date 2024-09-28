@@ -261,7 +261,7 @@ class TestSupabaseFunctions:
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_addToTeam(self, mock_get_client):
         team = {
-            "user_id": "ac774d3a-921f-4154-b590-5e05831431a1",
+            "user_id": "8e0ac7f0-8df0-4127-9081-1ab99ee6ad4c",
             "team_id": "17383e3d-f211-4724-8515-8c4cb836c812",
             "role": "farm_manager"
         }
@@ -270,7 +270,7 @@ class TestSupabaseFunctions:
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_removeFromTeam(self, mock_get_client):
-        result = supabaseFunctions.removeFromTeam("ac774d3a-921f-4154-b590-5e05831431a1")
+        result = supabaseFunctions.removeFromTeam("8e0ac7f0-8df0-4127-9081-1ab99ee6ad4c")
         assert "success" in result
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
@@ -304,15 +304,15 @@ class TestSupabaseFunctions:
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_updateUser(self, mock_get_client):
         user = {
-            "id": "ac774d3a-921f-4154-b590-5e05831431a1",
-            "full_name": "Xavier Test Reynolds" 
+            "id": "8e0ac7f0-8df0-4127-9081-1ab99ee6ad4c",
+            "full_name": "Stephan Test User" 
         }
         result = supabaseFunctions.updateUser(user)
         assert "success" in result
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getUser(self, mock_get_client):
-        result = supabaseFunctions.getUser("ac774d3a-921f-4154-b590-5e05831431a1")
+        result = supabaseFunctions.getUser("8e0ac7f0-8df0-4127-9081-1ab99ee6ad4c")
         assert isinstance(result, dict)
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
