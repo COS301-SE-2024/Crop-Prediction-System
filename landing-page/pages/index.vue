@@ -74,7 +74,7 @@ const mockStats = ref([
 						Your one-stop solution for all your farming needs. We provide a wide range of features that will help you
 						manage your farms better.
 					</p>
-					<a href="https://terrabyte.software/login" target="_blank">
+					<a href="https://app.terrabyte.software/login" target="_blank">
 						<Button label="Get Started" severity="primary" rounded class="!text-xl mt-8 !px-4"></Button>
 					</a>
 				</div>
