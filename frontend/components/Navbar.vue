@@ -99,11 +99,6 @@ const items = computed(() => [
 		url: '/team/manage',
 	},
 	{
-		label: 'IoT Devices',
-		icon: 'pi pi-globe',
-		url: '/settings',
-	},
-	{
 		label: 'Toggle Theme',
 		icon: useColorMode().preference == 'dark' ? 'pi pi-sun' : 'pi pi-moon',
 		command: () => {
