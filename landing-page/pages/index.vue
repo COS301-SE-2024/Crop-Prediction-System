@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
-import Chart from 'primevue/chart'
-import Slider from 'primevue/slider'
 import { ref, onMounted } from 'vue'
 import Fieldset from 'primevue/fieldset'
 import StatsCard from '../components/StatsCard.vue'
@@ -54,7 +52,7 @@ const mockStats = ref([
 </script>
 
 <template>
-	<div class="bg-surface-300/60 dark:bg-surface-900 text-surface-700 dark:text-surface-0">
+	<div class="bg-surface-0 dark:bg-surface-900 text-surface-700 dark:text-surface-0">
 		<div id="home" class="landing-wrapper overflow-hidden">
 			<div
 				id="hero"
@@ -75,7 +73,7 @@ const mockStats = ref([
 						manage your farms better.
 					</p>
 					<a href="https://app.terrabyte.software/login" target="_blank">
-						<Button label="Get Started" severity="primary" rounded class="!text-xl mt-8 !px-4"></Button>
+						<Button label="Get Started" class="mt-4" />
 					</a>
 				</div>
 				<div class="flex justify-center md:justify-end">
