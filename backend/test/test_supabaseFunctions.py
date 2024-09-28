@@ -83,4 +83,19 @@ class TestSupabaseFunctions:
         assert "error" in team_id
         assert team_id["error"] == "Failed to get team ID"
 
-    
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_getFieldData_fail(self, mock_get_client):
+        # Mock the Supabase client response
+        mock_client = MagicMock()
+        mock_get_client.return_value = mock_client
+        mock_client.table.return_value.select.return_value.eq.return_value.execute.return_value.data = [{
+            "field_id": "12345",
+            "name": "Field 1",
+            "coordinates": "POINT(1 1)"
+        }]
+
+        field = supabaseFunctions.getFieldData("12345")
+        # check if field contains error
+        assert "error" in field
+
+
