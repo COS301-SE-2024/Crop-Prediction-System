@@ -227,3 +227,29 @@ class TestSupabaseFunctions:
     #     result = supabaseFunctions.deleteField("69908502-804d-457a-85bf-c0c6c85b289a")
     #     assert "status" in result
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_updateEntry(self,mock_get_client):
+        entry = {
+            "field_id": "14420bc8-48e3-47bc-ab83-1a6498380588",
+            "date": "2024-09-15",
+            "tempmax": 30,
+            "tempmin": 20,
+            "tempdiurnal": 10,
+            "tempmean": 25,
+            "pressure": 1010,
+            "humidity": 50,
+            "dew_point": 15,
+            "clouds": 20,
+            "rain": 0,
+            "uvi": 5,
+            "soil_temperature": 25,
+            "soil_moisture": 50,
+            "pred_health": 0.5,
+            "pred_yield": 0.5,
+            "pred_sprayability": 50,
+            "summary": "Sunny day"
+        }
+        result = supabaseFunctions.updateEntry(entry)
+        assert "status" in result
+        assert "error_message" not in result
+
