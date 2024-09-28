@@ -8,7 +8,6 @@ import Divider from 'primevue/divider'
 	<div class="h-screen select-none">
 		<Navbar />
 		<slot />
-		<Divider />
 		<Footer />
 	</div>
 </template>
