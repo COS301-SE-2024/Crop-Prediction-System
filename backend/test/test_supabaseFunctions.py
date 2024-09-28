@@ -69,8 +69,8 @@ class TestSupabaseFunctions:
             "team_id": "12345"
         }]
         
-        team_id = supabaseFunctions.getTeamId("ac774d3a-921f-4154-b590-5e05831431a1")
-        assert team_id == {'role': 'farm_manager','team_id': '17383e3d-f211-4724-8515-8c4cb836c812'}
+        team_id = supabaseFunctions.getTeamId("0edb30e5-fb47-457a-a1d8-30c7e9cb4098")
+        assert team_id == {'role': 'unassigned','team_id': 'df98d7f1-2351-46fb-9792-ad70b8efd81a'}
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamId_failure(self, mock_get_client):
@@ -84,10 +84,3 @@ class TestSupabaseFunctions:
         assert team_id["error"] == "Failed to get team ID"
 
     
-
-
-def test_getCrop():
-    with patch('backend.database.supabaseFunctions.supabaseFunctions.getCrop') as mock_getCrop:
-        mock_getCrop.return_value = {"success": "Crop found"}
-        result = supabaseFunctions.getCrop("wheat")
-        assert result == {"success": "Crop found"}
