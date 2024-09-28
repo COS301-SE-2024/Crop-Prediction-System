@@ -58,7 +58,7 @@ useHead({
 			<div id="features" class="py-12 px-4 sm:px-6 lg:px-8">
 				<div class="max-w-7xl mx-auto">
 					<div class="text-center">
-						<h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">
+						<h2 class="text-3xl sm:text-4xl lg:text-5xl font-normal text-surface-900 dark:text-surface-0 mb-4">
 							Our Features
 						</h2>
 						<p class="text-xl text-surface-600 dark:text-surface-200 mb-12"></p>
@@ -297,7 +297,7 @@ useHead({
 							>
 								<i class="pi pi-chart-bar text-2xl text-emerald-700 dark:text-emerald-200"></i>
 							</div>
-							<h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">
+							<h2 class="text-3xl sm:text-4xl lg:text-5xl font-normal text-surface-900 dark:text-surface-0 mb-4">
 								Data Visualisation
 							</h2>
 						</div>
@@ -324,13 +324,13 @@ useHead({
 					<div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-5xl py-6">About Us</div>
 				</div>
 				<div>
-					<p class="border border-surface-border dark:border-surface-600 p-6 rounded-lg">
+					<p>
 						At TerraByte, we revolutionize the way farmers manage their crops by combining advanced AI technology with
-						real-time data from IoT sensors and trusted weather forecasts. Our app integrates seamlessly with Google
-						Maps and Gemini, allowing you to track and predict crop performance based on your precise location. By
-						leveraging the OpenWeather API, we provide up-to-date weather predictions, while our custom-built AI model
-						analyzes environmental data to offer accurate insights on crop growth and yield. With TerraByte, farmers
-						can make data-driven decisions to optimize their harvests and maximize efficiency.
+						real-time data from trusted weather forecasts. Our app integrates seamlessly with Google Maps and Gemini,
+						allowing you to track and predict crop performance based on your precise location. By leveraging the
+						OpenWeather API, we provide up-to-date weather predictions, while our custom-built AI model analyzes
+						environmental data to offer accurate insights on crop growth and yield. With TerraByte, farmers can make
+						data-driven decisions to optimize their harvests and maximize efficiency.
 					</p>
 				</div>
 			</div>
