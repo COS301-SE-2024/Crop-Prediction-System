@@ -199,3 +199,16 @@ class TestSupabaseFunctions:
         assert "error" in result
         assert result["error"] == "Failed to get past yield average"
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_createField_fail(self, mock_get_client):
+        field = Field(
+            field_name = "TEST",
+            crop_type = "wheat",
+            field_area = {
+                "type": "Polygon",
+                "coordinates": [[-25.87074931861521, 28.159573936176287], [-25.870773452610735, 28.160054051589952], [-25.871036512841457, 28.160062098216997], [-25.87101479229413, 28.159563207340227]]
+            },
+        )
+        result = supabaseFunctions.createField(field)
+        assert "error" in result
+
