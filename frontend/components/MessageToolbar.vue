@@ -25,7 +25,6 @@ const fetchUser = async () => {
 const sendMessage = async () => {
 	if (message.value.trim() !== '') {
 		try {
-			console.log(message.value)
 			await $fetch('/api/sendMessage', {
 				method: 'POST',
 				body: {

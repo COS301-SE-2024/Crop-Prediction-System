@@ -36,8 +36,6 @@ const send = async () => {
 		const { data, error } = await supabase.auth.resetPasswordForEmail(userEmail.value, {
 			redirectTo: `${appBaseUrl}/confirm?redirectTo=${redirectTo}`,
 		})
-		console.log(data)
-		console.log('error:', error)
 	} catch (error) {
 		console.log(error)
 	} finally {
