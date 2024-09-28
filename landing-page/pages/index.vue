@@ -3,20 +3,21 @@ import Button from 'primevue/button'
 import StatsCard from '../components/StatsCard.vue'
 
 const stats = [
+	{ title: 'Temperature' },
+	{ title: 'Rainfall' },
+	{ title: 'Humidity' },
 	{ title: 'Soil Moisture' },
 	{ title: 'Soil Temperature' },
-	{ title: 'Temperature' },
 	{ title: 'Dew Point' },
-	{ title: 'Humidity' },
-	{ title: 'Pressure' },
 ]
+
+useHead({
+	title: 'TerraByte',
+	link: [{ rel: 'icon', type: 'image/x-icon', href: '../assets/favicon.ico' }],
+})
 </script>
 
 <template>
-	<Head>
-		<title>TerraByte.software</title>
-		<link rel="icon" href="../assets/images/logo_only.png" type="image/x-icon" />
-	</Head>
 	<div class="bg-surface-0 dark:bg-surface-900 text-surface-700 dark:text-surface-0">
 		<div id="home" class="overflow-hidden">
 			<div
@@ -292,15 +293,25 @@ const stats = [
 			</div>
 			<div id="features" class="py-12 px-4 sm:px-6 lg:px-8">
 				<div class="max-w-7xl mx-auto">
-					<div class="flex justify-center text-center gap-6">
-						<div
-							class="flex items-center justify-center w-14 h-14 bg-emerald-200 dark:bg-emerald-700 rounded-lg mb-4"
-						>
-							<i class="pi pi-chart-bar text-2xl text-emerald-700 dark:text-emerald-200"></i>
+					<div class="flex flex-col items-center">
+						<div class="flex justify-center text-center gap-6">
+							<div
+								class="flex items-center justify-center w-14 h-14 bg-emerald-200 dark:bg-emerald-700 rounded-lg mb-4"
+							>
+								<i class="pi pi-chart-bar text-2xl text-emerald-700 dark:text-emerald-200"></i>
+							</div>
+							<h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">
+								Charts and Graphs
+							</h2>
 						</div>
-						<h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">
-							Charts and Graphs
-						</h2>
+						<div>
+							<p class="font-normal text-l leading-normal md:mt-2 px-10">
+								Our product provides a wide array of detailed graphs and charts, displaying key data gathered from
+								IoT sensors and the OpenWeather API. This real-time information empowers users to make informed
+								decisions, enhancing crop health and optimizing yield potential through precise monitoring and
+								analysis.
+							</p>
+						</div>
 					</div>
 					<p class="text-xl text-surface-600 dark:text-surface-200 mb-12"></p>
 					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
