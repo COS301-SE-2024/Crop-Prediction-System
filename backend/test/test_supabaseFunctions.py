@@ -320,3 +320,8 @@ class TestSupabaseFunctions:
         result = supabaseFunctions.getTeamYield("17383e3d-f211-4724-8515-8c4cb836c812")
         assert isinstance(result, list)
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_getMarketData(self, mock_get_client):
+        result = supabaseFunctions.getMarketData("wheat")
+        assert isinstance(result, list)
+
