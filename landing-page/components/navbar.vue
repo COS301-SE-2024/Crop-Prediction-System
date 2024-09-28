@@ -4,8 +4,16 @@
 			<div class="flex items-center justify-between h-16">
 				<!-- Logo -->
 				<div class="flex-shrink-0">
-					<img src="../assets/logo.png" alt="Logo" class="w-36 xl:h-14 xl:w-auto object-cover dark:hidden block" />
-					<img src="../assets/logo-alt.png" alt="Logo" class="w-36 xl:h-14 xl:w-auto object-cover hidden dark:block" />
+					<img
+						src="../assets/images/logo.png"
+						alt="Logo"
+						class="w-36 xl:h-14 xl:w-auto object-cover dark:hidden block"
+					/>
+					<img
+						src="../assets/images/logo-alt.png"
+						alt="Logo"
+						class="w-36 xl:h-14 xl:w-auto object-cover hidden dark:block"
+					/>
 				</div>
 
 				<!-- Desktop Menu -->
