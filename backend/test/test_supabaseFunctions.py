@@ -258,3 +258,13 @@ class TestSupabaseFunctions:
         result = supabaseFunctions.getTeamFields("17383e3d-f211-4724-8515-8c4cb836c812")
         assert isinstance(result, list)
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_addToTeam(self, mock_get_client):
+        team = {
+            "user_id": "ac774d3a-921f-4154-b590-5e05831431a1",
+            "team_id": "17383e3d-f211-4724-8515-8c4cb836c812",
+            "role": "farm_manager"
+        }
+        result = supabaseFunctions.addToTeam(team)
+        assert "success" in result
+
