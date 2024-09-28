@@ -301,3 +301,12 @@ class TestSupabaseFunctions:
         result = supabaseFunctions.getTeamMessages("17383e3d-f211-4724-8515-8c4cb836c812")
         assert isinstance(result, list)
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_updateUser(self, mock_get_client):
+        user = {
+            "id": "ac774d3a-921f-4154-b590-5e05831431a1",
+            "full_name": "Xavier Test Reynolds" 
+        }
+        result = supabaseFunctions.updateUser(user)
+        assert "success" in result
+
