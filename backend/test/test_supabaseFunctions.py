@@ -278,3 +278,21 @@ class TestSupabaseFunctions:
         result = supabaseFunctions.getTeamDetails("17383e3d-f211-4724-8515-8c4cb836c812")
         assert isinstance(result, list)
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_sendMessage(self, mock_get_client):
+        # parameter of send message
+        # {
+        #     "team_id": "17383e3d-f211-4724-8515-8c4cb836c812",
+        #     "user_email": "xavierrynolds@gmail.com",
+        #     "user_name": "Xavier Reynolds",
+        #     "message": "Testing 4"
+        # }
+        message = {
+            "team_id": "17383e3d-f211-4724-8515-8c4cb836c812",
+            "user_email": "xavierrynolds@gmail.com",
+            "user_name": "Xavier Reynolds",
+            "message": "Testing 4"
+        }
+        result = supabaseFunctions.sendMessage(message)
+        assert "success" in result
+
