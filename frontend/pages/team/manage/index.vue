@@ -191,7 +191,7 @@ const send = async () => {
 }
 
 function showWrongRoleError() {
-	if (userRole.value === 'data_analyst') {
+	if (userRole.value !== 'farm_manager') {
 		toast.add({
 			severity: 'warn',
 			summary: 'Access Denied',
