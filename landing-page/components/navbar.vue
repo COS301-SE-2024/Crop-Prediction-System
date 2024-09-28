@@ -101,13 +101,13 @@ const items = computed(() => [
 		name: 'REGISTER',
 		icon: 'pi pi-user-plus',
 		command: () => {
-			window.location.href = 'https://app.terrabyte.software/login'
+			window.open('https://app.terrabyte.software/login')
 		},
 	},
 	{
 		icon: 'pi pi-github',
 		command: () => {
-			window.location.href = 'https://github.com/COS301-SE-2024/Crop-Prediction-System'
+			window.open('https://github.com/COS301-SE-2024/Crop-Prediction-System')
 		},
 	},
 ])
