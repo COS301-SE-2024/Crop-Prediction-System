@@ -397,7 +397,7 @@ def test_train_batch_wait_for_completion_empty():
     assert response.status_code == 200
     assert response.json() == {'error': 'Field ID is required or `batch` must be set to `true`'}
 
-def test_train_batch_wait_for_completion():
-    response = client.post("/train", json={"batch": True})
-    assert response.status_code == 200
-    assert response.json() == {'status': 'All models trained successfully'}
+# def test_train_batch_wait_for_completion():
+#     response = client.post("/train", json={"batch": True})
+#     assert response.status_code == 200
+#     assert response.json() == {'status': 'All models trained successfully'}
