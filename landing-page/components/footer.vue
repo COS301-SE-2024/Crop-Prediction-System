@@ -1,5 +1,7 @@
 <template>
-	<div class="bg-surface-0 dark:bg-surface-900 text-surface-700 dark:text-surface-0 shadow-md border-t-2">
+	<div
+		class="bg-surface-0 dark:bg-surface-900 text-surface-700 dark:text-surface-0 shadow-md border-t-2 border-surface-border dark:border-surface-600"
+	>
 		<footer>
 			<div class="flex flex-col items-center justify-center px-4 py-4">
 				<p>&copy; 2024, Product of GeekGurusUnion</p>
