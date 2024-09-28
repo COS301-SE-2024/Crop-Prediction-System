@@ -13,6 +13,10 @@ const stats = [
 </script>
 
 <template>
+	<Head>
+		<title>TerraByte.software</title>
+		<link rel="icon" href="../assets/images/logo_only.png" type="image/x-icon" />
+	</Head>
 	<div class="bg-surface-0 dark:bg-surface-900 text-surface-700 dark:text-surface-0">
 		<div id="home" class="overflow-hidden">
 			<div
@@ -39,7 +43,7 @@ const stats = [
 				</div>
 
 				<!-- Image container with min-height and max-height -->
-				<div class="flex justify-center md:justify-end min-h-[300px] max-h-[500px] hidden lg:block bg-red-500">
+				<div class="flex justify-center md:justify-end min-h-[300px] max-h-[500px] hidden lg:block">
 					<img
 						src="../assets/images/Home-light.png"
 						alt="Logo"
@@ -240,7 +244,7 @@ const stats = [
 						class="flex justify-center col-span-12 lg:col-span-6 bg-orange-200 p-0 order-1 lg:order-none"
 						style="border-radius: 8px"
 					>
-						<img src="../assets/images/Screenshot 2024-09-12 162707.png" alt="mockup mobile" />
+						<img src="../assets/images/ai-model.png" alt="mockup mobile" />
 					</div>
 					<div class="col-span-12 lg:col-span-6 my-auto flex flex-col lg:items-end text-center lg:text-right gap-4">
 						<div
@@ -282,7 +286,7 @@ const stats = [
 						class="flex justify-center order-1 sm:order-2 col-span-12 lg:col-span-6 bg-yellow-100 p-0"
 						style="border-radius: 8px"
 					>
-						<img src="../assets/images/Screenshot 2024-09-12 162800.png" alt="mockup mobile" />
+						<img src="../assets/images/maps.png" alt="mockup mobile" />
 					</div>
 				</div>
 			</div>
