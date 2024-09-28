@@ -188,3 +188,9 @@ class TestSupabaseFunctions:
         assert "error" in result
         assert result["error"] == "Data not found. Team ID may be invalid or may not have any data."
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_getPastYieldAvg(self, mock_get_client):
+        result = supabaseFunctions.getPastYieldAvg("maize")
+        assert isinstance(result, float)
+
+
