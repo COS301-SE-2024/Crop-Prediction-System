@@ -38,7 +38,12 @@
 				<!-- <div class="p-5 sm:p-0">
 					<i class="pi pi-bell" style="font-size: 1.5rem" />
 				</div> -->
-
+				<i
+					class="pi pi-question-circle"
+					style="font-size: 1.5rem; padding-top: 16px; padding-bottom: 16px; padding-left: 8px; padding-right: 8px"
+					:class="'text-surface-500 dark:text-surface-300 rounded-md hover:bg-surface-300/20 hover:cursor-pointer'"
+					@click="navigateTo('/help')"
+				/>
 				<i
 					class="pi pi-comment"
 					style="
@@ -118,11 +123,6 @@ const items = computed(() => [
 		command: () => {
 			setColorTheme(useColorMode().preference == 'dark' ? 'light' : 'dark')
 		},
-	},
-	{
-		label: 'Help',
-		icon: 'pi pi-question-circle',
-		url: '/help',
 	},
 	{
 		label: 'Settings',
