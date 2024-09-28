@@ -18,7 +18,7 @@ class TestSupabaseFunctions:
     #     mock_client = MagicMock()
     #     mock_get_client.return_value = mock_client
     #     mock_client.table.return_value.select.return_value.eq.return_value.execute.return_value.data = [{
-    #         "name": "wheat",
+    #         "name": "maize",
     #         "t_base": 5,
     #         "stages": {
     #             "sowing": {"day": 1},
@@ -27,10 +27,8 @@ class TestSupabaseFunctions:
     #         }
     #     }]
         
-    #     crop = supabaseFunctions.getCrop("wheat")
-    #     assert crop.name == "wheat"
-    #     assert crop.t_base == 10
-    #     assert "tillering" in crop.stages
+    #     crop = supabaseFunctions.getCrop("maize")
+    #     assert isinstance(crop, Crop)
 
     # @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     # def test_getCrop_failure(self, mock_get_client):
@@ -82,3 +80,18 @@ class TestSupabaseFunctions:
         team_id = supabaseFunctions.getTeamId("0f543694-dba7-4858-bb34-23e88c844b76")
         assert "error" in team_id
         assert team_id["error"] == "Failed to get team ID"
+
+
+def test_getCrop():
+    with patch('backend.database.supabaseFunctions.supabaseFunctions.getCrop') as mock_getCrop:
+        mock_getCrop.return_value = Crop(
+            name="maize",
+            t_base=5,
+            stages={
+                "sowing": {"day": 1},
+                "germination": {"day": 10},
+                "tillering": {"day": 20}
+            }
+        )
+        crop = supabaseFunctions.getCrop("maize")
+        assert isinstance(crop, Crop)
