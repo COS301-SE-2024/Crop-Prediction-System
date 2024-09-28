@@ -39,6 +39,7 @@ import { useMarketData } from '~/composables/useMarketData'
 import { useCropData } from '~/composables/useCropData'
 import MarketHectareCard from '~/components/MarketHectareCard.vue'
 import MarketDataCard from '~/components/MarketDataCard.vue'
+import Chart from 'primevue/chart'
 
 const marketData = useMarketData()
 const { loading, cropOptions, selectedCrop, chartData, chartOptions } = marketData
