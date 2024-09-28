@@ -4,8 +4,8 @@
 	>
 		<footer>
 			<div class="flex flex-col items-center justify-center px-4 py-6">
-				<p>&copy; 2024, an EPI-USE Project made by GeekGurusUnion</p>
-				<p>Contact us: <a href="mailto:terrabyte.app@gmail.com">info@geekgurusunion.com</a></p>
+				<p>&copy; 2024, TerraByte is an EPI-USE Project made by GeekGurusUnion</p>
+				<p>Contact us: <span class="underline">terrabyte.app@gmail.com</span></p>
 			</div>
 		</footer>
 	</div>
