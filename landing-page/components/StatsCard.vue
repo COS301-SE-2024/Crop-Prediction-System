@@ -2,35 +2,28 @@
 	<div class="w-full border border-surface-border dark:border-surface-600 p-6 rounded-lg">
 		<div class="w-full flex flex-col gap-4 justify-between items-center">
 			<h2 class="font-semibold text-lg self-start">{{ title }}</h2>
-			<Chart :type="chartType" :data="currentChartData" :options="chartOptions" class="h-[200px] w-full" />
-			<div class="custom-slider">
-				<input
-					type="range"
-					:min="min"
-					:max="max"
-					:step="step"
-					v-model="sliderValue"
-					@input="updateChartData"
-					class="slider"
-				/>
-				<span>{{ chartLabels[sliderValue] }}</span>
-				<!-- Displaying current month -->
-			</div>
+			<Chart :type="chartType" :data="chartData" :options="chartOptions" class="h-[200px] w-full" />
 		</div>
 	</div>
 </template>
 
 <script setup>
 import Chart from 'primevue/chart'
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
-// Slider parameters
-const sliderValue = ref(0) // Default slider position (starts at the first data point)
-const min = 0
-const max = 6 // Assuming 7 data points (Jan to Jul)
-const step = 1
+const hardcodedData = {
+	SoilMoisture: [20, 25, 30, 28, 35, 33, 40],
+	SoilTemperature: [10, 12, 14, 13, 15, 17, 18],
+	Temperature: {
+		Max: [32, 33, 30, 26, 23, 23, 18],
+		Mean: [25, 27, 28, 26, 30, 29, 31],
+		Min: [15, 17, 19, 18, 20, 21, 22],
+	},
+	DewPoint: [5, 6, 7, 8, 9, 10, 11],
+	Humidity: [65, 60, 70, 68, 75, 73, 80],
+	Pressure: [1012, 1010, 1013, 1015, 1017, 1014, 1016],
+}
 
-// Props for chart configuration
 const props = defineProps({
 	title: {
 		type: String,
@@ -40,55 +33,123 @@ const props = defineProps({
 		type: String,
 		default: 'line',
 	},
-	chartData: {
-		type: Object,
-		required: true,
-	},
 })
 
-// Labels for each data point (e.g., months)
-const chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
+const chartData = ref(generateChartData())
 
-// Array to store the locked data points
-const lockedData = ref(props.chartData.datasets.map((dataset) => dataset.data.map(() => null)))
+// Function to generate chart data
+function generateChartData() {
+	switch (props.title) {
+		case 'Soil Moisture':
+			return {
+				labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+				datasets: [
+					{
+						label: 'Soil Moisture',
+						data: hardcodedData.SoilMoisture,
+						fill: false,
+						borderColor: 'rgba(6, 182, 212, 1)',
+						tension: 0.4,
+						borderWidth: 3,
+					},
+				],
+			}
+		case 'Soil Temperature':
+			return {
+				labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+				datasets: [
+					{
+						label: 'Soil Temperature',
+						data: hardcodedData.SoilTemperature,
+						fill: false,
+						borderColor: 'rgba(248, 114, 22, 1)',
+						tension: 0.4,
+						borderWidth: 3,
+					},
+				],
+			}
+		case 'Temperature':
+			return {
+				labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+				datasets: [
+					{
+						label: 'Max',
+						data: hardcodedData.Temperature.Max,
+						borderColor: 'rgba(76, 175, 80, 1)',
+						fill: false,
+						tension: 0.4,
+						borderWidth: 3,
+					},
+					{
+						label: 'Mean',
+						data: hardcodedData.Temperature.Mean,
+						borderColor: 'rgba(255, 205, 86, 1)',
+						fill: false,
+						tension: 0.4,
+						borderWidth: 3,
+					},
+					{
+						label: 'Min',
+						data: hardcodedData.Temperature.Min,
+						borderColor: 'rgba(255, 99, 132, 1)',
+						fill: false,
+						tension: 0.4,
+						borderWidth: 3,
+					},
+				],
+			}
+		case 'Dew Point':
+			return {
+				labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+				datasets: [
+					{
+						label: 'Dew Point',
+						data: hardcodedData.DewPoint,
+						fill: false,
+						borderColor: 'rgba(226, 226, 226, 1)',
+						tension: 0.4,
+						borderWidth: 3,
+					},
+				],
+			}
+		case 'Humidity':
+			return {
+				labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+				datasets: [
+					{
+						label: 'Humidity',
+						data: hardcodedData.Humidity,
+						fill: false,
+						borderColor: 'rgba(168, 84, 246, 1)',
+						tension: 0.4,
+						borderWidth: 3,
+					},
+				],
+			}
+		case 'Pressure':
+			return {
+				labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+				datasets: [
+					{
+						label: 'Pressure',
+						data: hardcodedData.Pressure,
+						fill: false,
+						borderColor: 'rgba(255, 99, 132, 1)',
+						tension: 0.4,
+						borderWidth: 3,
+					},
+				],
+			}
+		default:
+			return {}
+	}
+}
 
 // Chart options initialization
 const chartOptions = ref()
+
 onMounted(() => {
 	chartOptions.value = setChartOptions()
-})
-
-// Generate random data for future months
-const getRandomData = () => Math.floor(Math.random() * 100)
-
-// Function to lock data for current and previous months
-const lockData = () => {
-	props.chartData.datasets.forEach((dataset, datasetIndex) => {
-		// Lock data up to the current slider value
-		for (let i = 0; i <= sliderValue.value; i++) {
-			lockedData.value[datasetIndex][i] = dataset.data[i]
-		}
-	})
-}
-
-// Computed property to display locked data up to the current slider value, and predicted data after that
-const currentChartData = computed(() => {
-	return {
-		labels: chartLabels, // Always show all the months
-		datasets: props.chartData.datasets.map((dataset, datasetIndex) => ({
-			...dataset,
-			data: dataset.data.map((value, index) => {
-				// Use locked data up to the slider value, randomize data for future months
-				if (index <= sliderValue.value) {
-					// Return locked data (real data from the past)
-					return lockedData.value[datasetIndex][index]
-				} else {
-					// Return predicted data (randomized data for the future)
-					return getRandomData()
-				}
-			}),
-		})),
-	}
 })
 
 // Function to set chart options
@@ -123,12 +184,5 @@ const setChartOptions = () => {
 			},
 		},
 	}
-}
-
-// Update the chart data when the slider changes
-const updateChartData = () => {
-	// Lock data for months up to the current slider value
-	lockData()
-	console.log('Slider Value:', sliderValue.value)
 }
 </script>
