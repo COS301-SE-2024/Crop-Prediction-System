@@ -193,4 +193,9 @@ class TestSupabaseFunctions:
         result = supabaseFunctions.getPastYieldAvg("maize")
         assert isinstance(result, float)
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_getPastYieldAvg_fail(self, mock_get_client):
+        result = supabaseFunctions.getPastYieldAvg("invalid")
+        assert "error" in result
+        assert result["error"] == "Failed to get past yield average"
 
