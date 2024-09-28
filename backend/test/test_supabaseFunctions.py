@@ -253,3 +253,8 @@ class TestSupabaseFunctions:
         assert "status" in result
         assert "error_message" not in result
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_getTeamFields(self, mock_get_client):
+        result = supabaseFunctions.getTeamFields("17383e3d-f211-4724-8515-8c4cb836c812")
+        assert isinstance(result, list)
+
