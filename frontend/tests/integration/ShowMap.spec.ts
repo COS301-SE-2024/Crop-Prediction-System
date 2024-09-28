@@ -41,4 +41,3 @@ describe('GoogleMapsField Integration Test', () => {
 		expect(spy).toHaveBeenCalled()
 	})
 })
-
