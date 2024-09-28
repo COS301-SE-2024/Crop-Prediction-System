@@ -164,5 +164,12 @@ class TestSupabaseFunctions:
         assert result.field_id == "14420bc8-48e3-47bc-ab83-1a6498380588"
         assert result.field_name == "TEST"
 
-
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_getFieldInfo_fail(self, mock_get_client):
+        mock_get_client = MagicMock()
+        mock_get_client.return_value = mock_get_client
+        mock_get_client.table.return_value.select.return_value.eq.return_value.execute.return_value.data = []
+        result = supabaseFunctions.getFieldInfo("14420bc7-48e3-47bc-ab83-1a6498380588")
+        assert "error" in result
+        assert result["error"] == "Failed to get field info"
 
