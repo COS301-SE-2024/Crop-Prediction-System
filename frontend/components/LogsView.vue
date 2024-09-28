@@ -41,9 +41,9 @@
 			'sprayability',
 		]"
 	>
-		<template #header>
+		<div class="dark:text-white p-px md:p-5">
 			<div class="grid gap-2">
-				<div class="flex flex-wrap items-center justify-between gap-2 sticky">
+				<div class="flex flex-wrap items-center justify-between gap-2">
 					<p class="text-xl text-900 font-bold">Data Entry Logs</p>
 					<div class="flex text-xs gap-2">
 						<Button icon="pi pi-external-link" severity="secondary" label="Export" @click="exportSelectedCSV" />
@@ -101,7 +101,7 @@
 					</span>
 				</p>
 			</div>
-		</template>
+		</div>
 		<template #empty>
 			<div class="flex flex-col gap-3">
 				<Skeleton height="20px"></Skeleton>
