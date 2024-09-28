@@ -2,7 +2,7 @@
 	<div class="w-full h-screen flex flex-col justify-center items-center p-4 overflow-auto">
 		<Card class="p-5 w-80">
 			<template #title>
-				<h1 class="font-medium my-4">Rest Password</h1>
+				<h1 class="font-medium my-4">Reset Password</h1>
 			</template>
 			<template #content>
 				<div class="flex flex-col gap-2 items-start">
@@ -11,7 +11,16 @@
 				</div>
 			</template>
 			<template #footer>
-				<Button :loading="loading" @click="send" label="Send Reset Email" class="w-full" />
+				<div class="grid gap-5">
+					<Button :loading="loading" @click="send" label="Send Reset Email" class="w-full" />
+					<Button
+						label="Back to Login"
+						class="w-full"
+						icon="pi pi-arrow-left"
+						severity="secondary"
+						@click="navigateTo('/login')"
+					/>
+				</div>
 			</template>
 		</Card>
 		<Toast />

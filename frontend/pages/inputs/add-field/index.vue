@@ -105,6 +105,7 @@ const isMobile = ref(false)
 const toast = useToast()
 const activeIndex = ref(0)
 const googleMapRef = ref(null)
+const userRole = ref('')
 
 // INFO: Crop options
 const cropOptions = ref([
@@ -134,6 +135,8 @@ async function fetchTeamID() {
 				params: { userid: currentUser.value.id },
 			})
 			newField.value.team_id = response.team_id // Dynamically set team_id
+
+			userRole.value = response.role
 		}
 	} catch (error) {
 		console.error('Error fetching team ID:', error)
@@ -160,6 +163,16 @@ const isLoading = ref(false)
 
 // Save the field (submit to API)
 async function saveField() {
+	if (userRole.value === 'data_analyst') {
+		toast.add({
+			severity: 'warn',
+			summary: 'Access Denied',
+			detail: `You don't have the required permissions to perform this action.`,
+			life: 3000,
+		})
+		return
+	}
+
 	if (!newField.value.field_area.coordinates) {
 		toast.add({
 			severity: 'warn',
