@@ -183,3 +183,8 @@ class TestSupabaseFunctions:
         result = supabaseFunctions.getTeamFieldData(supabaseFunctions,"17383e3d-f211-4724-8515-8c4cb836c812",0)
         assert isinstance(result, list)
 
+    def test_getTeamFieldData_invalid(self):
+        result = supabaseFunctions.getTeamFieldData(supabaseFunctions,"17383e3f-f211-4724-8515-8c4cb836c812",1)
+        assert "error" in result
+        assert result["error"] == "Data not found. Team ID may be invalid or may not have any data."
+
