@@ -9,12 +9,12 @@
 				</div>
 
 				<!-- Desktop Menu -->
-				<div class="hidden lg:flex lg:items-center">
-					<ul class="flex space-x-6">
+				<div class="hidden lg:flex lg:flex-grow lg:items-center lg:justify-end">
+					<ul class="flex space-x-4">
 						<li v-for="item in menuItems" :key="item.name">
 							<a
 								@click="() => smoothScroll(item.href)"
-								class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out cursor-pointer"
+								class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out cursor-pointer whitespace-nowrap"
 							>
 								<i :class="item.icon" class="mr-2"></i>
 								{{ item.name }}
@@ -23,7 +23,7 @@
 						<li v-for="item in items" :key="item.name">
 							<a
 								@click="item.command"
-								class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out cursor-pointer"
+								class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out cursor-pointer whitespace-nowrap"
 							>
 								<i :class="item.icon" class="mr-2"></i>
 								{{ item.name }}
@@ -57,7 +57,7 @@
 							mobileMenuOpen = false
 						}
 					"
-					class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+					class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer align-middle"
 				>
 					<i :class="item.icon" class="mr-2"></i>
 					{{ item.name }}
@@ -66,7 +66,7 @@
 					v-for="item in items"
 					:key="item.name"
 					@click="item.command"
-					class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+					class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer align-middle"
 				>
 					<i :class="item.icon" class="mr-2"></i>
 					{{ item.name }}
@@ -102,6 +102,12 @@ const items = computed(() => [
 		icon: 'pi pi-user-plus',
 		command: () => {
 			window.location.href = 'https://terrabyte.software/login'
+		},
+	},
+	{
+		icon: 'pi pi-github',
+		command: () => {
+			window.location.href = 'https://github.com/COS301-SE-2024/Crop-Prediction-System'
 		},
 	},
 ])
