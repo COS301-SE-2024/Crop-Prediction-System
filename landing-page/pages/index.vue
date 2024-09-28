@@ -53,7 +53,7 @@ const mockStats = ref([
 
 <template>
 	<div class="bg-surface-0 dark:bg-surface-900 text-surface-700 dark:text-surface-0">
-		<div id="home" class="landing-wrapper overflow-hidden">
+		<div id="home" class="overflow-hidden">
 			<div
 				id="hero"
 				class="flex flex-col pt-6 px-6 lg:px-20 overflow-hidden"
@@ -330,14 +330,8 @@ const mockStats = ref([
 					<p class="text-xl text-surface-600 dark:text-surface-200 mb-12"></p>
 
 					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-						<div
-							v-for="stat in mockStats"
-							:key="stat.title"
-							class="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900 dark:to-emerald-800 p-0.5 rounded-lg"
-						>
-							<Fieldset>
-								<StatsCard :title="stat.title" :chartData="stat.chartData" />
-							</Fieldset>
+						<div v-for="stat in mockStats" :key="stat.title">
+							<StatsCard :title="stat.title" :chartData="stat.chartData" />
 						</div>
 					</div>
 				</div>
