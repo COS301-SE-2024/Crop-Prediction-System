@@ -128,12 +128,11 @@ useHead({
 								>
 									<i class="pi pi-cloud text-2xl text-green-700 dark:text-green-200"></i>
 								</div>
-								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">
-									IOT Sensor Integration
-								</h2>
+								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Report Generation</h2>
 								<p class="text-surface-600 dark:text-surface-0/60">
-									Our product provides thew functionality to integrate with IOT sensors for real-time data. We
-									have a wide range of sensors that can be integrated.
+									Our product generates reports based on the data collected from the OpenWeather API and the
+									predictions our AI model make. These reports are detailed and can be used to make informed
+									decisions.
 								</p>
 							</div>
 						</div>
@@ -153,7 +152,7 @@ useHead({
 								</h2>
 								<p class="text-surface-600 dark:text-surface-0/60">
 									Our product makes use of our in-house state of the art AI model to predict crop yields. This
-									model is is trained and can be used to predict various types of crops.
+									model is trained and can be used to predict various types of crops.
 								</p>
 							</div>
 						</div>
@@ -172,8 +171,8 @@ useHead({
 									Google Maps Integration
 								</h2>
 								<p class="text-surface-600 dark:text-surface-0/60">
-									Our product integrates with Google Maps for easy navigation and location access. This improves
-									the user experience, but also the predictions our AI model will make.
+									Our product integrates with Google Maps for easy navigation and location access. This allows
+									for weather predictions to be more accurate and for the AI model to make better predictions.
 								</p>
 							</div>
 						</div>
@@ -192,7 +191,8 @@ useHead({
 								</h2>
 								<p class="text-surface-600 dark:text-surface-0/60">
 									Our product features a wide range of graphs and charts, each displaying crucial data received
-									from the AI model in order to help our users better their Crop's health and potential yield.
+									from the AI model in order to help our users better understand their crop's health and
+									potential yield.
 								</p>
 							</div>
 						</div>
@@ -223,7 +223,7 @@ useHead({
 								>
 									<i class="pi pi-users text-2xl text-rose-700 dark:text-rose-200"></i>
 								</div>
-								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Team Availability</h2>
+								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Team Management</h2>
 								<p class="text-surface-600 dark:text-surface-0/60">
 									We added teams to our product to allow farmers and their helpers to have access to the same
 									set of fields and crops. This allows for better collaboration and communication.
