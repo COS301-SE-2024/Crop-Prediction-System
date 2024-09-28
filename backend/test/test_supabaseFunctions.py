@@ -98,4 +98,57 @@ class TestSupabaseFunctions:
         # check if field contains error
         assert "error" in field
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_getFieldData_success(self, mock_get_client):
+        # Mock the Supabase client response
+        mock_client = MagicMock()
+        mock_get_client.return_value = mock_client
+        mock_client.table.return_value.select.return_value.eq.return_value.execute.return_value.data = []
+
+        result = supabaseFunctions.getFieldData("3f76f41f-f166-4248-a7bb-56acef104f7a")
+        assert isinstance(result, list), "Result should be a list"
+
+        # Test that the list is not empty
+        assert len(result) > 0, "Result list should not be empty"
+
+        # Test the structure of each item in the list
+        for item in result:
+            assert isinstance(item, dict), "Each item in the result should be a dictionary"
+
+            # Check for required keys
+            required_keys = ['date', 'tempmax', 'tempmin', 'tempdiurnal', 'tempmean', 'pressure', 'humidity', 
+                             'dew_point', 'clouds', 'rain', 'uvi', 'soil_temperature', 'soil_moisture', 
+                             'pred_health', 'pred_yield', 'pred_sprayability', 'field_id', 'summary', 'id']
+            for key in required_keys:
+                assert key in item, f"Each item should have a '{key}' key"
+
+            # Check data types of some values
+            assert isinstance(item['date'], str), "'date' should be a string"
+            assert isinstance(item['tempmax'], (int, float)), "'tempmax' should be a number"
+            assert isinstance(item['tempmin'], (int, float)), "'tempmin' should be a number"
+            assert isinstance(item['field_id'], str), "'field_id' should be a string"
+            assert isinstance(item['summary'], str), "'summary' should be a string"
+            assert isinstance(item['id'], int), "'id' should be an integer"
+
+        # Test specific data points (you may want to adjust these based on your actual data)
+        assert result[0]['date'] == '2024-09-15', "First item should be for date 2024-09-15"
+        assert result[-1]['date'] == '2024-10-04', "Last item should be for date 2024-10-04"
+
+        # Test that dates are in order
+        dates = [item['date'] for item in result]
+        assert dates == sorted(dates), "Dates should be in ascending order"
+
+        # Test that all items have the same field_id
+        field_ids = set(item['field_id'] for item in result)
+        assert len(field_ids) == 1, "All items should have the same field_id"
+
+        # Test range of some values
+        for item in result:
+            assert -50 <= item['tempmax'] <= 50, "tempmax should be between -50 and 50"
+            assert -50 <= item['tempmin'] <= 50, "tempmin should be between -50 and 50"
+            assert 0 <= item['humidity'] <= 100, "humidity should be between 0 and 100"
+            assert 0 <= item['pred_health'] <= 1, "pred_health should be between 0 and 1"
+            assert item['pred_sprayability'] >= 0, "pred_sprayability should be non-negative"
+
+
 
