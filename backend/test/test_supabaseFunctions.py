@@ -212,3 +212,18 @@ class TestSupabaseFunctions:
         result = supabaseFunctions.createField(field)
         assert "error" in result
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_updateField(self, mock_get_client):
+        field = Field(
+            field_id = "14420bc8-48e3-47bc-ab83-1a6498380588",
+            field_name = "TEST",
+            crop_type = "wheat",
+        )
+        result = supabaseFunctions.updateField(field)
+        assert "status" in result
+
+    # @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    # def test_deleteField(self, mock_get_client):
+    #     result = supabaseFunctions.deleteField("69908502-804d-457a-85bf-c0c6c85b289a")
+    #     assert "status" in result
+
