@@ -43,3 +43,18 @@ def test_degenerate_polygon():
     area_hectares = calculate_hectares_from_coordinates(coordinates)
     assert math.isnan(area_hectares) or area_hectares == 0.0, \
            "Degenerate polygon should have zero or undefined area."
+
+
+def test_invalid_polygon(capsys):
+    invalid_coordinates = [
+        (0, 0),
+        (1, 1),
+        (0, 2),
+        (2, 0),
+        (0, 0)  # Closing point
+    ]
+
+    calculate_hectares_from_coordinates(invalid_coordinates)
+    
+    captured = capsys.readouterr()
+    assert "An error occurred: Invalid polygon geometry." in captured.out
