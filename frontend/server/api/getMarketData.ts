@@ -10,7 +10,6 @@ export default defineEventHandler(async (event) => {
 	}
 	const apiBaseUrl = useRuntimeConfig().public.apiBaseUrl
 	const callUrl = `${apiBaseUrl}/market?crop=${crop}`
-	console.log('Call url is ', callUrl)
 
 	try {
 		const response = await fetch(callUrl)

@@ -50,7 +50,6 @@ async function signUp() {
 		// Move to the next step
 		step.value = 2
 		newUserID.value = data?.user.id
-		console.log('New ID from ref:', newUserID.value)
 	} catch (error: any) {
 		errorMsg.value = error.message
 	}
@@ -104,7 +103,7 @@ definePageMeta({
 	<div class="w-full h-screen flex flex-col justify-center items-center p-4 overflow-auto">
 		<div class="w-full max-w-[450px] px-4 overflow-auto">
 			<!-- Step 1: Sign Up -->
-			<Card v-if="step === 1" class="w-full border border-surface-border">
+			<Card v-if="step === 1" class="w-full p-5">
 				<template #header>
 					<div class="flex justify-center items-center p-4">
 						<img

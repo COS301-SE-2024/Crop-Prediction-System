@@ -215,7 +215,6 @@ onMounted(async () => {
 		})
 
 		userRole.value = teamID.role
-		console.log(userRole.value)
 
 		const response = await $fetch('/api/getTeamFields', {
 			params: { team_id: teamID.team_id },

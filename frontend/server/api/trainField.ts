@@ -2,7 +2,6 @@ export default defineEventHandler(async (event) => {
 	const proxyUrl = useRuntimeConfig().public.apiBaseUrl
 	const body = await readBody(event)
 
-	console.log('This is body:', JSON.stringify(body))
 	const callUrl = `${proxyUrl}/train`
 
 	try {

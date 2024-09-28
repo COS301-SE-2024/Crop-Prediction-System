@@ -44,9 +44,11 @@ import { ref } from 'vue'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import { useToast } from 'primevue/usetoast'
+import { getTeamId } from '~/utils/apiUtils'
 
 const toast = useToast()
 const user = useSupabaseUser()
+const team_id = ref(null)
 const userData = ref({
 	full_name: '',
 	email: '',
@@ -54,6 +56,7 @@ const userData = ref({
 
 onMounted(async () => {
 	userData.value = await getUser()
+	team_id.value = await getTeamId(useSupabaseUser()?.value?.id)
 })
 
 async function getUser() {
@@ -86,6 +89,7 @@ async function updateUserProfile() {
 			body: {
 				id: user?.value?.id,
 				full_name: first_name.value,
+				team_id: team_id.value.team_id,
 			},
 		})
 	} catch (error) {
