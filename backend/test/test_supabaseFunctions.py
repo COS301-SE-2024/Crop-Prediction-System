@@ -273,3 +273,8 @@ class TestSupabaseFunctions:
         result = supabaseFunctions.removeFromTeam("ac774d3a-921f-4154-b590-5e05831431a1")
         assert "success" in result
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_getTeamDetails(self, mock_get_client):
+        result = supabaseFunctions.getTeamDetails("17383e3d-f211-4724-8515-8c4cb836c812")
+        assert isinstance(result, list)
+
