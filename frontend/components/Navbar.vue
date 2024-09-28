@@ -111,6 +111,11 @@ const items = computed(() => [
 		url: '/help',
 	},
 	{
+		label: 'Acknowledgements',
+		icon: 'pi pi-info-circle',
+		url: '/acknowledgements',
+	},
+	{
 		label: 'Settings',
 		icon: 'pi pi-cog',
 		url: '/settings',
