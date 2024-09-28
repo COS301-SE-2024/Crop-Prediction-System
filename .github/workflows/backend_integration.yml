@@ -1,22 +1,27 @@
-name: Automated Integration tests using Postman CLI
+name: Automated Integration tests with Postman CLI
 
 on:
-  workflow_run:
-    workflows: ["Deploy Backend"]
-    branches: [main, dev, feature/backend/API]
-    types:
-      - completed
+  pull_request:
+    branches:
+      - main
+      - dev
+      - feature/backend/API
 
 jobs:
-  automated-integration-tests:
+  run-postman-tests:
+    name: Run Postman API Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Install Postman CLI
         run: |
           curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
       - name: Login to Postman CLI
         run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+
       - name: Run API tests
         run: |
           postman collection run "26558432-89a30ebe-9eb6-4e38-a7c6-0c4408737984" -e "26558432-5841d9b8-9d3a-4e2d-a70b-a120e35065ab"
