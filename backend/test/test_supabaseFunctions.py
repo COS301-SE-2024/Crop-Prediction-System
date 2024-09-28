@@ -178,3 +178,8 @@ class TestSupabaseFunctions:
         result = supabaseFunctions.getTeamFieldData(supabaseFunctions,"17383e3d-f211-4724-8515-8c4cb836c812",1)
         assert isinstance(result, list)
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_getTeamFieldDataN0(self, mock_get_client):
+        result = supabaseFunctions.getTeamFieldData(supabaseFunctions,"17383e3d-f211-4724-8515-8c4cb836c812",0)
+        assert isinstance(result, list)
+
