@@ -120,7 +120,6 @@ const items = computed(() => [
 		url: '/acknowledgements',
 	},
 	{
-
 		label: 'Settings',
 		icon: 'pi pi-cog',
 		url: '/settings',
