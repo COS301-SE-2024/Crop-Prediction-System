@@ -1,14 +1,13 @@
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
-	console.log('Body is', body)
 
-	const { id, full_name } = body
+	const { id, full_name, team_id } = body
 
 	// Ensure both user_id and role are provided
-	if (!id || !full_name) {
+	if (!id || !full_name || !team_id) {
 		return {
 			statusCode: 400,
-			message: 'Both user_id and full name are required',
+			message: 'Both user_id, team_id, and full name are required',
 		}
 	}
 
@@ -18,10 +17,9 @@ export default defineEventHandler(async (event) => {
 		// Make a POST request to the external API
 		const response = await $fetch(`${apiBaseUrl}/updateUser`, {
 			method: 'PUT',
-			body: { id, full_name },
+			body: { id, full_name, team_id },
 		})
 
-		console.log(response)
 		// Return the response from the API call
 		return {
 			statusCode: 200,

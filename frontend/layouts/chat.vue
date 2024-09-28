@@ -1,5 +1,5 @@
 <template>
-	<div class="bg-surface-300/60 dark:bg-surface-900">
+	<div class="bg-surface-300/60 dark:bg-surface-900 select-none">
 		<div class="w-full h-screen flex flex-col justify-between">
 			<header class="sticky top-0">
 				<Navbar />

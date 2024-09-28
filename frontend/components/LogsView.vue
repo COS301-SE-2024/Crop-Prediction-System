@@ -221,8 +221,6 @@ const fetchEntryData = async () => {
 		params: { team_id: teamID.team_id },
 	})
 
-	console.log(entryData)
-
 	entries.value = entryData.map((entry: any) => ({
 		...entry,
 		yield: entry.pred_yield === null ? 'N/A' : entry.pred_yield.toFixed(2),
@@ -804,6 +802,7 @@ const triggerPrint = async () => {
                 @media print {
                     body * {
                         visibility: hidden;
+						font-family: Open sans, sans-serif;
                     }
                     #printSection, #printSection * {
                         visibility: visible;

@@ -77,7 +77,7 @@
 
 			<template #footer>
 				<div class="flex flex-row justify-end w-full">
-					<Button label="Invite Member" icon="pi pi-plus" size="small" @click="visible = true" />
+					<Button label="Invite Member" icon="pi pi-plus" size="small" @click="showVisible" />
 				</div>
 			</template>
 		</DataTable>
@@ -129,6 +129,10 @@ const isLoading = ref(false)
 
 onMounted(async () => {
 	await getTeamDetails()
+})
+
+definePageMeta({
+	middleware: 'auth',
 })
 
 async function getTeamDetails() {
@@ -197,6 +201,14 @@ function showWrongRoleError() {
 	}
 }
 
+const showVisible = () => {
+	if (userRole.value !== 'farm_manager') {
+		showWrongRoleError()
+		return
+	}
+	visible.value = true
+}
+
 const editRole = async (id: string) => {
 	if (userRole.value !== 'farm_manager') {
 		showWrongRoleError()
@@ -217,7 +229,6 @@ const editRole = async (id: string) => {
 			})
 
 			toast.add({ severity: 'success', summary: 'Role Updated', detail: 'User role updated successfully', life: 3000 })
-			console.log('Role update response:', response)
 		} catch (error) {
 			console.error('Error updating role:', error)
 			toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to update role', life: 3000 })

@@ -38,7 +38,12 @@
 				<!-- <div class="p-5 sm:p-0">
 					<i class="pi pi-bell" style="font-size: 1.5rem" />
 				</div> -->
-
+				<i
+					class="pi pi-question-circle"
+					style="font-size: 1.5rem; padding-top: 16px; padding-bottom: 16px; padding-left: 8px; padding-right: 8px"
+					:class="'text-surface-500 dark:text-surface-300 rounded-md hover:bg-surface-300/20 hover:cursor-pointer'"
+					@click="navigateTo('/help')"
+				/>
 				<i
 					class="pi pi-comment"
 					style="
@@ -65,9 +70,6 @@
 					:class="'text-surface-500 dark:text-surface-300 rounded-md hover:bg-surface-300/20 hover:cursor-pointer'"
 					@click="toggleProfile"
 				/>
-				<!-- <div class="hidden sm:block">
-			<i class="pi pi-cog" @click="toggleSettings" style="font-size: 1.5rem" />
-		  </div> -->
 			</div>
 		</div>
 		<Toast />
@@ -83,8 +85,6 @@ import { useToast } from 'primevue/usetoast'
 const toast = useToast()
 const user = useSupabaseUser()
 const client = useSupabaseClient()
-
-const settingsSwitch = ref(false)
 
 const op = ref<OverlayPanel | null>(null)
 const settingsPanel = ref<OverlayPanel | null>(null)
@@ -108,11 +108,6 @@ const items = computed(() => [
 		url: '/team/manage',
 	},
 	{
-		label: 'IoT Devices',
-		icon: 'pi pi-globe',
-		url: '/settings',
-	},
-	{
 		label: 'Toggle Theme',
 		icon: useColorMode().preference == 'dark' ? 'pi pi-sun' : 'pi pi-moon',
 		command: () => {
@@ -120,11 +115,12 @@ const items = computed(() => [
 		},
 	},
 	{
-		label: 'Help',
-		icon: 'pi pi-question-circle',
-		url: '/help',
+		label: 'Acknowledgements',
+		icon: 'pi pi-info-circle',
+		url: '/acknowledgements',
 	},
 	{
+
 		label: 'Settings',
 		icon: 'pi pi-cog',
 		url: '/settings',
@@ -183,7 +179,6 @@ const unreadMessages = useState('unreadMessages', () => 0)
 
 const supabase = useSupabaseClient()
 const route = useRoute()
-const router = useRouter()
 
 onMounted(() => {
 	fetchUser()
