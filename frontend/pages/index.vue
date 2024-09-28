@@ -30,7 +30,7 @@
 					collapsed
 				>
 					<div class="w-full flex flex-col justify-center items-center gap-4 relative">
-						<div class="flex w-full gap-4 mol:flex-row mos:flex-col justify-between items-center">
+						<div class="flex w-full gap-4 mol:flex-row mos:flex-col justify-center items-center">
 							<SelectButton
 								v-model="selectedFilterOption"
 								:options="filterOptions"
@@ -38,7 +38,6 @@
 								optionDisabled="constant"
 								@change="handleFilterChange"
 							/>
-							<Button icon="pi pi-question-circle" outlined severity="secondary" size="small" class="h-full" />
 						</div>
 						<div v-if="selectedField" class="grid gap-4 w-full" :class="getGridClass(filter.value)">
 							<StatsCard
