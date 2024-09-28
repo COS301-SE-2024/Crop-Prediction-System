@@ -93,7 +93,6 @@ const fetchUser = async () => {
 	const user = useSupabaseUser()
 	const response = await $fetch(`/api/getUser?user_id=${user.value.id}`)
 	currentUser.value = response
-	console.log(currentUser.value)
 }
 
 // Storing the count of unread messages

@@ -136,5 +136,4 @@ const filterOptions = ref([
 ])
 
 const { dummyChartData } = useDummyChartData()
-console.log(dummyChartData)
 </script>

@@ -229,7 +229,6 @@ const editRole = async (id: string) => {
 			})
 
 			toast.add({ severity: 'success', summary: 'Role Updated', detail: 'User role updated successfully', life: 3000 })
-			console.log('Role update response:', response)
 		} catch (error) {
 			console.error('Error updating role:', error)
 			toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to update role', life: 3000 })
