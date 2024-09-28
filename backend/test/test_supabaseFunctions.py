@@ -70,7 +70,7 @@ class TestSupabaseFunctions:
         }]
         
         team_id = supabaseFunctions.getTeamId("0edb30e5-fb47-457a-a1d8-30c7e9cb4098")
-        assert team_id == {'role': 'unassigned','team_id': 'df98d7f1-2351-46fb-9792-ad70b8efd81a'}
+        assert team_id == {'role': 'unassigned','team_id': '2dcf4ec3-8d29-461c-a053-48a0b73d9a2a'}
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamId_failure(self, mock_get_client):
@@ -175,12 +175,12 @@ class TestSupabaseFunctions:
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamFieldData(self, mock_get_client):
-        result = supabaseFunctions.getTeamFieldData(supabaseFunctions,"17383e3d-f211-4724-8515-8c4cb836c812",1)
+        result = supabaseFunctions.getTeamFieldData(supabaseFunctions,"2dcf4ec3-8d29-461c-a053-48a0b73d9a2a",1)
         assert isinstance(result, list)
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamFieldDataN0(self, mock_get_client):
-        result = supabaseFunctions.getTeamFieldData(supabaseFunctions,"17383e3d-f211-4724-8515-8c4cb836c812",0)
+        result = supabaseFunctions.getTeamFieldData(supabaseFunctions,"2dcf4ec3-8d29-461c-a053-48a0b73d9a2a",0)
         assert isinstance(result, list)
 
     def test_getTeamFieldData_invalid(self):
@@ -255,14 +255,14 @@ class TestSupabaseFunctions:
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamFields(self, mock_get_client):
-        result = supabaseFunctions.getTeamFields("17383e3d-f211-4724-8515-8c4cb836c812")
+        result = supabaseFunctions.getTeamFields("2dcf4ec3-8d29-461c-a053-48a0b73d9a2a")
         assert isinstance(result, list)
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_addToTeam(self, mock_get_client):
         team = {
             "user_id": "8e0ac7f0-8df0-4127-9081-1ab99ee6ad4c",
-            "team_id": "17383e3d-f211-4724-8515-8c4cb836c812",
+            "team_id": "2dcf4ec3-8d29-461c-a053-48a0b73d9a2a",
             "role": "farm_manager"
         }
         result = supabaseFunctions.addToTeam(team)
@@ -275,7 +275,7 @@ class TestSupabaseFunctions:
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamDetails(self, mock_get_client):
-        result = supabaseFunctions.getTeamDetails("17383e3d-f211-4724-8515-8c4cb836c812")
+        result = supabaseFunctions.getTeamDetails("2dcf4ec3-8d29-461c-a053-48a0b73d9a2a")
         assert isinstance(result, list)
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
@@ -288,9 +288,9 @@ class TestSupabaseFunctions:
         #     "message": "Testing 4"
         # }
         message = {
-            "team_id": "17383e3d-f211-4724-8515-8c4cb836c812",
-            "user_email": "xavierrynolds@gmail.com",
-            "user_name": "Xavier Reynolds",
+            "team_id": "2dcf4ec3-8d29-461c-a053-48a0b73d9a2a",
+            "user_email": "stephantestuser@gmail.com",
+            "user_name": "Stepha Test User",
             "message": "Testing 4"
         }
         result = supabaseFunctions.sendMessage(message)
@@ -298,7 +298,7 @@ class TestSupabaseFunctions:
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamMessages(self, mock_get_client):
-        result = supabaseFunctions.getTeamMessages("17383e3d-f211-4724-8515-8c4cb836c812")
+        result = supabaseFunctions.getTeamMessages("2dcf4ec3-8d29-461c-a053-48a0b73d9a2a")
         assert isinstance(result, list)
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
@@ -317,7 +317,7 @@ class TestSupabaseFunctions:
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamYield(self, mock_get_client):
-        result = supabaseFunctions.getTeamYield("17383e3d-f211-4724-8515-8c4cb836c812")
+        result = supabaseFunctions.getTeamYield("2dcf4ec3-8d29-461c-a053-48a0b73d9a2a")
         assert isinstance(result, list)
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
