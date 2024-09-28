@@ -4,7 +4,7 @@ import Footer from '~/components/footer.vue'
 </script>
 
 <template>
-	<div class="h-screen">
+	<div class="h-screen select-none">
 		<Navbar />
 		<slot />
 		<Footer />
