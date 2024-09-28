@@ -296,3 +296,8 @@ class TestSupabaseFunctions:
         result = supabaseFunctions.sendMessage(message)
         assert "success" in result
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_getTeamMessages(self, mock_get_client):
+        result = supabaseFunctions.getTeamMessages("17383e3d-f211-4724-8515-8c4cb836c812")
+        assert isinstance(result, list)
+
