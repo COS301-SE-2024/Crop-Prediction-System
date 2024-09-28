@@ -44,12 +44,12 @@ useHead({
 
 				<div class="flex justify-center md:justify-end min-h-[300px] max-h-[500px] hidden lg:block">
 					<img
-						src="../assets/images/Home-light.png"
+						src="../assets/images/Home-dark.png"
 						alt="Logo"
 						class="object-top object-cover dark:hidden block w-full"
 					/>
 					<img
-						src="../assets/images/Home-dark.png"
+						src="../assets/images/Home-light.png"
 						alt="Logo"
 						class="object-top object-cover hidden dark:block w-full"
 					/>
@@ -221,12 +221,12 @@ useHead({
 								<div
 									class="flex items-center justify-center w-12 h-12 bg-rose-200 dark:bg-rose-700 rounded-lg mb-4"
 								>
-									<i class="pi pi-users text-2xl text-rose-700 dark:text-rose-200"></i>
+									<i class="pi pi-wallet text-2xl text-rose-700 dark:text-rose-200"></i>
 								</div>
-								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Team Management</h2>
+								<h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-2">Market Data</h2>
 								<p class="text-surface-600 dark:text-surface-0/60">
-									We added teams to our product to allow farmers and their helpers to have access to the same
-									set of fields and crops. This allows for better collaboration and communication.
+									Our product provides market data for various crops. This data can be used to get an expected
+									revenue for your crops.
 								</p>
 							</div>
 						</div>
@@ -243,49 +243,48 @@ useHead({
 						class="flex justify-center col-span-12 lg:col-span-6 bg-orange-200 p-0 order-1 lg:order-none"
 						style="border-radius: 8px"
 					>
-						<img src="../assets/images/ai-model.png" alt="mockup mobile" />
+						<img src="../assets/images/ai-dark.png" alt="mockup mobile" class="dark:hidden block" />
+						<img src="../assets/images/ai-light.png" alt="mockup mobile" class="hidden dark:block" />
 					</div>
 					<div class="col-span-12 lg:col-span-6 my-auto flex flex-col lg:items-end text-center lg:text-right gap-4">
 						<div
-							class="flex items-center justify-center bg-orange-200 dark:bg-orange-700 self-center lg:self-end"
+							class="flex items-center justify-center bg-blue-200 dark:bg-blue-700 self-center lg:self-end"
 							style="width: 4.2rem; height: 4.2rem; border-radius: 10px"
 						>
-							<i class="pi pi-map-marker !text-4xl text-orange-700 dark:text-orange-200"></i>
-						</div>
-						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">
-							Map Functionality
-						</div>
-						<span
-							class="text-surface-700 dark:text-surface-100 text-xl leading-normal ml-0 md:ml-2"
-							style="max-width: 550px"
-							>When a user is ready to add a field to the app, they simply search for the field's location in the
-							search bar, and then just pinpoint the coordinates manually on the map. We implemented it this way to
-							ensure accurate locations and make the whole system easier to use for our clients.
-						</span>
-					</div>
-				</div>
-				<div class="grid grid-cols-12 gap-4 my-20 pt-2 md:pt-20">
-					<div class="col-span-12 lg:col-span-6 my-auto flex flex-col text-center lg:text-left lg:items-start gap-4">
-						<div
-							class="flex items-center justify-center bg-purple-200 dark:bg-purple-700 self-center lg:self-start"
-							style="width: 4.2rem; height: 4.2rem; border-radius: 10px"
-						>
-							<i class="pi pi-microchip-ai !text-3xl text-purple-700 dark:text-purple-200"></i>
+							<i class="pi pi-microchip-ai !text-4xl text-blue-700 dark:text-blue-200"></i>
 						</div>
 						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">AI Model</div>
 						<span
+							class="text-surface-700 dark:text-surface-100 text-xl leading-normal ml-0 md:ml-2"
+							style="max-width: 540px"
+							>Our product offers a state of the art AI model that predicts crop yields. This model is trained on a
+							wide range of crops and can be used to predict the yield of any crop.
+						</span>
+					</div>
+				</div>
+				<div class="grid grid-cols-12 gap-4 my-10 pt-2 md:pt-20">
+					<div class="col-span-12 lg:col-span-6 my-auto flex flex-col text-center lg:text-left lg:items-start gap-4">
+						<div
+							class="flex items-center justify-center bg-yellow-200 dark:bg-yellow-700 self-center lg:self-start"
+							style="width: 4.2rem; height: 4.2rem; border-radius: 10px"
+						>
+							<i class="pi pi-user !text-3xl text-yellow-700 dark:text-yellow-200"></i>
+						</div>
+						<div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">Team Management</div>
+						<span
 							class="text-surface-700 dark:text-surface-100 text-xl leading-normal mr-0 md:mr-2"
 							style="max-width: 550px"
-							>Our product offers a state of the art AI model that predicts crop yields. This model is trained on a
-							wide range of crops and can be used to predict the yield of any crop. This model is also constantly
-							updated to ensure the best predictions possible.
+						>
+							We added teams to our product to allow farmers and their helpers to have access to the same set of
+							fields and crops. This allows for better collaboration and communication.
 						</span>
 					</div>
 					<div
 						class="flex justify-center order-1 sm:order-2 col-span-12 lg:col-span-6 bg-yellow-100 p-0"
 						style="border-radius: 8px"
 					>
-						<img src="../assets/images/maps.png" alt="mockup mobile" />
+						<img src="../assets/images/team-dark.png" alt="mockup mobile" class="dark:hidden block" />
+						<img src="../assets/images/team-light.png" alt="mockup mobile" class="hidden dark:block" />
 					</div>
 				</div>
 			</div>
@@ -299,13 +298,13 @@ useHead({
 								<i class="pi pi-chart-bar text-2xl text-emerald-700 dark:text-emerald-200"></i>
 							</div>
 							<h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">
-								Charts and Graphs
+								Data Visualisation
 							</h2>
 						</div>
 						<div>
 							<p class="font-normal text-xl leading-normal md:mt-2 px-2">
 								Our product provides a wide array of detailed graphs and charts, displaying key data gathered from
-								IoT sensors and the OpenWeather API. This real-time information empowers users to make informed
+								the OpenWeather API and data predicted. This real-time information empowers users to make informed
 								decisions, enhancing crop health and optimizing yield potential through precise monitoring and
 								analysis.
 							</p>
