@@ -36,3 +36,20 @@ def test_load_model_data(pipeline):
     assert result is not None
     assert isinstance(result, pd.DataFrame)
 
+def test_load_yields(pipeline):
+    c: Crop = Crop(
+        name="wheat",
+        t_base=5.0, 
+        stages={
+            "sowing": {"day": 111},
+            "germination": {"day": 151},
+            "tillering": {"day": 182},
+            "heading": {"day": 243},
+            "maturity": {"day": 304}
+        }
+    )
+    result = pipeline.load_yields(c)
+    assert result is not None
+    assert len(result) > 0
+    assert isinstance(result, pd.DataFrame)
+
