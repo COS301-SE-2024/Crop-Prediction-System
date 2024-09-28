@@ -802,6 +802,7 @@ const triggerPrint = async () => {
                 @media print {
                     body * {
                         visibility: hidden;
+						font-family: Open sans, sans-serif;
                     }
                     #printSection, #printSection * {
                         visibility: visible;
