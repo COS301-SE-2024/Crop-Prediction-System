@@ -14,7 +14,7 @@
 						<li v-for="item in menuItems" :key="item.name">
 							<a
 								@click="() => smoothScroll(item.href)"
-								class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out cursor-pointer whitespace-nowrap"
+								class="px-2 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out cursor-pointer whitespace-nowrap"
 							>
 								<i :class="item.icon" class="mr-2"></i>
 								{{ item.name }}
@@ -23,10 +23,10 @@
 						<li v-for="item in items" :key="item.name">
 							<a
 								@click="item.command"
-								class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out cursor-pointer whitespace-nowrap"
+								class="px-2 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out cursor-pointer whitespace-nowrap"
 							>
-								<i :class="item.icon" class="mr-2"></i>
-								{{ item.name }}
+								<i :class="item.icon"></i>
+								<span v-if="item.name" class="ml-2">{{ item.name }}</span>
 							</a>
 						</li>
 					</ul>
@@ -101,7 +101,7 @@ const items = computed(() => [
 		name: 'REGISTER',
 		icon: 'pi pi-user-plus',
 		command: () => {
-			window.location.href = 'https://terrabyte.software/login'
+			window.location.href = 'https://app.terrabyte.software/login'
 		},
 	},
 	{
