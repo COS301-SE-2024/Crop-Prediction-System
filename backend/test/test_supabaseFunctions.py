@@ -150,5 +150,19 @@ class TestSupabaseFunctions:
             assert 0 <= item['pred_health'] <= 1, "pred_health should be between 0 and 1"
             assert item['pred_sprayability'] >= 0, "pred_sprayability should be non-negative"
 
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_getFieldInfo(self, mock_get_client):
+        mock_get_client = MagicMock()
+        mock_get_client.return_value = mock_get_client
+        mock_get_client.table.return_value.select.return_value.eq.return_value.execute.return_value.data = [{
+            "field_id": "14420bc8-48e3-47bc-ab83-1a6498380588",
+            "name": "Backyard",
+            "coordinates": "POINT(1 1)"
+        }]
+        result : Field = supabaseFunctions.getFieldInfo("14420bc8-48e3-47bc-ab83-1a6498380588")
+        assert isinstance(result, Field)
+        assert result.field_id == "14420bc8-48e3-47bc-ab83-1a6498380588"
+        assert result.field_name == "TEST"
+
 
 
