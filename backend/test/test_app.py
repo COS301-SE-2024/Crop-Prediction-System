@@ -8,9 +8,9 @@ import datetime
 client = TestClient(app)
 
 # Sample IDs and test data
-team_id = "d8d64098-b290-4fd2-b810-cadb1fe213ea"
+team_id = "2dcf4ec3-8d29-461c-a053-48a0b73d9a2a"
 field_id = str(uuid.uuid4())
-user_id = "02dffef4-7788-423c-869e-17db9c821542"
+user_id = "8e0ac7f0-8df0-4127-9081-1ab99ee6ad4c"
 today = datetime.datetime.now().strftime('%Y-%m-%d')
 crop="wheat"
 
@@ -31,11 +31,11 @@ def test_create_field():
         }
         response = client.post("/createField", json={
             "field_id": field_id,
-            "field_name": "TEST",
+            "field_name": "Stephan Test Field",
             "crop_type": "wheat",
             "field_area": {
                 "type": "Polygon",
-                "coordinates": [[-25.87074931861521, 28.159573936176287], [-25.870773452610735, 28.160054051589952], [-25.871036512841457, 28.160062098216997], [-25.87101479229413, 28.159563207340227]]
+                "coordinates": [[-24.87074931861521, 27.159573936176287], [-24.870773452610735, 27.160054051589952], [-24.871036512841457, 27.160062098216997], [-24.87101479229413, 27.159563207340227]]
             },
             "team_id": team_id
         })
@@ -47,12 +47,12 @@ def test_get_field_info():
         mock_getFieldInfo.return_value = {
             "id": field_id,
             "field_area": [
-                [-25.87074931861521, 28.159573936176287],
-                [-25.870773452610734, 28.160054051589952],
-                [-25.871036512841457, 28.160062098216997],
-                [-25.87101479229413, 28.159563207340227]
+                [-24.87074931861521, 27.159573936176287],
+                [-24.870773452610734, 27.160054051589952],
+                [-24.871036512841457, 27.160062098216997],
+                [-24.87101479229413, 27.159563207340227]
             ],
-            "field_name": "TEST",
+            "field_name": "Stephan Test Field",
             "crop_type": "wheat",
             "team_id": team_id,
             "hectare": 0.211313511746061
@@ -60,7 +60,7 @@ def test_get_field_info():
         response = client.get(f"/getFieldInfo?field_id={field_id}")
         assert response.status_code == 200
         assert response.json()["id"] == field_id
-        assert response.json()["field_name"] == "TEST"
+        assert response.json()["field_name"] == "Stephan Test Field"
         assert response.json()["crop_type"] == "wheat"
         assert response.json()["team_id"] == team_id
 
@@ -75,14 +75,14 @@ def test_get_team_field_data():
     with patch('backend.database.supabaseFunctions.supabaseFunctions.getTeamFieldData') as mock_getTeamFieldData:
         mock_getTeamFieldData.return_value = {
             "field_id": field_id,
-            "field_name": "TEST",
+            "field_name": "Stephan Test Field",
         }
         response = client.get(f"/getTeamFieldData?team_id={team_id}&n=1")
         assert response.status_code == 200
 
 def test_get_team_fields():
     with patch('backend.database.supabaseFunctions.supabaseFunctions.getTeamFields') as mock_getUserFields:
-        mock_getUserFields.return_value = [{"id": field_id, "field_name": "TEST"}]
+        mock_getUserFields.return_value = [{"id": field_id, "field_name": "Stephan Test Field"}]
         response = client.get(f"/getTeamFields?team_id={team_id}")
         data = response.json()
         assert response.status_code == 200
@@ -105,7 +105,7 @@ def test_add_to_team():
 def test_update_roles():
     with patch('backend.database.supabaseFunctions.supabaseFunctions.updateRoles') as mock_updateRoles:
         mock_updateRoles.return_value = {"success": "Roles updated"}
-        response = client.post("/updateRoles", json={"user_id": user_id, "roles": ["admin"]})
+        response = client.post("/updateRoles", json={"user_id": user_id, "roles": ["farm_manager"]})
         assert response.status_code == 200
         assert response.json() == {"success": "Roles updated"}
 
@@ -125,23 +125,23 @@ def test_update_field():
                 "created_at": "2024-08-10T15:52:58.591935+00:00",
                 "field_area": [
                     [
-                        -25.87074931861521,
-                        28.159573936176287
+                        -24.87074931861521,
+                        27.159573936176287
                     ],
                     [
-                        -25.870773452610734,
-                        28.160054051589952
+                        -24.870773452610734,
+                        27.160054051589952
                     ],
                     [
-                        -25.871036512841457,
-                        28.160062098216997
+                        -24.871036512841457,
+                        27.160062098216997
                     ],
                     [
-                        -25.87101479229413,
-                        28.159563207340227
+                        -24.87101479229413,
+                        27.159563207340227
                     ]
                 ],
-                "field_name": "TEST (UPDATED)",
+                "field_name": "Stephan Test Field",
                 "crop_type": "maize",
                 "team_id": team_id,
                 "updated_at": "2024-08-10T15:52:58.591935+00:00",
@@ -151,18 +151,18 @@ def test_update_field():
         }
         response = client.put("/updateField", json={
             "field_id": field_id,
-            "field_name": "TEST (UPDATED)",
+            "field_name": "Stephan Test Field",
             "crop_type": "maize",
             "field_area": {
                 "type": "Polygon",
-                "coordinates": [[-25.87074931861521, 28.159573936176287], [-25.870773452610735, 28.160054051589952], [-25.871036512841457, 28.160062098216997], [-25.87101479229413, 28.159563207340227]]
+                "coordinates": [[-24.87074931861521, 27.159573936176287], [-24.870773452610735, 27.160054051589952], [-24.871036512841457, 27.160062098216997], [-24.87101479229413, 27.159563207340227]]
             },
             "updated_at": "2024-08-10T15:52:58.591935+00:00",
             "team_id": team_id
         })
         assert response.status_code == 200
         assert response.json()["status"] == "success"
-        assert response.json()["data"]["field_name"] == "TEST (UPDATED)"
+        assert response.json()["data"]["field_name"] == "Stephan Test Field"
         assert response.json()["data"]["crop_type"] == "maize"
 
 # def test_update_entry():
@@ -237,23 +237,23 @@ def test_delete_field():
                 "created_at": "2024-08-10T15:52:58.591935+00:00",
                 "field_area": [
                     [
-                        -25.87074931861521,
-                        28.159573936176287
+                        -24.87074931861521,
+                        27.159573936176287
                     ],
                     [
-                        -25.870773452610734,
-                        28.160054051589952
+                        -24.870773452610734,
+                        27.160054051589952
                     ],
                     [
-                        -25.871036512841457,
-                        28.160062098216997
+                        -24.871036512841457,
+                        27.160062098216997
                     ],
                     [
-                        -25.87101479229413,
-                        28.159563207340227
+                        -24.87101479229413,
+                        27.159563207340227
                     ]
                 ],
-                "field_name": "TEST (UPDATED)",
+                "field_name": "Stephan Test Field",
                 "crop_type": "maize",
                 "team_id": f"{team_id}",
                 "updated_at": "2024-08-10T15:52:58.591935+00:00",
@@ -264,7 +264,7 @@ def test_delete_field():
         response = client.post("/deleteField", json={"field_id": field_id})
         assert response.status_code == 200
         assert response.json()["status"] == "success"
-        assert response.json()["data"]["field_name"] == "TEST (UPDATED)"
+        assert response.json()["data"]["field_name"] == "Stephan Test Field"
         assert response.json()["data"]["crop_type"] == "maize"
         assert response.json()["data"]["id"] == f"{field_id}"
 
@@ -308,21 +308,21 @@ def test_getPastYieldAvg():
 def test_getTeamFieldsData():
     with patch('backend.database.supabaseFunctions.supabaseFunctions.getTeamFieldData') as mock_getTeamFieldsData:
         mock_getTeamFieldsData.return_value = {"success": "Team fields data fetched"}
-        response = client.get("/getTeamFieldData?team_id=17383e3d-f211-4724-8515-8c4cb836c812&n=200")
+        response = client.get("/getTeamFieldData?team_id=2dcf4ec3-8d29-461c-a053-48a0b73d9a2a&n=200")
         assert response.status_code == 200
         assert response.json() == {"success": "Team fields data fetched"}
 
 def test_removeFromTeam():
     with patch('backend.database.supabaseFunctions.supabaseFunctions.removeFromTeam') as mock_removeFromTeam:
         mock_removeFromTeam.return_value = {"success": "User removed from team"}
-        response = client.put("/removeFromTeam?user_id=fcce6e0d-517d-4aa0-ba17-47938b9880fd")
+        response = client.put("/removeFromTeam?user_id=8e0ac7f0-8df0-4127-9081-1ab99ee6ad4c")
         assert response.status_code == 200
         assert response.json() == {"success": "User removed from team"}
 
 def test_getTeamDetails():
     with patch('backend.database.supabaseFunctions.supabaseFunctions.getTeamDetails') as mock_getTeamDetails:
         mock_getTeamDetails.return_value = {"success": "Team details fetched"}
-        response = client.get("/getTeamDetails?team_id=17383e3d-f211-4724-8515-8c4cb836c812")
+        response = client.get("/getTeamDetails?team_id=2dcf4ec3-8d29-461c-a053-48a0b73d9a2a")
         assert response.status_code == 200
         assert response.json() == {"success": "Team details fetched"}
 
@@ -344,7 +344,7 @@ def test_sendMessage():
 def test_getTeamMessages():
     with patch('backend.database.supabaseFunctions.supabaseFunctions.getTeamMessages') as mock_getTeamMessages:
         mock_getTeamMessages.return_value = {"success": "Messages fetched"}
-        response = client.get("/getTeamMessages?team_id=17383e3d-f211-4724-8515-8c4cb836c812")
+        response = client.get("/getTeamMessages?team_id=2dcf4ec3-8d29-461c-a053-48a0b73d9a2a")
         assert response.status_code == 200
         assert response.json() == {"success": "Messages fetched"}
 
@@ -374,7 +374,7 @@ def test_market():
 def test_getTeamYield():
     with patch('backend.database.supabaseFunctions.supabaseFunctions.getTeamYield') as mock_getTeamYield:
         mock_getTeamYield.return_value = {"success": "Team yield fetched"}
-        response = client.get("/getTeamYield?team_id=17383e3d-f211-4724-8515-8c4cb836c812")
+        response = client.get("/getTeamYield?team_id=2dcf4ec3-8d29-461c-a053-48a0b73d9a2a")
         assert response.status_code == 200
         assert response.json() == {"success": "Team yield fetched"}
 

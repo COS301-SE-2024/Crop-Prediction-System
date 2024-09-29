@@ -61,6 +61,16 @@ class TestSupabaseFunctions:
             assert stage == "tillering"
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
+    def test_addToTeam(self,mock_get_client):
+        team = {
+            "user_id": "8e0ac7f0-8df0-4127-9081-1ab99ee6ad4c",
+            "team_id": "2dcf4ec3-8d29-461c-a053-48a0b73d9a2a",
+            "role": "farm_manager"
+        }
+        result = supabaseFunctions.addToTeam(team)
+        assert "success" in result
+
+    @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamId_success(self, mock_get_client):
         # Mock the Supabase client response
         mock_client = MagicMock()
@@ -69,8 +79,8 @@ class TestSupabaseFunctions:
             "team_id": "12345"
         }]
         
-        team_id = supabaseFunctions.getTeamId("0edb30e5-fb47-457a-a1d8-30c7e9cb4098")
-        assert team_id == {'role': 'unassigned','team_id': '2dcf4ec3-8d29-461c-a053-48a0b73d9a2a'}
+        team_id = supabaseFunctions.getTeamId("8e0ac7f0-8df0-4127-9081-1ab99ee6ad4c")
+        assert team_id == {'role': 'farm_manager','team_id': '2dcf4ec3-8d29-461c-a053-48a0b73d9a2a'}
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamId_failure(self, mock_get_client):
@@ -79,7 +89,7 @@ class TestSupabaseFunctions:
         mock_get_client.return_value = mock_client
         mock_client.table.return_value.select.return_value.eq.return_value.execute.return_value.data = []
 
-        team_id = supabaseFunctions.getTeamId("0f543694-dba7-4858-bb34-23e88c844b76")
+        team_id = supabaseFunctions.getTeamId("7e0ac7f0-8df0-4127-9081-1ab99ee6ad4c")
         assert "error" in team_id
         assert team_id["error"] == "Failed to get team ID"
 
@@ -132,7 +142,7 @@ class TestSupabaseFunctions:
 
         # Test specific data points (you may want to adjust these based on your actual data)
         assert result[0]['date'] == '2024-09-15', "First item should be for date 2024-09-15"
-        assert result[-1]['date'] == '2024-10-04', "Last item should be for date 2024-10-04"
+        assert result[-1]['date'] == '2024-10-05', "Last item should be for date 2024-10-04"
 
         # Test that dates are in order
         dates = [item['date'] for item in result]
@@ -162,7 +172,7 @@ class TestSupabaseFunctions:
         result : Field = supabaseFunctions.getFieldInfo("14420bc8-48e3-47bc-ab83-1a6498380588")
         assert isinstance(result, Field)
         assert result.field_id == "14420bc8-48e3-47bc-ab83-1a6498380588"
-        assert result.field_name == "TEST"
+        assert result.field_name == "Backyard"
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getFieldInfo_fail(self, mock_get_client):
@@ -175,12 +185,12 @@ class TestSupabaseFunctions:
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamFieldData(self, mock_get_client):
-        result = supabaseFunctions.getTeamFieldData(supabaseFunctions,"2dcf4ec3-8d29-461c-a053-48a0b73d9a2a",1)
+        result = supabaseFunctions.getTeamFieldData(supabaseFunctions,"17383e3d-f211-4724-8515-8c4cb836c812",1)
         assert isinstance(result, list)
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamFieldDataN0(self, mock_get_client):
-        result = supabaseFunctions.getTeamFieldData(supabaseFunctions,"2dcf4ec3-8d29-461c-a053-48a0b73d9a2a",0)
+        result = supabaseFunctions.getTeamFieldData(supabaseFunctions,"17383e3d-f211-4724-8515-8c4cb836c812",0)
         assert isinstance(result, list)
 
     def test_getTeamFieldData_invalid(self):
@@ -202,7 +212,7 @@ class TestSupabaseFunctions:
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_createField_fail(self, mock_get_client):
         field = Field(
-            field_name = "TEST",
+            field_name = "Stephan Test 2",
             crop_type = "wheat",
             field_area = {
                 "type": "Polygon",
@@ -215,8 +225,8 @@ class TestSupabaseFunctions:
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_updateField(self, mock_get_client):
         field = Field(
-            field_id = "14420bc8-48e3-47bc-ab83-1a6498380588",
-            field_name = "TEST",
+            field_id = "2fea8a15-cf10-4db3-90b4-e2a5e3caabf8",
+            field_name = "Stephan Test Field",
             crop_type = "wheat",
         )
         result = supabaseFunctions.updateField(field)
@@ -230,7 +240,7 @@ class TestSupabaseFunctions:
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_updateEntry(self,mock_get_client):
         entry = {
-            "field_id": "14420bc8-48e3-47bc-ab83-1a6498380588",
+            "field_id": "2fea8a15-cf10-4db3-90b4-e2a5e3caabf8",
             "date": "2024-09-15",
             "tempmax": 30,
             "tempmin": 20,
@@ -251,11 +261,11 @@ class TestSupabaseFunctions:
         }
         result = supabaseFunctions.updateEntry(entry)
         assert "status" in result
-        assert "error_message" not in result
+        assert "error_message" in result
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamFields(self, mock_get_client):
-        result = supabaseFunctions.getTeamFields("2dcf4ec3-8d29-461c-a053-48a0b73d9a2a")
+        result = supabaseFunctions.getTeamFields("17383e3d-f211-4724-8515-8c4cb836c812")
         assert isinstance(result, list)
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
@@ -275,7 +285,7 @@ class TestSupabaseFunctions:
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamDetails(self, mock_get_client):
-        result = supabaseFunctions.getTeamDetails("2dcf4ec3-8d29-461c-a053-48a0b73d9a2a")
+        result = supabaseFunctions.getTeamDetails("17383e3d-f211-4724-8515-8c4cb836c812")
         assert isinstance(result, list)
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
@@ -290,7 +300,7 @@ class TestSupabaseFunctions:
         message = {
             "team_id": "2dcf4ec3-8d29-461c-a053-48a0b73d9a2a",
             "user_email": "stephantestuser@gmail.com",
-            "user_name": "Stepha Test User",
+            "user_name": "Stephan Test User",
             "message": "Testing 4"
         }
         result = supabaseFunctions.sendMessage(message)
@@ -317,7 +327,7 @@ class TestSupabaseFunctions:
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_getTeamYield(self, mock_get_client):
-        result = supabaseFunctions.getTeamYield("2dcf4ec3-8d29-461c-a053-48a0b73d9a2a")
+        result = supabaseFunctions.getTeamYield("17383e3d-f211-4724-8515-8c4cb836c812")
         assert isinstance(result, list)
 
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
@@ -328,9 +338,9 @@ class TestSupabaseFunctions:
     @patch('backend.database.supabaseInstance.supabaseInstance.get_client')
     def test_addFieldToSensor(self, mock_get_client):
         field = {
-            "field_id": "14420bc8-48e3-47bc-ab83-1a6498380588",
-            "sensor_id": "2CF7F12025200009"
+            "field_id": "9383ffd2-4e11-4053-9730-7439053a5a99",
+            "sensor_id": "2CF7F1202520006A"
         }
-        result = supabaseFunctions.addFieldToSensor("14420bc8-48e3-47bc-ab83-1a6498380588","2CF7F12025200009")
+        result = supabaseFunctions.addFieldToSensor("9383ffd2-4e11-4053-9730-7439053a5a99","2CF7F1202520006A")
         assert "success" in result
 

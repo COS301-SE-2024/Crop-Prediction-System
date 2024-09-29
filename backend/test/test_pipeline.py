@@ -53,6 +53,7 @@ def test_load_yields(pipeline):
     assert len(result) > 0
     assert isinstance(result, pd.DataFrame)
 
+
 def test_train(pipeline):
     c: Crop = Crop(
         name="wheat",
