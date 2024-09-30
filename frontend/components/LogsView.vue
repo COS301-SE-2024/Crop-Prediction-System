@@ -229,7 +229,6 @@ const fetchEntryData = async () => {
 
 onMounted(async () => {
 	await fetchEntryData()
-	console.log('User Role: ', userRole.value)
 })
 
 const onSelectAllChange = (event: { checked: boolean }) => {
@@ -966,11 +965,9 @@ const updateDatabase = async (data) => {
 
 const onCellEditComplete = async (event) => {
 	let { data, newValue, field, originalEvent } = event
-
 	if (originalEvent.type === 'keydown' && originalEvent.key === 'Enter') {
-		if (data[field] !== data._originalValue) {
+		if (newValue !== data._originalValue) {
 			data[field] = newValue
-			console.log('Data updated:', data)
 			await updateDatabase(data)
 			delete data._originalValue
 		}
