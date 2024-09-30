@@ -781,92 +781,86 @@ const preparePrintContent = async () => {
 
 const triggerPrint = async () => {
 	if (!(await preparePrintContent())) return
-	const printIframe = document.createElement('iframe')
-	printIframe.style.position = 'absolute'
-	printIframe.style.width = '0'
-	printIframe.style.height = '0'
-	printIframe.style.border = 'none'
-	document.body.appendChild(printIframe)
-	const printDoc = printIframe.contentWindow?.document
-	if (!printDoc) {
-		console.error('Failed to access print iframe document.')
-		return
+
+	// Create a print section if it doesn't exist
+	let printSection = document.getElementById('printSection')
+	if (!printSection) {
+		printSection = document.createElement('div')
+		printSection.id = 'printSection'
+		document.body.appendChild(printSection)
 	}
-	printDoc.open()
-	printDoc.write(`
-        <html>
-        <head>
-            <title>Print ${selectedField.value}</title>
-            <style>
-                @media print {
-                    body * {
-                        visibility: hidden;
-						font-family: Open sans, sans-serif;
-                    }
-                    #printSection, #printSection * {
-                        visibility: visible;
-                    }
-                    #printSection {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 100%;
-                    }
-                    .chart-container {
-                        page-break-inside: avoid; /* Prevent splitting graphs */
-                        break-inside: avoid;
-                        margin-bottom: 20px;
-                    }
-                    .headings {
-                        display: flex;
-                        flex-direction: row;
-                        justify-content: space-between;
-                        margin-bottom: 20px;
-						align-items: center;
-                    }
-                    canvas {
-                        width: 100% !important; /* Ensure charts fit within the page width */
-                        height: auto !important;
-                    }
-                    @page {
-                        size: auto;
-                        margin: 20mm; /* Adjust margins to fit content */
-                    }
-                    h1 {
-                        font-size: 24pt;
-                        font-weight: bold;
-                        margin-bottom: 10px;
-                    }
-                    h2 {
-                        font-size: 18pt;
-                        font-weight: bold;
-                        padding-bottom: 10px;
-                        margin-bottom: 8px;
-                    }
-                    h3 {
-                        font-size: 14pt;
-                        font-weight: normal;
-                        margin-bottom: 5px;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-            <div id="printSection">
-                ${printContent.value}
-            </div>
-        </body>
-        </html>
-    `)
-	printDoc.close()
-	printIframe.onload = () => {
-		if (printIframe.contentWindow) {
-			printIframe.contentWindow.focus()
-			printIframe.contentWindow.print()
+
+	// Insert content to print
+	printSection.innerHTML = `
+		<div>
+			${printContent.value}
+		</div>
+	`
+
+	// Apply the print CSS dynamically
+	const printStyle = document.createElement('style')
+	printStyle.innerHTML = `
+		@media print {
+			body * {
+				visibility: hidden;
+				font-family: Open sans, sans-serif;
+			}
+			#printSection, #printSection * {
+				visibility: visible;
+			}
+			#printSection {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+			}
+			.chart-container {
+				page-break-inside: avoid;
+				break-inside: avoid;
+				margin-bottom: 20px;
+			}
+			.headings {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				margin-bottom: 20px;
+				align-items: center;
+			}
+			canvas {
+				width: 100% !important; /* Ensure charts fit within the page width */
+				height: auto !important;
+			}
+			@page {
+				size: auto;
+				margin: 20mm; /* Adjust margins to fit content */
+			}
+			h1 {
+				font-size: 24pt;
+				font-weight: bold;
+				margin-bottom: 10px;
+			}
+			h2 {
+				font-size: 18pt;
+				font-weight: bold;
+				padding-bottom: 10px;
+				margin-bottom: 8px;
+			}
+			h3 {
+				font-size: 14pt;
+				font-weight: normal;
+				margin-bottom: 5px;
+			}
 		}
-	}
-	printIframe.contentWindow.onafterprint = () => {
-		document.body.removeChild(printIframe)
+	`
+	document.head.appendChild(printStyle)
+
+	// Trigger print
+	window.print()
+
+	// Cleanup after printing
+	window.onafterprint = () => {
+		printSection.innerHTML = ''
+		document.head.removeChild(printStyle)
 	}
 }
 
