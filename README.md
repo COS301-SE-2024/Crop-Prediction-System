@@ -33,11 +33,12 @@ Meet TerraByte, the AI-driven Crop Prediction System that applies Machine Learni
 
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/COS301-SE-2024/Crop-Prediction-System?logo=Github&link=https%3A%2F%2Fgithub.com%2FCOS301-SE-2024%2FCrop-Prediction-System%2Fissues)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-closed/COS301-SE-2024/Crop-Prediction-System?logo=Github&link=https%3A%2F%2Fgithub.com%2FCOS301-SE-2024%2FCrop-Prediction-System%2Fissues)
-![GitHub last commit](https://img.shields.io/github/last-commit/COS301-SE-2024/Crop-Prediction-System?logo=Github)
 ![GitHub Release](https://img.shields.io/github/v/release/COS301-SE-2024/Crop-Prediction-System?logo=Github)
 [![codecov](https://codecov.io/gh/COS301-SE-2024/Crop-Prediction-System/graph/badge.svg?token=WwjFFuFVr7)](https://codecov.io/gh/COS301-SE-2024/Crop-Prediction-System)
 [![System Uptime](https://img.shields.io/pingpong/uptime/sp_bf59a60096094040a09ea511e5b93cee?label=Website%20Uptime)](https://terrabyte.pingpong.host/)
 [![Assertible](https://assertible.com/apis/9e78aa9b-a667-4256-93b3-f89a9b26961b/status?api_token=hF30yIrlSGpMqbfo)](https://assertible.com/dashboard#/services/9e78aa9b-a667-4256-93b3-f89a9b26961b/results)
+
+<img width="607" alt="image" src="https://github.com/user-attachments/assets/98b7e610-caa4-4037-9eed-3da3fc19a174">
 
 ### Project Day Countdown
 
@@ -59,23 +60,24 @@ Meet TerraByte, the AI-driven Crop Prediction System that applies Machine Learni
 
 ## Documentation
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/wiki">Link to Wiki</a>
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/SRS%20Demo%203.pdf">Functional Requirements (SRS)</a>
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/SRS%20Demo%203.pdf">Link to Functional Requirements (SRS)</a>
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Architectural%20Requirements.pdf">Architectural Requirements</a>
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Architectural%20Requirements.pdf">Link to Architectural Requirements</a>
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Coding%20Standards.pdf">Coding Standards</a>
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Coding%20Standards.pdf">Link to Coding Standards</a>
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/User%20Manual.pdf">User Manual</a>
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/User%20Manual.pdf">Link to User Manual</a>
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Technical%20Installation%20Manual.pdf">Technical Installation Manual</a>
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Technical%20Installation%20Manual.pdf">Link to Technical Installation Manual</a>
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/ML%20Model%20Documentation.pdf">Machine Learning Specification</a>
+
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/wiki/Netlify-Deployment">Deployment Diagram</a>
 
 <a href="https://documenter.getpostman.com/view/26558432/2sA3Qwaoyd">API Documentation</a>
 
-<a href="https://github.com/orgs/COS301-SE-2024/projects/57/views/4">Link to Github Project Board</a>
+<a href="https://github.com/orgs/COS301-SE-2024/projects/57/views/4">Github Project Board</a>
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/wiki/Netlify-Deployment">Link to Deployment Documentation</a>
 
 ## Meet The Team
 
