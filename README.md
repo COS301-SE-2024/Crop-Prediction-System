@@ -58,6 +58,10 @@ Meet TerraByte, the AI-driven Crop Prediction System that applies Machine Learni
 
 <a href="https://www.canva.com/design/DAGNoDGk9Xw/EF4AfOHztK41WQi1NOY2nw/edit?utm_content=DAGNoDGk9Xw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Demo 3 Presentation</a>
 
+<a href="https://youtu.be/79Ss0NHEXwg">Demo 4 Video</a>
+
+<a href="https://www.canva.com/design/DAGSB8SQ4hA/3_F1AMF0_MbSsHcfHMSC6w/edit?utm_content=DAGSB8SQ4hA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Demo 4 Presentation</a>
+
 ## Documentation
 
 <a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/SRS%20Demo%203.pdf">Functional Requirements (SRS)</a>
@@ -72,11 +76,13 @@ Meet TerraByte, the AI-driven Crop Prediction System that applies Machine Learni
 
 <a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/ML%20Model%20Documentation.pdf">Machine Learning Specification</a>
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/wiki/Netlify-Deployment">Deployment Diagram</a>
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Deployment%20Diagram.png">Deployment Diagram</a>
 
 <a href="https://documenter.getpostman.com/view/26558432/2sA3Qwaoyd">API Documentation</a>
 
 <a href="https://github.com/orgs/COS301-SE-2024/projects/57/views/4">Github Project Board</a>
+
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Testing%20Policy.pdf" >Testing Policy</a>
 
 
 ## Meet The Team

@@ -32,7 +32,7 @@ describe('NavigationMenu', () => {
 		})
 
 		const menuItemLabels = component.findAll('.p-menuitem')
-		expect(menuItemLabels.length).toBe(6)
+		expect(menuItemLabels.length).toBe(7)
 	})
 
 	it('generates router links correctly', async () => {
@@ -50,13 +50,14 @@ describe('NavigationMenu', () => {
 		})
 
 		const links = component.findAll('a')
-		expect(links.length).toBe(12)
+		expect(links.length).toBe(14)
 
 		const urls = links.map((link) => link.attributes('href'))
 		expect(urls).toContain('/')
-		expect(urls).toContain('/inputs/add-field-data')
 		expect(urls).toContain('/inputs/manage-fields')
+		expect(urls).toContain('/inputs/add-field')
 		expect(urls).toContain('/log-data/view-logs')
 		expect(urls).toContain('/team/manage')
+		expect(urls).toContain('/team/chat')
 	})
 })
