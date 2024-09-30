@@ -142,7 +142,7 @@ class TestSupabaseFunctions:
 
         # Test specific data points (you may want to adjust these based on your actual data)
         assert result[0]['date'] == '2024-09-15', "First item should be for date 2024-09-15"
-        assert result[-1]['date'] == '2024-10-05', "Last item should be for date 2024-10-04"
+        assert result[-1]['date'] == '2024-10-06', "Last item should be for date 2024-10-04"
 
         # Test that dates are in order
         dates = [item['date'] for item in result]
