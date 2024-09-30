@@ -14,6 +14,7 @@ describe('Login Page', () => {
 		const email = 'ggu.capstone@gmail.com'
 		const password = 'WrongPassword'
 
+		cy.wait(500)
 		cy.get('#email').clear().type(email)
 		cy.get('input[type="password"]').clear().type(password)
 		cy.get('button').contains('Login').click()
@@ -23,7 +24,7 @@ describe('Login Page', () => {
 
 	it('should login successfully', () => {
 		const email = 'ggu.capstone@gmail.com'
-		const password = 'Test1234#'
+		const password = 'Testing1234#'
 
 		cy.wait(500)
 		cy.get('#email').clear().type(email)
