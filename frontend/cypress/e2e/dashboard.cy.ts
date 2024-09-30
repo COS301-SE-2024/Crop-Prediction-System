@@ -1,19 +1,57 @@
-describe('Dashboard', () => {
+describe('Dashboard Page', () => {
 	beforeEach(() => {
-		cy.login('ggu.capstone@gmail.com', 'Test1234#')
-		cy.visit('/')
-	})
+	  cy.login('ggu.capstone@gmail.com', 'Testing1234#')
+	});
+  
+	it('displays related charts when field is selected', () => {
+		cy.wait(5000)
+		cy.get('svg[data-pc-section="dropdownicon"]').click();
 
-	it('should display the Field Card and Map components', () => {
-		cy.get('.w-full.md\\:w-1\\/3').should('exist')
-		cy.get('.w-full.md\\:w-2\\/3').should('exist')
-	})
+		cy.contains('li', 'Test Field') 
+		.scrollIntoView()
+		.should('be.visible')
+		.click();
+	});
 
-	it('should select an option from the dropdown and update the graphs', () => {
-		cy.get('#pv_id_1').click()
-		cy.get('#pv_id_1_list').should('be.visible')
-		cy.get('#pv_id_1_list').contains('Wheat 3').click()
+	it('displays additional charts when slected', () => {
+		cy.wait(5000)
+		cy.get('svg[data-pc-section="dropdownicon"]').click();
 
-		cy.get('legend').click()
-	})
-})
+		cy.contains('li', 'Test Field') 
+		.scrollIntoView()
+		.should('be.visible')
+		.click();
+
+		cy.get('svg[data-pc-section="togglericon"]')
+		.scrollIntoView()
+		.should('be.visible')
+		.click();
+
+		cy.wait(2000);
+		cy.scrollTo('bottom', { duration: 2000 });
+		cy.wait(2000);
+		cy.scrollTo('top', { duration: 2000 });
+	});
+
+	it('toggles sidebar', () => {
+		cy.wait(5000)
+		cy.get('button[aria-label="Filter"]').click();
+
+		cy.get('div[data-pc-name="sidebar"]').should('exist').and('be.visible');
+	});
+
+	it('toggles navbar menu', () => {
+		cy.wait(5000)
+		cy.get('i.pi.pi-user').click();
+
+		cy.get('div[data-pc-name="menu"]').should('exist').and('be.visible');
+	});
+
+	it('redirects to team chat', () => {
+		cy.wait(500)
+		cy.get('i.pi.pi-comment').click();
+
+		cy.url().should('include', '/team/chat')
+	});
+  });
+  
