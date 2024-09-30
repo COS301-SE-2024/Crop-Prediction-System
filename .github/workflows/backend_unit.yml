@@ -35,6 +35,8 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          SENSOR_API_KEY: ${{ secrets.SENSOR_API_KEY }}
+          SENSOR_API_URL: ${{ secrets.SENSOR_API_URL }}
         run: |
           pytest --cov=backend backend/test/
           pytest --cov-report xml
