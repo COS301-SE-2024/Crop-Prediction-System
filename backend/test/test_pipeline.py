@@ -6,7 +6,7 @@ from backend.definitions.crop import Crop
 import datetime
 from uuid import uuid4
 import pandas as pd
-
+ 
 @pytest.fixture
 def mock_crop() -> Crop:
     return Crop(
