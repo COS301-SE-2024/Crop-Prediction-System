@@ -1,4 +1,4 @@
-describe('Dashboard Page', () => {
+describe('Revenue Page', () => {
 	beforeEach(() => {
 	  cy.login('ggu.capstone@gmail.com', 'Testing1234#')
       cy.wait(6000)
