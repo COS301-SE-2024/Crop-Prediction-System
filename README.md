@@ -60,23 +60,24 @@ Meet TerraByte, the AI-driven Crop Prediction System that applies Machine Learni
 
 ## Documentation
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/wiki">Link to Wiki</a>
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/SRS%20Demo%203.pdf">Functional Requirements (SRS)</a>
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/SRS%20Demo%203.pdf">Link to Functional Requirements (SRS)</a>
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Architectural%20Requirements.pdf">Architectural Requirements</a>
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Architectural%20Requirements.pdf">Link to Architectural Requirements</a>
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Coding%20Standards.pdf">Coding Standards</a>
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Coding%20Standards.pdf">Link to Coding Standards</a>
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/User%20Manual.pdf">User Manual</a>
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/User%20Manual.pdf">Link to User Manual</a>
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Technical%20Installation%20Manual.pdf">Technical Installation Manual</a>
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/Technical%20Installation%20Manual.pdf">Link to Technical Installation Manual</a>
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/blob/feature/docs/docs/ML%20Model%20Documentation.pdf">Machine Learning Specification</a>
+
+<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/wiki/Netlify-Deployment">Deployment Diagram</a>
 
 <a href="https://documenter.getpostman.com/view/26558432/2sA3Qwaoyd">API Documentation</a>
 
-<a href="https://github.com/orgs/COS301-SE-2024/projects/57/views/4">Link to Github Project Board</a>
+<a href="https://github.com/orgs/COS301-SE-2024/projects/57/views/4">Github Project Board</a>
 
-<a href="https://github.com/COS301-SE-2024/Crop-Prediction-System/wiki/Netlify-Deployment">Link to Deployment Documentation</a>
 
 ## Meet The Team
 
