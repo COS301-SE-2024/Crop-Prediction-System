@@ -40,3 +40,7 @@ def entry():
         soil_moisture=0.5,
         soil_temperature=15
     )
+
+# Test initialization of Weather class
+def test_weather_init(weather):
+    assert isinstance(weather, Weather)

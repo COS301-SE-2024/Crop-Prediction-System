@@ -10,14 +10,17 @@ import { required, email } from '@vuelidate/validators'
 const route = useRoute()
 const client = useSupabaseClient()
 const user = useSupabaseUser()
-const userEmail = ref('')
-const password = ref(null)
+const userEmail = ref(route.query.email || '')
+const password = ref(route.query.password || '')
 const errorMsg = ref(null)
 
 const rules = {
 	email: { required, email },
 	password: { required },
 }
+
+console.log(password)
+console.log(userEmail)
 
 const validation = useVuelidate(rules, { email: userEmail, password })
 
@@ -53,6 +56,13 @@ const signInWithOauth = async () => {
 	} catch (error) {
 		errorMsg.value = error.message
 	}
+}
+
+if (userEmail.value !== '' && password.value !== '') {
+	rules.email = { email }
+	rules.password = {}
+
+	signIn()
 }
 
 definePageMeta({
