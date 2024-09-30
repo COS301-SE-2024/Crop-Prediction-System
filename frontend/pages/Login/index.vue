@@ -67,7 +67,16 @@ definePageMeta({
 			<Card class="w-full bg-surface-100 dark:bg-surface-800 p-[20px]">
 				<template #header>
 					<div class="flex justify-center items-center p-4">
-						<img src="../../assets/logo-alt.png" alt="Logo" class="w-[auto] h-[70px] self-center" />
+						<img
+							src="../../assets/logo-alt.png"
+							alt="Logo"
+							class="hidden dark:block pt-1 w-[auto] h-[70px] self-center"
+						/>
+						<img
+							src="../../assets/logo.png"
+							alt="Logo"
+							class="dark:hidden block pt-1 w-[auto] h-[70px] self-center"
+						/>
 					</div>
 				</template>
 				<template #title>
