@@ -23,7 +23,7 @@ describe('Manage Fields Page', () => {
         cy.contains('h2', 'Test Field').should('be.visible'); 
 	});
 
-    it.only('can filter by crop type', () => {
+    it('can filter by crop type', () => {
 		cy.wait(3000);
 		cy.get('svg[data-pc-section="dropdownicon"]').click();
         cy.contains('li', 'Maize') 
