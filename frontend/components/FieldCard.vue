@@ -4,7 +4,7 @@
 			<div class="flex flex-row items-center mb-0 justify-center">
 				<Dropdown
 					v-model="internalSelectedField"
-					:options="fields"
+					:options="sortedFields"
 					optionLabel="field_name"
 					placeholder="Select a Field"
 					checkmark
@@ -173,6 +173,12 @@ const props = defineProps({
 		type: Array as () => Field[],
 		default: () => [],
 	},
+})
+
+const sortedFields = computed(() => {
+	return props.fields.slice().sort((a: Field, b: Field) => {
+		return a.field_name.localeCompare(b.field_name)
+	})
 })
 
 const emit = defineEmits(['update:modelValue'])
