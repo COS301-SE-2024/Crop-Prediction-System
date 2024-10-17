@@ -82,6 +82,7 @@
 				<p>All charts are interactive and allow you to hover over data points for more details.</p>
 				<StatsCard
 					title="Soil Moisture"
+					subtitle="The amount of water in the soil as a percentage"
 					:chartData="dummyChartData.chartData"
 					chartType="line"
 					class="border-2 border-surface-500"

@@ -2,7 +2,7 @@
 	<div class="bg-surface-300/60 dark:bg-surface-900 select-none">
 		<div class="w-full min-h-screen">
 			<!-- <div class="h-auto"> -->
-			<header class="sticky">
+			<header class="sticky top-0 z-50">
 				<Navbar />
 			</header>
 			<!-- </div> -->
