@@ -37,13 +37,11 @@
 // }
 
 Cypress.Commands.add('login', (email, password) => {
-	cy.visit('/login'); // Adjust this route based on your app's login page
-  
+	cy.visit('/login') // Adjust this route based on your app's login page
+
 	// Fill out the login form
 	cy.wait(500)
 	cy.get('#email').clear().type(email)
 	cy.get('input[type="password"]').clear().type(password)
 	cy.get('button').contains('Login').click()
-  
-  });
-  
+})
