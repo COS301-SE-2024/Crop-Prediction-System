@@ -3,8 +3,13 @@
 		<ProgressSpinner />
 		<h2 class="font-bold text-surface-700 dark:text-surface-0 text-xl">Fetching Team Messages</h2>
 	</div>
+
+	<div v-if="!isLoading && messages.length === 0" class="w-full h-full flex flex-col justify-center items-center">
+		<h2 class="font-bold text-surface-700 dark:text-surface-0 text-xl">No messages found</h2>
+	</div>
+
 	<div
-		v-show="!isLoading"
+		v-if="!isLoading && messages.length > 0"
 		ref="scrollableContainer"
 		class="w-full flex flex-col gap-2 items-center justify-between rounded-md overflow-y-auto"
 	>
@@ -49,20 +54,15 @@ const currentUser = ref(null)
 const team_id = ref('')
 const isLoading = ref(true)
 
-// You need to declare a DOM ref to access the last message directly
-const lastMessage = ref(null) // Ref to track the last message's DOM element
-
 const scrollableContainer = ref(null)
 
-// Scroll to the last message card
 const scrollToLastMessage = () => {
-	const lastChild = scrollableContainer.value.lastElementChild
+	const lastChild = scrollableContainer.value?.lastElementChild
 	setTimeout(() => {
-		lastChild.scrollIntoView({ behavior: 'smooth' })
+		lastChild?.scrollIntoView({ behavior: 'smooth' })
 	}, 500)
 }
 
-// Fetching Team ID first
 async function getTeamMessages() {
 	try {
 		const currentUser = useSupabaseUser()
@@ -75,39 +75,33 @@ async function getTeamMessages() {
 	} finally {
 		await fetchMessages()
 		isLoading.value = false
-		// Scroll to the last message after messages are loaded
 		nextTick(() => {
 			scrollToLastMessage()
 		})
 	}
 }
 
-// Fetch initial messages from team_chat table for the team
 const fetchMessages = async () => {
 	const response = await $fetch(`/api/getTeamMessages?team_id=${team_id.value}`)
 	messages.value = response
 }
 
-// Fetch user information
 const fetchUser = async () => {
 	const user = useSupabaseUser()
 	const response = await $fetch(`/api/getUser?user_id=${user.value.id}`)
 	currentUser.value = response
 }
 
-// Storing the count of unread messages
 const unreadMessages = useState('unreadMessages')
 
-// Getting the route to update unread messages if necessary
 const route = useRoute()
 
 watch(route, (newRoute) => {
 	if (newRoute.path === '/team/chat') {
-		unreadMessages.value = 0 // Reset unread messages
+		unreadMessages.value = 0
 	}
 })
 
-// Real-time subscription to new messages
 onMounted(() => {
 	fetchUser()
 	getTeamMessages()
@@ -116,8 +110,7 @@ onMounted(() => {
 		.channel('public:team_chat')
 		.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'team_chat' }, (payload) => {
 			if (payload.new.team_id === team_id.value) {
-				messages.value.push(payload.new)
-				// Scroll to the last message when a new message is added
+				messages.value = [...messages.value, payload.new]
 				nextTick(() => {
 					scrollToLastMessage()
 				})
@@ -125,38 +118,32 @@ onMounted(() => {
 		})
 		.subscribe()
 
-	// Cleanup on unmount
 	onUnmounted(() => {
 		supabase.removeChannel(subscription)
 	})
 })
 
-// Helper function to format the date
 const formatDate = (dateString) => {
 	const date = new Date(dateString)
 	return !isNaN(date) ? date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Invalid Date'
 }
 
-// Helper function to format the time
 const formatTime = (dateString) => {
 	const date = new Date(dateString)
 	return !isNaN(date) ? date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }) : 'Invalid Time'
 }
 
-// Helper function to style the message based on the user
 const checkMessage = (message) => {
 	return currentUser.value.email === message.user_email
 		? 'w-[90%] self-end border-2 border-primary-500 rounded-br-none mb-2'
 		: 'w-[90%] self-start border-2 border-surface-300 dark:border-surface-600 rounded-bl-none mb-2'
 }
 
-// Function to check if the date tag should be shown (only for the first message of each day)
 const shouldShowDateTag = (index) => {
-	if (index === 0) return true // Always show for the first message
+	if (index === 0) return true
 	const currentMessageDate = new Date(messages.value[index].created_at).toDateString()
 	const previousMessageDate = new Date(messages.value[index - 1].created_at).toDateString()
 
-	// Only show the date if it's different from the previous message
 	return currentMessageDate !== previousMessageDate
 }
 
