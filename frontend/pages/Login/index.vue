@@ -19,9 +19,6 @@ const rules = {
 	password: { required },
 }
 
-console.log(password)
-console.log(userEmail)
-
 const validation = useVuelidate(rules, { email: userEmail, password })
 
 const redirectTo = route.query.redirectTo || '/'
@@ -102,7 +99,7 @@ definePageMeta({
 						<div class="flex flex-col gap-2 items-start">
 							<h3 class="font-semibold">Password</h3>
 							<div class="flex justify-center w-full">
-								<Password v-model="password" toggleMask class="w-full" :feedback="false">
+								<Password v-model="password" toggleMask class="w-full" @keydown.enter="signIn" :feedback="false">
 									<template #header>
 										<h6 class="font-medium m-0 mb-2 text-base">Enter your password</h6>
 									</template>
