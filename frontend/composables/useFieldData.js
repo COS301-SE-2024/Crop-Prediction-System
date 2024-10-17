@@ -7,16 +7,56 @@ export function useFieldData() {
 	const filterOptions = ref([])
 	const loading = ref(false)
 
+	// soilMoisture: 'The amount of water in the soil as a percentage',
+	// soilTemperature: 'The temperature of the soil in degrees Celsius',
+	// temperature: 'The temperature in degrees Celsius',
+	// dewPoint: 'The temperature at which air becomes saturated with water vapor',
+	// humidity: 'The amount of water vapor in the air as a percentage',
+	// pressure: 'The force exerted by the atmosphere on a surface',
+	// uv: 'The strength of ultraviolet radiation from the sun',
+	// sprayability: 'The suitability to spray chemicals on crops',
+	// precipitation: 'The amount of rain that has fallen in millimeters',
+
 	const chartDataList = reactive({
-		soilMoisture: { title: 'Soil Moisture', chartData: {} },
-		soilTemperature: { title: 'Soil Temperature (°C)', chartData: {} },
-		sprayability: { title: 'Sprayability', chartData: {} },
-		precipitation: { title: 'Precipitation (mm)', chartData: {} },
-		temperature: { title: 'Temperature (°C)', chartData: {} },
-		dewPoint: { title: 'Dew Point (°C)', chartData: {} },
-		humidity: { title: 'Humidity', chartData: {} },
-		pressure: { title: 'Pressure', chartData: {} },
-		uv: { title: 'UV Index', chartData: {} },
+		soilMoisture: {
+			title: 'Soil Moisture',
+			chartData: {},
+			subtitle: 'The amount of water in the soil as a percentage',
+			unit: '%',
+		},
+		soilTemperature: {
+			title: 'Soil Temperature (°C)',
+			chartData: {},
+			subtitle: 'The temperature of the soil in degrees Celsius',
+			unit: '°C',
+		},
+		sprayability: {
+			title: 'Sprayability',
+			chartData: {},
+			subtitle: 'The suitability to spray chemicals on crops',
+			unit: '%',
+		},
+		precipitation: {
+			title: 'Precipitation (mm)',
+			chartData: {},
+			subtitle: 'The amount of rain that has fallen in millimeters',
+			unit: 'mm',
+		},
+		temperature: { title: 'Temperature (°C)', chartData: {}, subtitle: 'The temperature in degrees Celsius', unit: '°C' },
+		dewPoint: {
+			title: 'Dew Point (°C)',
+			chartData: {},
+			subtitle: 'The temperature at which air becomes saturated with water vapor',
+			unit: '°C',
+		},
+		humidity: {
+			title: 'Humidity',
+			chartData: {},
+			subtitle: 'The amount of water vapor in the air as a percentage',
+			unit: '%',
+		},
+		pressure: { title: 'Pressure', chartData: {}, subtitle: 'The force exerted by the atmosphere on a surface', unit: 'hPa' },
+		uv: { title: 'UV Index', chartData: {}, subtitle: 'The strength of ultraviolet radiation from the sun', unit: '' },
 	})
 
 	async function fetchFieldData() {

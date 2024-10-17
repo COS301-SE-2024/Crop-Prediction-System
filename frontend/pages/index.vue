@@ -24,8 +24,8 @@
 				</div>
 			</div>
 			<div class="w-full">
-				<Panel
-					:header="!selectedField ? 'Select a field to view stats' : 'More Field Stats'"
+				<Fieldset
+					:legend="!selectedField ? 'Select a field to view stats' : 'More Field Stats'"
 					:toggleable="!selectedField ? false : true"
 					collapsed
 				>
@@ -44,11 +44,14 @@
 								v-for="(chartData, key) in chartDataList"
 								:key="key"
 								:title="chartData.title"
+								:subtitle="chartData.subtitle"
 								:chartData="chartData.chartData"
+								:unit="chartData.unit"
+								class="border-2 border-surface-300 dark:border-surface-600"
 							/>
 						</div>
 					</div>
-				</Panel>
+				</Fieldset>
 			</div>
 		</div>
 	</div>

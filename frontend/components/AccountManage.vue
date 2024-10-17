@@ -6,11 +6,11 @@
 			</div>
 		</OverlayPanel>
 		<div
-			class="w-full flex flex-row gap-3 items-center dark:hover:bg-surface-400/10 hover:bg-surface-100 cursor-pointer p-2 rounded-lg"
+			class="w-full flex flex-row gap-3 items-center dark:hover:bg-surface-400/10 hover:bg-surface-100 cursor-pointer p-2 rounded-lg overflow-hidden"
 			@click="toggle($event)"
 		>
 			<Avatar icon="pi pi-user" size="large" shape="circle" />
-			<h1>{{ props.email }}</h1>
+			<h1 class="truncate">{{ props.email }}</h1>
 		</div>
 	</div>
 </template>

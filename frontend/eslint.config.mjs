@@ -17,5 +17,6 @@ export default withNuxt({
 		'prefer-const': 'off',
 		'@typescript-eslint/no-extraneous-class': 'off',
 		'vue/require-default-prop': 'off',
+        'import/no-duplicates': 'off',
 	},
 })
