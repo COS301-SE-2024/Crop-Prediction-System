@@ -32,40 +32,37 @@
 				Go to the add fields to start adding fields.
 			</h2>
 			<Card v-else v-for="field in filteredFields" :key="field.id" style="padding: 20px">
-				<template #title>
-					<div class="flex flex-row justify-between items-center mb-2">
-						<h2 class="text-2xl font-bold">{{ field.field_name }}</h2>
-						<Button
-							:key="field.id"
-							:id="field.id"
-							size="small"
-							severity="secondary"
-							icon="pi pi-microchip-ai"
-							label="Train"
-							outlined
-							:loading="loadingStates.get(field.id) || false"
-							@click="trainField(field)"
-						/>
-					</div>
-				</template>
 				<template #content>
-					<div class="text-gray-600 dark:text-gray-300 flex flex-col justify-between items-start gap-2">
-						<span> <strong>Crop Type: </strong>{{ capitalizeFirstCharacter(field.crop_type) }}</span>
-						<span><strong>Field Size: </strong>{{ field.hectare.toFixed(2) }}ha</span>
-						<span><strong>Field ID: </strong>{{ field.id }}</span>
-					</div>
-				</template>
-				<template #footer>
-					<div class="flex gap-3">
-						<Button
-							label="Delete"
-							severity="danger"
-							size="small"
-							outlined
-							class="w-full"
-							@click="openDeleteDialog(field)"
-						/>
-						<Button label="View or Edit" size="small" class="w-full" @click="editField(field)" />
+					<div class="justify-between flex flex-col gap-4 h-full">
+						<div class="flex flex-row justify-between items-center">
+							<h2 class="text-2xl font-bold">{{ field.field_name }}</h2>
+							<Button
+								:key="field.id"
+								:id="field.id"
+								size="small"
+								severity="secondary"
+								icon="pi pi-microchip-ai"
+								label="Train"
+								outlined
+								:loading="loadingStates.get(field.id) || false"
+								@click="trainField(field)"
+							/>
+						</div>
+						<div class="text-gray-600 dark:text-gray-300 flex flex-col justify-between items-start gap-2">
+							<span> <strong>Crop Type: </strong>{{ capitalizeFirstCharacter(field.crop_type) }}</span>
+							<span><strong>Field Size: </strong>{{ field.hectare.toFixed(2) }}ha</span>
+						</div>
+						<div class="flex gap-3">
+							<Button
+								label="Delete"
+								severity="danger"
+								size="small"
+								outlined
+								class="w-full"
+								@click="openDeleteDialog(field)"
+							/>
+							<Button label="View or Edit" size="small" class="w-full" @click="editField(field)" />
+						</div>
 					</div>
 				</template>
 			</Card>
@@ -79,6 +76,7 @@
 			v-model:visible="editAndViewVisible"
 			class="w-[95%] md:w-[740px] lg:w-[950px]"
 			:style="{ 'font-family': 'Open Sans' }"
+			@hide="toggleFieldEditMode"
 		>
 			<div class="flex flex-col justify-between items-start gap-4">
 				<div class="flex flex-col gap-2 w-full">

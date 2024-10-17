@@ -1,12 +1,13 @@
 <template>
 	<div class="flex w-full justify-center items-center">
+		<Toast />
 		<div v-if="loading" class="flex flex-col items-center justify-center gap-4 mt-20">
 			<ProgressSpinner />
 			<h2 class="dark:text-white font-bold">Fetching your data...</h2>
 		</div>
 		<div v-else class="flex flex-col justify-start items-start gap-4 w-full">
-			<div v-if="userFieldsWithData.length === 0">
-				<p class="text-surface-700 dark:text-surface-0">
+			<div v-if="userFieldsWithData.length === 0" class="w-full">
+				<p class="text-white rounded-md p-2 font-bold bg-red-500 w-full text-center">
 					You have no fields available. Start adding fields on the
 					<NuxtLink to="/inputs/add-field" class="underline">Add Field Page.</NuxtLink>
 				</p>
@@ -63,6 +64,7 @@ import FieldCard from '~/components/FieldCard.vue'
 import GoogleMapsField from '~/components/GoogleMapsField.vue'
 import StatsCard from '~/components/StatsCard.vue'
 import { useFieldData } from '~/composables/useFieldData'
+import { useToast } from 'primevue/usetoast'
 import { updateChartData, getGridClass } from '~/utils/chartDataUtils'
 
 const { userFieldsWithData, filterOptions, chartDataList, loading } = useFieldData()
@@ -71,6 +73,7 @@ const selectedField = ref(null)
 const filter = ref({ name: '8 Days', value: 8, constant: false })
 const selectedFilterOption = ref(filter.value)
 const screenWidth = ref(0)
+const toast = useToast()
 
 watch(filter, (newFilter) => {
 	if (selectedField.value) {

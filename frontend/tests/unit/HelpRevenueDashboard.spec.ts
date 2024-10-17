@@ -1,8 +1,7 @@
 // @vitest-environment nuxt
 import { mount } from '@vue/test-utils'
-import { it, expect, describe, beforeEach } from 'vitest'
+import { it, expect, describe, beforeEach, vi } from 'vitest'
 import HelpRevenueDashboard from '~/components/HelpRevenueDashboard.vue'
-import { vi } from 'vitest'
 
 // Mocking required components
 vi.mock('primevue/card', () => ({

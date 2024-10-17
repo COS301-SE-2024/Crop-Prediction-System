@@ -126,6 +126,7 @@ const confirmVisible = ref(false) // State for confirmation dialog
 const selectedUserId = ref('') // State for the user being removed
 const toast = useToast()
 const isLoading = ref(false)
+const currentUser = useSupabaseUser()
 
 onMounted(async () => {
 	await getTeamDetails()
@@ -176,6 +177,24 @@ const send = async () => {
 		params: { userid: currentUser?.value?.id },
 	})
 
+	if (userRole.value !== 'farm_manager') {
+		showWrongRoleError()
+		loading.value = false
+		return
+	}
+
+	if (!newUserEmail.value) {
+		toast.add({ severity: 'error', summary: 'Error', detail: 'Please enter a valid email address', life: 3000 })
+		loading.value = false
+		return
+	}
+
+	if (currentUser.value?.email === newUserEmail.value) {
+		toast.add({ severity: 'warn', summary: 'Access Denied', detail: 'You are already in the team', life: 3000 })
+		loading.value = false
+		return
+	}
+
 	try {
 		await $fetch('/api/send', {
 			params: { to: newUserEmail.value, team_id: teamID.team_id, role: role.value.value },
@@ -214,6 +233,11 @@ const editRole = async (id: string) => {
 		showWrongRoleError()
 		return
 	}
+
+	if (currentUser.value?.id === id) {
+		toast.add({ severity: 'warn', summary: 'Access Denied', detail: 'You cannot edit yourself in the team', life: 3000 })
+		return
+	}
 	// If the row is being edited (check mark is clicked)
 	if (editingRoleId.value === id) {
 		const updatedRow = team.value.find((member: any) => member.id === id)
@@ -245,6 +269,11 @@ const editRole = async (id: string) => {
 const confirmRemove = (id: string) => {
 	if (userRole.value !== 'farm_manager') {
 		showWrongRoleError()
+		return
+	}
+
+	if (currentUser.value?.id === id) {
+		toast.add({ severity: 'warn', summary: 'Access Denied', detail: 'You cannot remove yourself from the team', life: 3000 })
 		return
 	}
 	selectedUserId.value = id

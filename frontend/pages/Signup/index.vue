@@ -40,10 +40,14 @@ async function signUp() {
 			},
 		})
 		if (error) throw error
-		successMsg.value = 'Check your email to confirm your account.'
+		successMsg.value = 'You have been successfully signed up! You will be redirected to the Home page.'
 		updateRole(data.user.id)
 	} catch (error) {
 		errorMsg.value = error.message
+	} finally {
+		setTimeout(() => {
+			navigateTo('/')
+		}, 3000)
 	}
 }
 
