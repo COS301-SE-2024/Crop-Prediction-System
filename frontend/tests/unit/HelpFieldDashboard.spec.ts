@@ -1,9 +1,8 @@
 // @vitest-environment nuxt
 import { mount } from '@vue/test-utils'
-import { it, expect, describe, beforeEach } from 'vitest'
+import { it, expect, describe, beforeEach, vi } from 'vitest'
 import HelpFieldDashboard from '~/components/HelpFieldDashboard.vue'
 import Dropdown from 'primevue/dropdown' // Import the Dropdown component to mock it
-import { vi } from 'vitest' // Import 'vi' for mocking
 
 // Mocking the Dropdown component
 vi.mock('primevue/dropdown', () => ({

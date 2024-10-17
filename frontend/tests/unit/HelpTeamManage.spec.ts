@@ -1,8 +1,7 @@
 // @vitest-environment nuxt
 import { mount } from '@vue/test-utils'
-import { it, expect, describe, beforeEach } from 'vitest'
+import { it, expect, describe, beforeEach, vi } from 'vitest'
 import TeamManagementHelp from '~/components/HelpTeamManage.vue'
-import { vi } from 'vitest'
 
 // Mock the DataTable and Card components
 vi.mock('primevue/datatable', () => ({
