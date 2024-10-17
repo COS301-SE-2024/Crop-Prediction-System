@@ -133,9 +133,9 @@
 						field !== 'date' &&
 						field !== 'field_name' &&
 						field !== 'crop_type' &&
-						field !== 'health' &&
-						field !== 'yield' &&
-						field !== 'sprayability'
+						field !== 'pred_health' &&
+						field !== 'pred_yield' &&
+						field !== 'pred_sprayability'
 					"
 				>
 					<InputNumber
@@ -145,6 +145,8 @@
 						size="small"
 						:minFractionDigits="0"
 						:maxFractionDigits="10"
+						:useGrouping="false"
+						:locale="'en-US'"
 					/>
 				</template>
 				<template v-else>
