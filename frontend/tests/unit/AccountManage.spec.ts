@@ -14,8 +14,8 @@ describe('AccountManage', () => {
 	it('renders the div for toggling', async () => {
 		const wrapper = await mountSuspended(AccountManage)
 		const onCLickToggle = wrapper.find(
-			'div[class="w-full flex flex-row gap-3 items-center dark:hover:bg-surface-400/10 hover:bg-surface-100 cursor-pointer p-2 rounded-lg"]',
-		)
+			'div.w-full.flex.flex-row.gap-3.items-center.dark\\:hover\\:bg-surface-400\\/10.hover\\:bg-surface-100.cursor-pointer.p-2.rounded-lg.overflow-hidden'
+		) 
 		expect(onCLickToggle.exists()).toBe(true)
 	})
 	it('calls the toggle function on click', async () => {
