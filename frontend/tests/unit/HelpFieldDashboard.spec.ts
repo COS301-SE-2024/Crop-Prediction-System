@@ -68,7 +68,7 @@ describe('HelpFieldDashboard.vue', () => {
 	})
 
 	it('renders the "Loading Indicator" section', () => {
-		const sectionHeading = wrapper.findAll('h2').at(6)
+		const sectionHeading = wrapper.findAll('h2').at(7)
 		expect(sectionHeading.text()).toMatch(/6\. Loading Indicator/)
 		expect(wrapper.text()).toContain('While the field data is being fetched, a loading spinner and message will appear.')
 	})
