@@ -1,6 +1,7 @@
 name: Automated Integration tests with Postman CLI
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
