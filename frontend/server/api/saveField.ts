@@ -24,8 +24,8 @@ export default defineEventHandler(async (event) => {
 			team_id,
 		}
 
-		console.log('SendBody', sendBody)
-		console.log('Field Stringify', JSON.stringify(field_area))
+		// console.log('SendBody', sendBody)
+		// console.log('Field Stringify', JSON.stringify(field_area))
 		// Forward the data to the external API
 		const response = await $fetch(saveFieldUrl, {
 			method: 'POST',

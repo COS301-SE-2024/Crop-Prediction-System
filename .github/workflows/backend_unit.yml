@@ -6,6 +6,9 @@ on:
     branches:
       - main
       - dev
+  push:
+    branches:
+      - hotfix/cleanup
 
 jobs:
   run-unit-tests:
@@ -47,3 +50,4 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          flags: backend
