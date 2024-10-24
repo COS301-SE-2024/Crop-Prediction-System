@@ -75,11 +75,11 @@ function getChartToday() {
 	return Math.round(chartToday * 100) / 100
 }
 
-console.log(chartToday.value)
+// console.log(chartToday.value)
 
-console.log(todayFormatted)
+// console.log(todayFormatted)
 
-console.log(props.chartData)
+// console.log(props.chartData)
 
 const setChartOptions = () => {
 	return {
